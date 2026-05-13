@@ -1,0 +1,1110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pathao Food Pickup — Case Study | Akash Poddar</title>
+  <meta name="description" content="How I designed and shipped Pathao Food's zero-delivery-fee Pickup feature — a new order type for 500K+ users covering discovery, real-time tracking, payments, and restaurant tooling." />
+  <link rel="canonical" href="https://echo-akash.github.io/pickup.html" />
+  <meta property="og:title" content="Pathao Food Pickup — PM Case Study by Akash Poddar" />
+  <meta property="og:description" content="Designing a new order type from BCD to PRD. Zero-delivery-fee pickup for urban Bangladesh and Nepal." />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://echo-akash.github.io/pickup.html" />
+  <meta property="og:image" content="https://echo-akash.github.io/og-image.png" />
+  <meta name="author" content="Akash Poddar" />
+  <meta name="robots" content="index, follow" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Pathao Food Pickup — Product Case Study",
+    "description": "How Akash Poddar designed and shipped Pathao Food's Pickup feature — a new zero-delivery-fee order type covering discovery, real-time tracking, payment, restaurant tooling, and GTM.",
+    "author": { "@type": "Person", "name": "Akash Poddar", "url": "https://echo-akash.github.io/" },
+    "publisher": { "@type": "Person", "name": "Akash Poddar" }
+  }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,300;1,9..144,500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --ink: #0e0e0e;
+      --ink-mid: #444;
+      --ink-muted: #888;
+      --ink-faint: #bbb;
+      --surface: #f7f5f0;
+      --white: #ffffff;
+      --accent: #1c4f8a;
+      --accent-light: #e8f0fa;
+      --accent2: #2e7d6b;
+      --accent2-light: #e4f3ee;
+      --amber: #7a4a10;
+      --amber-light: #fef3e2;
+      --coral: #8c3320;
+      --coral-light: #faeae7;
+      --line: rgba(0,0,0,0.08);
+      --serif: 'Fraunces', Georgia, serif;
+      --sans: 'DM Sans', system-ui, sans-serif;
+      --radius: 10px;
+      --ease: cubic-bezier(0.16, 1, 0.3, 1);
+      --content-w: 760px;
+      --wide-w: 1000px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--sans); background: var(--surface); color: var(--ink); font-size: 15px; line-height: 1.6; overflow-x: hidden; }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 40px; height: 56px;
+      background: rgba(247,245,240,0.88); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--line);
+    }
+    .nav-logo { font-family: var(--serif); font-size: 16px; font-weight: 600; color: var(--ink); text-decoration: none; letter-spacing: -0.02em; }
+    .nav-links { display: flex; gap: 32px; list-style: none; }
+    .nav-links a { font-size: 13px; color: var(--ink-mid); text-decoration: none; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--accent); }
+    .nav-cta { font-size: 13px; padding: 7px 18px; background: var(--ink); color: var(--white); border-radius: 20px; text-decoration: none; transition: background 0.2s; }
+    .nav-cta:hover { background: var(--accent); }
+
+    /* ── HERO ── */
+    .cs-hero {
+      background: var(--ink);
+      padding: 120px 40px 80px;
+      position: relative;
+      overflow: hidden;
+    }
+    .cs-hero-inner { max-width: var(--wide-w); margin: 0 auto; position: relative; z-index: 1; }
+    .cs-hero-grid {
+      position: absolute; inset: 0;
+      background-image: linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+    .cs-hero-bar { height: 4px; background: linear-gradient(90deg, #1c6fb5, #1d9e75); border-radius: 2px; width: 64px; margin-bottom: 28px; }
+    .cs-meta-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 24px; }
+    .cs-tag { font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; padding: 5px 14px; border-radius: 20px; }
+    .tag-teal { background: rgba(29,158,117,0.15); color: #5dcaa5; border: 1px solid rgba(29,158,117,0.2); }
+    .tag-blue { background: rgba(55,138,221,0.15); color: #85b7eb; border: 1px solid rgba(55,138,221,0.2); }
+    .tag-amber { background: rgba(186,117,23,0.15); color: #f0b860; border: 1px solid rgba(186,117,23,0.2); }
+    .tag-gray { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.4); border: 1px solid rgba(255,255,255,0.1); }
+    .cs-hero-title { font-family: var(--serif); font-size: clamp(36px, 6vw, 64px); font-weight: 600; letter-spacing: -0.03em; line-height: 0.95; color: #fff; margin-bottom: 20px; }
+    .cs-hero-title em { font-style: italic; font-weight: 300; color: rgba(255,255,255,0.4); }
+    .cs-hero-sub { font-size: 17px; font-weight: 300; color: rgba(255,255,255,0.5); max-width: 600px; line-height: 1.7; margin-bottom: 48px; }
+    .cs-hero-sub strong { color: rgba(255,255,255,0.8); font-weight: 400; }
+    .cs-kpi-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 40px; }
+    .cs-kpi { padding-right: 32px; border-right: 1px solid rgba(255,255,255,0.08); }
+    .cs-kpi:last-child { border-right: none; }
+    .cs-kpi-num { font-family: var(--serif); font-size: 32px; font-weight: 600; letter-spacing: -0.02em; color: #fff; line-height: 1; margin-bottom: 6px; }
+    .cs-kpi-num span { font-size: 20px; font-style: italic; font-weight: 300; color: rgba(255,255,255,0.35); }
+    .cs-kpi-label { font-size: 11px; color: rgba(255,255,255,0.35); line-height: 1.4; max-width: 120px; }
+
+    /* ── TOC ── */
+    .toc-bar {
+      position: sticky; top: 56px; z-index: 90;
+      background: var(--white); border-bottom: 1px solid var(--line);
+      overflow-x: auto;
+    }
+    .toc-inner { max-width: var(--wide-w); margin: 0 auto; display: flex; gap: 0; padding: 0 40px; }
+    .toc-item { font-size: 12px; color: var(--ink-muted); text-decoration: none; padding: 14px 20px; white-space: nowrap; border-bottom: 2px solid transparent; transition: color 0.2s, border-color 0.2s; display: flex; align-items: center; gap: 6px; }
+    .toc-item:hover { color: var(--accent); border-bottom-color: var(--accent); }
+    .toc-item.active { color: var(--accent); border-bottom-color: var(--accent); }
+    .toc-num { font-size: 10px; color: var(--ink-faint); }
+
+    /* ── CONTENT WRAPPER ── */
+    .cs-body { max-width: var(--wide-w); margin: 0 auto; padding: 0 40px; }
+
+    /* ── SECTION ── */
+    .cs-section { padding: 72px 0 0; }
+    .cs-section:last-of-type { padding-bottom: 80px; }
+    .section-eyebrow { font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+    .section-eyebrow::after { content: ''; flex: 0 0 32px; height: 1px; background: var(--accent); opacity: 0.4; }
+    .cs-section h2 { font-family: var(--serif); font-size: 32px; font-weight: 600; letter-spacing: -0.02em; color: var(--ink); line-height: 1.15; margin-bottom: 28px; }
+    .cs-section h3 { font-family: var(--serif); font-size: 20px; font-weight: 600; letter-spacing: -0.01em; color: var(--ink); margin: 32px 0 12px; }
+    .cs-section p { font-size: 15px; color: var(--ink-mid); line-height: 1.8; font-weight: 300; margin-bottom: 16px; }
+    .cs-section p strong { color: var(--ink); font-weight: 500; }
+
+    /* ── DIVIDER ── */
+    .cs-divider { border: none; border-top: 1px solid var(--line); margin: 56px 0 0; }
+
+    /* ── CALLOUT ── */
+    .callout {
+      background: var(--white); border-radius: var(--radius);
+      border: 1px solid var(--line); border-left: 4px solid var(--accent);
+      padding: 20px 24px; margin: 28px 0;
+      font-size: 15px; color: var(--ink-mid); line-height: 1.75; font-weight: 300;
+    }
+    .callout strong { color: var(--ink); font-weight: 500; }
+    .callout.amber { border-left-color: #c47e20; background: var(--amber-light); }
+    .callout.teal { border-left-color: #1d9e75; background: var(--accent2-light); }
+    .callout.coral { border-left-color: #c0402a; background: var(--coral-light); }
+
+    /* ── INSIGHT QUOTE ── */
+    .insight-quote {
+      margin: 32px 0;
+      padding: 28px 32px;
+      background: var(--ink);
+      border-radius: var(--radius);
+      color: rgba(255,255,255,0.55);
+      font-size: 16px;
+      font-weight: 300;
+      line-height: 1.8;
+    }
+    .insight-quote strong { color: #fff; font-weight: 400; }
+    .insight-quote .iq-label { font-size: 10px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.25); margin-bottom: 10px; }
+
+    /* ── CARD GRID ── */
+    .card-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 24px 0; }
+    .card-grid-2 { grid-template-columns: repeat(2, 1fr); }
+    .grid-card { background: var(--white); border-radius: var(--radius); border: 1px solid var(--line); padding: 20px 22px; }
+    .grid-card-label { font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 8px; }
+    .grid-card-title { font-family: var(--serif); font-size: 17px; font-weight: 600; color: var(--ink); margin-bottom: 8px; line-height: 1.3; }
+    .grid-card-body { font-size: 13px; color: var(--ink-mid); line-height: 1.65; font-weight: 300; }
+    .grid-card-num { font-family: var(--serif); font-size: 28px; font-weight: 600; letter-spacing: -0.02em; color: var(--ink); line-height: 1; margin-bottom: 6px; }
+    .grid-card-num span { font-size: 18px; font-style: italic; font-weight: 300; color: var(--ink-faint); }
+    .accent-top { border-top: 3px solid var(--accent); }
+    .accent-top-teal { border-top: 3px solid #1d9e75; }
+    .accent-top-amber { border-top: 3px solid #c47e20; }
+    .accent-top-coral { border-top: 3px solid #c0402a; }
+
+    /* ── PERSONA CARDS ── */
+    .persona-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin: 24px 0; }
+    .persona-card { background: var(--white); border-radius: var(--radius); border: 1px solid var(--line); padding: 24px; }
+    .persona-icon { width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: var(--serif); font-size: 16px; font-weight: 600; margin-bottom: 14px; }
+    .pi-blue { background: var(--accent-light); color: var(--accent); }
+    .pi-teal { background: var(--accent2-light); color: var(--accent2); }
+    .persona-name { font-size: 14px; font-weight: 500; color: var(--ink); margin-bottom: 4px; }
+    .persona-role { font-size: 12px; color: var(--ink-muted); margin-bottom: 14px; }
+    .persona-row { display: flex; gap: 8px; margin-bottom: 8px; font-size: 13px; color: var(--ink-mid); line-height: 1.5; }
+    .persona-row-label { font-size: 10px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-faint); min-width: 56px; padding-top: 2px; }
+
+    /* ── USER JOURNEY TABLE ── */
+    .journey-table { width: 100%; border-collapse: collapse; margin: 24px 0; font-size: 13px; }
+    .journey-table th { background: var(--ink); color: rgba(255,255,255,0.6); font-size: 10px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; padding: 12px 16px; text-align: left; }
+    .journey-table td { padding: 14px 16px; border-bottom: 1px solid var(--line); vertical-align: top; line-height: 1.55; }
+    .journey-table tr:last-child td { border-bottom: none; }
+    .journey-table tr:nth-child(even) td { background: rgba(0,0,0,0.015); }
+    .journey-table .phase-label { font-weight: 500; color: var(--ink); font-size: 12px; }
+    .emoji-state { font-size: 18px; display: block; margin-bottom: 4px; }
+    .friction-text { font-size: 12px; color: #c0402a; }
+
+    /* ── FLOW STEPS ── */
+    .flow-steps { display: flex; flex-direction: column; gap: 0; margin: 24px 0; }
+    .flow-step { display: grid; grid-template-columns: 48px 1fr; gap: 20px; position: relative; }
+    .flow-step::before { content: ''; position: absolute; left: 23px; top: 40px; bottom: -12px; width: 2px; background: var(--line); }
+    .flow-step:last-child::before { display: none; }
+    .flow-step-num { width: 48px; height: 48px; border-radius: 50%; background: var(--white); border: 1px solid var(--line); display: flex; align-items: center; justify-content: center; font-family: var(--serif); font-size: 16px; font-weight: 600; color: var(--accent); flex-shrink: 0; position: relative; z-index: 1; margin-bottom: 24px; }
+    .flow-step-body { padding-top: 12px; padding-bottom: 24px; }
+    .flow-step-title { font-size: 14px; font-weight: 500; color: var(--ink); margin-bottom: 6px; }
+    .flow-step-desc { font-size: 13px; color: var(--ink-mid); line-height: 1.65; font-weight: 300; }
+
+    /* ── FEATURE TABLE ── */
+    .feature-table { width: 100%; border-collapse: collapse; margin: 24px 0; }
+    .feature-table th { background: var(--surface); font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-muted); padding: 10px 16px; text-align: left; border-bottom: 1px solid var(--line); }
+    .feature-table td { padding: 14px 16px; border-bottom: 1px solid var(--line); font-size: 13px; color: var(--ink-mid); vertical-align: top; line-height: 1.6; }
+    .feature-table td:first-child { font-weight: 500; color: var(--ink); white-space: nowrap; }
+    .feature-table tr:last-child td { border-bottom: none; }
+    .priority-badge { display: inline-block; font-size: 10px; padding: 2px 8px; border-radius: 10px; font-weight: 500; background: var(--accent-light); color: var(--accent); white-space: nowrap; }
+
+    /* ── NOTIFICATION TABLE ── */
+    .notif-list { display: flex; flex-direction: column; gap: 12px; margin: 24px 0; }
+    .notif-item { background: var(--white); border-radius: var(--radius); border: 1px solid var(--line); padding: 16px 20px; display: grid; grid-template-columns: 40px 1fr; gap: 14px; align-items: flex-start; }
+    .notif-num { width: 28px; height: 28px; border-radius: 50%; background: var(--accent-light); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 500; color: var(--accent); flex-shrink: 0; }
+    .notif-trigger { font-size: 11px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-muted); margin-bottom: 4px; }
+    .notif-copy { font-size: 13.5px; color: var(--ink); font-weight: 400; line-height: 1.5; }
+    .notif-copy em { font-style: normal; color: var(--ink-mid); font-size: 12px; }
+
+    /* ── RISK TABLE ── */
+    .risk-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 24px 0; }
+    .risk-card { background: var(--white); border-radius: var(--radius); border: 1px solid var(--line); padding: 20px; }
+    .risk-label { font-size: 10px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 8px; }
+    .risk-high { color: #c0402a; }
+    .risk-med { color: #c47e20; }
+    .risk-low { color: #1d9e75; }
+    .risk-title { font-size: 14px; font-weight: 500; color: var(--ink); margin-bottom: 8px; line-height: 1.3; }
+    .risk-body { font-size: 12.5px; color: var(--ink-mid); line-height: 1.6; font-weight: 300; }
+
+    /* ── GTM PHASES ── */
+    .gtm-phases { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; margin: 24px 0; border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
+    .gtm-phase { padding: 20px; border-right: 1px solid var(--line); background: var(--white); }
+    .gtm-phase:last-child { border-right: none; }
+    .gtm-phase-num { font-family: var(--serif); font-size: 24px; font-weight: 600; color: var(--ink-faint); margin-bottom: 8px; }
+    .gtm-phase-title { font-size: 13px; font-weight: 500; color: var(--ink); margin-bottom: 8px; }
+    .gtm-phase-body { font-size: 12px; color: var(--ink-mid); line-height: 1.6; font-weight: 300; }
+
+    /* ── METRICS GRID ── */
+    .metrics-grid-cs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 24px 0; }
+    .metric-cs { background: var(--white); border-radius: var(--radius); border: 1px solid var(--line); padding: 20px 22px; }
+    .metric-cs-type { font-size: 10px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 8px; }
+    .metric-cs-name { font-size: 14px; font-weight: 500; color: var(--ink); margin-bottom: 6px; }
+    .metric-cs-target { font-size: 20px; font-weight: 500; color: var(--accent); font-family: var(--serif); letter-spacing: -0.01em; margin-bottom: 4px; }
+    .metric-cs-window { font-size: 11px; color: var(--ink-faint); }
+
+    /* ── WIN CHIPS ── */
+    .win-chips { display: flex; flex-direction: column; gap: 10px; margin: 24px 0; }
+    .win-chip { display: flex; gap: 12px; align-items: flex-start; font-size: 13.5px; color: var(--ink-mid); line-height: 1.65; }
+    .win-chip-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); flex-shrink: 0; margin-top: 6px; }
+    .win-chip strong { color: var(--ink); font-weight: 500; }
+
+    /* ── LESSONS ── */
+    .lesson-list { display: flex; flex-direction: column; gap: 20px; margin: 24px 0; }
+    .lesson-item { display: grid; grid-template-columns: 32px 1fr; gap: 16px; }
+    .lesson-num { font-family: var(--serif); font-size: 22px; font-weight: 600; color: var(--ink-faint); line-height: 1; padding-top: 2px; }
+    .lesson-title { font-size: 15px; font-weight: 500; color: var(--ink); margin-bottom: 6px; }
+    .lesson-body { font-size: 13.5px; color: var(--ink-mid); line-height: 1.7; font-weight: 300; }
+    .lesson-body strong { color: var(--ink); font-weight: 500; }
+
+    /* ── FOOTER ── */
+    .cs-footer { background: var(--ink); padding: 64px 40px; }
+    .cs-footer-inner { max-width: var(--wide-w); margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 40px; flex-wrap: wrap; }
+    .cs-footer-title { font-family: var(--serif); font-size: 28px; font-weight: 600; color: #fff; letter-spacing: -0.02em; margin-bottom: 8px; }
+    .cs-footer-sub { font-size: 14px; color: rgba(255,255,255,0.4); font-weight: 300; }
+    .cs-footer-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+    .footer-btn { padding: 10px 24px; border-radius: 40px; font-size: 13px; text-decoration: none; transition: all 0.2s; }
+    .footer-btn-primary { background: #fff; color: var(--ink); }
+    .footer-btn-primary:hover { background: #e0dcd4; }
+    .footer-btn-secondary { border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.6); }
+    .footer-btn-secondary:hover { border-color: rgba(255,255,255,0.5); color: #fff; }
+    footer { background: var(--ink); border-top: 1px solid rgba(255,255,255,0.06); padding: 20px 40px; text-align: center; font-size: 12px; color: rgba(255,255,255,0.2); }
+
+    /* ── REVEAL ── */
+    .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.6s var(--ease), transform 0.6s var(--ease); }
+    .reveal.visible { opacity: 1; transform: none; }
+
+    /* ── RESPONSIVE — tablet ── */
+    @media (max-width: 900px) {
+      .cs-kpi-row { grid-template-columns: repeat(3, 1fr); gap: 20px 0; }
+      .cs-kpi { padding-right: 20px; }
+      .card-grid { grid-template-columns: repeat(2, 1fr); }
+      .metrics-grid-cs { grid-template-columns: repeat(2, 1fr); }
+      .risk-grid { grid-template-columns: repeat(2, 1fr); }
+      .gtm-phases { grid-template-columns: repeat(2, 1fr); }
+      .gtm-phase:nth-child(2) { border-right: none; }
+      .gtm-phase:nth-child(3) { border-top: 1px solid var(--line); }
+      .gtm-phase:nth-child(4) { border-top: 1px solid var(--line); border-right: none; }
+    }
+
+    /* ── RESPONSIVE — mobile ── */
+    @media (max-width: 640px) {
+      /* Nav */
+      nav { padding: 0 16px; }
+      .nav-links { display: none; }
+      .nav-cta { font-size: 12px; padding: 6px 14px; }
+
+      /* Hero */
+      .cs-hero { padding: 88px 16px 48px; }
+      .cs-hero-title { font-size: clamp(32px, 10vw, 48px); }
+      .cs-hero-sub { font-size: 15px; margin-bottom: 36px; }
+      .cs-meta-row { gap: 8px; }
+      .cs-tag { font-size: 10px; padding: 4px 10px; }
+
+      /* KPI strip — 2-col on mobile */
+      .cs-kpi-row {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px 0;
+        border-top: 1px solid rgba(255,255,255,0.08);
+      }
+      .cs-kpi {
+        padding: 0 16px 0 0;
+        border-right: 1px solid rgba(255,255,255,0.08);
+        border-bottom: 1px solid rgba(255,255,255,0.08);
+        padding-bottom: 20px;
+        margin-bottom: 4px;
+      }
+      .cs-kpi:nth-child(even) { border-right: none; padding-left: 16px; }
+      .cs-kpi:nth-last-child(-n+2) { border-bottom: none; }
+      .cs-kpi-num { font-size: 24px; }
+      .cs-kpi-num span { font-size: 16px; }
+      .cs-kpi-label { font-size: 10px; max-width: none; }
+
+      /* TOC — scrollable, compact */
+      .toc-inner { padding: 0 12px; }
+      .toc-item { font-size: 11px; padding: 12px 10px; gap: 4px; }
+      .toc-num { display: none; }
+
+      /* Body */
+      .cs-body { padding: 0 16px; }
+      .cs-section { padding: 48px 0 0; }
+      .cs-section h2 { font-size: 24px; }
+      .cs-section h3 { font-size: 17px; margin: 24px 0 10px; }
+      .cs-section p { font-size: 14px; }
+      .section-eyebrow { font-size: 10px; }
+      .cs-divider { margin: 40px 0 0; }
+
+      /* Cards — all single column */
+      .card-grid { grid-template-columns: 1fr; }
+      .card-grid-2 { grid-template-columns: 1fr; }
+      .grid-card { padding: 16px; }
+      .grid-card-title { font-size: 15px; }
+      .grid-card-num { font-size: 22px; }
+
+      /* Callout */
+      .callout { padding: 16px 18px; font-size: 14px; }
+
+      /* Insight quote */
+      .insight-quote { padding: 20px; font-size: 15px; }
+
+      /* Personas — single column */
+      .persona-grid { grid-template-columns: 1fr; }
+      .persona-card { padding: 18px; }
+      .persona-row { flex-direction: column; gap: 2px; }
+      .persona-row-label { min-width: unset; }
+
+      /* Feature table — scroll wrapper */
+      .feature-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: var(--radius); border: 1px solid var(--line); margin: 24px 0; }
+      .feature-table { margin: 0; font-size: 12px; min-width: 560px; }
+      .feature-table th { padding: 8px 12px; font-size: 10px; }
+      .feature-table td { padding: 12px; }
+      .feature-table td:first-child { white-space: normal; min-width: 100px; }
+
+      /* Journey table — scroll wrapper */
+      .journey-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: var(--radius); border: 1px solid var(--line); margin: 24px 0; }
+      .journey-table { margin: 0; font-size: 12px; min-width: 520px; }
+      .journey-table th { padding: 8px 12px; }
+      .journey-table td { padding: 10px 12px; }
+
+      /* Flow steps */
+      .flow-step { grid-template-columns: 36px 1fr; gap: 14px; }
+      .flow-step-num { width: 36px; height: 36px; font-size: 14px; }
+      .flow-step::before { left: 17px; top: 36px; }
+      .flow-step-title { font-size: 13px; }
+      .flow-step-desc { font-size: 12.5px; }
+
+      /* Notifications */
+      .notif-item { grid-template-columns: 32px 1fr; gap: 10px; padding: 14px 16px; }
+      .notif-copy { font-size: 13px; }
+
+      /* Metrics */
+      .metrics-grid-cs { grid-template-columns: 1fr 1fr; gap: 12px; }
+      .metric-cs { padding: 16px; }
+      .metric-cs-target { font-size: 18px; }
+
+      /* Risk grid — single column */
+      .risk-grid { grid-template-columns: 1fr; }
+
+      /* GTM phases — single column */
+      .gtm-phases { grid-template-columns: 1fr; }
+      .gtm-phase { border-right: none !important; border-top: 1px solid var(--line); }
+      .gtm-phase:first-child { border-top: none; }
+
+      /* Lessons */
+      .lesson-item { grid-template-columns: 28px 1fr; gap: 12px; }
+      .lesson-num { font-size: 18px; }
+      .lesson-title { font-size: 14px; }
+      .lesson-body { font-size: 13px; }
+
+      /* Footer */
+      .cs-footer { padding: 40px 16px; }
+      .cs-footer-inner { flex-direction: column; gap: 28px; }
+      .cs-footer-title { font-size: 22px; }
+      .cs-footer-actions { flex-direction: column; gap: 8px; }
+      .footer-btn { text-align: center; }
+      footer { padding: 20px 16px; }
+    }
+
+    /* ── RESPONSIVE — very small (≤380px) ── */
+    @media (max-width: 380px) {
+      .cs-hero-title { font-size: 30px; }
+      .cs-kpi-row { grid-template-columns: 1fr 1fr; }
+      .metrics-grid-cs { grid-template-columns: 1fr; }
+      .toc-item { padding: 12px 8px; font-size: 10px; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a class="nav-logo" href="index.html">Akash Poddar</a>
+    <ul class="nav-links">
+      <li><a href="work.html">Case Studies</a></li>
+      <li><a href="index.html#experience">Experience</a></li>
+      <li><a href="index.html#contact">Contact</a></li>
+    </ul>
+    <a class="nav-cta" href="mailto:akash.poddar.0799@gmail.com">Get in touch</a>
+  </nav>
+
+  <!-- HERO -->
+  <div class="cs-hero">
+    <div class="cs-hero-grid"></div>
+    <div class="cs-hero-inner">
+      <div class="cs-meta-row">
+        <span class="cs-tag tag-teal">Pathao Food</span>
+        <span class="cs-tag tag-blue">0 → 1 Feature</span>
+        <span class="cs-tag tag-amber">New Order Type</span>
+        <span class="cs-tag tag-gray">Bangladesh · Nepal · 2025–26</span>
+      </div>
+      <h1 class="cs-hero-title">Pathao Food<br><em>Pickup</em></h1>
+      <p class="cs-hero-sub">
+        Designing a <strong>zero-delivery-fee order type</strong> from first principles — covering discovery, real-time tracking, restaurant tooling, payments, and a full GTM rollout across Dhaka, Chittagong, and Kathmandu.
+      </p>
+      <div class="cs-kpi-row">
+        <div class="cs-kpi">
+          <div class="cs-kpi-num">20<span>%</span></div>
+          <div class="cs-kpi-label">Target order volume uplift within 3 months</div>
+        </div>
+        <div class="cs-kpi">
+          <div class="cs-kpi-num">15<span>%</span></div>
+          <div class="cs-kpi-label">MAU increase target within 3 months</div>
+        </div>
+        <div class="cs-kpi">
+          <div class="cs-kpi-num">12<span>%</span></div>
+          <div class="cs-kpi-label">Pickup tab view → completed order conversion</div>
+        </div>
+        <div class="cs-kpi">
+          <div class="cs-kpi-num">60<span>%</span></div>
+          <div class="cs-kpi-label">Restaurant adoption target for the feature</div>
+        </div>
+        <div class="cs-kpi">
+          <div class="cs-kpi-num">4.0<span>+</span></div>
+          <div class="cs-kpi-label">Target user satisfaction rating for pickup orders</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOC -->
+  <div class="toc-bar">
+    <div class="toc-inner">
+      <a class="toc-item" href="#context"><span class="toc-num">01</span> Context</a>
+      <a class="toc-item" href="#problem"><span class="toc-num">02</span> Problem</a>
+      <a class="toc-item" href="#personas"><span class="toc-num">03</span> Personas</a>
+      <a class="toc-item" href="#strategy"><span class="toc-num">04</span> Strategy</a>
+      <a class="toc-item" href="#features"><span class="toc-num">05</span> Features</a>
+      <a class="toc-item" href="#journey"><span class="toc-num">06</span> User Journey</a>
+      <a class="toc-item" href="#notifications"><span class="toc-num">07</span> Notifications</a>
+      <a class="toc-item" href="#restaurant"><span class="toc-num">08</span> Restaurant Side</a>
+      <a class="toc-item" href="#metrics"><span class="toc-num">09</span> Metrics</a>
+      <a class="toc-item" href="#gtm"><span class="toc-num">10</span> GTM</a>
+      <a class="toc-item" href="#risks"><span class="toc-num">11</span> Risks</a>
+      <a class="toc-item" href="#lessons"><span class="toc-num">12</span> Lessons</a>
+    </div>
+  </div>
+
+  <div class="cs-body">
+
+    <!-- 01 CONTEXT -->
+    <div class="cs-section reveal" id="context">
+      <div class="section-eyebrow">01 — Context & Background</div>
+      <h2>Why Pathao needed a new order type</h2>
+      <p>Pathao Food is one of Bangladesh and Nepal's leading food delivery platforms. By 2025, the core delivery product was mature — but a structural gap had emerged: <strong>Pathao had exactly zero answer for users who didn't want a rider</strong>. Every single order required dispatch logistics, regardless of whether the user was 200 metres from the restaurant or eating in five minutes.</p>
+      <p>Competitor analysis painted a clear picture. Foodpanda, Foodi, Uber Eats, and DoorDash all offered Pickup as a standard mode. Delivery fees of ৳50–100 per order were a documented deterrent for price-sensitive urban users, particularly in high-frequency ordering segments. The market signal was unambiguous: this was a revenue channel being actively surrendered.</p>
+
+      <div class="card-grid reveal">
+        <div class="grid-card accent-top">
+          <div class="grid-card-label">The gap</div>
+          <div class="grid-card-title">Zero pickup offering</div>
+          <div class="grid-card-body">100% of orders required rider dispatch. Cost-sensitive users had no alternative but to order elsewhere or not at all.</div>
+        </div>
+        <div class="grid-card accent-top-teal">
+          <div class="grid-card-label">Market signal</div>
+          <div class="grid-card-title">Competitors already there</div>
+          <div class="grid-card-body">Foodpanda, Foodi, Uber Eats, and DoorDash all ship pickup as standard. This was table stakes being missed.</div>
+        </div>
+        <div class="grid-card accent-top-amber">
+          <div class="grid-card-label">User pain</div>
+          <div class="grid-card-title">Fees deterring orders</div>
+          <div class="grid-card-body">Delivery fees of ৳50–100 deterred frequent ordering among urban millennials and Gen Z — Pathao's core growth segment.</div>
+        </div>
+      </div>
+
+      <div class="callout teal">
+        <strong>Strategic alignment:</strong> Pickup mapped directly to the 2025 Q3–Q4 OKR of expanding revenue channels in the Food vertical through non-delivery order types — a first-time GMV diversification play for Pathao Food.
+      </div>
+    </div>
+
+    <hr class="cs-divider" />
+
+    <!-- 02 PROBLEM -->
+    <div class="cs-section reveal" id="problem">
+      <div class="section-eyebrow">02 — Problem Statement</div>
+      <h2>The structural delivery dependency</h2>
+
+      <div class="insight-quote">
+        <div class="iq-label">Core problem</div>
+        <strong>"Pathao Food is a delivery-only platform in a market that has moved to hybrid."</strong> Every order locks in rider costs, limits peak-hour capacity, and excludes users who could be 5-minute walks from the food they want.
+      </div>
+
+      <p>The problem had three distinct dimensions that needed separate solutions:</p>
+
+      <div class="card-grid reveal">
+        <div class="grid-card">
+          <div class="grid-card-label">User dimension</div>
+          <div class="grid-card-title">Fee sensitivity blocking frequency</div>
+          <div class="grid-card-body">Urban millennials and Gen Z placed fewer orders because delivery fees made casual, everyday ordering economically unattractive.</div>
+        </div>
+        <div class="grid-card">
+          <div class="grid-card-label">Ops dimension</div>
+          <div class="grid-card-title">Rider pressure at peak hours</div>
+          <div class="grid-card-body">All order volume funnelled through the rider network. Peak-hour scarcity meant orders failed or slowed precisely when demand was highest.</div>
+        </div>
+        <div class="grid-card">
+          <div class="grid-card-label">Platform dimension</div>
+          <div class="grid-card-title">Single revenue model</div>
+          <div class="grid-card-body">Pathao's Food GMV was entirely delivery-dependent. A new order type meant a new GMV lever that didn't compete with the existing one.</div>
+        </div>
+      </div>
+
+      <h3>Failure modes to design around</h3>
+      <div class="win-chips">
+        <div class="win-chip"><div class="win-chip-dot"></div><span><strong>Low restaurant adoption</strong> — if restaurants didn't participate, the discovery surface would be empty and users would churn immediately. A restaurant-first activation strategy was non-negotiable.</span></div>
+        <div class="win-chip"><div class="win-chip-dot"></div><span><strong>Operational confusion</strong> — restaurants handling delivery and pickup orders in parallel without clear separation would create fulfilment errors and preparation delays.</span></div>
+        <div class="win-chip"><div class="win-chip-dot"></div><span><strong>User no-shows</strong> — unlike delivery, there's no rider to close the loop. If the user doesn't appear, the restaurant bears the cost. The system needed explicit no-show handling from day one.</span></div>
+        <div class="win-chip"><div class="win-chip-dot"></div><span><strong>Refund ambiguity</strong> — pre-payment without delivery confirmation creates refund complexity. Every cancellation scenario needed a defined refund path before launch.</span></div>
+      </div>
+    </div>
+
+    <hr class="cs-divider" />
+
+    <!-- 03 PERSONAS -->
+    <div class="cs-section reveal" id="personas">
+      <div class="section-eyebrow">03 — Target Personas</div>
+      <h2>Who we were designing for</h2>
+      <p>Pickup attracts a fundamentally different user than delivery. The mental model shifts from "bring it to me" to "I'll come to you." Two primary personas drove the product decisions.</p>
+
+      <div class="persona-grid">
+        <div class="persona-card">
+          <div class="persona-icon pi-blue">AH</div>
+          <div class="persona-name">The Affordability-Hunter</div>
+          <div class="persona-role">Urban millennial, Dhaka · Orders 8–12x/month</div>
+          <div class="persona-row"><div class="persona-row-label">Goal</div><div>Order food daily without delivery fees eating into their budget</div></div>
+          <div class="persona-row"><div class="persona-row-label">Behaviour</div><div>Works near dense restaurant areas. Checks Pathao during lunch and evening. Often passes restaurants on commute.</div></div>
+          <div class="persona-row"><div class="persona-row-label">Pain</div><div>৳50–100 delivery fee makes Pathao a "special occasion" app, not a daily habit</div></div>
+          <div class="persona-row"><div class="persona-row-label">Quote</div><div><em>"The restaurant is right downstairs. Why am I paying ৳80 for someone to walk it up?"</em></div></div>
+        </div>
+        <div class="persona-card">
+          <div class="persona-icon pi-teal">SR</div>
+          <div class="persona-name">The Speed-Seeker</div>
+          <div class="persona-role">Gen Z, Chittagong · Orders 4–6x/month</div>
+          <div class="persona-row"><div class="persona-row-label">Goal</div><div>Get food faster than delivery during peak hours without waiting for a rider</div></div>
+          <div class="persona-row"><div class="persona-row-label">Behaviour</div><div>High-frequency app user. Frequently frustrated by peak-hour delivery delays of 45–60 minutes. Values speed over convenience.</div></div>
+          <div class="persona-row"><div class="persona-row-label">Pain</div><div>Peak-hour delivery is unpredictable. Would rather pick up if they knew the food was ready</div></div>
+          <div class="persona-row"><div class="persona-row-label">Quote</div><div><em>"Just tell me when the food is ready and I'll be there. Don't make me wait for a rider who's 20 minutes away."</em></div></div>
+        </div>
+      </div>
+    </div>
+
+    <hr class="cs-divider" />
+
+    <!-- 04 STRATEGY -->
+    <div class="cs-section reveal" id="strategy">
+      <div class="section-eyebrow">04 — Product Strategy</div>
+      <h2>The core decisions that shaped the product</h2>
+
+      <h3>Decision 1 — Pre-payment only, no COD</h3>
+      <p>Without a rider to verify collection, cash-on-delivery creates an unresolvable fulfilment loop. The restaurant prepares food with no guarantee of payment. Pre-payment was both the right UX choice — it creates commitment and reduces no-shows — and the operationally necessary one. Supported payment methods: <strong>Pathao Pay, BNPL, and digital payments</strong>. COD explicitly disabled for all pickup orders.</p>
+
+      <h3>Decision 2 — Restaurant-First Dispatch as a prerequisite</h3>
+      <p>Pickup was built on top of Resto-First Dispatch (RFD) — the ordering model where restaurants confirm and prepare food before dispatch. This was a conscious dependency decision. RFD restaurants had already demonstrated operational reliability. <strong>Enabling pickup for a restaurant required RFD to already be active</strong> — this single constraint dramatically reduced the risk of operational failure on launch.</p>
+
+      <h3>Decision 3 — Two discovery surfaces, not one</h3>
+      <p>Rather than just adding a filter to the existing Food Home, we introduced a <strong>dedicated Pickup tab</strong> in the bottom navigation. This created a clean, separate mental model for users and a controlled surface for restaurant discovery. Map view was built in from launch — pickup is inherently location-driven, and users need to see where they're going.</p>
+
+      <h3>Decision 4 — No pickup-to-delivery switch at checkout</h3>
+      <p>Mode switching was locked to the restaurant screen, not checkout. This prevented last-minute order-type confusion, kept the checkout flow clean, and ensured the delivery fee logic (or absence of it) was set before the user committed to items.</p>
+
+      <div class="callout amber">
+        <strong>Phased approach:</strong> Phase 1 (approved) shipped core pickup: discovery, order placement, real-time tracking, restaurant management, and payments. Phase 2 (planned) would add scheduled pickup, pickup-specific discounts, and co-subsidy models. This sequencing kept the launch scope manageable and let us validate demand before adding complexity.
+      </div>
+
+      <h3>MVP scope decisions — what we explicitly cut</h3>
+      <div class="win-chips">
+        <div class="win-chip"><div class="win-chip-dot"></div><span><strong>Food Web pickup support</strong> — cut from Phase 1. Requires Digital Payment, Pathao Pay, and BNPL prerequisites on web that would significantly extend the timeline.</span></div>
+        <div class="win-chip"><div class="win-chip-dot"></div><span><strong>Expanded search result discovery</strong> — cut from Phase 1. Adding pickup restaurants to search results would have increased the complexity of an already in-progress search revamp.</span></div>
+        <div class="win-chip"><div class="win-chip-dot"></div><span><strong>Pickup-specific discounts</strong> — moved to Phase 2. Discount logic across delivery mode separation required significant ops dashboard rework that didn't need to block core launch.</span></div>
+      </div>
+    </div>
+
+    <hr class="cs-divider" />
+
+    <!-- 05 FEATURES -->
+    <div class="cs-section reveal" id="features">
+      <div class="section-eyebrow">05 — Feature Breakdown</div>
+      <h2>What was built, and why each piece mattered</h2>
+
+      <div class="feature-table-wrap">
+      <table class="feature-table">
+        <thead>
+          <tr>
+            <th>Feature</th>
+            <th>User Story</th>
+            <th>Key Design Decisions</th>
+            <th style="width:80px">Priority</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Pickup Discovery & Explore</td>
+            <td>Browse pickup-enabled restaurants based on location</td>
+            <td>Dedicated Pickup tab in bottom nav (city-level configurable). Map view with restaurant pins. Location-based sorting. Pickup indicator on restaurant cards. Collection-scoped search and filters. Mode switch locked to restaurant screen — not checkout.</td>
+            <td><span class="priority-badge">Must Have</span></td>
+          </tr>
+          <tr>
+            <td>Real-Time Order Tracking</td>
+            <td>Know exactly when to head to the restaurant</td>
+            <td>Four statuses: Pending → Placed → Food Ready → Delivered. Token ID displayed when food is ready for frictionless handover. Smart notifications at 50% and 100% of prep time. Google Maps deep-link for navigation. No rider info section — replaced with restaurant contact. "Picked Up" button available after acceptance, even before restaurant handover.</td>
+            <td><span class="priority-badge">Must Have</span></td>
+          </tr>
+          <tr>
+            <td>Bill & Pre-Payment</td>
+            <td>See savings clearly; pay securely before order confirms</td>
+            <td>Delivery fee and tip lines removed from bill. Delivery-fee promos suppressed. Payment flow: Place Order → Payment Screen → Success → Ongoing Order. On payment failure, user returns to checkout with error — order not placed. Supported: Pathao Pay, BNPL, Digital Payment.</td>
+            <td><span class="priority-badge">Must Have</span></td>
+          </tr>
+          <tr>
+            <td>Order History & Reorder</td>
+            <td>Reorder a favourite pickup meal with one tap</td>
+            <td>Pickup label on history items. Mode memory on reorder — pickup reorders default to pickup, delivery to delivery. Alert if pickup is disabled for that restaurant, with delivery fallback prompt. Food Web blocks pickup reorders with redirect to app.</td>
+            <td><span class="priority-badge">Must Have</span></td>
+          </tr>
+          <tr>
+            <td>Order Cancellation & Refunds</td>
+            <td>Cancel if plans change; get a refund where applicable</td>
+            <td>Cancellation allowed before restaurant accepts. Refund eligibility rules clearly defined: auto-refund to escrow for Pay/BNPL; manual daily sheet process for digital payments. No refund for user no-show or user-initiated CX cancellations. Disclaimer surfaced in-app.</td>
+            <td><span class="priority-badge">Must Have</span></td>
+          </tr>
+          <tr>
+            <td>No-Show Handling</td>
+            <td>Protect restaurants when users don't appear</td>
+            <td>Restaurant can mark "No Show" after n hours of food ready. System auto-marks No Show at end of day for uncollected orders. No-Show = order marked delivered. Engine Room can also mark No Show on behalf of restaurant.</td>
+            <td><span class="priority-badge">Must Have</span></td>
+          </tr>
+          <tr>
+            <td>Restaurant Location & Directions</td>
+            <td>Find the restaurant without any friction</td>
+            <td>Address and map shown at order confirmation. Deep-link to Google Maps with user-to-restaurant route pre-loaded.</td>
+            <td><span class="priority-badge">Must Have</span></td>
+          </tr>
+          <tr>
+            <td>Review & Rating</td>
+            <td>Rate the food — not the rider who wasn't there</td>
+            <td>Driver rating removed from pickup order rating flow. Food rating only — keeps the review relevant and clean.</td>
+            <td><span class="priority-badge">Must Have</span></td>
+          </tr>
+        </tbody>
+      </table>
+      </div><!-- end feature-table-wrap -->
+    </div>
+    <div class="cs-section reveal" id="journey">
+      <div class="section-eyebrow">06 — User Journey</div>
+      <h2>The ideal end-to-end pickup experience</h2>
+      <p>The designed flow removed every moment of ambiguity that caused failure in early prototypes — particularly around payment confirmation, the moment to leave for the restaurant, and handover identification.</p>
+
+      <div class="flow-steps">
+        <div class="flow-step">
+          <div class="flow-step-num">1</div>
+          <div class="flow-step-body">
+            <div class="flow-step-title">Discovery — Pickup Tab or Map View</div>
+            <div class="flow-step-desc">User taps the Pickup tab in the Food bottom nav. Restaurants sorted by proximity to their set location. Map view available for spatial scanning. Pickup indicator badges on all eligible restaurant cards. Filter applies to restaurant collections, not delivery-based options.</div>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-step-num">2</div>
+          <div class="flow-step-body">
+            <div class="flow-step-title">Menu Browse & Cart</div>
+            <div class="flow-step-desc">User selects a pickup-enabled restaurant. Delivery mode locked to Pickup. No delivery fee shown anywhere in the UI. Mode can only be changed here — not in checkout. User builds cart normally.</div>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-step-num">3</div>
+          <div class="flow-step-body">
+            <div class="flow-step-title">Checkout & Pre-Payment</div>
+            <div class="flow-step-desc">Bill breakdown shows items only — no delivery fee, no tip. Delivery-fee promos suppressed. User taps Place Order → taken to payment screen. Payment via Pathao Pay, BNPL, or digital payment. On success, order placed and user enters ongoing order screen. On failure, user returns to checkout with clear error — order not created.</div>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-step-num">4</div>
+          <div class="flow-step-body">
+            <div class="flow-step-title">Tracking — Pending to Accepted</div>
+            <div class="flow-step-desc">Status: PENDING until restaurant accepts. Once accepted: PLACED. Estimated ready time shown prominently. No rider section — restaurant contact info shown. "Picked Up" button available (can tap before restaurant handover). Map shows user and restaurant positions. No route shown in-app — Google Maps redirect for navigation.</div>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-step-num">5</div>
+          <div class="flow-step-body">
+            <div class="flow-step-title">Timing Notifications — Leave at the Right Moment</div>
+            <div class="flow-step-desc">At 50% prep time: "Your food is almost ready! Time to head out." At 100% or restaurant handover (whichever first): "Your order is ready! Pick it up from [Restaurant Name]." These notifications replace the job the rider dispatch normally does — creating the moment of action for the user without requiring live ops involvement.</div>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-step-num">6</div>
+          <div class="flow-step-body">
+            <div class="flow-step-title">Handover — Token ID as the Identifier</div>
+            <div class="flow-step-desc">When food is ready, a <strong>Token ID</strong> appears in the ongoing order screen. User shows/quotes the token at the counter — removes dependency on name matching or app screenshots. Restaurant staff identifies the order instantly. No ambiguity, no queue confusion.</div>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-step-num">7</div>
+          <div class="flow-step-body">
+            <div class="flow-step-title">Pickup Confirmation & Loyalty</div>
+            <div class="flow-step-desc">User taps "Picked Up" — order marked DELIVERED. Sancus loyalty points credited. Rating screen shows food rating only (no rider rating). Order appears in history with Pickup label, reorder defaults to pickup mode.</div>
+          </div>
+        </div>
+      </div>
+
+      <h3>Before vs. after: the ordering friction table</h3>
+      <div class="journey-table-wrap">
+      <table class="journey-table">
+        <thead>
+          <tr>
+            <th>Phase</th>
+            <th>Before (delivery only)</th>
+            <th>Emotional state</th>
+            <th>After (with Pickup)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="phase-label">Decision</td>
+            <td>Checks delivery fee. ৳80 feels steep for a quick lunch.</td>
+            <td><span class="emoji-state">😕</span><span class="friction-text">Fee friction</span></td>
+            <td>No delivery fee. Decides to pickup. Order starts immediately.</td>
+          </tr>
+          <tr>
+            <td class="phase-label">Waiting</td>
+            <td>45-minute wait, uncertain if rider is coming.</td>
+            <td><span class="emoji-state">😤</span><span class="friction-text">Uncertainty</span></td>
+            <td>Prep time shown upfront. Notified at 50% and 100%. Knows exactly when to leave.</td>
+          </tr>
+          <tr>
+            <td class="phase-label">Arrival</td>
+            <td>No equivalent — food arrives at door.</td>
+            <td>—</td>
+            <td>Token ID displayed. Walk up to counter, quote token. No queue confusion.</td>
+          </tr>
+          <tr>
+            <td class="phase-label">Completion</td>
+            <td>Rates food and rider.</td>
+            <td><span class="emoji-state">😐</span><span class="friction-text">Irrelevant prompt</span></td>
+            <td>Rates food only. Loyalty points credited. Reorder defaults to pickup.</td>
+          </tr>
+        </tbody>
+      </table>
+      </div><!-- end journey-table-wrap -->
+    </div>
+
+    <hr class="cs-divider" />
+    <div class="cs-section reveal" id="notifications">
+      <div class="section-eyebrow">07 — Notification System</div>
+      <h2>Replacing the rider with smart timing</h2>
+      <p>In delivery orders, the rider implicitly signals the user when the food is near. In pickup, there's no rider — so the notification system had to carry that entire behavioural trigger. Every notification was mapped to a specific user action we needed to drive.</p>
+
+      <div class="notif-list">
+        <div class="notif-item">
+          <div class="notif-num">1</div>
+          <div>
+            <div class="notif-trigger">Restaurant accepts order</div>
+            <div class="notif-copy">"Your order is being prepared and will be ready at <strong>1:30 PM.</strong>" <em>→ Sets expectation. Anchors the user to a time.</em></div>
+          </div>
+        </div>
+        <div class="notif-item">
+          <div class="notif-num">2</div>
+          <div>
+            <div class="notif-trigger">50% of prep time elapsed</div>
+            <div class="notif-copy">"<strong>Your food is almost ready!</strong> Time to head out and pick it up." <em>→ Creates the leave-now moment. Prevents users from arriving too early or too late.</em></div>
+          </div>
+        </div>
+        <div class="notif-item">
+          <div class="notif-num">3</div>
+          <div>
+            <div class="notif-trigger">Prep time complete OR restaurant clicks Handover (whichever first)</div>
+            <div class="notif-copy">"<strong>Your order is ready!</strong> Pick it up from [Restaurant Name]." <em>→ The critical action trigger. Drives foot traffic at the right moment.</em></div>
+          </div>
+        </div>
+        <div class="notif-item">
+          <div class="notif-num">4</div>
+          <div>
+            <div class="notif-trigger">X minutes after ready — food not picked up</div>
+            <div class="notif-copy">"<strong>Reminder: your food is ready at [Restaurant Name].</strong> Please collect it soon." + SMS fallback. <em>→ Protects restaurants from cold food and no-shows. Also triggers internal Pathao Talk channel alert for ops visibility.</em></div>
+          </div>
+        </div>
+        <div class="notif-item">
+          <div class="notif-num">5</div>
+          <div>
+            <div class="notif-trigger">User confirms pickup</div>
+            <div class="notif-copy">"<strong>Enjoy your meal!</strong> Your order is complete." <em>→ Closes the loop positively. Triggers loyalty point credit.</em></div>
+          </div>
+        </div>
+        <div class="notif-item">
+          <div class="notif-num">6–8</div>
+          <div>
+            <div class="notif-trigger">Cancellation / No-Show scenarios</div>
+            <div class="notif-copy">User cancel: "Your pickup order has been cancelled successfully." · Restaurant cancel: "Your order at [Restaurant Name] was cancelled. A refund will be processed shortly." · No-show: "Your order was not collected and has been closed. Please contact support if needed." <em>→ Each path has a defined message so no user is left in ambiguity about order state or refund expectation.</em></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <hr class="cs-divider" />
+
+    <!-- 08 RESTAURANT SIDE -->
+    <div class="cs-section reveal" id="restaurant">
+      <div class="section-eyebrow">08 — Restaurant & Ops Tooling</div>
+      <h2>The other side of the product: restaurant and ops experience</h2>
+      <p>A pickup product is only as good as the restaurant's ability to manage it. Most failed pickup launches in competing apps had one root cause: restaurants didn't have the tools to separate and communicate pickup order status clearly. We built this side as a first-class product surface, not an afterthought.</p>
+
+      <div class="card-grid-2 card-grid reveal">
+        <div class="grid-card accent-top">
+          <div class="grid-card-label">Restaurant portal</div>
+          <div class="grid-card-title">Dedicated pickup order panel</div>
+          <div class="grid-card-body">Pickup orders clearly marked with a "Pickup" identifier. Separate panel or filter for pickup vs. delivery. User photo, name, and mobile shown — staff can identify the user at handover. Order marked pre-paid to remove payment confusion. Handover button triggers user notification. Printable receipt includes pickup-specific fields.</div>
+        </div>
+        <div class="grid-card accent-top-teal">
+          <div class="grid-card-label">Food ops dashboard</div>
+          <div class="grid-card-title">Pickup enable / disable controls</div>
+          <div class="grid-card-body">Toggle per restaurant to enable/disable pickup — requires RFD active. Bulk enable/disable for multiple restaurants simultaneously. CSV upload support with new pickup column (True/False). Cache propagation: changes reflect within 5 minutes. Chain restaurants require RFD handle to be configured first.</div>
+        </div>
+        <div class="grid-card accent-top-amber">
+          <div class="grid-card-label">Engine room</div>
+          <div class="grid-card-title">Internal order management</div>
+          <div class="grid-card-body">Delivery mode (Pickup/Delivery) visible on all orders. Rider info section blank for pickup orders. Manual pairing, appease-to-driver, and foodman sections all unavailable. Route shows user-to-restaurant only. Order status manually changeable: Placed → Food Ready → Delivered. No-Show markable on behalf of restaurant after user confirmation.</div>
+        </div>
+        <div class="grid-card accent-top-coral">
+          <div class="grid-card-label">Restaurant criteria</div>
+          <div class="grid-card-title">Eligibility gates for quality</div>
+          <div class="grid-card-body">Only restaurants meeting all three criteria eligible for pickup: (1) already onboarded to RFD, (2) cancellation rate below 5%, (3) high item hygiene rate. This ensured the initial restaurant list was operationally ready — not just willing.</div>
+        </div>
+      </div>
+    </div>
+
+    <hr class="cs-divider" />
+
+    <!-- 09 METRICS -->
+    <div class="cs-section reveal" id="metrics">
+      <div class="section-eyebrow">09 — Success Metrics</div>
+      <h2>How we defined and measured success</h2>
+
+      <div class="metrics-grid-cs">
+        <div class="metric-cs">
+          <div class="metric-cs-type">North Star</div>
+          <div class="metric-cs-name">GMV uplift from Pickup orders</div>
+          <div class="metric-cs-target">+20%</div>
+          <div class="metric-cs-window">Total order volume uplift · 3 months</div>
+        </div>
+        <div class="metric-cs">
+          <div class="metric-cs-type">Acquisition</div>
+          <div class="metric-cs-name">MAU growth driven by Pickup</div>
+          <div class="metric-cs-target">+15%</div>
+          <div class="metric-cs-window">Monthly active users · 3 months</div>
+        </div>
+        <div class="metric-cs">
+          <div class="metric-cs-type">Conversion</div>
+          <div class="metric-cs-name">Pickup tab view → completed order</div>
+          <div class="metric-cs-target">12%</div>
+          <div class="metric-cs-window">View-to-order conversion rate</div>
+        </div>
+        <div class="metric-cs">
+          <div class="metric-cs-type">Adoption</div>
+          <div class="metric-cs-name">MAUs engaging with Pickup tab</div>
+          <div class="metric-cs-target">20%</div>
+          <div class="metric-cs-window">Of total MAUs · by Sep 29, 2025</div>
+        </div>
+        <div class="metric-cs">
+          <div class="metric-cs-type">Supply</div>
+          <div class="metric-cs-name">Restaurant adoption rate</div>
+          <div class="metric-cs-target">60%</div>
+          <div class="metric-cs-window">Active restaurants enabling Pickup · 4 months</div>
+        </div>
+        <div class="metric-cs">
+          <div class="metric-cs-type">Quality</div>
+          <div class="metric-cs-name">User satisfaction score</div>
+          <div class="metric-cs-target">4.0+</div>
+          <div class="metric-cs-window">Avg rating for pickup orders · 6 months</div>
+        </div>
+        <div class="metric-cs">
+          <div class="metric-cs-type">Partner</div>
+          <div class="metric-cs-name">Restaurant revenue uplift</div>
+          <div class="metric-cs-target">+10%</div>
+          <div class="metric-cs-window">Avg revenue for partnered restaurants</div>
+        </div>
+        <div class="metric-cs">
+          <div class="metric-cs-type">Frequency</div>
+          <div class="metric-cs-name">Orders per user per month</div>
+          <div class="metric-cs-target">+10%</div>
+          <div class="metric-cs-window">Average order frequency · 3 months</div>
+        </div>
+        <div class="metric-cs">
+          <div class="metric-cs-type">Ops efficiency</div>
+          <div class="metric-cs-name">Delivery operational cost reduction</div>
+          <div class="metric-cs-target">-10%</div>
+          <div class="metric-cs-window">From delivery-to-pickup order shift · 6 months</div>
+        </div>
+      </div>
+
+      <h3>Analytics events instrumented (Firebase)</h3>
+      <div class="callout">
+        <strong>FV2_VisitPickUp</strong> — tap on Pickup in bottom nav · <strong>FV2_VisitPickUpMap</strong> — open map view · <strong>FV2_ClickPickUpRestaurant</strong> — restaurant tap (with source: PickUpHome / PickUpMap / PickUpMapRestoList / SearchRestaurantTab / SearchItemTab) · <strong>FV2_Checkout</strong> — extended with <code>delivery_mode</code> parameter · <strong>FV2_MenuItemAdd / FV2_MenuItemAddMP</strong> — both extended with <code>delivery_mode</code>. This event instrumentation was defined in the PRD to ensure funnel analysis was available from day one of launch.
+      </div>
+    </div>
+
+    <hr class="cs-divider" />
+
+    <!-- 10 GTM -->
+    <div class="cs-section reveal" id="gtm">
+      <div class="section-eyebrow">10 — Go-to-Market</div>
+      <h2>How we took it to market</h2>
+      <p>GTM for a new order type is operationally heavy — it's not just a feature release. It required simultaneous restaurant onboarding, CX training, billing process design, refund workflows, and analytics dashboard preparation. All workstreams were tracked in a shared task tracker with named owners and hard deadlines.</p>
+
+      <div class="gtm-phases reveal">
+        <div class="gtm-phase">
+          <div class="gtm-phase-num">01</div>
+          <div class="gtm-phase-title">Restaurant List Preparation</div>
+          <div class="gtm-phase-body">Hunt list and confirmed list built by ops. Eligibility gating applied: RFD active, cancellation rate &lt;5%, high item hygiene. Preparation times tuned. Addresses verified and updated with floor/location details.</div>
+        </div>
+        <div class="gtm-phase">
+          <div class="gtm-phase-num">02</div>
+          <div class="gtm-phase-title">Process & SOP Build</div>
+          <div class="gtm-phase-body">CX and RCM SOPs drafted for order disputes, no-show handling, wrong/cold food complaints, and payment discrepancies. KAM SOP for weekly prep time monitoring. Refund process defined and finance team aligned on daily manual refund sheet.</div>
+        </div>
+        <div class="gtm-phase">
+          <div class="gtm-phase-num">03</div>
+          <div class="gtm-phase-title">Training</div>
+          <div class="gtm-phase-body">Training materials prepared for restaurants, CX, and Ops. KAM, Ops, and CX training completed. Restaurant training sessions run. All stakeholders confirmed ready before feature toggle activation.</div>
+        </div>
+        <div class="gtm-phase">
+          <div class="gtm-phase-num">04</div>
+          <div class="gtm-phase-title">Launch & Monitor</div>
+          <div class="gtm-phase-body">Pickup enabled for confirmed restaurant list. Analytics dashboard live with Pickup tag. Daily refund sheet process active. Restaurant billing format and periodic billing cycle confirmed. Marketing GTM plan executed in parallel.</div>
+        </div>
+      </div>
+
+      <div class="callout teal" style="margin-top: 24px;">
+        <strong>Phased city rollout:</strong> Initial launch targeted Dhaka, Chittagong, and Kathmandu — cities with sufficient restaurant density and urban user concentration to generate meaningful pickup adoption data before a broader rollout.
+      </div>
+    </div>
+
+    <hr class="cs-divider" />
+
+    <!-- 11 RISKS -->
+    <div class="cs-section reveal" id="risks">
+      <div class="section-eyebrow">11 — Risk Management</div>
+      <h2>Risks identified and mitigations designed</h2>
+
+      <div class="risk-grid">
+        <div class="risk-card">
+          <div class="risk-label risk-high">High Risk</div>
+          <div class="risk-title">Low restaurant adoption at launch</div>
+          <div class="risk-body">Mitigated by pre-qualifying the restaurant list (RFD, cancellation rate, hygiene), offering lower commission rates, and running KAM-led onboarding before launch day. Bulk CSV onboarding reduced manual ops effort.</div>
+        </div>
+        <div class="risk-card">
+          <div class="risk-label risk-high">High Risk</div>
+          <div class="risk-title">User no-shows stranding restaurants</div>
+          <div class="risk-body">Explicit no-show handling built into both the restaurant portal and Engine Room. Auto-mark at end-of-day for uncollected orders. Clear refund policy defined — no refund for no-show, clearly disclosed as disclaimer at checkout.</div>
+        </div>
+        <div class="risk-card">
+          <div class="risk-label risk-med">Medium Risk</div>
+          <div class="risk-title">Refund complexity post-payment</div>
+          <div class="risk-body">Pre-payment creates refund obligation on cancellation. Mitigated by auto-escrow for Pay/BNPL, and daily manual refund sheet process for digital payments. Every cancellation scenario mapped to a defined refund path before launch.</div>
+        </div>
+        <div class="risk-card">
+          <div class="risk-label risk-med">Medium Risk</div>
+          <div class="risk-title">Restaurant operational confusion</div>
+          <div class="risk-body">Separate pickup panel in restaurant portal, clear Pickup identifier on orders, and user photo/name/token ID displayed for handover certainty. Restaurant training mandatory before activation.</div>
+        </div>
+        <div class="risk-card">
+          <div class="risk-label risk-med">Medium Risk</div>
+          <div class="risk-title">Wrong/cold food disputes</div>
+          <div class="risk-body">Unlike delivery, there's no rider to mediate. CX SOP defined for missing/wrong/cold food claims. KAM monitoring preparation time compliance weekly, with removal criteria for poor performers.</div>
+        </div>
+        <div class="risk-card">
+          <div class="risk-label risk-low">Low Risk</div>
+          <div class="risk-title">Cache lag on enable/disable</div>
+          <div class="risk-body">5-minute cache propagation time acknowledged and accepted. Documented in PRD as a known system behaviour — ops team briefed not to expect instant visibility changes.</div>
+        </div>
+      </div>
+    </div>
+
+    <hr class="cs-divider" />
+
+    <!-- 12 LESSONS -->
+    <div class="cs-section reveal" id="lessons">
+      <div class="section-eyebrow">12 — Lessons & Reflections</div>
+      <h2>What this product taught me</h2>
+
+      <div class="lesson-list">
+        <div class="lesson-item">
+          <div class="lesson-num">01</div>
+          <div>
+            <div class="lesson-title">The hardest work was the other side of the marketplace</div>
+            <div class="lesson-body">User-facing features are the visible 20% of a marketplace product. <strong>The 80% is the restaurant and ops tooling.</strong> Building the pickup panel, the enable/disable controls, the handover flow, the no-show process, and the CX SOPs took as much thought as the entire user experience. A pickup product that launched without this layer would have failed within weeks regardless of user adoption.</div>
+          </div>
+        </div>
+        <div class="lesson-item">
+          <div class="lesson-num">02</div>
+          <div>
+            <div class="lesson-title">Prerequisite dependencies are a feature, not a constraint</div>
+            <div class="lesson-body">Making RFD a hard prerequisite for pickup eligibility was initially seen as a limiter. In practice, it was the most important quality gate in the product. <strong>RFD restaurants had already proven reliability</strong> — linking pickup to that prerequisite meant the launch restaurant list started operationally validated, not optimistically assumed.</div>
+          </div>
+        </div>
+        <div class="lesson-item">
+          <div class="lesson-num">03</div>
+          <div>
+            <div class="lesson-title">Notifications are a product, not a feature</div>
+            <div class="lesson-body">In delivery, the rider creates natural progress signals. In pickup, <strong>notifications carry the entire behavioural load</strong> of getting the user to the restaurant at the right time. The 50%/100% prep-time notification pattern required careful tuning — too early and users arrive cold, too late and the food sits. Designing this as a system with explicit trigger logic, not ad-hoc push messages, was the right call.</div>
+          </div>
+        </div>
+        <div class="lesson-item">
+          <div class="lesson-num">04</div>
+          <div>
+            <div class="lesson-title">Phase 2 scope protection prevented scope creep</div>
+            <div class="lesson-body">Scheduled pickup, pickup-specific discounts, and Food Web support were all stakeholder requests that were explicitly moved to Phase 2 with written rationale in the PRD. <strong>Documenting what's not in scope is as important as documenting what is.</strong> It gave the engineering team clarity and gave stakeholders a visible roadmap rather than a flat "no."</div>
+          </div>
+        </div>
+        <div class="lesson-item">
+          <div class="lesson-num">05</div>
+          <div>
+            <div class="lesson-title">Token ID was the simplest solution to the hardest handover problem</div>
+            <div class="lesson-body">Early designs explored QR codes and push-based handover confirmation. Both added friction. The Token ID — a short code displayed in the app when food is ready — solved handover identification in a way that required zero restaurant tech change, worked even with poor connectivity, and matched existing restaurant counter behaviour. <strong>The simplest solution was the right one.</strong></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end cs-body -->
+
+  <!-- FOOTER CTA -->
+  <div class="cs-footer">
+    <div class="cs-footer-inner">
+      <div>
+        <div class="cs-footer-title">Read more of my work</div>
+        <div class="cs-footer-sub">Search ranking, personalisation, FinTech, EdTech, and AI activation</div>
+      </div>
+      <div class="cs-footer-actions">
+        <a class="footer-btn footer-btn-primary" href="work.html">All case studies</a>
+        <a class="footer-btn footer-btn-secondary" href="index.html">Full profile</a>
+        <a class="footer-btn footer-btn-secondary" href="mailto:akash.poddar.0799@gmail.com">Get in touch</a>
+      </div>
+    </div>
+  </div>
+  <footer>© 2026 Akash Poddar · Dhaka, Bangladesh</footer>
+
+  <script>
+    const reveals = document.querySelectorAll('.reveal');
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e, i) => {
+        if (e.isIntersecting) {
+          e.target.style.transitionDelay = (i * 0.05) + 's';
+          e.target.classList.add('visible');
+          io.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.08 });
+    reveals.forEach(r => io.observe(r));
+
+    const tocItems = document.querySelectorAll('.toc-item');
+    const sections = document.querySelectorAll('.cs-section[id]');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          tocItems.forEach(t => t.classList.remove('active'));
+          const active = document.querySelector(`.toc-item[href="#${entry.target.id}"]`);
+          if (active) active.classList.add('active');
+        }
+      });
+    }, { threshold: 0.3, rootMargin: '-56px 0px -60% 0px' });
+    sections.forEach(s => observer.observe(s));
+  </script>
+
+</body>
+</html>

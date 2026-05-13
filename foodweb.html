@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pathao Food Web — Case Study | Akash Poddar</title>
+  <meta name="description" content="How I built Pathao Food Web (food.pathao.com) from zero — Pathao's first food delivery web platform, built for SEO acquisition, digital payments, and cross-device ordering." />
+  <link rel="canonical" href="https://echo-akash.github.io/foodweb.html" />
+  <meta property="og:title" content="Pathao Food Web — 0→1 PM Case Study by Akash Poddar" />
+  <meta property="og:description" content="Building food.pathao.com from scratch — SEO-first web ordering platform for Bangladesh's leading food delivery app." />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://echo-akash.github.io/foodweb.html" />
+  <meta property="og:image" content="https://echo-akash.github.io/og-image.png" />
+  <meta name="author" content="Akash Poddar" />
+  <meta name="robots" content="index, follow" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Pathao Food Web — 0→1 Product Case Study",
+    "description": "How Akash Poddar built food.pathao.com from zero — a SEO-first web food ordering platform for Bangladesh, covering strategy, architecture, SEO, payments, and city expansion.",
+    "author": { "@type": "Person", "name": "Akash Poddar", "url": "https://echo-akash.github.io/" }
+  }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,300;1,9..144,500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --ink: #0e0e0e;
+      --ink-mid: #444;
+      --ink-muted: #888;
+      --ink-faint: #bbb;
+      --surface: #f7f5f0;
+      --white: #ffffff;
+      --accent: #1c4f8a;
+      --accent-light: #e8f0fa;
+      --accent2: #2e7d6b;
+      --accent2-light: #e4f3ee;
+      --amber: #7a4a10;
+      --amber-light: #fef3e2;
+      --coral: #8c3320;
+      --coral-light: #faeae7;
+      --purple: #4a2d8a;
+      --purple-light: #f0ecfa;
+      --line: rgba(0,0,0,0.08);
+      --serif: 'Fraunces', Georgia, serif;
+      --sans: 'DM Sans', system-ui, sans-serif;
+      --radius: 10px;
+      --ease: cubic-bezier(0.16, 1, 0.3, 1);
+      --content-w: 760px;
+      --wide-w: 1000px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--sans); background: var(--surface); color: var(--ink); font-size: 15px; line-height: 1.6; overflow-x: hidden; }
+
+    /* NAV */
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 0 40px; height: 56px; background: rgba(247,245,240,0.88); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); }
+    .nav-logo { font-family: var(--serif); font-size: 16px; font-weight: 600; color: var(--ink); text-decoration: none; letter-spacing: -0.02em; }
+    .nav-links { display: flex; gap: 32px; list-style: none; }
+    .nav-links a { font-size: 13px; color: var(--ink-mid); text-decoration: none; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--accent); }
+    .nav-cta { font-size: 13px; padding: 7px 18px; background: var(--ink); color: var(--white); border-radius: 20px; text-decoration: none; transition: background 0.2s; }
+    .nav-cta:hover { background: var(--accent); }
+
+    /* HERO */
+    .cs-hero { background: var(--ink); padding: 120px 40px 80px; position: relative; overflow: hidden; }
+    .cs-hero-inner { max-width: var(--wide-w); margin: 0 auto; position: relative; z-index: 1; }
+    .cs-hero-grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px); background-size: 60px 60px; }
+    .cs-hero-bar { height: 4px; background: linear-gradient(90deg, #1c6fb5, #7c3aed); border-radius: 2px; width: 64px; margin-bottom: 28px; }
+    .cs-meta-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 24px; }
+    .cs-tag { font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; padding: 5px 14px; border-radius: 20px; }
+    .tag-blue { background: rgba(55,138,221,0.15); color: #85b7eb; border: 1px solid rgba(55,138,221,0.2); }
+    .tag-purple { background: rgba(124,58,237,0.15); color: #b794f6; border: 1px solid rgba(124,58,237,0.2); }
+    .tag-amber { background: rgba(186,117,23,0.15); color: #f0b860; border: 1px solid rgba(186,117,23,0.2); }
+    .tag-gray { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.4); border: 1px solid rgba(255,255,255,0.1); }
+    .tag-teal { background: rgba(29,158,117,0.15); color: #5dcaa5; border: 1px solid rgba(29,158,117,0.2); }
+    .cs-hero-title { font-family: var(--serif); font-size: clamp(36px, 6vw, 64px); font-weight: 600; letter-spacing: -0.03em; line-height: 0.95; color: #fff; margin-bottom: 20px; }
+    .cs-hero-title em { font-style: italic; font-weight: 300; color: rgba(255,255,255,0.4); }
+    .cs-hero-sub { font-size: 17px; font-weight: 300; color: rgba(255,255,255,0.5); max-width: 600px; line-height: 1.7; margin-bottom: 48px; }
+    .cs-hero-sub strong { color: rgba(255,255,255,0.8); font-weight: 400; }
+    .cs-kpi-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 40px; }
+    .cs-kpi { padding-right: 32px; border-right: 1px solid rgba(255,255,255,0.08); }
+    .cs-kpi:last-child { border-right: none; }
+    .cs-kpi-num { font-family: var(--serif); font-size: 32px; font-weight: 600; letter-spacing: -0.02em; color: #fff; line-height: 1; margin-bottom: 6px; }
+    .cs-kpi-num span { font-size: 20px; font-style: italic; font-weight: 300; color: rgba(255,255,255,0.35); }
+    .cs-kpi-label { font-size: 11px; color: rgba(255,255,255,0.35); line-height: 1.4; max-width: 120px; }
+
+    /* TOC */
+    .toc-bar { position: sticky; top: 56px; z-index: 90; background: var(--white); border-bottom: 1px solid var(--line); overflow-x: auto; }
+    .toc-inner { max-width: var(--wide-w); margin: 0 auto; display: flex; gap: 0; padding: 0 40px; }
+    .toc-item { font-size: 12px; color: var(--ink-muted); text-decoration: none; padding: 14px 18px; white-space: nowrap; border-bottom: 2px solid transparent; transition: color 0.2s, border-color 0.2s; display: flex; align-items: center; gap: 6px; }
+    .toc-item:hover, .toc-item.active { color: var(--accent); border-bottom-color: var(--accent); }
+    .toc-num { font-size: 10px; color: var(--ink-faint); }
+
+    /* BODY */
+    .cs-body { max-width: var(--wide-w); margin: 0 auto; padding: 0 40px; }
+    .cs-section { padding: 72px 0 0; }
+    .cs-section:last-of-type { padding-bottom: 80px; }
+    .section-eyebrow { font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+    .section-eyebrow::after { content: ''; flex: 0 0 32px; height: 1px; background: var(--accent); opacity: 0.4; }
+    .cs-section h2 { font-family: var(--serif); font-size: 32px; font-weight: 600; letter-spacing: -0.02em; color: var(--ink); line-height: 1.15; margin-bottom: 28px; }
+    .cs-section h3 { font-family: var(--serif); font-size: 20px; font-weight: 600; letter-spacing: -0.01em; color: var(--ink); margin: 32px 0 12px; }
+    .cs-section p { font-size: 15px; color: var(--ink-mid); line-height: 1.8; font-weight: 300; margin-bottom: 16px; }
+    .cs-section p strong { color: var(--ink); font-weight: 500; }
+    .cs-divider { border: none; border-top: 1px solid var(--line); margin: 56px 0 0; }
+
+    /* CALLOUT */
+    .callout { background: var(--white); border-radius: var(--radius); border: 1px solid var(--line); border-left: 4px solid var(--accent); padding: 20px 24px; margin: 28px 0; font-size: 15px; color: var(--ink-mid); line-height: 1.75; font-weight: 300; }
+    .callout strong { color: var(--ink); font-weight: 500; }
+    .callout.amber { border-left-color: #c47e20; background: var(--amber-light); }
+    .callout.teal { border-left-color: #1d9e75; background: var(--accent2-light); }
+    .callout.coral { border-left-color: #c0402a; background: var(--coral-light); }
+    .callout.purple { border-left-color: #7c3aed; background: var(--purple-light); }
+
+    /* INSIGHT QUOTE */
+    .insight-quote { margin: 32px 0; padding: 28px 32px; background: var(--ink); border-radius: var(--radius); color: rgba(255,255,255,0.55); font-size: 16px; font-weight: 300; line-height: 1.8; }
+    .insight-quote strong { color: #fff; font-weight: 400; }
+    .insight-quote .iq-label { font-size: 10px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.25); margin-bottom: 10px; }
+
+    /* CARD GRIDS */
+    .card-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 24px 0; }
+    .card-grid-2 { grid-template-columns: repeat(2, 1fr); }
+    .card-grid-4 { grid-template-columns: repeat(4, 1fr); }
+    .grid-card { background: var(--white); border-radius: var(--radius); border: 1px solid var(--line); padding: 20px 22px; }
+    .grid-card-label { font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 8px; }
+    .grid-card-title { font-family: var(--serif); font-size: 17px; font-weight: 600; color: var(--ink); margin-bottom: 8px; line-height: 1.3; }
+    .grid-card-body { font-size: 13px; color: var(--ink-mid); line-height: 1.65; font-weight: 300; }
+    .grid-card-num { font-family: var(--serif); font-size: 28px; font-weight: 600; letter-spacing: -0.02em; color: var(--ink); line-height: 1; margin-bottom: 6px; }
+    .grid-card-num span { font-size: 18px; font-style: italic; font-weight: 300; color: var(--ink-faint); }
+    .accent-top { border-top: 3px solid var(--accent); }
+    .accent-top-teal { border-top: 3px solid #1d9e75; }
+    .accent-top-amber { border-top: 3px solid #c47e20; }
+    .accent-top-coral { border-top: 3px solid #c0402a; }
+    .accent-top-purple { border-top: 3px solid #7c3aed; }
+
+    /* ARCHITECTURE BLOCKS */
+    .arch-stack { display: flex; flex-direction: column; gap: 12px; margin: 24px 0; }
+    .arch-layer { border-radius: var(--radius); border: 1px solid var(--line); overflow: hidden; }
+    .arch-layer-header { padding: 12px 20px; display: flex; align-items: center; gap: 12px; }
+    .arch-layer-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+    .arch-layer-title { font-size: 13px; font-weight: 500; color: var(--ink); }
+    .arch-layer-body { padding: 14px 20px; background: var(--white); font-size: 13px; color: var(--ink-mid); line-height: 1.65; font-weight: 300; border-top: 1px solid var(--line); }
+    .arch-layer-body strong { color: var(--ink); font-weight: 500; }
+
+    /* FLOW STEPS */
+    .flow-steps { display: flex; flex-direction: column; gap: 0; margin: 24px 0; }
+    .flow-step { display: grid; grid-template-columns: 48px 1fr; gap: 20px; position: relative; }
+    .flow-step::before { content: ''; position: absolute; left: 23px; top: 40px; bottom: -12px; width: 2px; background: var(--line); }
+    .flow-step:last-child::before { display: none; }
+    .flow-step-num { width: 48px; height: 48px; border-radius: 50%; background: var(--white); border: 1px solid var(--line); display: flex; align-items: center; justify-content: center; font-family: var(--serif); font-size: 16px; font-weight: 600; color: var(--accent); flex-shrink: 0; position: relative; z-index: 1; margin-bottom: 24px; }
+    .flow-step-body { padding-top: 12px; padding-bottom: 24px; }
+    .flow-step-title { font-size: 14px; font-weight: 500; color: var(--ink); margin-bottom: 6px; }
+    .flow-step-desc { font-size: 13px; color: var(--ink-mid); line-height: 1.65; font-weight: 300; }
+
+    /* SEO TABLE */
+    .seo-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: var(--radius); border: 1px solid var(--line); margin: 24px 0; }
+    .seo-table { width: 100%; border-collapse: collapse; min-width: 520px; }
+    .seo-table th { background: var(--ink); color: rgba(255,255,255,0.6); font-size: 10px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; padding: 12px 16px; text-align: left; }
+    .seo-table td { padding: 13px 16px; border-bottom: 1px solid var(--line); font-size: 13px; color: var(--ink-mid); vertical-align: top; line-height: 1.6; }
+    .seo-table td:first-child { font-weight: 500; color: var(--ink); }
+    .seo-table tr:last-child td { border-bottom: none; }
+    .seo-table tr:nth-child(even) td { background: rgba(0,0,0,0.015); }
+
+    /* WIN CHIPS */
+    .win-chips { display: flex; flex-direction: column; gap: 10px; margin: 24px 0; }
+    .win-chip { display: flex; gap: 12px; align-items: flex-start; font-size: 13.5px; color: var(--ink-mid); line-height: 1.65; }
+    .win-chip-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); flex-shrink: 0; margin-top: 6px; }
+    .win-chip strong { color: var(--ink); font-weight: 500; }
+
+    /* METRICS GRID */
+    .metrics-grid-cs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 24px 0; }
+    .metric-cs { background: var(--white); border-radius: var(--radius); border: 1px solid var(--line); padding: 20px 22px; }
+    .metric-cs-type { font-size: 10px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 8px; }
+    .metric-cs-name { font-size: 14px; font-weight: 500; color: var(--ink); margin-bottom: 6px; line-height: 1.3; }
+    .metric-cs-target { font-size: 22px; font-weight: 500; color: var(--accent); font-family: var(--serif); letter-spacing: -0.01em; margin-bottom: 4px; }
+    .metric-cs-window { font-size: 11px; color: var(--ink-faint); }
+
+    /* TIMELINE */
+    .timeline { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; margin: 24px 0; border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
+    .tl-phase { padding: 20px; border-right: 1px solid var(--line); background: var(--white); }
+    .tl-phase:last-child { border-right: none; }
+    .tl-phase-num { font-family: var(--serif); font-size: 22px; font-weight: 600; color: var(--ink-faint); margin-bottom: 6px; }
+    .tl-phase-title { font-size: 12px; font-weight: 500; color: var(--ink); margin-bottom: 10px; }
+    .tl-phase-items { display: flex; flex-direction: column; gap: 6px; }
+    .tl-phase-item { font-size: 12px; color: var(--ink-mid); line-height: 1.5; display: flex; gap: 6px; }
+    .tl-phase-item::before { content: '—'; color: var(--ink-faint); flex-shrink: 0; }
+
+    /* RISK GRID */
+    .risk-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 24px 0; }
+    .risk-card { background: var(--white); border-radius: var(--radius); border: 1px solid var(--line); padding: 20px; }
+    .risk-label { font-size: 10px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 8px; }
+    .risk-high { color: #c0402a; } .risk-med { color: #c47e20; } .risk-low { color: #1d9e75; }
+    .risk-title { font-size: 14px; font-weight: 500; color: var(--ink); margin-bottom: 8px; line-height: 1.3; }
+    .risk-body { font-size: 12.5px; color: var(--ink-mid); line-height: 1.6; font-weight: 300; }
+
+    /* LESSON LIST */
+    .lesson-list { display: flex; flex-direction: column; gap: 20px; margin: 24px 0; }
+    .lesson-item { display: grid; grid-template-columns: 32px 1fr; gap: 16px; }
+    .lesson-num { font-family: var(--serif); font-size: 22px; font-weight: 600; color: var(--ink-faint); line-height: 1; padding-top: 2px; }
+    .lesson-title { font-size: 15px; font-weight: 500; color: var(--ink); margin-bottom: 6px; }
+    .lesson-body { font-size: 13.5px; color: var(--ink-mid); line-height: 1.7; font-weight: 300; }
+    .lesson-body strong { color: var(--ink); font-weight: 500; }
+
+    /* COMPETITOR TABLE */
+    .comp-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 24px 0; border-radius: var(--radius); border: 1px solid var(--line); }
+    .comp-table { width: 100%; border-collapse: collapse; min-width: 480px; font-size: 13px; }
+    .comp-table th { background: var(--surface); font-size: 10px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-muted); padding: 10px 16px; text-align: left; border-bottom: 1px solid var(--line); }
+    .comp-table td { padding: 13px 16px; border-bottom: 1px solid var(--line); vertical-align: top; line-height: 1.55; color: var(--ink-mid); }
+    .comp-table td:first-child { font-weight: 500; color: var(--ink); }
+    .comp-table tr:last-child td { border-bottom: none; }
+    .check { color: #1d9e75; font-weight: 500; }
+    .cross { color: #c0402a; font-weight: 500; }
+    .partial { color: #c47e20; font-weight: 500; }
+
+    /* PARTNER STRIP */
+    .partner-strip { display: flex; flex-wrap: wrap; gap: 10px; margin: 20px 0; }
+    .partner-pill { font-size: 12px; padding: 6px 14px; background: var(--white); border: 1px solid var(--line); border-radius: 20px; color: var(--ink-mid); font-weight: 400; }
+
+    /* FOOTER */
+    .cs-footer { background: var(--ink); padding: 64px 40px; }
+    .cs-footer-inner { max-width: var(--wide-w); margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 40px; flex-wrap: wrap; }
+    .cs-footer-title { font-family: var(--serif); font-size: 28px; font-weight: 600; color: #fff; letter-spacing: -0.02em; margin-bottom: 8px; }
+    .cs-footer-sub { font-size: 14px; color: rgba(255,255,255,0.4); font-weight: 300; }
+    .cs-footer-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+    .footer-btn { padding: 10px 24px; border-radius: 40px; font-size: 13px; text-decoration: none; transition: all 0.2s; }
+    .footer-btn-primary { background: #fff; color: var(--ink); }
+    .footer-btn-primary:hover { background: #e0dcd4; }
+    .footer-btn-secondary { border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.6); }
+    .footer-btn-secondary:hover { border-color: rgba(255,255,255,0.5); color: #fff; }
+    footer { background: var(--ink); border-top: 1px solid rgba(255,255,255,0.06); padding: 20px 40px; text-align: center; font-size: 12px; color: rgba(255,255,255,0.2); }
+
+    /* REVEAL */
+    .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.6s var(--ease), transform 0.6s var(--ease); }
+    .reveal.visible { opacity: 1; transform: none; }
+
+    /* RESPONSIVE */
+    @media (max-width: 900px) {
+      .cs-kpi-row { grid-template-columns: repeat(3, 1fr); gap: 20px 0; }
+      .card-grid { grid-template-columns: repeat(2, 1fr); }
+      .card-grid-4 { grid-template-columns: repeat(2, 1fr); }
+      .metrics-grid-cs { grid-template-columns: repeat(2, 1fr); }
+      .risk-grid { grid-template-columns: repeat(2, 1fr); }
+      .timeline { grid-template-columns: repeat(2, 1fr); }
+      .tl-phase:nth-child(2) { border-right: none; }
+      .tl-phase:nth-child(3) { border-top: 1px solid var(--line); }
+      .tl-phase:nth-child(4) { border-top: 1px solid var(--line); border-right: none; }
+    }
+
+    @media (max-width: 640px) {
+      nav { padding: 0 16px; }
+      .nav-links { display: none; }
+      .nav-cta { font-size: 12px; padding: 6px 14px; }
+      .cs-hero { padding: 88px 16px 48px; }
+      .cs-hero-title { font-size: clamp(32px, 10vw, 48px); }
+      .cs-hero-sub { font-size: 15px; margin-bottom: 36px; }
+      .cs-meta-row { gap: 8px; }
+      .cs-tag { font-size: 10px; padding: 4px 10px; }
+      .cs-kpi-row { grid-template-columns: repeat(2, 1fr); gap: 20px 0; }
+      .cs-kpi { padding-right: 16px; border-right: 1px solid rgba(255,255,255,0.08); border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 20px; margin-bottom: 4px; }
+      .cs-kpi:nth-child(even) { border-right: none; padding-left: 16px; }
+      .cs-kpi:nth-last-child(-n+2) { border-bottom: none; }
+      .cs-kpi-num { font-size: 24px; }
+      .cs-kpi-num span { font-size: 16px; }
+      .toc-inner { padding: 0 12px; }
+      .toc-item { font-size: 11px; padding: 12px 8px; }
+      .toc-num { display: none; }
+      .cs-body { padding: 0 16px; }
+      .cs-section { padding: 48px 0 0; }
+      .cs-section h2 { font-size: 24px; }
+      .cs-section h3 { font-size: 17px; margin: 24px 0 10px; }
+      .cs-section p { font-size: 14px; }
+      .cs-divider { margin: 40px 0 0; }
+      .card-grid { grid-template-columns: 1fr; }
+      .card-grid-2 { grid-template-columns: 1fr; }
+      .card-grid-4 { grid-template-columns: 1fr; }
+      .callout { padding: 16px 18px; font-size: 14px; }
+      .insight-quote { padding: 20px; font-size: 15px; }
+      .flow-step { grid-template-columns: 36px 1fr; gap: 14px; }
+      .flow-step-num { width: 36px; height: 36px; font-size: 14px; }
+      .flow-step::before { left: 17px; top: 36px; }
+      .metrics-grid-cs { grid-template-columns: 1fr 1fr; gap: 10px; }
+      .risk-grid { grid-template-columns: 1fr; }
+      .timeline { grid-template-columns: 1fr; }
+      .tl-phase { border-right: none !important; border-top: 1px solid var(--line); }
+      .tl-phase:first-child { border-top: none; }
+      .lesson-item { grid-template-columns: 28px 1fr; gap: 12px; }
+      .lesson-num { font-size: 18px; }
+      .lesson-title { font-size: 14px; }
+      .lesson-body { font-size: 13px; }
+      .arch-layer-body { font-size: 12.5px; }
+      .cs-footer { padding: 40px 16px; }
+      .cs-footer-inner { flex-direction: column; gap: 28px; }
+      .cs-footer-title { font-size: 22px; }
+      .cs-footer-actions { flex-direction: column; gap: 8px; }
+      .footer-btn { text-align: center; }
+      footer { padding: 20px 16px; }
+    }
+
+    @media (max-width: 380px) {
+      .cs-hero-title { font-size: 28px; }
+      .metrics-grid-cs { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a class="nav-logo" href="index.html">Akash Poddar</a>
+    <ul class="nav-links">
+      <li><a href="work.html">Case Studies</a></li>
+      <li><a href="index.html#experience">Experience</a></li>
+      <li><a href="index.html#contact">Contact</a></li>
+    </ul>
+    <a class="nav-cta" href="mailto:akash.poddar.0799@gmail.com">Get in touch</a>
+  </nav>
+
+  <!-- HERO -->
+  <div class="cs-hero">
+    <div class="cs-hero-grid"></div>
+    <div class="cs-hero-inner">
+      <div class="cs-hero-bar"></div>
+      <div class="cs-meta-row">
+        <span class="cs-tag tag-blue">Pathao Food</span>
+        <span class="cs-tag tag-purple">0 → 1 Platform</span>
+        <span class="cs-tag tag-amber">SEO-First</span>
+        <span class="cs-tag tag-teal">Web Ordering</span>
+        <span class="cs-tag tag-gray">food.pathao.com · Bangladesh</span>
+      </div>
+      <h1 class="cs-hero-title">Pathao Food Web<br><em>food.pathao.com</em></h1>
+      <p class="cs-hero-sub">
+        Building Pathao's first app-independent food ordering web platform from scratch — <strong>SEO-first architecture, digital payments, city-level expansion tooling</strong>, and a new acquisition channel that didn't depend on ad spend.
+      </p>
+      <div class="cs-kpi-row">
+        <div class="cs-kpi">
+          <div class="cs-kpi-num">+60<span>%</span></div>
+          <div class="cs-kpi-label">Organic impressions growth post-launch</div>
+        </div>
+        <div class="cs-kpi">
+          <div class="cs-kpi-num">−60<span>%</span></div>
+          <div class="cs-kpi-label">City expansion setup time vs. app-only rollout</div>
+        </div>
+        <div class="cs-kpi">
+          <div class="cs-kpi-num">0<span>→1</span></div>
+          <div class="cs-kpi-label">Built entirely from scratch, no prior web product</div>
+        </div>
+        <div class="cs-kpi">
+          <div class="cs-kpi-num">3<span>+</span></div>
+          <div class="cs-kpi-label">Payment methods: Pay Later, bKash, cards</div>
+        </div>
+        <div class="cs-kpi">
+          <div class="cs-kpi-num">∞<span> cities</span></div>
+          <div class="cs-kpi-label">Dynamic city config enables unlimited geographic scale</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOC -->
+  <div class="toc-bar">
+    <div class="toc-inner">
+      <a class="toc-item" href="#context"><span class="toc-num">01</span> Context</a>
+      <a class="toc-item" href="#problem"><span class="toc-num">02</span> Problem</a>
+      <a class="toc-item" href="#opportunity"><span class="toc-num">03</span> Opportunity</a>
+      <a class="toc-item" href="#strategy"><span class="toc-num">04</span> Strategy</a>
+      <a class="toc-item" href="#architecture"><span class="toc-num">05</span> Architecture</a>
+      <a class="toc-item" href="#seo"><span class="toc-num">06</span> SEO System</a>
+      <a class="toc-item" href="#ordering"><span class="toc-num">07</span> Ordering Flow</a>
+      <a class="toc-item" href="#payments"><span class="toc-num">08</span> Payments</a>
+      <a class="toc-item" href="#expansion"><span class="toc-num">09</span> City Expansion</a>
+      <a class="toc-item" href="#metrics"><span class="toc-num">10</span> Metrics</a>
+      <a class="toc-item" href="#risks"><span class="toc-num">11</span> Risks</a>
+      <a class="toc-item" href="#lessons"><span class="toc-num">12</span> Lessons</a>
+    </div>
+  </div>
+
+  <div class="cs-body">
+
+    <!-- 01 CONTEXT -->
+    <div class="cs-section reveal" id="context">
+      <div class="section-eyebrow">01 — Context & Background</div>
+      <h2>Pathao Food was invisible on the web</h2>
+      <p>By 2023, Pathao Food was one of Bangladesh's most-used food delivery services — but it existed entirely inside a mobile app. If someone searched "order KFC online Dhaka" or "best biryani delivery near Dhanmondi" on Google, Pathao didn't show up. The entire user acquisition funnel started and ended inside the app stores.</p>
+      <p>This was a compounding problem. Pathao was spending on paid acquisition to drive app installs. But organic search — the highest-intent, lowest-cost channel in any market — was untouched. Foodpanda had a web presence. International players like Uber Eats built their organic channels years ago. Pathao had nothing.</p>
+      <p>The business also faced a structural ceiling: every new city or partner needed to be activated entirely through app infrastructure. There was no lightweight way to test market demand, onboard restaurant partners, or create digital presence for a new geography without a full app rollout.</p>
+
+      <div class="card-grid reveal">
+        <div class="grid-card accent-top">
+          <div class="grid-card-label">The visibility gap</div>
+          <div class="grid-card-title">Zero web search presence</div>
+          <div class="grid-card-body">Pathao Food had no indexable web pages. Google searches for food delivery in Dhaka, Chittagong, or Kathmandu returned competitors — not Pathao.</div>
+        </div>
+        <div class="grid-card accent-top-teal">
+          <div class="grid-card-label">The acquisition gap</div>
+          <div class="grid-card-title">100% paid-dependent growth</div>
+          <div class="grid-card-body">All new user acquisition required app install campaigns. There was no organic funnel — every user cost money to acquire, and organic search value was zero.</div>
+        </div>
+        <div class="grid-card accent-top-amber">
+          <div class="grid-card-label">The expansion gap</div>
+          <div class="grid-card-title">Slow city-level scaling</div>
+          <div class="grid-card-body">Each new city or restaurant partner had no lightweight digital presence. Expansion required full app infrastructure activation, creating a bottleneck on growth speed.</div>
+        </div>
+      </div>
+
+      <div class="callout teal">
+        <strong>My mandate:</strong> Build Pathao Food Web — <a href="https://food.pathao.com" target="_blank" rel="noopener" style="color: var(--accent2);">food.pathao.com</a> — from zero. A fully functional web food ordering platform that serves as a new organic acquisition channel, supports digital payments, and enables city expansion independently of the mobile app release cycle.
+      </div>
+    </div>
+
+    <hr class="cs-divider" />
+
+    <!-- 02 PROBLEM -->
+    <div class="cs-section reveal" id="problem">
+      <div class="section-eyebrow">02 — Problem Statement</div>
+      <h2>Three compounding problems, one platform to solve them</h2>
+
+      <div class="insight-quote">
+        <div class="iq-label">Core problem</div>
+        <strong>"Pathao Food had a dominant app presence and zero web presence. In Bangladesh's digital economy, that meant an entire acquisition channel — organic search — was completely abandoned to competitors."</strong>
+      </div>
+
+      <h3>Problem 1 — No SEO surface area</h3>
+      <p>Every restaurant on Pathao, every cuisine, every city had no web URL, no title tag, no structured data, no indexable page. A search for "Burger King delivery Dhaka" or "north end coffee order online" returned Foodpanda, not Pathao. This was revenue being actively surrendered to competitors with an existing web presence.</p>
+
+      <h3>Problem 2 — App-only ordering excluded web users</h3>
+      <p>A significant segment of users — particularly in corporate and office environments, or users arriving from desktop search — had no way to order Pathao Food without downloading the app first. The friction of an app install before a first order is a documented conversion killer, particularly for new or infrequent users.</p>
+
+      <h3>Problem 3 — City expansion was bottlenecked</h3>
+      <p>Activating Pathao Food in a new city required full app-side configuration. There was no lightweight mechanism to establish a digital footprint — a restaurant list, a location page, a searchable presence — for a new geography before the full infrastructure was ready. The web platform needed to decouple digital presence from app rollout speed.</p>
+
+      <div class="card-grid-2 card-grid reveal">
+        <div class="grid-card">
+          <div class="grid-card-label">User impact</div>
+          <div class="grid-card-title">High-intent users lost at discovery</div>
+          <div class="grid-card-body">Users searching for specific restaurants or cuisines in Bangladesh had no reason to find Pathao. First touch went to Foodpanda or direct restaurant websites. Pathao entered the funnel only after a user had already made a decision — if at all.</div>
+        </div>
+        <div class="grid-card">
+          <div class="grid-card-label">Business impact</div>
+          <div class="grid-card-title">CAC with no organic offset</div>
+          <div class="grid-card-body">Without organic acquisition, every new user carried a full paid CAC. The web platform represented a structural CAC reduction opportunity — once ranked, organic users cost nothing to acquire. This was a compounding asset that didn't exist at all.</div>
+        </div>
+      </div>
+    </div>
+
+    <hr class="cs-divider" />
+
+    <!-- 03 OPPORTUNITY -->
+    <div class="cs-section reveal" id="opportunity">
+      <div class="section-eyebrow">03 — Market Opportunity</div>
+      <h2>Why the timing was right</h2>
+
+      <p>Bangladesh's internet penetration had grown substantially by 2023, with mobile and desktop web usage both rising in urban centres. The food delivery market was maturing — users were more comfortable with online ordering and digital payments than they had been two years prior. This created a structural window: the demand was there for a web ordering experience, but no Bangladeshi food delivery platform had built a genuinely strong SEO-first web product.</p>
+
+      <h3>Competitive landscape</h3>
+      <div class="comp-table-wrap">
+        <table class="comp-table">
+          <thead>
+            <tr>
+              <th>Platform</th>
+              <th>Web ordering</th>
+              <th>SEO-optimised pages</th>
+              <th>Digital payments (web)</th>
+              <th>City expansion tools</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Foodpanda Bangladesh</td>
+              <td><span class="check">✓ Yes</span></td>
+              <td><span class="partial">~ Partial</span></td>
+              <td><span class="check">✓ Yes</span></td>
+              <td><span class="partial">~ Limited</span></td>
+            </tr>
+            <tr>
+              <td>Shohoz Food</td>
+              <td><span class="partial">~ Limited</span></td>
+              <td><span class="cross">✗ No</span></td>
+              <td><span class="partial">~ Partial</span></td>
+              <td><span class="cross">✗ No</span></td>
+            </tr>
+            <tr>
+              <td>HungryNaki</td>
+              <td><span class="check">✓ Yes</span></td>
+              <td><span class="partial">~ Basic</span></td>
+              <td><span class="check">✓ Yes</span></td>
+              <td><span class="cross">✗ No</span></td>
+            </tr>
+            <tr>
+              <td><strong>Pathao Food Web (built)</strong></td>
+              <td><span class="check">✓ Yes</span></td>
+              <td><span class="check">✓ Full SEO architecture</span></td>
+              <td><span class="check">✓ Pay Later, bKash, cards</span></td>
+              <td><span class="check">✓ Dynamic city config</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Key restaurant partners already on the platform</h3>
+      <p>Pathao Food's restaurant network included major chains and beloved local brands — all of which had searchable demand on Google that Pathao was not capturing:</p>
+      <div class="partner-strip">
+        <span class="partner-pill">KFC Bangladesh</span>
+        <span class="partner-pill">Burger King</span>
+        <span class="partner-pill">Chillox</span>
+        <span class="partner-pill">North End Coffee</span>
+        <span class="partner-pill">Panshi</span>
+        <span class="partner-pill">Khichuri Bhai</span>
+        <span class="partner-pill">7 Dayz</span>
+        <span class="partner-pill">Barcode</span>
+        <span class="partner-pill">Peyala</span>
+        <span class="partner-pill">YCD</span>
+      </div>
+      <p>Every one of these restaurants had users searching their names on Google. Pathao's app didn't intercept any of that intent. The web platform was the mechanism to capture it.</p>
+    </div>
+
+    <hr class="cs-divider" />
+
+    <!-- 04 STRATEGY -->
+    <div class="cs-section reveal" id="strategy">
+      <div class="section-eyebrow">04 — Product Strategy</div>
+      <h2>Four principles that shaped every decision</h2>
+
+      <h3>Principle 1 — SEO-first, not web-first</h3>
+      <p>The temptation with a web platform is to replicate the app experience in a browser. That would have been a mistake. The primary job of the web platform was <strong>organic discovery and acquisition</strong> — getting Pathao into search results for restaurant names, cuisines, and locations across Bangladesh. Every architectural decision — URL structures, page types, metadata, structured data — was made to maximise indexability and keyword coverage first, ordering experience second.</p>
+
+      <h3>Principle 2 — App as the deep-link destination, not a competitor</h3>
+      <p>The web platform was not designed to replace the app. It was designed to <strong>intercept organic traffic at discovery</strong> and convert users into the Pathao ecosystem — either ordering on web or installing the app. This shaped the entire UX: prominent app-download CTAs, QR codes to the Play Store and App Store, and a web ordering flow that was complete enough to convert but built to drive app adoption as the primary ongoing channel.</p>
+
+      <h3>Principle 3 — Dynamic city configuration as the scaling mechanism</h3>
+      <p>Rather than hardcoding city-level content, the platform was architected around <strong>dynamic city configuration</strong>. Adding a new city to the web platform required a single configuration change — not a new deployment or engineering sprint. This decoupled the web platform's geographic reach from the engineering release cycle, enabling city expansion at a speed the app could never match.</p>
+
+      <h3>Principle 4 — Digital payments as a conversion requirement, not a feature</h3>
+      <p>Web ordering without digital payments creates a broken experience — a user who orders on web but has to pay cash on delivery defeats the point. <strong>Digital payment support (Pay Later/BNPL, bKash, cards) was a launch requirement</strong>, not a Phase 2 addition. Getting this right at launch was non-negotiable for conversion.</p>
+
+      <div class="callout amber">
+        <strong>Scope constraint accepted:</strong> Pickup order support on web was explicitly excluded from the initial launch. Pickup on web required Digital Payment, Pathao Pay, and BNPL prerequisites that would significantly extend the timeline. Web was launched as delivery-only, with pickup as a follow-on phase once the payment infrastructure matured.
+      </div>
+    </div>
+
+    <hr class="cs-divider" />
+
+    <!-- 05 ARCHITECTURE -->
+    <div class="cs-section reveal" id="architecture">
+      <div class="section-eyebrow">05 — Platform Architecture</div>
+      <h2>How the platform was structured</h2>
+      <p>The web platform was built across three distinct layers — public-facing discovery, ordering infrastructure, and operational tooling. Each layer had different stakeholders, different performance requirements, and different SEO implications.</p>
+
+      <div class="arch-stack">
+        <div class="arch-layer">
+          <div class="arch-layer-header">
+            <div class="arch-layer-dot" style="background: #1c4f8a;"></div>
+            <div class="arch-layer-title">Layer 1 — Public Discovery Surface (SEO-optimised)</div>
+          </div>
+          <div class="arch-layer-body">
+            <strong>Homepage (food.pathao.com):</strong> Location entry point, value proposition, app download CTAs, partner restaurant logos, payment options, merchant onboarding CTA, "How it works" flow. Optimised for brand + category search terms.<br><br>
+            <strong>City pages (/dhaka, /chittagong, /kathmandu etc.):</strong> Dynamically generated per configured city. Restaurant listings by area and cuisine. City-specific title tags and meta. Targeted for "food delivery [city]" and "restaurants [city]" searches.<br><br>
+            <strong>Restaurant pages (/restaurants/[slug]):</strong> Dedicated SEO page per restaurant partner. Captures branded search (e.g. "KFC delivery Dhaka", "North End Coffee order online"). Includes menu preview, delivery info, and direct order CTA. Every new restaurant partner automatically gets a searchable URL.
+          </div>
+        </div>
+        <div class="arch-layer">
+          <div class="arch-layer-header">
+            <div class="arch-layer-dot" style="background: #1d9e75;"></div>
+            <div class="arch-layer-title">Layer 2 — Ordering Infrastructure</div>
+          </div>
+          <div class="arch-layer-body">
+            <strong>Location detection:</strong> "Locate me" (GPS) and manual address entry. Saved addresses surfaced on login. Location sets restaurant availability scope.<br><br>
+            <strong>Cart and checkout:</strong> Full item-level add/remove/quantity. Promo code application. Delivery fee shown in bill breakdown. Order confirmation with estimated delivery time.<br><br>
+            <strong>Payment gateway:</strong> Pathao Pay Later (BNPL), bKash integration, card payments. Pre-payment required for digital payment methods. Payment failure returns to checkout with clear error state.<br><br>
+            <strong>Order tracking:</strong> Post-order status screen. Foodman tracking view. Real-time status updates.
+          </div>
+        </div>
+        <div class="arch-layer">
+          <div class="arch-layer-header">
+            <div class="arch-layer-dot" style="background: #c47e20;"></div>
+            <div class="arch-layer-title">Layer 3 — Operational Tooling</div>
+          </div>
+          <div class="arch-layer-body">
+            <strong>Dynamic city configuration:</strong> Internal ops dashboard toggle to activate/deactivate web ordering per city. No code deployment required. Enables new city activation in minutes.<br><br>
+            <strong>Restaurant web page management:</strong> Automatic page creation on restaurant onboarding. Slug generation from restaurant name. City-level grouping for taxonomy SEO.<br><br>
+            <strong>Merchant onboarding CTA:</strong> Prominent "Join as a Restaurant Partner" pathway surfaced on homepage and restaurant listing pages — turning the SEO surface into a B2B acquisition channel as well as B2C.
+          </div>
+        </div>
+      </div>
+
+      <h3>Page type taxonomy</h3>
+      <div class="card-grid reveal">
+        <div class="grid-card accent-top">
+          <div class="grid-card-label">Page type 1</div>
+          <div class="grid-card-title">Homepage</div>
+          <div class="grid-card-body">Brand and category entry point. Single page, high link authority. Targets: "food delivery Bangladesh", "Pathao Food", "order food online Dhaka".</div>
+        </div>
+        <div class="grid-card accent-top-teal">
+          <div class="grid-card-label">Page type 2</div>
+          <div class="grid-card-title">City / Area pages</div>
+          <div class="grid-card-body">One per active city. Dynamically generated. Targets: "food delivery Dhaka", "restaurants Chittagong delivery", "online food order Kathmandu".</div>
+        </div>
+        <div class="grid-card accent-top-purple">
+          <div class="grid-card-label">Page type 3</div>
+          <div class="grid-card-title">Restaurant pages</div>
+          <div class="grid-card-body">One per restaurant partner. Auto-generated on partner onboarding. Targets: "[Restaurant Name] delivery", "[Restaurant Name] order online", "[Cuisine] delivery [area]".</div>
+        </div>
+      </div>
+    </div>
+
+    <hr class="cs-divider" />
+
+    <!-- 06 SEO SYSTEM -->
+    <div class="cs-section reveal" id="seo">
+      <div class="section-eyebrow">06 — SEO System Design</div>
+      <h2>Building the organic acquisition engine</h2>
+      <p>SEO was not a post-launch optimisation task — it was a pre-launch architecture requirement. Every structural decision about URLs, metadata, page content, and internal linking was made before a line of UI code was written.</p>
+
+      <div class="seo-table-wrap">
+        <table class="seo-table">
+          <thead>
+            <tr>
+              <th>SEO element</th>
+              <th>Decision made</th>
+              <th>Rationale</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>URL structure</td>
+              <td>food.pathao.com/restaurants/[restaurant-slug]</td>
+              <td>Clean, readable URLs with restaurant name as slug maximise branded search match. Subdomain keeps Food SEO separate from Pathao's main domain authority pool.</td>
+            </tr>
+            <tr>
+              <td>Title tags</td>
+              <td>Unique per page: "Order [Restaurant] Online — Pathao Food" / "Best Food Delivery in [City] — Pathao Food"</td>
+              <td>Keyword-first format matches the top search intents. "Order [X] online" matches transactional queries; "best food delivery [city]" matches navigational queries.</td>
+            </tr>
+            <tr>
+              <td>Meta descriptions</td>
+              <td>Action-oriented: "Order from [Restaurant] and get delivery in under an hour. Fast food delivery in [City] with Pathao Food."</td>
+              <td>Meta descriptions don't affect rank directly but control click-through rate. Action verbs ("order", "get delivery") trigger transactional intent matching.</td>
+            </tr>
+            <tr>
+              <td>Open Graph tags</td>
+              <td>Full OG suite per page: og:title, og:description, og:image, og:url</td>
+              <td>Social sharing from WhatsApp and Facebook (dominant platforms in Bangladesh) generates link previews. Rich previews increase share click-through significantly.</td>
+            </tr>
+            <tr>
+              <td>Structured data</td>
+              <td>Restaurant schema (name, cuisine, address, delivery hours, image) on restaurant pages</td>
+              <td>Enables Google rich results — restaurant cards in search with star ratings, delivery info, and menu highlights. Significantly increases SERP real estate vs. plain blue links.</td>
+            </tr>
+            <tr>
+              <td>Internal linking</td>
+              <td>Homepage → city pages → restaurant pages. Cuisine-type cross-links between restaurant pages.</td>
+              <td>Deep link distribution ensures Google crawls and indexes restaurant pages, not just the homepage. Cuisine cross-links build topical authority clusters.</td>
+            </tr>
+            <tr>
+              <td>Image optimisation</td>
+              <td>WebP format with descriptive alt text on all restaurant and feature images. IPX image proxy for responsive sizing.</td>
+              <td>WebP delivers 25–34% smaller file sizes vs JPEG — critical for Core Web Vitals on Bangladesh's mixed network conditions. Alt text contributes to image search indexing.</td>
+            </tr>
+            <tr>
+              <td>robots.txt + sitemap</td>
+              <td>Allow all crawlers. XML sitemap auto-generated including all city and restaurant pages.</td>
+              <td>Auto-generating the sitemap ensured every new restaurant page was submitted to Google Search Console automatically on creation, without manual intervention.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout purple">
+        <strong>The compounding effect:</strong> Each new restaurant partner added to Pathao Food Web auto-generated a new indexed URL targeting that restaurant's branded search terms. With hundreds of restaurant partners, this created a long-tail keyword coverage that grew automatically as the partner network grew — no additional SEO work required per restaurant.
+      </div>
+    </div>
+
+    <hr class="cs-divider" />
+
+    <!-- 07 ORDERING FLOW -->
+    <div class="cs-section reveal" id="ordering">
+      <div class="section-eyebrow">07 — Ordering Experience</div>
+      <h2>The web ordering flow: built for conversion, designed for app transition</h2>
+      <p>The ordering flow had two simultaneous jobs: complete enough to convert first-time web users into placed orders, and clear enough to drive app downloads for ongoing usage. Every screen had an app download prompt without disrupting the ordering path for web-first users.</p>
+
+      <div class="flow-steps">
+        <div class="flow-step">
+          <div class="flow-step-num">1</div>
+          <div class="flow-step-body">
+            <div class="flow-step-title">Discovery — Homepage or Restaurant Page</div>
+            <div class="flow-step-desc">User arrives from Google search ("KFC delivery Dhaka"), social share, or direct navigation. Homepage shows location entry ("Locate me" or manual address) with app download as primary CTA. Restaurant page shows restaurant details, menu preview, and direct "Order Now" CTA. App download QR codes available throughout — no friction to convert to app if preferred.</div>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-step-num">2</div>
+          <div class="flow-step-body">
+            <div class="flow-step-title">Location Entry</div>
+            <div class="flow-step-desc">GPS-based "Locate me" for one-tap location detection. Manual address input for precision. Saved addresses surfaced for logged-in users (via Pathao account). Location determines available restaurants and delivery zones. No location = no restaurant list — this is intentional and surfaces a clear CTA to set location.</div>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-step-num">3</div>
+          <div class="flow-step-body">
+            <div class="flow-step-title">Restaurant Browse & Menu</div>
+            <div class="flow-step-desc">Restaurant listing sorted by relevance to user location. Promotions and partner offers surfaced prominently. Menu page shows full item list, images, prices, and customisation options (size, add-ons). Breadcrumb navigation for SEO and user orientation. "Add to cart" maintains session across browse — no cart loss on back navigation.</div>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-step-num">4</div>
+          <div class="flow-step-body">
+            <div class="flow-step-title">Cart & Checkout</div>
+            <div class="flow-step-desc">Cart summary with item-level edit/remove. Promo code input. Delivery fee displayed in bill breakdown. Delivery address confirmation. Payment method selection: Pay Later (BNPL), bKash, card. Order review before placement. COD available where digital payment is not required — web ordering maintains parity with app payment options where infrastructure allows.</div>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-step-num">5</div>
+          <div class="flow-step-body">
+            <div class="flow-step-title">Payment & Order Confirmation</div>
+            <div class="flow-step-desc">For digital payments: user redirected to payment gateway. On success, order placed and confirmation screen shown with order ID, estimated delivery time, and Foodman details. On payment failure, user returned to checkout with clear error message — no order created, no duplicate charge risk. Order confirmation includes prominent app download prompt ("Track your order in the app").</div>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-step-num">6</div>
+          <div class="flow-step-body">
+            <div class="flow-step-title">Order Tracking</div>
+            <div class="flow-step-desc">Web-based order status view showing Placed → Accepted → On the Way → Delivered states. Foodman location and contact info displayed. Deep-link to app tracking for richer real-time view. Order history accessible for logged-in users with re-order functionality — maintains the session value of a web account.</div>
+          </div>
+        </div>
+      </div>
+
+      <h3>Key UX decisions</h3>
+      <div class="win-chips">
+        <div class="win-chip"><div class="win-chip-dot"></div><span><strong>App download as companion, not gate</strong> — users can complete a full order on web without downloading the app. App download is prominently offered at every step but never blocks ordering. This maximises both web conversions and app installs.</span></div>
+        <div class="win-chip"><div class="win-chip-dot"></div><span><strong>QR codes for frictionless app transition</strong> — QR codes on the restaurants listing page link directly to the Play Store and App Store. A user browsing on desktop can scan with their phone and land directly in the app — bypassing the store search step entirely.</span></div>
+        <div class="win-chip"><div class="win-chip-dot"></div><span><strong>Restaurant partner onboarding CTA embedded in the UX</strong> — "Are you a Restaurant Owner? Join as a Restaurant Partner" is surfaced on the homepage and listing pages. The web platform serves as a B2B acquisition surface for new restaurant partners at zero marginal cost.</span></div>
+        <div class="win-chip"><div class="win-chip-dot"></div><span><strong>Helpline number in header</strong> — 09678100800 displayed prominently. In a market where trust in online ordering is still building, a visible helpline number reduces purchase anxiety, particularly for first-time web orderers.</span></div>
+      </div>
+    </div>
+
+    <hr class="cs-divider" />
+
+    <!-- 08 PAYMENTS -->
+    <div class="cs-section reveal" id="payments">
+      <div class="section-eyebrow">08 — Payment Architecture</div>
+      <h2>Digital payments as a first-class launch requirement</h2>
+      <p>Bangladesh's digital payment ecosystem was maturing rapidly through 2023–24. bKash had reached near-universal adoption in urban Bangladesh. Pathao Pay Later (BNPL) was already available in the app. Card penetration was rising among the urban professional segment. Integrating all three on web was non-negotiable for parity with competitors and for conversion rate on digital-payment-preferring users.</p>
+
+      <div class="card-grid reveal">
+        <div class="grid-card accent-top">
+          <div class="grid-card-label">Pay Later / BNPL</div>
+          <div class="grid-card-title">Pathao's proprietary buy-now-pay-later</div>
+          <div class="grid-card-body">Leverages Pathao's existing user credit relationship. Approved users order now, pay in the billing cycle. Removes payment as a conversion blocker for users who prefer to settle monthly. High-intent, high-LTV user segment.</div>
+        </div>
+        <div class="grid-card accent-top-teal">
+          <div class="grid-card-label">bKash</div>
+          <div class="grid-card-title">Bangladesh's dominant MFS platform</div>
+          <div class="grid-card-body">Near-universal adoption among urban Bangladeshi users. bKash payment on web mirrors the in-app experience. Critically important for users who don't hold cards but routinely pay digitally via mobile financial services.</div>
+        </div>
+        <div class="grid-card accent-top-amber">
+          <div class="grid-card-label">Cards</div>
+          <div class="grid-card-title">Debit and credit card gateway</div>
+          <div class="grid-card-body">Covers the urban professional and corporate segment. Desktop web ordering + card payment is the dominant pattern for office-hour orders placed from work computers — a significant web-specific use case not served by the app.</div>
+        </div>
+      </div>
+
+      <div class="callout">
+        <strong>Payment failure design:</strong> On payment failure, the order is not placed and the user is returned to checkout with a specific error message. No duplicate charge, no ambiguous order state. This was explicitly designed to prevent the trust-destroying pattern of "money taken but order unclear" — particularly important for first-time digital payers.
+      </div>
+    </div>
+
+    <hr class="cs-divider" />
+
+    <!-- 09 CITY EXPANSION -->
+    <div class="cs-section reveal" id="expansion">
+      <div class="section-eyebrow">09 — City Expansion System</div>
+      <h2>Decoupling web presence from app release cycles</h2>
+      <p>One of the most strategically important capabilities of the web platform was what I called dynamic city configuration — the ability to activate a new city's web presence without a code deployment or engineering sprint.</p>
+
+      <div class="insight-quote">
+        <div class="iq-label">Key insight</div>
+        Before the web platform, activating Pathao Food in a new city required coordinating app releases, backend configuration, and ops readiness simultaneously. <strong>The web platform's dynamic city config meant a new city could have a searchable, indexable web presence — with restaurant listings, SEO pages, and an ordering surface — activated in minutes by the ops team, independent of any engineering work.</strong>
+      </div>
+
+      <h3>How dynamic city configuration worked</h3>
+      <div class="flow-steps">
+        <div class="flow-step">
+          <div class="flow-step-num">1</div>
+          <div class="flow-step-body">
+            <div class="flow-step-title">City added to configuration dashboard</div>
+            <div class="flow-step-desc">Ops or product team adds a new city (name, slug, lat/lng bounds, delivery zones) in the internal ops dashboard. No code change, no deployment required.</div>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-step-num">2</div>
+          <div class="flow-step-body">
+            <div class="flow-step-title">City page auto-generated</div>
+            <div class="flow-step-desc">food.pathao.com/[city-slug] is automatically created with the city's restaurant list, dynamically generated title tags and meta descriptions, and a sitemap entry. Google can start indexing within 24–48 hours of activation.</div>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-step-num">3</div>
+          <div class="flow-step-body">
+            <div class="flow-step-title">Restaurant pages generated per partner</div>
+            <div class="flow-step-desc">Each restaurant activated for the city automatically gets a URL, a page with menu/info/ordering CTA, and an entry in the sitemap. Partner count grows the SEO surface area automatically.</div>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-step-num">4</div>
+          <div class="flow-step-body">
+            <div class="flow-step-title">Organic traffic begins flowing</div>
+            <div class="flow-step-desc">Once indexed, searches for "food delivery [city]" and "[restaurant name] [city]" start surfacing Pathao Food results. The city has an organic acquisition channel before the app rollout even completes — creating lead time for user acquisition.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout teal">
+        <strong>Result:</strong> City expansion setup time reduced by 60% compared to app-only rollout. The web platform became the vanguard of geographic expansion — establishing digital presence and beginning organic acquisition weeks before app infrastructure was fully operational in a new city.
+      </div>
+    </div>
+
+    <hr class="cs-divider" />
+
+    <!-- 10 METRICS -->
+    <div class="cs-section reveal" id="metrics">
+      <div class="section-eyebrow">10 — Success Metrics</div>
+      <h2>How success was defined and measured</h2>
+
+      <div class="metrics-grid-cs">
+        <div class="metric-cs">
+          <div class="metric-cs-type">North Star</div>
+          <div class="metric-cs-name">Organic impressions growth</div>
+          <div class="metric-cs-target">+60%</div>
+          <div class="metric-cs-window">Achieved post-launch · Google Search Console</div>
+        </div>
+        <div class="metric-cs">
+          <div class="metric-cs-type">Expansion</div>
+          <div class="metric-cs-name">City launch time reduction</div>
+          <div class="metric-cs-target">−60%</div>
+          <div class="metric-cs-window">vs. app-only city activation</div>
+        </div>
+        <div class="metric-cs">
+          <div class="metric-cs-type">Acquisition</div>
+          <div class="metric-cs-name">New channel established</div>
+          <div class="metric-cs-target">Organic</div>
+          <div class="metric-cs-window">Web as a 0-cost acquisition channel vs. paid-only before</div>
+        </div>
+        <div class="metric-cs">
+          <div class="metric-cs-type">Conversion</div>
+          <div class="metric-cs-name">Digital payment options live</div>
+          <div class="metric-cs-target">3 methods</div>
+          <div class="metric-cs-window">Pay Later · bKash · Cards at launch</div>
+        </div>
+        <div class="metric-cs">
+          <div class="metric-cs-type">SEO coverage</div>
+          <div class="metric-cs-name">Indexed pages at launch</div>
+          <div class="metric-cs-target">100%</div>
+          <div class="metric-cs-window">Every restaurant partner auto-gets a URL and sitemap entry</div>
+        </div>
+        <div class="metric-cs">
+          <div class="metric-cs-type">Platform</div>
+          <div class="metric-cs-name">B2B surface created</div>
+          <div class="metric-cs-target">Web → Partner</div>
+          <div class="metric-cs-window">Merchant onboarding CTA on homepage and listing pages</div>
+        </div>
+      </div>
+
+      <h3>Measurement framework</h3>
+      <div class="win-chips">
+        <div class="win-chip"><div class="win-chip-dot"></div><span><strong>Google Search Console</strong> — primary source for impressions, clicks, average position, and keyword coverage. Tracked weekly with particular attention to restaurant-branded and city-level queries.</span></div>
+        <div class="win-chip"><div class="win-chip-dot"></div><span><strong>Web order volume</strong> — tracked separately from app order volume to isolate web-native conversion rate and identify web-specific user behaviour patterns (time-of-day, device type, payment method preferences).</span></div>
+        <div class="win-chip"><div class="win-chip-dot"></div><span><strong>App install attribution from web</strong> — UTM-tagged app download links and QR codes allowed attribution of app installs sourced from the web platform. This measured the web-to-app conversion funnel contribution.</span></div>
+        <div class="win-chip"><div class="win-chip-dot"></div><span><strong>City activation speed</strong> — time from "decision to launch city on web" to "first indexed pages live" tracked against the pre-web baseline to validate the 60% setup time reduction.</span></div>
+      </div>
+    </div>
+
+    <hr class="cs-divider" />
+
+    <!-- 11 RISKS -->
+    <div class="cs-section reveal" id="risks">
+      <div class="section-eyebrow">11 — Risks & Mitigations</div>
+      <h2>What could go wrong and how we designed around it</h2>
+
+      <div class="risk-grid">
+        <div class="risk-card">
+          <div class="risk-label risk-high">High Risk</div>
+          <div class="risk-title">Web cannibalises app adoption</div>
+          <div class="risk-body">If web ordering was too frictionless, users might never download the app — reducing the long-term LTV benefit of app-native engagement. Mitigated by positioning app download as primary CTA throughout, and reserving some features (rich order tracking, reorder, loyalty points) as app-exclusive incentives.</div>
+        </div>
+        <div class="risk-card">
+          <div class="risk-label risk-high">High Risk</div>
+          <div class="risk-title">Payment failure erodes trust</div>
+          <div class="risk-body">Bangladesh's web payment trust was fragile in 2023. A single "money taken, order unclear" incident would damage the entire web channel. Mitigated by explicit order-not-created-on-payment-failure logic, clear error messaging at every failure state, and a visible helpline number for immediate escalation.</div>
+        </div>
+        <div class="risk-card">
+          <div class="risk-label risk-med">Medium Risk</div>
+          <div class="risk-title">SEO pages rank slowly or not at all</div>
+          <div class="risk-body">New domains and subdomains can take 3–6 months to build search authority. Mitigated by ensuring the sitemap was submitted to Search Console on launch day, internal linking was properly configured to distribute authority to restaurant pages, and structured data was implemented for rich result eligibility from day one.</div>
+        </div>
+        <div class="risk-card">
+          <div class="risk-label risk-med">Medium Risk</div>
+          <div class="risk-title">Inconsistent restaurant data quality</div>
+          <div class="risk-body">Restaurant pages would only be useful for SEO if the data (name, cuisine, address, operating hours) was accurate and complete. Mitigated by making restaurant page creation contingent on a minimum data completeness threshold, with an ops-side QA step before pages were published.</div>
+        </div>
+        <div class="risk-card">
+          <div class="risk-label risk-med">Medium Risk</div>
+          <div class="risk-title">Core Web Vitals failure on slow networks</div>
+          <div class="risk-body">Bangladesh has mixed network quality. Slow page load directly hurts both SEO ranking and conversion. Mitigated by WebP image format via IPX proxy, lazy loading for below-fold content, and a performance budget set during engineering review — not as a post-launch cleanup item.</div>
+        </div>
+        <div class="risk-card">
+          <div class="risk-label risk-low">Low Risk</div>
+          <div class="risk-title">Ops misuse of city config toggle</div>
+          <div class="risk-body">Dynamic city config gave non-technical ops users the ability to create live web pages. Mitigated by a required data validation step (minimum fields: city name, slug, at least one active restaurant) before a city could be activated, preventing empty or broken city pages from going live.</div>
+        </div>
+      </div>
+    </div>
+
+    <hr class="cs-divider" />
+
+    <!-- 12 LESSONS -->
+    <div class="cs-section reveal" id="lessons">
+      <div class="section-eyebrow">12 — Lessons & Reflections</div>
+      <h2>What building food.pathao.com taught me</h2>
+
+      <div class="lesson-list">
+        <div class="lesson-item">
+          <div class="lesson-num">01</div>
+          <div>
+            <div class="lesson-title">SEO is a product decision, not a marketing task</div>
+            <div class="lesson-body">The most consequential SEO choices for Pathao Food Web were made before the first line of UI was written: URL structure, page taxonomy, dynamic sitemap generation, structured data schema. These were engineering architecture decisions. <strong>Treating SEO as a post-launch content task would have built the wrong product.</strong> The 60% organic impression lift was a direct result of SEO being a PM-level requirement, not a marketing department request.</div>
+          </div>
+        </div>
+        <div class="lesson-item">
+          <div class="lesson-num">02</div>
+          <div>
+            <div class="lesson-title">The right 0→1 question is "what job can only this platform do?"</div>
+            <div class="lesson-body">Early in the project, there was pressure to replicate the full app experience on web. The right question was different: <strong>what can the web do that the app cannot?</strong> The answer was organic search interception and city-level geographic scalability without engineering dependency. Anchoring the product around those two capabilities — rather than "web version of the app" — shaped everything from the architecture to the metrics.</div>
+          </div>
+        </div>
+        <div class="lesson-item">
+          <div class="lesson-num">03</div>
+          <div>
+            <div class="lesson-title">Dynamic configuration is worth the upfront investment</div>
+            <div class="lesson-body">Building the city configuration dashboard was slower than hardcoding the first few cities. But the compounding return — 60% faster city expansion, zero engineering involvement for ops-side geographic activation — justified the investment many times over. <strong>The right infrastructure decision often looks like over-engineering at launch and looks like obvious architecture six months later.</strong></div>
+          </div>
+        </div>
+        <div class="lesson-item">
+          <div class="lesson-num">04</div>
+          <div>
+            <div class="lesson-title">Trust signals are conversion features, not decoration</div>
+            <div class="lesson-body">The helpline number in the header, the partner logos (KFC, Burger King, Chillox), the payment method icons — these weren't brand decoration. In a market where web ordering trust was still establishing itself, <strong>every trust signal was a measurable conversion lever</strong>. The partner logos signalled platform legitimacy. The helpline signalled accountability. Both reduced the perceived risk of a first-time digital food order.</div>
+          </div>
+        </div>
+        <div class="lesson-item">
+          <div class="lesson-num">05</div>
+          <div>
+            <div class="lesson-title">A new channel is only as good as its handoff to the existing one</div>
+            <div class="lesson-body">The web platform's long-term value to Pathao wasn't just web orders — it was app installs attributed to organic web discovery. Getting the web-to-app transition right (QR codes, deep links, app-exclusive feature incentives) was as important as the ordering flow itself. <strong>A 0→1 platform succeeds when it strengthens the existing ecosystem, not when it competes with it.</strong></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end cs-body -->
+
+  <!-- FOOTER -->
+  <div class="cs-footer">
+    <div class="cs-footer-inner">
+      <div>
+        <div class="cs-footer-title">See the product live</div>
+        <div class="cs-footer-sub">food.pathao.com · Built 0→1 at Pathao</div>
+      </div>
+      <div class="cs-footer-actions">
+        <a class="footer-btn footer-btn-primary" href="https://food.pathao.com" target="_blank" rel="noopener">Visit food.pathao.com ↗</a>
+        <a class="footer-btn footer-btn-secondary" href="work.html">All case studies</a>
+        <a class="footer-btn footer-btn-secondary" href="mailto:akash.poddar.0799@gmail.com">Get in touch</a>
+      </div>
+    </div>
+  </div>
+  <footer>© 2026 Akash Poddar · Dhaka, Bangladesh</footer>
+
+  <script>
+    const reveals = document.querySelectorAll('.reveal');
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e, i) => {
+        if (e.isIntersecting) {
+          e.target.style.transitionDelay = (i * 0.05) + 's';
+          e.target.classList.add('visible');
+          io.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.08 });
+    reveals.forEach(r => io.observe(r));
+
+    const tocItems = document.querySelectorAll('.toc-item');
+    const sections = document.querySelectorAll('.cs-section[id]');
+    new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          tocItems.forEach(t => t.classList.remove('active'));
+          const active = document.querySelector(`.toc-item[href="#${entry.target.id}"]`);
+          if (active) active.classList.add('active');
+        }
+      });
+    }, { threshold: 0.3, rootMargin: '-56px 0px -60% 0px' }).observe || sections.forEach(s => {
+      new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting) {
+          tocItems.forEach(t => t.classList.remove('active'));
+          const active = document.querySelector(`.toc-item[href="#${entries[0].target.id}"]`);
+          if (active) active.classList.add('active');
+        }
+      }, { threshold: 0.3, rootMargin: '-56px 0px -60% 0px' }).observe(s);
+    });
+  </script>
+
+</body>
+</html>
