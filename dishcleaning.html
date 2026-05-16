@@ -1,0 +1,1089 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-62DWPTYD6F"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-62DWPTYD6F');
+  </script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pathao Food Dish Data Cleaning - Case Study | Akash Poddar</title>
+  <meta name="description" content="How I built a structured food data taxonomy for Pathao Food - cleaning 100K+ menu items, separating cuisine from dish, and laying the data foundation for AI-powered personalisation." />
+  <link rel="canonical" href="https://echo-akash.github.io/dishcleaning.html" />
+  <meta property="og:title" content="Pathao Food Dish Data Cleaning - PM Case Study by Akash Poddar" />
+  <meta property="og:description" content="Building the data foundation for AI at Pathao Food - taxonomy design, menu data cleaning, and structured labelling at scale." />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://echo-akash.github.io/dishcleaning.html" />
+  <meta property="og:image" content="https://echo-akash.github.io/og-image.png" />
+  <meta name="author" content="Akash Poddar" />
+  <meta name="robots" content="index, follow" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Pathao Food Dish Data Cleaning - Product Case Study",
+    "description": "How Akash Poddar designed a food data taxonomy, cleaned 100K+ menu items, and built the structured data layer that enables AI-powered discovery and personalisation at Pathao Food.",
+    "author": { "@type": "Person", "name": "Akash Poddar", "url": "https://echo-akash.github.io/" }
+  }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,300;1,9..144,500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --ink: #0e0e0e;
+      --ink-mid: #444;
+      --ink-muted: #888;
+      --ink-faint: #bbb;
+      --surface: #f7f5f0;
+      --white: #ffffff;
+      --accent: #1c4f8a;
+      --accent-light: #e8f0fa;
+      --accent2: #2e7d6b;
+      --accent2-light: #e4f3ee;
+      --amber: #7a4a10;
+      --amber-light: #fef3e2;
+      --coral: #8c3320;
+      --coral-light: #faeae7;
+      --purple: #4a2d8a;
+      --purple-light: #f0ecfa;
+      --line: rgba(0,0,0,0.08);
+      --serif: 'Fraunces', Georgia, serif;
+      --sans: 'DM Sans', system-ui, sans-serif;
+      --radius: 10px;
+      --ease: cubic-bezier(0.16, 1, 0.3, 1);
+      --wide-w: 1000px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--sans); background: var(--surface); color: var(--ink); font-size: 15px; line-height: 1.6; overflow-x: hidden; }
+
+    /* NAV */
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 0 40px; height: 56px; background: rgba(247,245,240,0.88); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); }
+    .nav-logo { font-family: var(--serif); font-size: 16px; font-weight: 600; color: var(--ink); text-decoration: none; letter-spacing: -0.02em; }
+    .nav-links { display: flex; gap: 32px; list-style: none; }
+    .nav-links a { font-size: 13px; color: var(--ink-mid); text-decoration: none; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--accent); }
+    .nav-cta { font-size: 13px; padding: 7px 18px; background: var(--ink); color: var(--white); border-radius: 20px; text-decoration: none; transition: background 0.2s; }
+    .nav-cta:hover { background: var(--accent); }
+
+    /* HERO */
+    .cs-hero { background: var(--ink); padding: 120px 40px 80px; position: relative; overflow: hidden; }
+    .cs-hero-inner { max-width: var(--wide-w); margin: 0 auto; position: relative; z-index: 1; }
+    .cs-hero-grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px); background-size: 60px 60px; }
+    .cs-hero-bar { height: 4px; background: linear-gradient(90deg, #7c3aed, #1c6fb5); border-radius: 2px; width: 64px; margin-bottom: 28px; }
+    .cs-meta-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 24px; }
+    .cs-tag { font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; padding: 5px 14px; border-radius: 20px; }
+    .tag-purple { background: rgba(124,58,237,0.15); color: #b794f6; border: 1px solid rgba(124,58,237,0.2); }
+    .tag-blue   { background: rgba(55,138,221,0.15); color: #85b7eb; border: 1px solid rgba(55,138,221,0.2); }
+    .tag-amber  { background: rgba(186,117,23,0.15); color: #f0b860; border: 1px solid rgba(186,117,23,0.2); }
+    .tag-teal   { background: rgba(29,158,117,0.15); color: #5dcaa5; border: 1px solid rgba(29,158,117,0.2); }
+    .tag-gray   { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.4); border: 1px solid rgba(255,255,255,0.1); }
+    .cs-hero-title { font-family: var(--serif); font-size: clamp(36px, 6vw, 64px); font-weight: 600; letter-spacing: -0.03em; line-height: 0.95; color: #fff; margin-bottom: 20px; }
+    .cs-hero-title em { font-style: italic; font-weight: 300; color: rgba(255,255,255,0.4); }
+    .cs-hero-sub { font-size: 17px; font-weight: 300; color: rgba(255,255,255,0.5); max-width: 600px; line-height: 1.7; margin-bottom: 48px; }
+    .cs-hero-sub strong { color: rgba(255,255,255,0.8); font-weight: 400; }
+    .cs-kpi-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 40px; }
+    .cs-kpi { padding-right: 32px; border-right: 1px solid rgba(255,255,255,0.08); }
+    .cs-kpi:last-child { border-right: none; }
+    .cs-kpi-num { font-family: var(--serif); font-size: 32px; font-weight: 600; letter-spacing: -0.02em; color: #fff; line-height: 1; margin-bottom: 6px; }
+    .cs-kpi-num span { font-size: 20px; font-style: italic; font-weight: 300; color: rgba(255,255,255,0.35); }
+    .cs-kpi-label { font-size: 11px; color: rgba(255,255,255,0.35); line-height: 1.4; max-width: 120px; }
+
+    /* TOC */
+    .toc-bar { position: sticky; top: 56px; z-index: 90; background: var(--white); border-bottom: 1px solid var(--line); overflow-x: auto; }
+    .toc-inner { max-width: var(--wide-w); margin: 0 auto; display: flex; padding: 0 40px; }
+    .toc-item { font-size: 12px; color: var(--ink-muted); text-decoration: none; padding: 14px 18px; white-space: nowrap; border-bottom: 2px solid transparent; transition: color 0.2s, border-color 0.2s; display: flex; align-items: center; gap: 6px; }
+    .toc-item:hover, .toc-item.active { color: var(--accent); border-bottom-color: var(--accent); }
+    .toc-num { font-size: 10px; color: var(--ink-faint); }
+
+    /* BODY */
+    .cs-body { max-width: var(--wide-w); margin: 0 auto; padding: 0 40px; }
+    .cs-section { padding: 72px 0 0; }
+    .cs-section:last-of-type { padding-bottom: 80px; }
+    .section-eyebrow { font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+    .section-eyebrow::after { content: ''; flex: 0 0 32px; height: 1px; background: var(--accent); opacity: 0.4; }
+    .cs-section h2 { font-family: var(--serif); font-size: 32px; font-weight: 600; letter-spacing: -0.02em; color: var(--ink); line-height: 1.15; margin-bottom: 28px; }
+    .cs-section h3 { font-family: var(--serif); font-size: 20px; font-weight: 600; letter-spacing: -0.01em; color: var(--ink); margin: 32px 0 12px; }
+    .cs-section p { font-size: 15px; color: var(--ink-mid); line-height: 1.8; font-weight: 300; margin-bottom: 16px; }
+    .cs-section p strong { color: var(--ink); font-weight: 500; }
+    .cs-divider { border: none; border-top: 1px solid var(--line); margin: 56px 0 0; }
+
+    /* CALLOUT */
+    .callout { background: var(--white); border-radius: var(--radius); border: 1px solid var(--line); border-left: 4px solid var(--accent); padding: 20px 24px; margin: 28px 0; font-size: 15px; color: var(--ink-mid); line-height: 1.75; font-weight: 300; }
+    .callout strong { color: var(--ink); font-weight: 500; }
+    .callout.amber  { border-left-color: #c47e20; background: var(--amber-light); }
+    .callout.teal   { border-left-color: #1d9e75; background: var(--accent2-light); }
+    .callout.coral  { border-left-color: #c0402a; background: var(--coral-light); }
+    .callout.purple { border-left-color: #7c3aed; background: var(--purple-light); }
+
+    /* INSIGHT QUOTE */
+    .insight-quote { margin: 32px 0; padding: 28px 32px; background: var(--ink); border-radius: var(--radius); color: rgba(255,255,255,0.55); font-size: 16px; font-weight: 300; line-height: 1.8; }
+    .insight-quote strong { color: #fff; font-weight: 400; }
+    .insight-quote .iq-label { font-size: 10px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.25); margin-bottom: 10px; }
+
+    /* CARD GRIDS */
+    .card-grid   { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 24px 0; }
+    .card-grid-2 { grid-template-columns: repeat(2, 1fr); }
+    .grid-card { background: var(--white); border-radius: var(--radius); border: 1px solid var(--line); padding: 20px 22px; }
+    .grid-card-label { font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 8px; }
+    .grid-card-title { font-family: var(--serif); font-size: 17px; font-weight: 600; color: var(--ink); margin-bottom: 8px; line-height: 1.3; }
+    .grid-card-body  { font-size: 13px; color: var(--ink-mid); line-height: 1.65; font-weight: 300; }
+    .accent-top        { border-top: 3px solid var(--accent); }
+    .accent-top-teal   { border-top: 3px solid #1d9e75; }
+    .accent-top-amber  { border-top: 3px solid #c47e20; }
+    .accent-top-coral  { border-top: 3px solid #c0402a; }
+    .accent-top-purple { border-top: 3px solid #7c3aed; }
+
+    /* BEFORE / AFTER COMPARISON */
+    .ba-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0; margin: 24px 0; border-radius: var(--radius); overflow: hidden; border: 1px solid var(--line); }
+    .ba-col { padding: 24px; }
+    .ba-col.before { background: var(--coral-light); border-right: 1px solid var(--line); }
+    .ba-col.after  { background: var(--accent2-light); }
+    .ba-header { font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 16px; }
+    .ba-col.before .ba-header { color: var(--coral); }
+    .ba-col.after  .ba-header { color: var(--accent2); }
+    .ba-item { font-size: 13px; color: var(--ink-mid); line-height: 1.6; padding: 8px 0; border-bottom: 1px solid var(--line); display: flex; gap: 8px; }
+    .ba-item:last-child { border-bottom: none; }
+    .ba-item-icon { flex-shrink: 0; font-size: 14px; margin-top: 1px; }
+    .ba-item strong { color: var(--ink); font-weight: 500; }
+
+    /* TAXONOMY DIAGRAM */
+    .taxonomy-visual { background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); padding: 28px; margin: 24px 0; }
+    .tax-row { display: flex; align-items: flex-start; gap: 0; }
+    .tax-node { text-align: center; flex: 1; }
+    .tax-node-box { padding: 10px 16px; border-radius: 8px; font-size: 13px; font-weight: 500; color: var(--white); display: inline-block; margin-bottom: 12px; min-width: 120px; }
+    .tax-node-blue   { background: var(--accent); }
+    .tax-node-teal   { background: #1d9e75; }
+    .tax-node-amber  { background: #c47e20; }
+    .tax-node-purple { background: #7c3aed; }
+    .tax-children { display: flex; flex-direction: column; gap: 6px; align-items: center; }
+    .tax-child { font-size: 12px; color: var(--ink-mid); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px; text-align: center; }
+    .tax-connector { width: 1px; height: 20px; background: var(--ink-faint); margin: 0 auto; }
+    .tax-h-line { flex: 1; height: 1px; background: var(--line); margin-top: 22px; }
+
+    /* RULE TABLE */
+    .rule-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 24px 0; border-radius: var(--radius); border: 1px solid var(--line); }
+    .rule-table { width: 100%; border-collapse: collapse; min-width: 520px; font-size: 13px; }
+    .rule-table th { background: var(--ink); color: rgba(255,255,255,0.6); font-size: 10px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; padding: 12px 16px; text-align: left; }
+    .rule-table td { padding: 13px 16px; border-bottom: 1px solid var(--line); color: var(--ink-mid); vertical-align: top; line-height: 1.6; }
+    .rule-table td:first-child { font-weight: 500; color: var(--ink); }
+    .rule-table tr:last-child td { border-bottom: none; }
+    .rule-table tr:nth-child(even) td { background: rgba(0,0,0,0.015); }
+    .badge-cuisine { font-size: 10px; padding: 2px 8px; border-radius: 10px; background: var(--accent-light); color: var(--accent); font-weight: 500; white-space: nowrap; }
+    .badge-dish    { font-size: 10px; padding: 2px 8px; border-radius: 10px; background: var(--accent2-light); color: var(--accent2); font-weight: 500; white-space: nowrap; }
+    .badge-edge    { font-size: 10px; padding: 2px 8px; border-radius: 10px; background: var(--amber-light); color: var(--amber); font-weight: 500; white-space: nowrap; }
+
+    /* FLOW STEPS */
+    .flow-steps { display: flex; flex-direction: column; gap: 0; margin: 24px 0; }
+    .flow-step { display: grid; grid-template-columns: 48px 1fr; gap: 20px; position: relative; }
+    .flow-step::before { content: ''; position: absolute; left: 23px; top: 40px; bottom: -12px; width: 2px; background: var(--line); }
+    .flow-step:last-child::before { display: none; }
+    .flow-step-num { width: 48px; height: 48px; border-radius: 50%; background: var(--white); border: 1px solid var(--line); display: flex; align-items: center; justify-content: center; font-family: var(--serif); font-size: 16px; font-weight: 600; color: var(--accent); flex-shrink: 0; position: relative; z-index: 1; margin-bottom: 24px; }
+    .flow-step-body { padding-top: 12px; padding-bottom: 24px; }
+    .flow-step-title { font-size: 14px; font-weight: 500; color: var(--ink); margin-bottom: 6px; }
+    .flow-step-desc  { font-size: 13px; color: var(--ink-mid); line-height: 1.65; font-weight: 300; }
+
+    /* WIN CHIPS */
+    .win-chips { display: flex; flex-direction: column; gap: 10px; margin: 24px 0; }
+    .win-chip { display: flex; gap: 12px; align-items: flex-start; font-size: 13.5px; color: var(--ink-mid); line-height: 1.65; }
+    .win-chip-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); flex-shrink: 0; margin-top: 6px; }
+    .win-chip strong { color: var(--ink); font-weight: 500; }
+
+    /* METRICS GRID */
+    .metrics-grid-cs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 24px 0; }
+    .metric-cs { background: var(--white); border-radius: var(--radius); border: 1px solid var(--line); padding: 20px 22px; }
+    .metric-cs-type   { font-size: 10px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 8px; }
+    .metric-cs-name   { font-size: 14px; font-weight: 500; color: var(--ink); margin-bottom: 6px; line-height: 1.3; }
+    .metric-cs-target { font-size: 22px; font-weight: 500; color: var(--accent); font-family: var(--serif); letter-spacing: -0.01em; margin-bottom: 4px; }
+    .metric-cs-window { font-size: 11px; color: var(--ink-faint); }
+
+    /* AI DOWNSTREAM */
+    .downstream-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 24px 0; }
+    .downstream-card { background: var(--white); border-radius: var(--radius); border: 1px solid var(--line); padding: 20px; position: relative; overflow: hidden; }
+    .downstream-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; }
+    .dc-purple::before { background: #7c3aed; }
+    .dc-blue::before   { background: var(--accent); }
+    .dc-teal::before   { background: #1d9e75; }
+    .dc-amber::before  { background: #c47e20; }
+    .dc-coral::before  { background: #c0402a; }
+    .dc-slate::before  { background: #3a4460; }
+    .downstream-card .dc-icon { font-size: 22px; margin-bottom: 10px; }
+    .downstream-card .dc-title { font-size: 14px; font-weight: 500; color: var(--ink); margin-bottom: 6px; line-height: 1.3; }
+    .downstream-card .dc-body  { font-size: 12.5px; color: var(--ink-mid); line-height: 1.6; font-weight: 300; }
+    .downstream-card .dc-status { display: inline-block; margin-top: 10px; font-size: 10px; font-weight: 500; letter-spacing: 0.06em; padding: 2px 8px; border-radius: 10px; }
+    .status-enabled { background: var(--accent2-light); color: var(--accent2); }
+    .status-planned { background: var(--amber-light); color: var(--amber); }
+
+    /* RISK GRID */
+    .risk-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 24px 0; }
+    .risk-card { background: var(--white); border-radius: var(--radius); border: 1px solid var(--line); padding: 20px; }
+    .risk-label { font-size: 10px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 8px; }
+    .risk-high { color: #c0402a; } .risk-med { color: #c47e20; } .risk-low { color: #1d9e75; }
+    .risk-title { font-size: 14px; font-weight: 500; color: var(--ink); margin-bottom: 8px; line-height: 1.3; }
+    .risk-body  { font-size: 12.5px; color: var(--ink-mid); line-height: 1.6; font-weight: 300; }
+
+    /* LESSON LIST */
+    .lesson-list { display: flex; flex-direction: column; gap: 20px; margin: 24px 0; }
+    .lesson-item { display: grid; grid-template-columns: 32px 1fr; gap: 16px; }
+    .lesson-num   { font-family: var(--serif); font-size: 22px; font-weight: 600; color: var(--ink-faint); line-height: 1; padding-top: 2px; }
+    .lesson-title { font-size: 15px; font-weight: 500; color: var(--ink); margin-bottom: 6px; }
+    .lesson-body  { font-size: 13.5px; color: var(--ink-mid); line-height: 1.7; font-weight: 300; }
+    .lesson-body strong { color: var(--ink); font-weight: 500; }
+
+    /* FOOTER */
+    .cs-footer { background: var(--ink); padding: 64px 40px; }
+    .cs-footer-inner { max-width: var(--wide-w); margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 40px; flex-wrap: wrap; }
+    .cs-footer-title { font-family: var(--serif); font-size: 28px; font-weight: 600; color: #fff; letter-spacing: -0.02em; margin-bottom: 8px; }
+    .cs-footer-sub   { font-size: 14px; color: rgba(255,255,255,0.4); font-weight: 300; }
+    .cs-footer-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+    .footer-btn { padding: 10px 24px; border-radius: 40px; font-size: 13px; text-decoration: none; transition: all 0.2s; }
+    .footer-btn-primary { background: #fff; color: var(--ink); }
+    .footer-btn-primary:hover { background: #e0dcd4; }
+    .footer-btn-secondary { border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.6); }
+    .footer-btn-secondary:hover { border-color: rgba(255,255,255,0.5); color: #fff; }
+    footer { background: var(--ink); border-top: 1px solid rgba(255,255,255,0.06); padding: 20px 40px; text-align: center; font-size: 12px; color: rgba(255,255,255,0.2); }
+
+    /* REVEAL */
+    .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.6s var(--ease), transform 0.6s var(--ease); }
+    .reveal.visible { opacity: 1; transform: none; }
+
+    /* RESPONSIVE */
+    @media (max-width: 900px) {
+      .card-grid { grid-template-columns: repeat(2, 1fr); }
+      .downstream-grid { grid-template-columns: repeat(2, 1fr); }
+      .risk-grid { grid-template-columns: repeat(2, 1fr); }
+      .metrics-grid-cs { grid-template-columns: repeat(2, 1fr); }
+      .cs-kpi-row { grid-template-columns: repeat(3, 1fr); gap: 20px 0; }
+      .cs-kpi { padding-right: 20px; }
+    }
+
+    @media (max-width: 640px) {
+      nav { padding: 0 16px; }
+      .nav-links { display: none; }
+      .nav-cta { font-size: 12px; padding: 6px 14px; }
+      .cs-hero { padding: 88px 16px 48px; }
+      .cs-hero-title { font-size: clamp(32px, 10vw, 48px); }
+      .cs-hero-sub { font-size: 15px; margin-bottom: 36px; }
+      .cs-kpi-row { grid-template-columns: repeat(2, 1fr); gap: 20px 0; }
+      .cs-kpi { border-right: 1px solid rgba(255,255,255,0.08); border-bottom: 1px solid rgba(255,255,255,0.08); padding-right: 16px; padding-bottom: 20px; margin-bottom: 4px; }
+      .cs-kpi:nth-child(even) { border-right: none; padding-left: 16px; }
+      .cs-kpi:nth-last-child(-n+2) { border-bottom: none; }
+      .cs-kpi-num { font-size: 24px; }
+      .toc-inner { padding: 0 12px; }
+      .toc-item { font-size: 11px; padding: 12px 8px; }
+      .toc-num { display: none; }
+      .cs-body { padding: 0 16px; }
+      .cs-section { padding: 48px 0 0; }
+      .cs-section h2 { font-size: 24px; }
+      .cs-section h3 { font-size: 17px; margin: 24px 0 10px; }
+      .cs-section p { font-size: 14px; }
+      .cs-divider { margin: 40px 0 0; }
+      .card-grid, .card-grid-2 { grid-template-columns: 1fr; }
+      .downstream-grid { grid-template-columns: 1fr; }
+      .risk-grid { grid-template-columns: 1fr; }
+      .metrics-grid-cs { grid-template-columns: 1fr 1fr; gap: 10px; }
+      .ba-grid { grid-template-columns: 1fr; }
+      .ba-col.before { border-right: none; border-bottom: 1px solid var(--line); }
+      .flow-step { grid-template-columns: 36px 1fr; gap: 14px; }
+      .flow-step-num { width: 36px; height: 36px; font-size: 14px; }
+      .flow-step::before { left: 17px; top: 36px; }
+      .lesson-item { grid-template-columns: 28px 1fr; gap: 12px; }
+      .lesson-num { font-size: 18px; }
+      .tax-row { flex-direction: column; gap: 16px; }
+      .tax-h-line { display: none; }
+      .cs-footer { padding: 40px 16px; }
+      .cs-footer-inner { flex-direction: column; gap: 28px; }
+      .cs-footer-title { font-size: 22px; }
+      .cs-footer-actions { flex-direction: column; gap: 8px; }
+      footer { padding: 20px 16px; }
+    }
+
+    @media (max-width: 380px) {
+      .metrics-grid-cs { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a class="nav-logo" href="index.html">Akash Poddar</a>
+    <ul class="nav-links">
+      <li><a href="work.html">Case Studies</a></li>
+      <li><a href="index.html#experience">Experience</a></li>
+      <li><a href="index.html#contact">Contact</a></li>
+    </ul>
+    <a class="nav-cta" href="mailto:akash.poddar.0799@gmail.com">Get in touch</a>
+  </nav>
+
+  <!-- HERO -->
+  <div class="cs-hero">
+    <div class="cs-hero-grid"></div>
+    <div class="cs-hero-inner">
+      <div class="cs-hero-bar"></div>
+      <div class="cs-meta-row">
+        <span class="cs-tag tag-purple">Data Foundation</span>
+        <span class="cs-tag tag-blue">Taxonomy Design</span>
+        <span class="cs-tag tag-amber">AI Enablement</span>
+        <span class="cs-tag tag-teal">Menu Quality</span>
+        <span class="cs-tag tag-gray">Pathao Food · 2024–25</span>
+      </div>
+      <h1 class="cs-hero-title">Pathao Food<br><em>Dish Data Cleaning</em></h1>
+      <p class="cs-hero-sub">
+        Building the structured data layer that powers discovery, personalisation, and AI at Pathao Food - from <strong>noisy, inconsistent menu data</strong> to a clean, machine-readable taxonomy of cuisines, dishes, and intent signals at scale.
+      </p>
+      <div class="cs-kpi-row">
+        <div class="cs-kpi">
+          <div class="cs-kpi-num">100K<span>+</span></div>
+          <div class="cs-kpi-label">Menu items cleaned and classified</div>
+        </div>
+        <div class="cs-kpi">
+          <div class="cs-kpi-num">2<span> layers</span></div>
+          <div class="cs-kpi-label">Cuisine + Dish taxonomy enforced at scale</div>
+        </div>
+        <div class="cs-kpi">
+          <div class="cs-kpi-num">6<span>+</span></div>
+          <div class="cs-kpi-label">Downstream AI and product features unlocked</div>
+        </div>
+        <div class="cs-kpi">
+          <div class="cs-kpi-num">~0<span>%</span></div>
+          <div class="cs-kpi-label">Pre-existing structured taxonomy before this work</div>
+        </div>
+        <div class="cs-kpi">
+          <div class="cs-kpi-num">1<span>st</span></div>
+          <div class="cs-kpi-label">Data foundation layer for AI in Pathao Food</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOC -->
+  <div class="toc-bar">
+    <div class="toc-inner">
+      <a class="toc-item" href="#context"><span class="toc-num">01</span> Context</a>
+      <a class="toc-item" href="#problem"><span class="toc-num">02</span> Problem</a>
+      <a class="toc-item" href="#taxonomy"><span class="toc-num">03</span> Taxonomy</a>
+      <a class="toc-item" href="#rules"><span class="toc-num">04</span> Rules</a>
+      <a class="toc-item" href="#process"><span class="toc-num">05</span> Process</a>
+      <a class="toc-item" href="#edgecases"><span class="toc-num">06</span> Edge Cases</a>
+      <a class="toc-item" href="#downstream"><span class="toc-num">07</span> AI Downstream</a>
+      <a class="toc-item" href="#metrics"><span class="toc-num">08</span> Metrics</a>
+      <a class="toc-item" href="#risks"><span class="toc-num">09</span> Risks</a>
+      <a class="toc-item" href="#lessons"><span class="toc-num">10</span> Lessons</a>
+    </div>
+  </div>
+
+  <div class="cs-body">
+
+    <!-- 01 CONTEXT -->
+    <div class="cs-section reveal" id="context">
+      <div class="section-eyebrow">01 - Context & Background</div>
+      <h2>Pathao Food had a restaurant graph. It didn't have a food graph.</h2>
+      <p>By 2024, Pathao Food had thousands of restaurant partners across Dhaka, Chittagong, and Kathmandu. Each restaurant had uploaded their own menu - item names, prices, descriptions, and photos. The operational infrastructure was solid. The data underneath it was not.</p>
+      <p>Every menu item had been entered by individual restaurant owners or onboarding ops teams, each with their own conventions, languages, and levels of care. The result was a database of over 100,000 menu items with no shared schema. There was no standard way to answer the most basic question a food discovery product needs to answer: <strong>what kind of food is this?</strong></p>
+      <p>This wasn't just an ops cleanliness problem. It was a structural ceiling on every AI and personalisation initiative Pathao Food wanted to build. You cannot recommend "Bengali cuisine" to a user if the system doesn't know which items are Bengali. You cannot surface "biryani near you" if the system can't distinguish the dish biryani from the restaurant that happens to have "biryani" in its name. The data had to be fixed before any of the roadmap above it could work.</p>
+
+      <div class="card-grid reveal">
+        <div class="grid-card accent-top">
+          <div class="grid-card-label">The state of the data</div>
+          <div class="grid-card-title">No shared taxonomy</div>
+          <div class="grid-card-body">Menu items existed as free-text strings. No cuisine field. No dish category. No normalised naming. "Chicken Biryani", "chkn biryani", "Biriyani (chicken)" - all the same dish, zero way to know that programmatically.</div>
+        </div>
+        <div class="grid-card accent-top-teal">
+          <div class="grid-card-label">The product ceiling</div>
+          <div class="grid-card-title">Discovery was keyword-only</div>
+          <div class="grid-card-body">Search and collections worked on exact string matching. "Biryani" returned items containing the word. It couldn't return semantically related items, couldn't surface by cuisine intent, and couldn't personalise by food preference.</div>
+        </div>
+        <div class="grid-card accent-top-purple">
+          <div class="grid-card-label">The AI blocker</div>
+          <div class="grid-card-title">No features to train on</div>
+          <div class="grid-card-body">Every ML model Pathao Food wanted to build - recommendation, cuisine affinity, dietary preference detection - required structured labels as features. Without them, there was nothing for a model to learn from.</div>
+        </div>
+      </div>
+
+      <div class="callout purple">
+        <strong>Strategic context:</strong> This was the explicit prerequisite for Pathao Food's AI roadmap. No structured food taxonomy = no cuisine affinity model = no personalised discovery = no AI-powered recommendation engine. Dish cleaning was not a data ops task. It was the foundation layer for every intelligent product capability on the roadmap.
+      </div>
+    </div>
+
+    <hr class="cs-divider" />
+
+    <!-- 02 PROBLEM -->
+    <div class="cs-section reveal" id="problem">
+      <div class="section-eyebrow">02 - Problem Deep Dive</div>
+      <h2>What the data actually looked like</h2>
+
+      <div class="insight-quote">
+        <div class="iq-label">Core problem</div>
+        <strong>"A food delivery platform with 100,000+ menu items and no structured answer to the question: what cuisine is this, and what dish is this?"</strong> Without those two labels, every intelligent feature - search ranking, cuisine filters, personalisation, dietary flags - was either impossible or unreliable.
+      </div>
+
+      <h3>Five categories of data rot</h3>
+      <div class="card-grid reveal">
+        <div class="grid-card">
+          <div class="grid-card-label">Problem type 1</div>
+          <div class="grid-card-title">Name inconsistency</div>
+          <div class="grid-card-body">"Chicken Biryani", "Biriyani Chicken", "chkn briyani", "Special Chicken Biriyani" - four names for one dish. No canonical form, no deduplication signal, no way to group them.</div>
+        </div>
+        <div class="grid-card">
+          <div class="grid-card-label">Problem type 2</div>
+          <div class="grid-card-title">Cuisine-as-dish confusion</div>
+          <div class="grid-card-body">Restaurants tagged items as "Chinese", "Thai", "Mughlai" - which are cuisines, not dishes. The dish field was empty or incorrect. The platform couldn't distinguish what kind of food an item was vs. where it came from.</div>
+        </div>
+        <div class="grid-card">
+          <div class="grid-card-label">Problem type 3</div>
+          <div class="grid-card-title">Missing classification</div>
+          <div class="grid-card-body">Thousands of items had no cuisine or dish label at all. The onboarding flow didn't enforce classification. Restaurants skipped optional fields entirely, and there was no validation on submission.</div>
+        </div>
+        <div class="grid-card">
+          <div class="grid-card-label">Problem type 4</div>
+          <div class="grid-card-title">Banglish and script mixing</div>
+          <div class="grid-card-body">"Khichuri", "khichuri", "Khichri", "Khichudi" - the same Bengali dish in different romanisation schemes. "ভাত" alongside "Rice". Mixed-language entries that no keyword matcher could reliably normalise.</div>
+        </div>
+        <div class="grid-card">
+          <div class="grid-card-label">Problem type 5</div>
+          <div class="grid-card-title">Fusion ambiguity</div>
+          <div class="grid-card-body">"Tandoori Chicken Pizza" - is this Indian? Italian? Both? Items at the intersection of two cuisines had no clear classification path, and existing taxonomies provided no guidance for these cases.</div>
+        </div>
+      </div>
+
+      <h3>Why this broke product features downstream</h3>
+      <div class="ba-grid">
+        <div class="ba-col before">
+          <div class="ba-header">Before - what the data looked like</div>
+          <div class="ba-item"><div class="ba-item-icon">✗</div><div>Search for "biryani" returns 400+ results with no ranking signal - keyword match only, relevance undefined</div></div>
+          <div class="ba-item"><div class="ba-item-icon">✗</div><div>Cuisine filter "Bengali" returns nothing - no item is labelled as Bengali cuisine in the database</div></div>
+          <div class="ba-item"><div class="ba-item-icon">✗</div><div>Personalisation engine has no food-type features - it can only learn from what restaurant a user ordered from, not what they actually ate</div></div>
+          <div class="ba-item"><div class="ba-item-icon">✗</div><div>"Thai Soup" classified as cuisine: Thai, dish: empty - the dish field that recommendation models need doesn't exist</div></div>
+          <div class="ba-item"><div class="ba-item-icon">✗</div><div>New restaurant onboarding creates unclassified items by default - data debt compounds with every new partner</div></div>
+        </div>
+        <div class="ba-col after">
+          <div class="ba-header">After - what the data enables</div>
+          <div class="ba-item"><div class="ba-item-icon">✓</div><div>Search for "biryani" returns results ranked by dish-type match, cuisine affinity, and user preference history</div></div>
+          <div class="ba-item"><div class="ba-item-icon">✓</div><div>Cuisine filter "Bengali" surfaces all items with cuisine: Bengali - Tehari, Ilish, Khichuri, Fuchka, cross-restaurant</div></div>
+          <div class="ba-item"><div class="ba-item-icon">✓</div><div>Personalisation model can learn cuisine affinity and dish-type preference - "this user orders Bengali dishes at lunch"</div></div>
+          <div class="ba-item"><div class="ba-item-icon">✓</div><div>"Thai Soup" correctly labelled cuisine: Thai, dish: Soup - both fields populated and machine-readable</div></div>
+          <div class="ba-item"><div class="ba-item-icon">✓</div><div>Onboarding now enforces classification - new restaurant items enter the system clean from day one</div></div>
+        </div>
+      </div>
+    </div>
+
+    <hr class="cs-divider" />
+
+    <!-- 03 TAXONOMY -->
+    <div class="cs-section reveal" id="taxonomy">
+      <div class="section-eyebrow">03 - Taxonomy Design</div>
+      <h2>The two-layer model: Cuisine and Dish</h2>
+      <p>The first design decision was the most important: <strong>every menu item needs exactly two labels</strong> - a Cuisine label and a Dish label. These are not interchangeable. They answer different questions and serve different product purposes. Getting this distinction right was the foundational intellectual work of the entire project.</p>
+
+      <div class="callout">
+        <strong>Cuisine</strong> - the cooking tradition or regional origin of the food. It tells you <em>where the food style comes from</em>. A cuisine can contain hundreds of dishes. Examples: Bengali, Thai, Chinese, Mughlai, Continental, Fusion.<br><br>
+        <strong>Dish</strong> - the specific food item being prepared and served. It tells you <em>what the food is</em>. A dish belongs to one or more cuisines. Examples: Biryani, Soup, Shawarma, Fried Rice, Naan, Risotto.
+      </div>
+
+      <h3>The taxonomy structure</h3>
+
+      <div class="taxonomy-visual reveal">
+        <p style="font-size:11px; font-weight:500; letter-spacing:0.1em; text-transform:uppercase; color:var(--ink-faint); margin-bottom:20px;">Pathao Food item taxonomy - two mandatory labels per item</p>
+        <div class="tax-row">
+          <div class="tax-node">
+            <div class="tax-node-box tax-node-blue">Bengali</div>
+            <div class="tax-connector"></div>
+            <div class="tax-children">
+              <div class="tax-child">Tehari</div>
+              <div class="tax-child">Ilish Bhaji</div>
+              <div class="tax-child">Fuchka</div>
+              <div class="tax-child">Khichuri</div>
+              <div class="tax-child">Panta Ilish</div>
+            </div>
+          </div>
+          <div class="tax-h-line"></div>
+          <div class="tax-node">
+            <div class="tax-node-box tax-node-teal">Thai</div>
+            <div class="tax-connector"></div>
+            <div class="tax-children">
+              <div class="tax-child">Soup</div>
+              <div class="tax-child">Curry</div>
+              <div class="tax-child">Fried Rice</div>
+              <div class="tax-child">Noodles</div>
+            </div>
+          </div>
+          <div class="tax-h-line"></div>
+          <div class="tax-node">
+            <div class="tax-node-box tax-node-amber">Mughlai</div>
+            <div class="tax-connector"></div>
+            <div class="tax-children">
+              <div class="tax-child">Biryani</div>
+              <div class="tax-child">Rezala</div>
+              <div class="tax-child">Korma</div>
+              <div class="tax-child">Naan</div>
+            </div>
+          </div>
+          <div class="tax-h-line"></div>
+          <div class="tax-node">
+            <div class="tax-node-box tax-node-purple">Fusion</div>
+            <div class="tax-connector"></div>
+            <div class="tax-children">
+              <div class="tax-child">Tandoori Pizza</div>
+              <div class="tax-child">Korean BBQ Burger</div>
+              <div class="tax-child">Desi Pasta</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <h3>Cuisine taxonomy - defined categories</h3>
+      <div class="card-grid reveal">
+        <div class="grid-card accent-top">
+          <div class="grid-card-label">Regional / Heritage</div>
+          <div class="grid-card-title">Origin-based cuisines</div>
+          <div class="grid-card-body">Bengali, Indian, Mughlai, Thai, Chinese, Japanese, Korean, Italian, Middle Eastern, Mexican, Continental. Each maps to a geographic or cultural cooking tradition.</div>
+        </div>
+        <div class="grid-card accent-top-teal">
+          <div class="grid-card-label">Style-based</div>
+          <div class="grid-card-title">Cooking-style cuisines</div>
+          <div class="grid-card-body">Fast Food, Street Food, BBQ & Grill. Defined not by geography but by preparation style and consumption context - applicable across cultural origins.</div>
+        </div>
+        <div class="grid-card accent-top-purple">
+          <div class="grid-card-label">Cross-origin</div>
+          <div class="grid-card-title">Fusion cuisine</div>
+          <div class="grid-card-body">Items that intentionally blend two distinct culinary traditions. "Tandoori Chicken Pizza" is neither purely Italian nor purely Indian - it is Fusion. A specific, defined category, not a catch-all.</div>
+        </div>
+      </div>
+
+      <h3>Dish taxonomy - defined categories</h3>
+      <div class="card-grid reveal">
+        <div class="grid-card">
+          <div class="grid-card-label">Rice-based</div>
+          <div class="grid-card-title">Biryani, Tehari, Fried Rice, Khichuri, Pilau, Panta</div>
+          <div class="grid-card-body">Rice as the primary ingredient. Preparation method and accompanying items define the specific dish type.</div>
+        </div>
+        <div class="grid-card">
+          <div class="grid-card-label">Bread-based</div>
+          <div class="grid-card-title">Naan, Paratha, Roti, Sandwich, Wrap, Toast</div>
+          <div class="grid-card-body">Bread or dough as the primary vehicle. Includes flatbreads and western sandwich forms.</div>
+        </div>
+        <div class="grid-card">
+          <div class="grid-card-label">Protein-based</div>
+          <div class="grid-card-title">Curry, Roast, Grilled, Tandoori, Kebab, Rezala, Bhuna</div>
+          <div class="grid-card-body">Meat, seafood, or legume as the core. Cooking method (grilled vs. curried vs. roasted) defines the sub-category.</div>
+        </div>
+        <div class="grid-card">
+          <div class="grid-card-label">Noodle / Pasta</div>
+          <div class="grid-card-title">Noodles, Chow Mein, Ramen, Pasta, Risotto</div>
+          <div class="grid-card-body">Carbohydrate-based dishes where noodle or pasta is the primary element, distinct from rice-based dishes.</div>
+        </div>
+        <div class="grid-card">
+          <div class="grid-card-label">Snack / Street</div>
+          <div class="grid-card-title">Fuchka, Spring Roll, Samosa, Shawarma, Tacos</div>
+          <div class="grid-card-body">Portable, hand-held, or street-food-context items. Defined by consumption context as much as preparation.</div>
+        </div>
+        <div class="grid-card">
+          <div class="grid-card-label">Liquid / Bowl</div>
+          <div class="grid-card-title">Soup, Salad, Haleem, Dal</div>
+          <div class="grid-card-body">Liquid-primary or loose-form dishes. Bowl-format items consumed with a spoon rather than hands or bread.</div>
+        </div>
+      </div>
+    </div>
+
+    <hr class="cs-divider" />
+
+    <!-- 04 RULES -->
+    <div class="cs-section reveal" id="rules">
+      <div class="section-eyebrow">04 - Classification Rules</div>
+      <h2>The decision logic that makes the taxonomy consistent</h2>
+      <p>A taxonomy is only as good as the rules that enforce it. Anyone labelling an item - whether an ops team member, a restaurant owner, or a machine learning model - needs an unambiguous decision path. I designed a four-question decision tree and a set of conflict-resolution rules for every edge case.</p>
+
+      <h3>The four-question decision tree</h3>
+      <div class="flow-steps">
+        <div class="flow-step">
+          <div class="flow-step-num">Q1</div>
+          <div class="flow-step-body">
+            <div class="flow-step-title">Does the name refer to a region, country, or cooking tradition?</div>
+            <div class="flow-step-desc">If yes → it's a <strong>Cuisine identifier</strong>, not a Dish name. "Thai", "Chinese", "Bengali", "Mughlai", "Italian" are cuisines. They go in the Cuisine field. The Dish field still needs to be filled separately. Example: "Thai Soup" → Cuisine: Thai, Dish: Soup.</div>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-step-num">Q2</div>
+          <div class="flow-step-body">
+            <div class="flow-step-title">Does the name describe a specific preparation that can be eaten as a complete item?</div>
+            <div class="flow-step-desc">If yes → it contains a <strong>Dish identifier</strong>. Look for action words: fried, grilled, curry, soup, roll, wrap, biryani, tehari. These indicate what the food is. "Chicken Biryani" → Dish: Biryani. "Grilled Chicken Salad" → Dish: Grilled Chicken Salad (Continental).</div>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-step-num">Q3</div>
+          <div class="flow-step-body">
+            <div class="flow-step-title">Does the name contain both a cuisine signal AND a dish signal?</div>
+            <div class="flow-step-desc">Split them. "Korean Kimchi Fried Rice" → Cuisine: Korean, Dish: Kimchi Fried Rice. "Mughlai Chicken" → Cuisine: Mughlai, Dish: Chicken (curry - infer from context). The dish label captures what it is; the cuisine label captures where it's from.</div>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-step-num">Q4</div>
+          <div class="flow-step-body">
+            <div class="flow-step-title">Does the name combine elements from two distinct culinary traditions intentionally?</div>
+            <div class="flow-step-desc">If yes → Cuisine: Fusion. This is the catch for deliberate hybrids - "Tandoori Chicken Pizza", "Desi Pasta", "Korean BBQ Burger". Fusion is not "I don't know the cuisine" - it's a positive classification for a specific type of cross-cultural dish.</div>
+          </div>
+        </div>
+      </div>
+
+      <h3>Classification examples - applied to real menu data</h3>
+      <div class="rule-table-wrap">
+        <table class="rule-table">
+          <thead>
+            <tr>
+              <th>Menu item as entered</th>
+              <th>Dish name</th>
+              <th>Cuisine</th>
+              <th>Classification signal</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Chicken Biryani</td>
+              <td>Biryani</td>
+              <td><span class="badge-cuisine">Indian / Mughlai</span></td>
+              <td>"Biryani" is the dish. Indian subcontinent origin.</td>
+            </tr>
+            <tr>
+              <td>Beef Tehari</td>
+              <td>Tehari</td>
+              <td><span class="badge-cuisine">Bengali</span></td>
+              <td>"Tehari" is a specific Bengali rice dish with beef.</td>
+            </tr>
+            <tr>
+              <td>Thai Soup</td>
+              <td>Soup</td>
+              <td><span class="badge-cuisine">Thai</span></td>
+              <td>"Thai" = cuisine. "Soup" = dish. Both extracted from the name.</td>
+            </tr>
+            <tr>
+              <td>Chicken Pasta Alfredo</td>
+              <td>Pasta Alfredo</td>
+              <td><span class="badge-cuisine">Italian</span></td>
+              <td>Alfredo = Italian preparation. Pasta = dish type.</td>
+            </tr>
+            <tr>
+              <td>Vegetable Fried Rice</td>
+              <td>Fried Rice</td>
+              <td><span class="badge-cuisine">Chinese</span></td>
+              <td>"Fried Rice" = dish. Chinese cooking method and flavour profile.</td>
+            </tr>
+            <tr>
+              <td>Chicken Shawarma Wrap</td>
+              <td>Shawarma</td>
+              <td><span class="badge-cuisine">Middle Eastern</span></td>
+              <td>"Shawarma" is a named Middle Eastern dish. "Wrap" is the format.</td>
+            </tr>
+            <tr>
+              <td>Mutton Rezala</td>
+              <td>Rezala</td>
+              <td><span class="badge-cuisine">Mughlai</span></td>
+              <td>"Rezala" is a defined Mughlai curry preparation. Not generic curry.</td>
+            </tr>
+            <tr>
+              <td>Fuchka with Tamarind Water</td>
+              <td>Fuchka</td>
+              <td><span class="badge-cuisine">Bengali</span></td>
+              <td>"Fuchka" is a specific Bengali street food. Tamarind water is the accompaniment.</td>
+            </tr>
+            <tr>
+              <td>Tandoori Chicken Pizza</td>
+              <td>Pizza</td>
+              <td><span class="badge-edge">Fusion</span></td>
+              <td>Italian dish format (pizza) + Indian topping style (tandoori). Deliberate fusion.</td>
+            </tr>
+            <tr>
+              <td>Egg Toast Sandwich</td>
+              <td>Sandwich</td>
+              <td><span class="badge-cuisine">Continental</span></td>
+              <td>Sandwiches are Western/Continental. Egg toast = preparation variant.</td>
+            </tr>
+            <tr>
+              <td>Panta Ilish</td>
+              <td>Panta Ilish</td>
+              <td><span class="badge-cuisine">Bengali</span></td>
+              <td>Fermented rice with hilsha - a complete Bengali cultural dish. Name = dish name.</td>
+            </tr>
+            <tr>
+              <td>Creamy Mushroom Risotto</td>
+              <td>Risotto</td>
+              <td><span class="badge-cuisine">Italian</span></td>
+              <td>"Risotto" is a named Italian dish. Mushroom is the variant.</td>
+            </tr>
+            <tr>
+              <td>chkn briyani</td>
+              <td>Biryani</td>
+              <td><span class="badge-cuisine">Indian / Mughlai</span></td>
+              <td>Typo-normalised to canonical form "Chicken Biryani". Classified as above.</td>
+            </tr>
+            <tr>
+              <td>Korean Kimchi Fried Rice</td>
+              <td>Kimchi Fried Rice</td>
+              <td><span class="badge-cuisine">Korean</span></td>
+              <td>"Korean" = cuisine. "Kimchi Fried Rice" = specific dish. Both extracted.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <hr class="cs-divider" />
+
+    <!-- 05 PROCESS -->
+    <div class="cs-section reveal" id="process">
+      <div class="section-eyebrow">05 - Cleaning Process</div>
+      <h2>How 100,000+ items were cleaned at scale</h2>
+      <p>The taxonomy design solved the "what to label" question. The process design solved the "how to label at scale" question. A purely manual process would have taken months and produced inconsistent results across labellers. A purely automated process would have missed the ambiguous cases that require contextual judgement. The answer was a hybrid pipeline.</p>
+
+      <div class="flow-steps">
+        <div class="flow-step">
+          <div class="flow-step-num">1</div>
+          <div class="flow-step-body">
+            <div class="flow-step-title">Audit - understand the scope before designing the solution</div>
+            <div class="flow-step-desc">Pulled a stratified sample of 2,000 items across restaurant types, cities, and cuisine categories. Classified each manually against a draft taxonomy. This audit revealed the five problem types (name inconsistency, cuisine-as-dish confusion, missing labels, Banglish variation, fusion ambiguity) and shaped the final taxonomy design. The process was designed around what the data actually looked like - not an assumed ideal state.</div>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-step-num">2</div>
+          <div class="flow-step-body">
+            <div class="flow-step-title">Rule-based auto-classification for high-confidence items</div>
+            <div class="flow-step-desc">Built a rule engine covering the most common patterns - items containing "Biryani", "Tehari", "Fried Rice", "Shawarma", "Ramen", "Pizza" and their known Banglish variants. These patterns covered ~60% of the item catalogue with high confidence. Auto-labelled with a confidence score, flagged for spot-check rather than full manual review.</div>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-step-num">3</div>
+          <div class="flow-step-body">
+            <div class="flow-step-title">Labeller guidelines and training for human review of ambiguous items</div>
+            <div class="flow-step-desc">Created a labelling guide (the taxonomy document shared with ops) with the four-question decision tree, 20+ worked examples across cuisine and dish types, explicit handling instructions for Banglish names, and a Fusion classification checklist. Ops team trained on the guide before labelling the ambiguous ~40% of items that the rule engine could not classify with confidence.</div>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-step-num">4</div>
+          <div class="flow-step-body">
+            <div class="flow-step-title">Banglish normalisation pass</div>
+            <div class="flow-step-desc">Separate pass specifically for Banglish variants - mapping "khichudi", "khichri", "Khichuri", "ক্ষিচুড়ি" to the canonical dish label "Khichuri". This normalisation table was built collaboratively with Bangladeshi team members who had domain knowledge of regional spelling variants. The canonical form was set as the searchable and displayable label.</div>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-step-num">5</div>
+          <div class="flow-step-body">
+            <div class="flow-step-title">QA - inter-labeller agreement check</div>
+            <div class="flow-step-desc">A 5% random sample of manually labelled items was re-labelled by a second labeller blind to the first label. Agreement rate measured. Items with disagreement were escalated for a tie-breaking review. This produced both a quality metric for the cleaned dataset and identified ambiguous categories that needed additional rule clarification.</div>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-step-num">6</div>
+          <div class="flow-step-body">
+            <div class="flow-step-title">Onboarding enforcement - prevent new data rot</div>
+            <div class="flow-step-desc">Modified the restaurant onboarding flow to make Cuisine and Dish classification mandatory fields with a constrained dropdown (not free text). New items now enter the system pre-classified. The dropdown options are the taxonomy categories. Restaurants can request a new category via a flagging mechanism, reviewed monthly by the product team.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <hr class="cs-divider" />
+
+    <!-- 06 EDGE CASES -->
+    <div class="cs-section reveal" id="edgecases">
+      <div class="section-eyebrow">06 - Edge Cases & Hard Decisions</div>
+      <h2>The cases that challenged the taxonomy</h2>
+      <p>A taxonomy is only trustworthy if it has documented answers for the hard cases. These were the most contested classification decisions, and the reasoning behind each one.</p>
+
+      <div class="card-grid reveal">
+        <div class="grid-card accent-top-amber">
+          <div class="grid-card-label">Hard case 1</div>
+          <div class="grid-card-title">Butter Naan with Chicken Korma</div>
+          <div class="grid-card-body"><strong>Decision:</strong> Cuisine: Mughlai. Dish: Chicken Korma. Naan is the accompaniment, not the primary dish. The meal-defining item is the Korma. Accompaniments are not classified as the dish when a more specific protein/main dish is named alongside them.</div>
+        </div>
+        <div class="grid-card accent-top-amber">
+          <div class="grid-card-label">Hard case 2</div>
+          <div class="grid-card-title">Prawn Curry</div>
+          <div class="grid-card-body"><strong>Decision:</strong> Dish: Curry. Cuisine: depends on preparation - mustard-based prawn curry = Bengali. Coconut-based = Indian. When the preparation style is unspecified, cuisine is assigned based on the restaurant's primary cuisine profile. Context wins over name alone.</div>
+        </div>
+        <div class="grid-card accent-top-amber">
+          <div class="grid-card-label">Hard case 3</div>
+          <div class="grid-card-title">Paneer Butter Masala</div>
+          <div class="grid-card-body"><strong>Decision:</strong> Cuisine: Indian (North Indian specifically). Dish: Paneer Butter Masala - the full name is the dish name here, as it is a named and widely recognised specific curry. Not just "Curry". The specificity of the named preparation takes precedence.</div>
+        </div>
+        <div class="grid-card accent-top-coral">
+          <div class="grid-card-label">Hard case 4</div>
+          <div class="grid-card-title">Falafel Wrap with Hummus</div>
+          <div class="grid-card-body"><strong>Decision:</strong> Cuisine: Middle Eastern. Dish: Falafel Wrap. Hummus is the accompaniment. "Falafel Wrap" is the primary food item. The "with X" construction always subordinates the second item to an accompaniment role - it does not change the dish classification.</div>
+        </div>
+        <div class="grid-card accent-top-coral">
+          <div class="grid-card-label">Hard case 5</div>
+          <div class="grid-card-title">Fast Food classification</div>
+          <div class="grid-card-body"><strong>Decision:</strong> Fast Food is a style-based cuisine, not a residual category. "Hot N' Crispy Chicken" = Cuisine: Fast Food, Dish: Fried Chicken. Fast Food has its own preparation conventions (deep-fried, battered, quick-serve) that constitute a distinct culinary identity regardless of origin.</div>
+        </div>
+        <div class="grid-card accent-top-purple">
+          <div class="grid-card-label">Hard case 6</div>
+          <div class="grid-card-title">Pizza - Italian or Fast Food?</div>
+          <div class="grid-card-body"><strong>Decision:</strong> Origin = Italian. But for most Bangladeshi menu context, Pizza is served as Fast Food. Classification uses <strong>restaurant context</strong> as the tiebreaker - a pizza from a traditional Italian restaurant = Italian. A pizza from a fast food cloud kitchen = Fast Food. Context over strict etymology.</div>
+        </div>
+      </div>
+    </div>
+
+    <hr class="cs-divider" />
+
+    <!-- 07 AI DOWNSTREAM -->
+    <div class="cs-section reveal" id="downstream">
+      <div class="section-eyebrow">07 - AI & Product Downstream</div>
+      <h2>What this data layer unlocks</h2>
+      <p>The cleaned taxonomy is not a finished product - it is infrastructure. Its value is entirely in what becomes possible on top of it. This is the concrete list of product capabilities that were either unblocked or significantly improved by the existence of clean, structured food data.</p>
+
+      <div class="downstream-grid reveal">
+        <div class="downstream-card dc-purple">
+          <div class="dc-icon">🧠</div>
+          <div class="dc-title">Cuisine Affinity Model</div>
+          <div class="dc-body">Train a user-level cuisine preference model: "this user orders Bengali cuisine 60% of the time at lunch." Cuisine label is the primary feature. Impossible without it.</div>
+          <span class="dc-status status-enabled">Enabled by this work</span>
+        </div>
+        <div class="downstream-card dc-blue">
+          <div class="dc-icon">🔍</div>
+          <div class="dc-title">Intent-Aware Search</div>
+          <div class="dc-body">Search for "biryani" returns all items with Dish: Biryani - regardless of how the restaurant named it. Semantic search grounded in taxonomy, not keyword matching.</div>
+          <span class="dc-status status-enabled">Enabled by this work</span>
+        </div>
+        <div class="downstream-card dc-teal">
+          <div class="dc-icon">🗂️</div>
+          <div class="dc-title">Cuisine-Based Collections</div>
+          <div class="dc-body">Homepage collections like "Bengali Classics" or "Quick Bites" can now be generated automatically from cuisine and dish labels - not manually curated lists that go stale.</div>
+          <span class="dc-status status-enabled">Enabled by this work</span>
+        </div>
+        <div class="downstream-card dc-amber">
+          <div class="dc-icon">🎯</div>
+          <div class="dc-title">Personalised Discovery</div>
+          <div class="dc-body">Surface restaurants to a user based on their cuisine and dish-type preference history - not just proximity or popularity. "You usually order Thai on Fridays - here are options near you."</div>
+          <span class="dc-status status-enabled">Enabled by this work</span>
+        </div>
+        <div class="downstream-card dc-coral">
+          <div class="dc-icon">🥗</div>
+          <div class="dc-title">Dietary Preference Detection</div>
+          <div class="dc-body">Dish labels enable vegetarian/vegan/halal detection by type. "Vegetable Spring Roll" (Dish: Spring Roll) + ingredient context = reliably flagged as vegetarian. Protein labels enable meat-type filtering.</div>
+          <span class="dc-status status-planned">Planned - next phase</span>
+        </div>
+        <div class="downstream-card dc-slate">
+          <div class="dc-icon">📊</div>
+          <div class="dc-title">Restaurant Benchmarking</div>
+          <div class="dc-body">Compare a restaurant's menu coverage against cuisine peers. "Your Bengali menu has 12 items but competitors average 24 - here are the most-ordered missing dishes in your category." Ops and partner intelligence tool.</div>
+          <span class="dc-status status-planned">Planned - next phase</span>
+        </div>
+      </div>
+
+      <div class="callout purple">
+        <strong>The AI compounding effect:</strong> Each new piece of user behaviour data (an order placed, a search run, a collection tapped) is now tagged with structured cuisine and dish labels at the moment it's generated. This means the training dataset for every future model grows richer with every order placed - structured labels accumulate automatically. The taxonomy doesn't just unlock current features; it continuously improves the quality of all future models.
+      </div>
+    </div>
+
+    <hr class="cs-divider" />
+
+    <!-- 08 METRICS -->
+    <div class="cs-section reveal" id="metrics">
+      <div class="section-eyebrow">08 - Success Metrics</div>
+      <h2>How success was defined and measured</h2>
+
+      <div class="metrics-grid-cs">
+        <div class="metric-cs">
+          <div class="metric-cs-type">Coverage</div>
+          <div class="metric-cs-name">% of active menu items with both Cuisine + Dish labels</div>
+          <div class="metric-cs-target">95%+</div>
+          <div class="metric-cs-window">Target coverage of active item catalogue</div>
+        </div>
+        <div class="metric-cs">
+          <div class="metric-cs-type">Quality</div>
+          <div class="metric-cs-name">Inter-labeller agreement rate on QA sample</div>
+          <div class="metric-cs-target">90%+</div>
+          <div class="metric-cs-window">Agreement threshold for taxonomy trustworthiness</div>
+        </div>
+        <div class="metric-cs">
+          <div class="metric-cs-type">Prevention</div>
+          <div class="metric-cs-name">New items entering system without classification</div>
+          <div class="metric-cs-target">0%</div>
+          <div class="metric-cs-window">Post-onboarding enforcement launch</div>
+        </div>
+        <div class="metric-cs">
+          <div class="metric-cs-type">Search impact</div>
+          <div class="metric-cs-name">Cuisine-filtered search result relevance score</div>
+          <div class="metric-cs-target">Baseline → track</div>
+          <div class="metric-cs-window">Pre/post taxonomy deployment comparison</div>
+        </div>
+        <div class="metric-cs">
+          <div class="metric-cs-type">AI readiness</div>
+          <div class="metric-cs-name">Feature completeness for cuisine affinity model</div>
+          <div class="metric-cs-target">100%</div>
+          <div class="metric-cs-window">All required training features available post-cleaning</div>
+        </div>
+        <div class="metric-cs">
+          <div class="metric-cs-type">Maintenance</div>
+          <div class="metric-cs-name">Monthly unclassified item backlog</div>
+          <div class="metric-cs-target">&lt; 500</div>
+          <div class="metric-cs-window">Ongoing - reviewed and cleared monthly</div>
+        </div>
+      </div>
+    </div>
+
+    <hr class="cs-divider" />
+
+    <!-- 09 RISKS -->
+    <div class="cs-section reveal" id="risks">
+      <div class="section-eyebrow">09 - Risks & Mitigations</div>
+      <h2>What could go wrong</h2>
+
+      <div class="risk-grid">
+        <div class="risk-card">
+          <div class="risk-label risk-high">High Risk</div>
+          <div class="risk-title">Taxonomy drift - categories become stale as menus evolve</div>
+          <div class="risk-body">New food trends (Korean fried chicken, cloud kitchen fusions) emerge faster than taxonomy review cycles. Mitigated by a monthly new-category review process and a restaurant-facing "flag unknown category" mechanism that surfaces gaps proactively.</div>
+        </div>
+        <div class="risk-card">
+          <div class="risk-label risk-high">High Risk</div>
+          <div class="risk-title">Labeller inconsistency at scale</div>
+          <div class="risk-body">Human labellers make different judgements on ambiguous items without explicit guidance. Mitigated by the decision tree documentation, worked examples for every edge case type, and the inter-labeller QA check that catches systematic disagreements before they propagate.</div>
+        </div>
+        <div class="risk-card">
+          <div class="risk-label risk-med">Medium Risk</div>
+          <div class="risk-title">Restaurant resistance to classification enforcement</div>
+          <div class="risk-body">Restaurant owners may find the mandatory classification step friction in onboarding. Mitigated by making the dropdown UI fast (type-ahead search), pre-populating common choices based on restaurant name/type, and framing classification as a discoverability benefit for the restaurant - "your items appear in cuisine-filtered searches".</div>
+        </div>
+        <div class="risk-card">
+          <div class="risk-label risk-med">Medium Risk</div>
+          <div class="risk-title">Banglish coverage gaps</div>
+          <div class="risk-body">The Banglish normalisation table covers known variants but will miss new or hyperlocal spelling forms. Mitigated by logging unmatched search queries - a user searching "khichudi" who gets zero results surfaces a coverage gap that feeds back into the normalisation dictionary.</div>
+        </div>
+        <div class="risk-card">
+          <div class="risk-label risk-low">Low Risk</div>
+          <div class="risk-title">AI model overfits to early taxonomy choices</div>
+          <div class="risk-body">If the taxonomy is later revised, models trained on old labels need retraining. Mitigated by versioning taxonomy definitions and logging the taxonomy version against every labelled item - model retraining scope is queryable when the taxonomy changes.</div>
+        </div>
+        <div class="risk-card">
+          <div class="risk-label risk-low">Low Risk</div>
+          <div class="risk-title">Over-classification of Fusion</div>
+          <div class="risk-body">"Fusion" becoming a catch-all for "I'm not sure" rather than a positive classification of genuine hybrids. Mitigated by the explicit Fusion checklist (must meet both criteria: deliberate blend, two identifiable distinct culinary traditions) and the requirement that labellers cannot select Fusion without marking both parent cuisines.</div>
+        </div>
+      </div>
+    </div>
+
+    <hr class="cs-divider" />
+
+    <!-- 10 LESSONS -->
+    <div class="cs-section reveal" id="lessons">
+      <div class="section-eyebrow">10 - Lessons & Reflections</div>
+      <h2>What this work taught me about data as a product</h2>
+
+      <div class="lesson-list">
+        <div class="lesson-item">
+          <div class="lesson-num">01</div>
+          <div>
+            <div class="lesson-title">Data quality is a product problem, not a data engineering problem</div>
+            <div class="lesson-body">The dish cleaning initiative only happened because a PM owned it. Data teams can build pipelines; they cannot define what "correct" means for a food taxonomy. <strong>The definition of correct is a product decision</strong> - it depends on how the data will be used, what features it needs to power, and what user experiences it needs to enable. A PM has to own that definition or it won't be made correctly.</div>
+          </div>
+        </div>
+        <div class="lesson-item">
+          <div class="lesson-num">02</div>
+          <div>
+            <div class="lesson-title">The taxonomy is a product, and it needs a PRD</div>
+            <div class="lesson-body">The labelling guide I wrote for ops wasn't just documentation - it was a product specification. Every edge case decision in it was a product decision with downstream consequences. <strong>Treating the taxonomy document with the same rigour as a feature PRD</strong> - with explicit decision logic, worked examples, and conflict-resolution rules - was what made the cleaned data trustworthy enough to build AI features on.</div>
+          </div>
+        </div>
+        <div class="lesson-item">
+          <div class="lesson-num">03</div>
+          <div>
+            <div class="lesson-title">Prevention is worth more than cleaning</div>
+            <div class="lesson-body">The 100,000-item backlog took months to clean. The onboarding enforcement change that prevents new unclassified items takes minutes per new restaurant and compounds infinitely. <strong>The ratio of investment to return is completely inverted</strong> between retrospective cleaning and prospective enforcement. Cleaning the backlog was necessary; the onboarding fix was the real long-term solution.</div>
+          </div>
+        </div>
+        <div class="lesson-item">
+          <div class="lesson-num">04</div>
+          <div>
+            <div class="lesson-title">Edge cases are not exceptions - they are the rule</div>
+            <div class="lesson-body">In food data, the "easy" cases (Chicken Biryani → Mughlai / Biryani) are a minority. The majority of decisions involve regional variants, Banglish spelling, ambiguous fusion items, accompaniment-vs-main confusion, and context-dependent cuisine assignment. <strong>A taxonomy that only handles the easy cases is a taxonomy that produces unreliable data</strong>. The value is in the documented edge case decisions.</div>
+          </div>
+        </div>
+        <div class="lesson-item">
+          <div class="lesson-num">05</div>
+          <div>
+            <div class="lesson-title">Structured data is the moat, not the model</div>
+            <div class="lesson-body">Any company can access the same ML frameworks and foundation models. What they cannot copy is years of structured, labelled, domain-specific food data built on a well-designed taxonomy with Bangladeshi culinary context encoded into every decision. <strong>The real competitive advantage in AI is the training data quality, not the model architecture</strong>. This is what dish cleaning was actually building - a data moat.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end cs-body -->
+
+  <div class="cs-footer">
+    <div class="cs-footer-inner">
+      <div>
+        <div class="cs-footer-title">The foundation for everything intelligent</div>
+        <div class="cs-footer-sub">Data infrastructure · AI readiness · Pathao Food</div>
+      </div>
+      <div class="cs-footer-actions">
+        <a class="footer-btn footer-btn-primary" href="work.html">All case studies</a>
+        <a class="footer-btn footer-btn-secondary" href="pickup.html">Pathao Pickup →</a>
+        <a class="footer-btn footer-btn-secondary" href="mailto:akash.poddar.0799@gmail.com">Get in touch</a>
+      </div>
+    </div>
+  </div>
+  <footer>© 2026 Akash Poddar · Dhaka, Bangladesh</footer>
+
+  <script>
+    const reveals = document.querySelectorAll('.reveal');
+    new IntersectionObserver((entries) => {
+      let d = 0;
+      entries.filter(e => e.isIntersecting)
+        .sort((a,b) => a.boundingClientRect.top - b.boundingClientRect.top)
+        .forEach(entry => {
+          entry.target.style.transitionDelay = (d++ * 0.06) + 's';
+          entry.target.classList.add('visible');
+        });
+    }, { threshold: 0.08 }).observe || document.querySelectorAll('.reveal').forEach(r => {
+      new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting) {
+          entries[0].target.classList.add('visible');
+        }
+      }, { threshold: 0.08 }).observe(r);
+    });
+
+    // Simpler reveal init that works everywhere
+    const io = new IntersectionObserver((entries) => {
+      let d = 0;
+      entries.filter(e => e.isIntersecting)
+        .sort((a,b) => a.boundingClientRect.top - b.boundingClientRect.top)
+        .forEach(entry => {
+          entry.target.style.transitionDelay = (d++ * 0.06) + 's';
+          entry.target.classList.add('visible');
+          io.unobserve(entry.target);
+        });
+    }, { threshold: 0.08 });
+    reveals.forEach(r => io.observe(r));
+
+    // TOC active state - fires when section top enters the viewport just below the sticky bars
+    // rootMargin top = -(nav 56px + toc ~45px) = -101px so we detect when the section
+    // heading crosses into the reading area. Bottom = -85% so only the topmost visible
+    // section wins, preventing two sections firing at once.
+    const tocItems = document.querySelectorAll('.toc-item');
+    const sections = document.querySelectorAll('.cs-section[id]');
+
+    const tocObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          tocItems.forEach(t => t.classList.remove('active'));
+          const active = document.querySelector(`.toc-item[href="#${entry.target.id}"]`);
+          if (active) active.classList.add('active');
+        }
+      });
+    }, {
+      threshold: 0,
+      rootMargin: '-101px 0px -85% 0px'
+    });
+
+    sections.forEach(s => tocObserver.observe(s));
+  </script>
+
+</body>
+</html>
