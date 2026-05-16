@@ -11,11 +11,11 @@
   </script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Pathao Food Dish Data Cleaning — Case Study | Akash Poddar</title>
-  <meta name="description" content="How I built a structured food data taxonomy for Pathao Food — cleaning 100K+ menu items, separating cuisine from dish, and laying the data foundation for AI-powered personalisation." />
+  <title>Pathao Food Dish Data Cleaning - Case Study | Akash Poddar</title>
+  <meta name="description" content="How I built a structured food data taxonomy for Pathao Food - cleaning 100K+ menu items, separating cuisine from dish, and laying the data foundation for AI-powered personalisation." />
   <link rel="canonical" href="https://echo-akash.github.io/dishcleaning.html" />
-  <meta property="og:title" content="Pathao Food Dish Data Cleaning — PM Case Study by Akash Poddar" />
-  <meta property="og:description" content="Building the data foundation for AI at Pathao Food — taxonomy design, menu data cleaning, and structured labelling at scale." />
+  <meta property="og:title" content="Pathao Food Dish Data Cleaning - PM Case Study by Akash Poddar" />
+  <meta property="og:description" content="Building the data foundation for AI at Pathao Food - taxonomy design, menu data cleaning, and structured labelling at scale." />
   <meta property="og:type" content="article" />
   <meta property="og:url" content="https://echo-akash.github.io/dishcleaning.html" />
   <meta property="og:image" content="https://echo-akash.github.io/og-image.png" />
@@ -25,7 +25,7 @@
   {
     "@context": "https://schema.org",
     "@type": "Article",
-    "headline": "Pathao Food Dish Data Cleaning — Product Case Study",
+    "headline": "Pathao Food Dish Data Cleaning - Product Case Study",
     "description": "How Akash Poddar designed a food data taxonomy, cleaned 100K+ menu items, and built the structured data layer that enables AI-powered discovery and personalisation at Pathao Food.",
     "author": { "@type": "Person", "name": "Akash Poddar", "url": "https://echo-akash.github.io/" }
   }
@@ -335,7 +335,7 @@
       </div>
       <h1 class="cs-hero-title">Pathao Food<br><em>Dish Data Cleaning</em></h1>
       <p class="cs-hero-sub">
-        Building the structured data layer that powers discovery, personalisation, and AI at Pathao Food — from <strong>noisy, inconsistent menu data</strong> to a clean, machine-readable taxonomy of cuisines, dishes, and intent signals at scale.
+        Building the structured data layer that powers discovery, personalisation, and AI at Pathao Food - from <strong>noisy, inconsistent menu data</strong> to a clean, machine-readable taxonomy of cuisines, dishes, and intent signals at scale.
       </p>
       <div class="cs-kpi-row">
         <div class="cs-kpi">
@@ -382,9 +382,9 @@
 
     <!-- 01 CONTEXT -->
     <div class="cs-section reveal" id="context">
-      <div class="section-eyebrow">01 — Context & Background</div>
+      <div class="section-eyebrow">01 - Context & Background</div>
       <h2>Pathao Food had a restaurant graph. It didn't have a food graph.</h2>
-      <p>By 2024, Pathao Food had thousands of restaurant partners across Dhaka, Chittagong, and Kathmandu. Each restaurant had uploaded their own menu — item names, prices, descriptions, and photos. The operational infrastructure was solid. The data underneath it was not.</p>
+      <p>By 2024, Pathao Food had thousands of restaurant partners across Dhaka, Chittagong, and Kathmandu. Each restaurant had uploaded their own menu - item names, prices, descriptions, and photos. The operational infrastructure was solid. The data underneath it was not.</p>
       <p>Every menu item had been entered by individual restaurant owners or onboarding ops teams, each with their own conventions, languages, and levels of care. The result was a database of over 100,000 menu items with no shared schema. There was no standard way to answer the most basic question a food discovery product needs to answer: <strong>what kind of food is this?</strong></p>
       <p>This wasn't just an ops cleanliness problem. It was a structural ceiling on every AI and personalisation initiative Pathao Food wanted to build. You cannot recommend "Bengali cuisine" to a user if the system doesn't know which items are Bengali. You cannot surface "biryani near you" if the system can't distinguish the dish biryani from the restaurant that happens to have "biryani" in its name. The data had to be fixed before any of the roadmap above it could work.</p>
 
@@ -392,7 +392,7 @@
         <div class="grid-card accent-top">
           <div class="grid-card-label">The state of the data</div>
           <div class="grid-card-title">No shared taxonomy</div>
-          <div class="grid-card-body">Menu items existed as free-text strings. No cuisine field. No dish category. No normalised naming. "Chicken Biryani", "chkn biryani", "Biriyani (chicken)" — all the same dish, zero way to know that programmatically.</div>
+          <div class="grid-card-body">Menu items existed as free-text strings. No cuisine field. No dish category. No normalised naming. "Chicken Biryani", "chkn biryani", "Biriyani (chicken)" - all the same dish, zero way to know that programmatically.</div>
         </div>
         <div class="grid-card accent-top-teal">
           <div class="grid-card-label">The product ceiling</div>
@@ -402,7 +402,7 @@
         <div class="grid-card accent-top-purple">
           <div class="grid-card-label">The AI blocker</div>
           <div class="grid-card-title">No features to train on</div>
-          <div class="grid-card-body">Every ML model Pathao Food wanted to build — recommendation, cuisine affinity, dietary preference detection — required structured labels as features. Without them, there was nothing for a model to learn from.</div>
+          <div class="grid-card-body">Every ML model Pathao Food wanted to build - recommendation, cuisine affinity, dietary preference detection - required structured labels as features. Without them, there was nothing for a model to learn from.</div>
         </div>
       </div>
 
@@ -415,12 +415,12 @@
 
     <!-- 02 PROBLEM -->
     <div class="cs-section reveal" id="problem">
-      <div class="section-eyebrow">02 — Problem Deep Dive</div>
+      <div class="section-eyebrow">02 - Problem Deep Dive</div>
       <h2>What the data actually looked like</h2>
 
       <div class="insight-quote">
         <div class="iq-label">Core problem</div>
-        <strong>"A food delivery platform with 100,000+ menu items and no structured answer to the question: what cuisine is this, and what dish is this?"</strong> Without those two labels, every intelligent feature — search ranking, cuisine filters, personalisation, dietary flags — was either impossible or unreliable.
+        <strong>"A food delivery platform with 100,000+ menu items and no structured answer to the question: what cuisine is this, and what dish is this?"</strong> Without those two labels, every intelligent feature - search ranking, cuisine filters, personalisation, dietary flags - was either impossible or unreliable.
       </div>
 
       <h3>Five categories of data rot</h3>
@@ -428,12 +428,12 @@
         <div class="grid-card">
           <div class="grid-card-label">Problem type 1</div>
           <div class="grid-card-title">Name inconsistency</div>
-          <div class="grid-card-body">"Chicken Biryani", "Biriyani Chicken", "chkn briyani", "Special Chicken Biriyani" — four names for one dish. No canonical form, no deduplication signal, no way to group them.</div>
+          <div class="grid-card-body">"Chicken Biryani", "Biriyani Chicken", "chkn briyani", "Special Chicken Biriyani" - four names for one dish. No canonical form, no deduplication signal, no way to group them.</div>
         </div>
         <div class="grid-card">
           <div class="grid-card-label">Problem type 2</div>
           <div class="grid-card-title">Cuisine-as-dish confusion</div>
-          <div class="grid-card-body">Restaurants tagged items as "Chinese", "Thai", "Mughlai" — which are cuisines, not dishes. The dish field was empty or incorrect. The platform couldn't distinguish what kind of food an item was vs. where it came from.</div>
+          <div class="grid-card-body">Restaurants tagged items as "Chinese", "Thai", "Mughlai" - which are cuisines, not dishes. The dish field was empty or incorrect. The platform couldn't distinguish what kind of food an item was vs. where it came from.</div>
         </div>
         <div class="grid-card">
           <div class="grid-card-label">Problem type 3</div>
@@ -443,32 +443,32 @@
         <div class="grid-card">
           <div class="grid-card-label">Problem type 4</div>
           <div class="grid-card-title">Banglish and script mixing</div>
-          <div class="grid-card-body">"Khichuri", "khichuri", "Khichri", "Khichudi" — the same Bengali dish in different romanisation schemes. "ভাত" alongside "Rice". Mixed-language entries that no keyword matcher could reliably normalise.</div>
+          <div class="grid-card-body">"Khichuri", "khichuri", "Khichri", "Khichudi" - the same Bengali dish in different romanisation schemes. "ভাত" alongside "Rice". Mixed-language entries that no keyword matcher could reliably normalise.</div>
         </div>
         <div class="grid-card">
           <div class="grid-card-label">Problem type 5</div>
           <div class="grid-card-title">Fusion ambiguity</div>
-          <div class="grid-card-body">"Tandoori Chicken Pizza" — is this Indian? Italian? Both? Items at the intersection of two cuisines had no clear classification path, and existing taxonomies provided no guidance for these cases.</div>
+          <div class="grid-card-body">"Tandoori Chicken Pizza" - is this Indian? Italian? Both? Items at the intersection of two cuisines had no clear classification path, and existing taxonomies provided no guidance for these cases.</div>
         </div>
       </div>
 
       <h3>Why this broke product features downstream</h3>
       <div class="ba-grid">
         <div class="ba-col before">
-          <div class="ba-header">Before — what the data looked like</div>
-          <div class="ba-item"><div class="ba-item-icon">✗</div><div>Search for "biryani" returns 400+ results with no ranking signal — keyword match only, relevance undefined</div></div>
-          <div class="ba-item"><div class="ba-item-icon">✗</div><div>Cuisine filter "Bengali" returns nothing — no item is labelled as Bengali cuisine in the database</div></div>
-          <div class="ba-item"><div class="ba-item-icon">✗</div><div>Personalisation engine has no food-type features — it can only learn from what restaurant a user ordered from, not what they actually ate</div></div>
-          <div class="ba-item"><div class="ba-item-icon">✗</div><div>"Thai Soup" classified as cuisine: Thai, dish: empty — the dish field that recommendation models need doesn't exist</div></div>
-          <div class="ba-item"><div class="ba-item-icon">✗</div><div>New restaurant onboarding creates unclassified items by default — data debt compounds with every new partner</div></div>
+          <div class="ba-header">Before - what the data looked like</div>
+          <div class="ba-item"><div class="ba-item-icon">✗</div><div>Search for "biryani" returns 400+ results with no ranking signal - keyword match only, relevance undefined</div></div>
+          <div class="ba-item"><div class="ba-item-icon">✗</div><div>Cuisine filter "Bengali" returns nothing - no item is labelled as Bengali cuisine in the database</div></div>
+          <div class="ba-item"><div class="ba-item-icon">✗</div><div>Personalisation engine has no food-type features - it can only learn from what restaurant a user ordered from, not what they actually ate</div></div>
+          <div class="ba-item"><div class="ba-item-icon">✗</div><div>"Thai Soup" classified as cuisine: Thai, dish: empty - the dish field that recommendation models need doesn't exist</div></div>
+          <div class="ba-item"><div class="ba-item-icon">✗</div><div>New restaurant onboarding creates unclassified items by default - data debt compounds with every new partner</div></div>
         </div>
         <div class="ba-col after">
-          <div class="ba-header">After — what the data enables</div>
+          <div class="ba-header">After - what the data enables</div>
           <div class="ba-item"><div class="ba-item-icon">✓</div><div>Search for "biryani" returns results ranked by dish-type match, cuisine affinity, and user preference history</div></div>
-          <div class="ba-item"><div class="ba-item-icon">✓</div><div>Cuisine filter "Bengali" surfaces all items with cuisine: Bengali — Tehari, Ilish, Khichuri, Fuchka, cross-restaurant</div></div>
-          <div class="ba-item"><div class="ba-item-icon">✓</div><div>Personalisation model can learn cuisine affinity and dish-type preference — "this user orders Bengali dishes at lunch"</div></div>
-          <div class="ba-item"><div class="ba-item-icon">✓</div><div>"Thai Soup" correctly labelled cuisine: Thai, dish: Soup — both fields populated and machine-readable</div></div>
-          <div class="ba-item"><div class="ba-item-icon">✓</div><div>Onboarding now enforces classification — new restaurant items enter the system clean from day one</div></div>
+          <div class="ba-item"><div class="ba-item-icon">✓</div><div>Cuisine filter "Bengali" surfaces all items with cuisine: Bengali - Tehari, Ilish, Khichuri, Fuchka, cross-restaurant</div></div>
+          <div class="ba-item"><div class="ba-item-icon">✓</div><div>Personalisation model can learn cuisine affinity and dish-type preference - "this user orders Bengali dishes at lunch"</div></div>
+          <div class="ba-item"><div class="ba-item-icon">✓</div><div>"Thai Soup" correctly labelled cuisine: Thai, dish: Soup - both fields populated and machine-readable</div></div>
+          <div class="ba-item"><div class="ba-item-icon">✓</div><div>Onboarding now enforces classification - new restaurant items enter the system clean from day one</div></div>
         </div>
       </div>
     </div>
@@ -477,19 +477,19 @@
 
     <!-- 03 TAXONOMY -->
     <div class="cs-section reveal" id="taxonomy">
-      <div class="section-eyebrow">03 — Taxonomy Design</div>
+      <div class="section-eyebrow">03 - Taxonomy Design</div>
       <h2>The two-layer model: Cuisine and Dish</h2>
-      <p>The first design decision was the most important: <strong>every menu item needs exactly two labels</strong> — a Cuisine label and a Dish label. These are not interchangeable. They answer different questions and serve different product purposes. Getting this distinction right was the foundational intellectual work of the entire project.</p>
+      <p>The first design decision was the most important: <strong>every menu item needs exactly two labels</strong> - a Cuisine label and a Dish label. These are not interchangeable. They answer different questions and serve different product purposes. Getting this distinction right was the foundational intellectual work of the entire project.</p>
 
       <div class="callout">
-        <strong>Cuisine</strong> — the cooking tradition or regional origin of the food. It tells you <em>where the food style comes from</em>. A cuisine can contain hundreds of dishes. Examples: Bengali, Thai, Chinese, Mughlai, Continental, Fusion.<br><br>
-        <strong>Dish</strong> — the specific food item being prepared and served. It tells you <em>what the food is</em>. A dish belongs to one or more cuisines. Examples: Biryani, Soup, Shawarma, Fried Rice, Naan, Risotto.
+        <strong>Cuisine</strong> - the cooking tradition or regional origin of the food. It tells you <em>where the food style comes from</em>. A cuisine can contain hundreds of dishes. Examples: Bengali, Thai, Chinese, Mughlai, Continental, Fusion.<br><br>
+        <strong>Dish</strong> - the specific food item being prepared and served. It tells you <em>what the food is</em>. A dish belongs to one or more cuisines. Examples: Biryani, Soup, Shawarma, Fried Rice, Naan, Risotto.
       </div>
 
       <h3>The taxonomy structure</h3>
 
       <div class="taxonomy-visual reveal">
-        <p style="font-size:11px; font-weight:500; letter-spacing:0.1em; text-transform:uppercase; color:var(--ink-faint); margin-bottom:20px;">Pathao Food item taxonomy — two mandatory labels per item</p>
+        <p style="font-size:11px; font-weight:500; letter-spacing:0.1em; text-transform:uppercase; color:var(--ink-faint); margin-bottom:20px;">Pathao Food item taxonomy - two mandatory labels per item</p>
         <div class="tax-row">
           <div class="tax-node">
             <div class="tax-node-box tax-node-blue">Bengali</div>
@@ -537,7 +537,7 @@
         </div>
       </div>
 
-      <h3>Cuisine taxonomy — defined categories</h3>
+      <h3>Cuisine taxonomy - defined categories</h3>
       <div class="card-grid reveal">
         <div class="grid-card accent-top">
           <div class="grid-card-label">Regional / Heritage</div>
@@ -547,16 +547,16 @@
         <div class="grid-card accent-top-teal">
           <div class="grid-card-label">Style-based</div>
           <div class="grid-card-title">Cooking-style cuisines</div>
-          <div class="grid-card-body">Fast Food, Street Food, BBQ & Grill. Defined not by geography but by preparation style and consumption context — applicable across cultural origins.</div>
+          <div class="grid-card-body">Fast Food, Street Food, BBQ & Grill. Defined not by geography but by preparation style and consumption context - applicable across cultural origins.</div>
         </div>
         <div class="grid-card accent-top-purple">
           <div class="grid-card-label">Cross-origin</div>
           <div class="grid-card-title">Fusion cuisine</div>
-          <div class="grid-card-body">Items that intentionally blend two distinct culinary traditions. "Tandoori Chicken Pizza" is neither purely Italian nor purely Indian — it is Fusion. A specific, defined category, not a catch-all.</div>
+          <div class="grid-card-body">Items that intentionally blend two distinct culinary traditions. "Tandoori Chicken Pizza" is neither purely Italian nor purely Indian - it is Fusion. A specific, defined category, not a catch-all.</div>
         </div>
       </div>
 
-      <h3>Dish taxonomy — defined categories</h3>
+      <h3>Dish taxonomy - defined categories</h3>
       <div class="card-grid reveal">
         <div class="grid-card">
           <div class="grid-card-label">Rice-based</div>
@@ -595,9 +595,9 @@
 
     <!-- 04 RULES -->
     <div class="cs-section reveal" id="rules">
-      <div class="section-eyebrow">04 — Classification Rules</div>
+      <div class="section-eyebrow">04 - Classification Rules</div>
       <h2>The decision logic that makes the taxonomy consistent</h2>
-      <p>A taxonomy is only as good as the rules that enforce it. Anyone labelling an item — whether an ops team member, a restaurant owner, or a machine learning model — needs an unambiguous decision path. I designed a four-question decision tree and a set of conflict-resolution rules for every edge case.</p>
+      <p>A taxonomy is only as good as the rules that enforce it. Anyone labelling an item - whether an ops team member, a restaurant owner, or a machine learning model - needs an unambiguous decision path. I designed a four-question decision tree and a set of conflict-resolution rules for every edge case.</p>
 
       <h3>The four-question decision tree</h3>
       <div class="flow-steps">
@@ -619,19 +619,19 @@
           <div class="flow-step-num">Q3</div>
           <div class="flow-step-body">
             <div class="flow-step-title">Does the name contain both a cuisine signal AND a dish signal?</div>
-            <div class="flow-step-desc">Split them. "Korean Kimchi Fried Rice" → Cuisine: Korean, Dish: Kimchi Fried Rice. "Mughlai Chicken" → Cuisine: Mughlai, Dish: Chicken (curry — infer from context). The dish label captures what it is; the cuisine label captures where it's from.</div>
+            <div class="flow-step-desc">Split them. "Korean Kimchi Fried Rice" → Cuisine: Korean, Dish: Kimchi Fried Rice. "Mughlai Chicken" → Cuisine: Mughlai, Dish: Chicken (curry - infer from context). The dish label captures what it is; the cuisine label captures where it's from.</div>
           </div>
         </div>
         <div class="flow-step">
           <div class="flow-step-num">Q4</div>
           <div class="flow-step-body">
             <div class="flow-step-title">Does the name combine elements from two distinct culinary traditions intentionally?</div>
-            <div class="flow-step-desc">If yes → Cuisine: Fusion. This is the catch for deliberate hybrids — "Tandoori Chicken Pizza", "Desi Pasta", "Korean BBQ Burger". Fusion is not "I don't know the cuisine" — it's a positive classification for a specific type of cross-cultural dish.</div>
+            <div class="flow-step-desc">If yes → Cuisine: Fusion. This is the catch for deliberate hybrids - "Tandoori Chicken Pizza", "Desi Pasta", "Korean BBQ Burger". Fusion is not "I don't know the cuisine" - it's a positive classification for a specific type of cross-cultural dish.</div>
           </div>
         </div>
       </div>
 
-      <h3>Classification examples — applied to real menu data</h3>
+      <h3>Classification examples - applied to real menu data</h3>
       <div class="rule-table-wrap">
         <table class="rule-table">
           <thead>
@@ -707,7 +707,7 @@
               <td>Panta Ilish</td>
               <td>Panta Ilish</td>
               <td><span class="badge-cuisine">Bengali</span></td>
-              <td>Fermented rice with hilsha — a complete Bengali cultural dish. Name = dish name.</td>
+              <td>Fermented rice with hilsha - a complete Bengali cultural dish. Name = dish name.</td>
             </tr>
             <tr>
               <td>Creamy Mushroom Risotto</td>
@@ -736,7 +736,7 @@
 
     <!-- 05 PROCESS -->
     <div class="cs-section reveal" id="process">
-      <div class="section-eyebrow">05 — Cleaning Process</div>
+      <div class="section-eyebrow">05 - Cleaning Process</div>
       <h2>How 100,000+ items were cleaned at scale</h2>
       <p>The taxonomy design solved the "what to label" question. The process design solved the "how to label at scale" question. A purely manual process would have taken months and produced inconsistent results across labellers. A purely automated process would have missed the ambiguous cases that require contextual judgement. The answer was a hybrid pipeline.</p>
 
@@ -744,15 +744,15 @@
         <div class="flow-step">
           <div class="flow-step-num">1</div>
           <div class="flow-step-body">
-            <div class="flow-step-title">Audit — understand the scope before designing the solution</div>
-            <div class="flow-step-desc">Pulled a stratified sample of 2,000 items across restaurant types, cities, and cuisine categories. Classified each manually against a draft taxonomy. This audit revealed the five problem types (name inconsistency, cuisine-as-dish confusion, missing labels, Banglish variation, fusion ambiguity) and shaped the final taxonomy design. The process was designed around what the data actually looked like — not an assumed ideal state.</div>
+            <div class="flow-step-title">Audit - understand the scope before designing the solution</div>
+            <div class="flow-step-desc">Pulled a stratified sample of 2,000 items across restaurant types, cities, and cuisine categories. Classified each manually against a draft taxonomy. This audit revealed the five problem types (name inconsistency, cuisine-as-dish confusion, missing labels, Banglish variation, fusion ambiguity) and shaped the final taxonomy design. The process was designed around what the data actually looked like - not an assumed ideal state.</div>
           </div>
         </div>
         <div class="flow-step">
           <div class="flow-step-num">2</div>
           <div class="flow-step-body">
             <div class="flow-step-title">Rule-based auto-classification for high-confidence items</div>
-            <div class="flow-step-desc">Built a rule engine covering the most common patterns — items containing "Biryani", "Tehari", "Fried Rice", "Shawarma", "Ramen", "Pizza" and their known Banglish variants. These patterns covered ~60% of the item catalogue with high confidence. Auto-labelled with a confidence score, flagged for spot-check rather than full manual review.</div>
+            <div class="flow-step-desc">Built a rule engine covering the most common patterns - items containing "Biryani", "Tehari", "Fried Rice", "Shawarma", "Ramen", "Pizza" and their known Banglish variants. These patterns covered ~60% of the item catalogue with high confidence. Auto-labelled with a confidence score, flagged for spot-check rather than full manual review.</div>
           </div>
         </div>
         <div class="flow-step">
@@ -766,20 +766,20 @@
           <div class="flow-step-num">4</div>
           <div class="flow-step-body">
             <div class="flow-step-title">Banglish normalisation pass</div>
-            <div class="flow-step-desc">Separate pass specifically for Banglish variants — mapping "khichudi", "khichri", "Khichuri", "ক্ষিচুড়ি" to the canonical dish label "Khichuri". This normalisation table was built collaboratively with Bangladeshi team members who had domain knowledge of regional spelling variants. The canonical form was set as the searchable and displayable label.</div>
+            <div class="flow-step-desc">Separate pass specifically for Banglish variants - mapping "khichudi", "khichri", "Khichuri", "ক্ষিচুড়ি" to the canonical dish label "Khichuri". This normalisation table was built collaboratively with Bangladeshi team members who had domain knowledge of regional spelling variants. The canonical form was set as the searchable and displayable label.</div>
           </div>
         </div>
         <div class="flow-step">
           <div class="flow-step-num">5</div>
           <div class="flow-step-body">
-            <div class="flow-step-title">QA — inter-labeller agreement check</div>
+            <div class="flow-step-title">QA - inter-labeller agreement check</div>
             <div class="flow-step-desc">A 5% random sample of manually labelled items was re-labelled by a second labeller blind to the first label. Agreement rate measured. Items with disagreement were escalated for a tie-breaking review. This produced both a quality metric for the cleaned dataset and identified ambiguous categories that needed additional rule clarification.</div>
           </div>
         </div>
         <div class="flow-step">
           <div class="flow-step-num">6</div>
           <div class="flow-step-body">
-            <div class="flow-step-title">Onboarding enforcement — prevent new data rot</div>
+            <div class="flow-step-title">Onboarding enforcement - prevent new data rot</div>
             <div class="flow-step-desc">Modified the restaurant onboarding flow to make Cuisine and Dish classification mandatory fields with a constrained dropdown (not free text). New items now enter the system pre-classified. The dropdown options are the taxonomy categories. Restaurants can request a new category via a flagging mechanism, reviewed monthly by the product team.</div>
           </div>
         </div>
@@ -790,7 +790,7 @@
 
     <!-- 06 EDGE CASES -->
     <div class="cs-section reveal" id="edgecases">
-      <div class="section-eyebrow">06 — Edge Cases & Hard Decisions</div>
+      <div class="section-eyebrow">06 - Edge Cases & Hard Decisions</div>
       <h2>The cases that challenged the taxonomy</h2>
       <p>A taxonomy is only trustworthy if it has documented answers for the hard cases. These were the most contested classification decisions, and the reasoning behind each one.</p>
 
@@ -803,17 +803,17 @@
         <div class="grid-card accent-top-amber">
           <div class="grid-card-label">Hard case 2</div>
           <div class="grid-card-title">Prawn Curry</div>
-          <div class="grid-card-body"><strong>Decision:</strong> Dish: Curry. Cuisine: depends on preparation — mustard-based prawn curry = Bengali. Coconut-based = Indian. When the preparation style is unspecified, cuisine is assigned based on the restaurant's primary cuisine profile. Context wins over name alone.</div>
+          <div class="grid-card-body"><strong>Decision:</strong> Dish: Curry. Cuisine: depends on preparation - mustard-based prawn curry = Bengali. Coconut-based = Indian. When the preparation style is unspecified, cuisine is assigned based on the restaurant's primary cuisine profile. Context wins over name alone.</div>
         </div>
         <div class="grid-card accent-top-amber">
           <div class="grid-card-label">Hard case 3</div>
           <div class="grid-card-title">Paneer Butter Masala</div>
-          <div class="grid-card-body"><strong>Decision:</strong> Cuisine: Indian (North Indian specifically). Dish: Paneer Butter Masala — the full name is the dish name here, as it is a named and widely recognised specific curry. Not just "Curry". The specificity of the named preparation takes precedence.</div>
+          <div class="grid-card-body"><strong>Decision:</strong> Cuisine: Indian (North Indian specifically). Dish: Paneer Butter Masala - the full name is the dish name here, as it is a named and widely recognised specific curry. Not just "Curry". The specificity of the named preparation takes precedence.</div>
         </div>
         <div class="grid-card accent-top-coral">
           <div class="grid-card-label">Hard case 4</div>
           <div class="grid-card-title">Falafel Wrap with Hummus</div>
-          <div class="grid-card-body"><strong>Decision:</strong> Cuisine: Middle Eastern. Dish: Falafel Wrap. Hummus is the accompaniment. "Falafel Wrap" is the primary food item. The "with X" construction always subordinates the second item to an accompaniment role — it does not change the dish classification.</div>
+          <div class="grid-card-body"><strong>Decision:</strong> Cuisine: Middle Eastern. Dish: Falafel Wrap. Hummus is the accompaniment. "Falafel Wrap" is the primary food item. The "with X" construction always subordinates the second item to an accompaniment role - it does not change the dish classification.</div>
         </div>
         <div class="grid-card accent-top-coral">
           <div class="grid-card-label">Hard case 5</div>
@@ -822,8 +822,8 @@
         </div>
         <div class="grid-card accent-top-purple">
           <div class="grid-card-label">Hard case 6</div>
-          <div class="grid-card-title">Pizza — Italian or Fast Food?</div>
-          <div class="grid-card-body"><strong>Decision:</strong> Origin = Italian. But for most Bangladeshi menu context, Pizza is served as Fast Food. Classification uses <strong>restaurant context</strong> as the tiebreaker — a pizza from a traditional Italian restaurant = Italian. A pizza from a fast food cloud kitchen = Fast Food. Context over strict etymology.</div>
+          <div class="grid-card-title">Pizza - Italian or Fast Food?</div>
+          <div class="grid-card-body"><strong>Decision:</strong> Origin = Italian. But for most Bangladeshi menu context, Pizza is served as Fast Food. Classification uses <strong>restaurant context</strong> as the tiebreaker - a pizza from a traditional Italian restaurant = Italian. A pizza from a fast food cloud kitchen = Fast Food. Context over strict etymology.</div>
         </div>
       </div>
     </div>
@@ -832,9 +832,9 @@
 
     <!-- 07 AI DOWNSTREAM -->
     <div class="cs-section reveal" id="downstream">
-      <div class="section-eyebrow">07 — AI & Product Downstream</div>
+      <div class="section-eyebrow">07 - AI & Product Downstream</div>
       <h2>What this data layer unlocks</h2>
-      <p>The cleaned taxonomy is not a finished product — it is infrastructure. Its value is entirely in what becomes possible on top of it. This is the concrete list of product capabilities that were either unblocked or significantly improved by the existence of clean, structured food data.</p>
+      <p>The cleaned taxonomy is not a finished product - it is infrastructure. Its value is entirely in what becomes possible on top of it. This is the concrete list of product capabilities that were either unblocked or significantly improved by the existence of clean, structured food data.</p>
 
       <div class="downstream-grid reveal">
         <div class="downstream-card dc-purple">
@@ -846,37 +846,37 @@
         <div class="downstream-card dc-blue">
           <div class="dc-icon">🔍</div>
           <div class="dc-title">Intent-Aware Search</div>
-          <div class="dc-body">Search for "biryani" returns all items with Dish: Biryani — regardless of how the restaurant named it. Semantic search grounded in taxonomy, not keyword matching.</div>
+          <div class="dc-body">Search for "biryani" returns all items with Dish: Biryani - regardless of how the restaurant named it. Semantic search grounded in taxonomy, not keyword matching.</div>
           <span class="dc-status status-enabled">Enabled by this work</span>
         </div>
         <div class="downstream-card dc-teal">
           <div class="dc-icon">🗂️</div>
           <div class="dc-title">Cuisine-Based Collections</div>
-          <div class="dc-body">Homepage collections like "Bengali Classics" or "Quick Bites" can now be generated automatically from cuisine and dish labels — not manually curated lists that go stale.</div>
+          <div class="dc-body">Homepage collections like "Bengali Classics" or "Quick Bites" can now be generated automatically from cuisine and dish labels - not manually curated lists that go stale.</div>
           <span class="dc-status status-enabled">Enabled by this work</span>
         </div>
         <div class="downstream-card dc-amber">
           <div class="dc-icon">🎯</div>
           <div class="dc-title">Personalised Discovery</div>
-          <div class="dc-body">Surface restaurants to a user based on their cuisine and dish-type preference history — not just proximity or popularity. "You usually order Thai on Fridays — here are options near you."</div>
+          <div class="dc-body">Surface restaurants to a user based on their cuisine and dish-type preference history - not just proximity or popularity. "You usually order Thai on Fridays - here are options near you."</div>
           <span class="dc-status status-enabled">Enabled by this work</span>
         </div>
         <div class="downstream-card dc-coral">
           <div class="dc-icon">🥗</div>
           <div class="dc-title">Dietary Preference Detection</div>
           <div class="dc-body">Dish labels enable vegetarian/vegan/halal detection by type. "Vegetable Spring Roll" (Dish: Spring Roll) + ingredient context = reliably flagged as vegetarian. Protein labels enable meat-type filtering.</div>
-          <span class="dc-status status-planned">Planned — next phase</span>
+          <span class="dc-status status-planned">Planned - next phase</span>
         </div>
         <div class="downstream-card dc-slate">
           <div class="dc-icon">📊</div>
           <div class="dc-title">Restaurant Benchmarking</div>
-          <div class="dc-body">Compare a restaurant's menu coverage against cuisine peers. "Your Bengali menu has 12 items but competitors average 24 — here are the most-ordered missing dishes in your category." Ops and partner intelligence tool.</div>
-          <span class="dc-status status-planned">Planned — next phase</span>
+          <div class="dc-body">Compare a restaurant's menu coverage against cuisine peers. "Your Bengali menu has 12 items but competitors average 24 - here are the most-ordered missing dishes in your category." Ops and partner intelligence tool.</div>
+          <span class="dc-status status-planned">Planned - next phase</span>
         </div>
       </div>
 
       <div class="callout purple">
-        <strong>The AI compounding effect:</strong> Each new piece of user behaviour data (an order placed, a search run, a collection tapped) is now tagged with structured cuisine and dish labels at the moment it's generated. This means the training dataset for every future model grows richer with every order placed — structured labels accumulate automatically. The taxonomy doesn't just unlock current features; it continuously improves the quality of all future models.
+        <strong>The AI compounding effect:</strong> Each new piece of user behaviour data (an order placed, a search run, a collection tapped) is now tagged with structured cuisine and dish labels at the moment it's generated. This means the training dataset for every future model grows richer with every order placed - structured labels accumulate automatically. The taxonomy doesn't just unlock current features; it continuously improves the quality of all future models.
       </div>
     </div>
 
@@ -884,7 +884,7 @@
 
     <!-- 08 METRICS -->
     <div class="cs-section reveal" id="metrics">
-      <div class="section-eyebrow">08 — Success Metrics</div>
+      <div class="section-eyebrow">08 - Success Metrics</div>
       <h2>How success was defined and measured</h2>
 
       <div class="metrics-grid-cs">
@@ -922,7 +922,7 @@
           <div class="metric-cs-type">Maintenance</div>
           <div class="metric-cs-name">Monthly unclassified item backlog</div>
           <div class="metric-cs-target">&lt; 500</div>
-          <div class="metric-cs-window">Ongoing — reviewed and cleared monthly</div>
+          <div class="metric-cs-window">Ongoing - reviewed and cleared monthly</div>
         </div>
       </div>
     </div>
@@ -931,13 +931,13 @@
 
     <!-- 09 RISKS -->
     <div class="cs-section reveal" id="risks">
-      <div class="section-eyebrow">09 — Risks & Mitigations</div>
+      <div class="section-eyebrow">09 - Risks & Mitigations</div>
       <h2>What could go wrong</h2>
 
       <div class="risk-grid">
         <div class="risk-card">
           <div class="risk-label risk-high">High Risk</div>
-          <div class="risk-title">Taxonomy drift — categories become stale as menus evolve</div>
+          <div class="risk-title">Taxonomy drift - categories become stale as menus evolve</div>
           <div class="risk-body">New food trends (Korean fried chicken, cloud kitchen fusions) emerge faster than taxonomy review cycles. Mitigated by a monthly new-category review process and a restaurant-facing "flag unknown category" mechanism that surfaces gaps proactively.</div>
         </div>
         <div class="risk-card">
@@ -948,17 +948,17 @@
         <div class="risk-card">
           <div class="risk-label risk-med">Medium Risk</div>
           <div class="risk-title">Restaurant resistance to classification enforcement</div>
-          <div class="risk-body">Restaurant owners may find the mandatory classification step friction in onboarding. Mitigated by making the dropdown UI fast (type-ahead search), pre-populating common choices based on restaurant name/type, and framing classification as a discoverability benefit for the restaurant — "your items appear in cuisine-filtered searches".</div>
+          <div class="risk-body">Restaurant owners may find the mandatory classification step friction in onboarding. Mitigated by making the dropdown UI fast (type-ahead search), pre-populating common choices based on restaurant name/type, and framing classification as a discoverability benefit for the restaurant - "your items appear in cuisine-filtered searches".</div>
         </div>
         <div class="risk-card">
           <div class="risk-label risk-med">Medium Risk</div>
           <div class="risk-title">Banglish coverage gaps</div>
-          <div class="risk-body">The Banglish normalisation table covers known variants but will miss new or hyperlocal spelling forms. Mitigated by logging unmatched search queries — a user searching "khichudi" who gets zero results surfaces a coverage gap that feeds back into the normalisation dictionary.</div>
+          <div class="risk-body">The Banglish normalisation table covers known variants but will miss new or hyperlocal spelling forms. Mitigated by logging unmatched search queries - a user searching "khichudi" who gets zero results surfaces a coverage gap that feeds back into the normalisation dictionary.</div>
         </div>
         <div class="risk-card">
           <div class="risk-label risk-low">Low Risk</div>
           <div class="risk-title">AI model overfits to early taxonomy choices</div>
-          <div class="risk-body">If the taxonomy is later revised, models trained on old labels need retraining. Mitigated by versioning taxonomy definitions and logging the taxonomy version against every labelled item — model retraining scope is queryable when the taxonomy changes.</div>
+          <div class="risk-body">If the taxonomy is later revised, models trained on old labels need retraining. Mitigated by versioning taxonomy definitions and logging the taxonomy version against every labelled item - model retraining scope is queryable when the taxonomy changes.</div>
         </div>
         <div class="risk-card">
           <div class="risk-label risk-low">Low Risk</div>
@@ -972,7 +972,7 @@
 
     <!-- 10 LESSONS -->
     <div class="cs-section reveal" id="lessons">
-      <div class="section-eyebrow">10 — Lessons & Reflections</div>
+      <div class="section-eyebrow">10 - Lessons & Reflections</div>
       <h2>What this work taught me about data as a product</h2>
 
       <div class="lesson-list">
@@ -980,14 +980,14 @@
           <div class="lesson-num">01</div>
           <div>
             <div class="lesson-title">Data quality is a product problem, not a data engineering problem</div>
-            <div class="lesson-body">The dish cleaning initiative only happened because a PM owned it. Data teams can build pipelines; they cannot define what "correct" means for a food taxonomy. <strong>The definition of correct is a product decision</strong> — it depends on how the data will be used, what features it needs to power, and what user experiences it needs to enable. A PM has to own that definition or it won't be made correctly.</div>
+            <div class="lesson-body">The dish cleaning initiative only happened because a PM owned it. Data teams can build pipelines; they cannot define what "correct" means for a food taxonomy. <strong>The definition of correct is a product decision</strong> - it depends on how the data will be used, what features it needs to power, and what user experiences it needs to enable. A PM has to own that definition or it won't be made correctly.</div>
           </div>
         </div>
         <div class="lesson-item">
           <div class="lesson-num">02</div>
           <div>
             <div class="lesson-title">The taxonomy is a product, and it needs a PRD</div>
-            <div class="lesson-body">The labelling guide I wrote for ops wasn't just documentation — it was a product specification. Every edge case decision in it was a product decision with downstream consequences. <strong>Treating the taxonomy document with the same rigour as a feature PRD</strong> — with explicit decision logic, worked examples, and conflict-resolution rules — was what made the cleaned data trustworthy enough to build AI features on.</div>
+            <div class="lesson-body">The labelling guide I wrote for ops wasn't just documentation - it was a product specification. Every edge case decision in it was a product decision with downstream consequences. <strong>Treating the taxonomy document with the same rigour as a feature PRD</strong> - with explicit decision logic, worked examples, and conflict-resolution rules - was what made the cleaned data trustworthy enough to build AI features on.</div>
           </div>
         </div>
         <div class="lesson-item">
@@ -1000,7 +1000,7 @@
         <div class="lesson-item">
           <div class="lesson-num">04</div>
           <div>
-            <div class="lesson-title">Edge cases are not exceptions — they are the rule</div>
+            <div class="lesson-title">Edge cases are not exceptions - they are the rule</div>
             <div class="lesson-body">In food data, the "easy" cases (Chicken Biryani → Mughlai / Biryani) are a minority. The majority of decisions involve regional variants, Banglish spelling, ambiguous fusion items, accompaniment-vs-main confusion, and context-dependent cuisine assignment. <strong>A taxonomy that only handles the easy cases is a taxonomy that produces unreliable data</strong>. The value is in the documented edge case decisions.</div>
           </div>
         </div>
@@ -1008,7 +1008,7 @@
           <div class="lesson-num">05</div>
           <div>
             <div class="lesson-title">Structured data is the moat, not the model</div>
-            <div class="lesson-body">Any company can access the same ML frameworks and foundation models. What they cannot copy is years of structured, labelled, domain-specific food data built on a well-designed taxonomy with Bangladeshi culinary context encoded into every decision. <strong>The real competitive advantage in AI is the training data quality, not the model architecture</strong>. This is what dish cleaning was actually building — a data moat.</div>
+            <div class="lesson-body">Any company can access the same ML frameworks and foundation models. What they cannot copy is years of structured, labelled, domain-specific food data built on a well-designed taxonomy with Bangladeshi culinary context encoded into every decision. <strong>The real competitive advantage in AI is the training data quality, not the model architecture</strong>. This is what dish cleaning was actually building - a data moat.</div>
           </div>
         </div>
       </div>
@@ -1062,7 +1062,7 @@
     }, { threshold: 0.08 });
     reveals.forEach(r => io.observe(r));
 
-    // TOC active state — fires when section top enters the viewport just below the sticky bars
+    // TOC active state - fires when section top enters the viewport just below the sticky bars
     // rootMargin top = -(nav 56px + toc ~45px) = -101px so we detect when the section
     // heading crosses into the reading area. Bottom = -85% so only the topmost visible
     // section wins, preventing two sections firing at once.
