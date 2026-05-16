@@ -531,7 +531,7 @@
 
     /* ── MODAL OVERLAY ── */
     .modal-overlay {
-      display: none;
+      display: none; /* default — JS uses hidden attr */
       position: fixed;
       inset: 0;
       background: rgba(14,14,14,0.7);
@@ -693,16 +693,327 @@
 
     /* ── RESPONSIVE ── */
     @media (max-width: 768px) {
-      nav { padding: 0 20px; }
+      nav { padding: 0 16px; }
       .nav-links { display: none; }
-      .page-header { padding: 100px 20px 48px; }
-      .filter-bar { padding: 0 20px 32px; }
-      .work-grid { grid-template-columns: 1fr; padding: 0 20px 80px; }
+      .nav-cta { font-size: 12px; padding: 6px 14px; }
+      .page-header { padding: 88px 16px 40px; }
+      .page-title { font-size: clamp(32px, 10vw, 48px); }
+      .page-desc { font-size: 14px; }
+      .work-grid { grid-template-columns: 1fr; padding: 0 16px 64px; gap: 16px; }
       .work-card.featured { grid-column: auto; }
-      .modal-metrics { grid-template-columns: repeat(2, 1fr); }
-      .cta-strip { padding: 60px 20px; }
-      .cta-inner { flex-direction: column; }
+      .featured .card-banner { height: 180px; }
+      .featured .card-title { font-size: 20px; }
+      /* card metrics: scroll horizontally so numbers never get cut */
+      .card-metrics {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        gap: 16px;
+        padding-bottom: 4px;
+        /* hide scrollbar visually but keep it functional */
+        scrollbar-width: none;
+      }
+      .card-metrics::-webkit-scrollbar { display: none; }
+      .c-metric { flex-shrink: 0; min-width: 64px; }
+      .c-metric-num { font-size: 17px; }
+      /* modal */
+      .modal-overlay { padding: 0; align-items: flex-end; }
+      .modal {
+        border-radius: 20px 20px 0 0;
+        max-height: 92vh;
+        width: 100%;
+        max-width: 100%;
+      }
+      .modal-banner { height: 140px; padding: 16px 20px; border-radius: 20px 20px 0 0; }
+      .modal-title { font-size: 20px; }
+      .modal-body { padding: 20px; }
+      .modal-metrics { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+      .modal-metric { padding: 12px; }
+      .modal-metric-num { font-size: 20px; }
+      /* toolbar */
+      .toolbar { padding: 0 16px 20px; }
+      .toolbar-inner {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+        padding: 12px;
+      }
+      .search-wrap { min-width: unset; width: 100%; }
+      .filter-pills {
+        display: flex;
+        overflow-x: auto;
+        flex-wrap: nowrap;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        gap: 6px;
+        padding-bottom: 2px;
+      }
+      .filter-pills::-webkit-scrollbar { display: none; }
+      .filter-btn { white-space: nowrap; flex-shrink: 0; }
+      .sort-wrap { width: 100%; }
+      .sort-select { width: 100%; }
+      .toolbar-status { padding: 0; }
+      /* pagination */
+      .pagination { padding: 24px 16px 48px; gap: 4px; }
+      .page-btn { min-width: 36px; height: 36px; font-size: 13px; }
+      /* cta */
+      .cta-strip { padding: 48px 16px; }
+      .cta-inner { flex-direction: column; gap: 24px; }
+      .cta-text { font-size: 26px; }
+      .cta-actions { flex-direction: column; gap: 8px; }
+      .cta-btn-primary, .cta-btn-secondary { text-align: center; }
+      footer { padding: 20px 16px; }
     }
+    /* ── FILTER COUNT BADGE ── */
+    .filter-count {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 18px;
+      height: 18px;
+      padding: 0 5px;
+      border-radius: 9px;
+      font-size: 10px;
+      font-weight: 500;
+      background: rgba(0,0,0,0.07);
+      color: var(--ink-muted);
+      margin-left: 4px;
+      vertical-align: middle;
+    }
+    .filter-btn.active .filter-count {
+      background: rgba(255,255,255,0.2);
+      color: rgba(255,255,255,0.8);
+    }
+
+    /* ── SCREEN READER ONLY ── */
+    .sr-only {
+      position: absolute;
+      width: 1px; height: 1px;
+      padding: 0; margin: -1px;
+      overflow: hidden;
+      clip: rect(0,0,0,0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    /* ── CONTENT-VISIBILITY for off-screen cards (performance) ── */
+    .work-card {
+      content-visibility: auto;
+      contain-intrinsic-size: 0 420px;
+    }
+    .work-card.featured {
+      contain-intrinsic-size: 0 520px;
+    }
+
+    /* ── TOOLBAR ── */
+    .toolbar {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 0 40px 32px;
+    }
+
+    .toolbar-inner {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      padding: 14px 16px;
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      margin-bottom: 12px;
+    }
+
+    /* Search */
+    .search-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+      flex: 1;
+      min-width: 200px;
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 10px;
+      color: var(--ink-faint);
+      pointer-events: none;
+      flex-shrink: 0;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 8px 32px 8px 32px;
+      font-family: var(--sans);
+      font-size: 13px;
+      color: var(--ink);
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      -webkit-appearance: none;
+    }
+
+    .search-input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(28,79,138,0.08);
+    }
+
+    .search-input::placeholder { color: var(--ink-faint); }
+
+    /* hide browser's native clear button */
+    .search-input::-webkit-search-cancel-button { -webkit-appearance: none; }
+
+    .search-clear {
+      position: absolute;
+      right: 8px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--ink-faint);
+      font-size: 12px;
+      line-height: 1;
+      padding: 2px 4px;
+      transition: color 0.2s;
+    }
+
+    .search-clear:hover { color: var(--ink); }
+
+    /* Filter pills */
+    .filter-pills {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      flex: 2;
+    }
+
+    /* Sort */
+    .sort-wrap { flex-shrink: 0; }
+
+    .sort-select {
+      font-family: var(--sans);
+      font-size: 12px;
+      color: var(--ink-mid);
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 7px 12px;
+      cursor: pointer;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .sort-select:focus { border-color: var(--accent); }
+
+    /* Toolbar status row */
+    .toolbar-status {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0 4px;
+    }
+
+    .results-count {
+      font-size: 12px;
+      color: var(--ink-muted);
+    }
+
+    .results-count strong { color: var(--ink); font-weight: 500; }
+
+    .clear-all-btn {
+      font-family: var(--sans);
+      font-size: 12px;
+      color: var(--accent);
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+
+    /* No results */
+    .no-results {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 80px 40px;
+      text-align: center;
+    }
+
+    .no-results-icon { margin-bottom: 16px; color: var(--ink-faint); }
+    .no-results-title { font-family: var(--serif); font-size: 20px; color: var(--ink-mid); margin-bottom: 8px; }
+    .no-results-sub { font-size: 13px; color: var(--ink-faint); }
+    .inline-clear-btn { background: none; border: none; color: var(--accent); font-size: 13px; cursor: pointer; text-decoration: underline; font-family: var(--sans); }
+
+    /* Search highlight */
+    .search-highlight { background: #fff3b0; border-radius: 2px; padding: 0 1px; }
+
+    /* Toolbar mobile rules merged into main @media block above */
+
+    /* ── PAGINATION ── */
+    .pagination {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 32px 40px 64px;
+      flex-wrap: wrap;
+    }
+
+    .page-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 40px;
+      height: 40px;
+      padding: 0 10px;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      background: var(--white);
+      color: var(--ink-mid);
+      font-family: var(--sans);
+      font-size: 13px;
+      font-weight: 400;
+      cursor: pointer;
+      transition: all 0.15s;
+      text-decoration: none;
+    }
+
+    .page-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .page-btn.active { background: var(--ink); color: var(--white); border-color: var(--ink); font-weight: 500; }
+    .page-btn:disabled { opacity: 0.35; cursor: not-allowed; pointer-events: none; }
+    .page-btn.page-ellipsis { border: none; background: none; cursor: default; color: var(--ink-faint); min-width: 24px; }
+
+    .page-info {
+      font-size: 12px;
+      color: var(--ink-muted);
+      padding: 0 8px;
+    }
+
+    /* Per-page selector */
+    .per-page-wrap {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: var(--ink-muted);
+      margin-left: 16px;
+    }
+
+    .per-page-select {
+      font-family: var(--sans);
+      font-size: 12px;
+      color: var(--ink-mid);
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 4px 8px;
+      cursor: pointer;
+      outline: none;
+    }
+
+    .per-page-select:focus { border-color: var(--accent); }
+
   </style>
 </head>
 <body>
@@ -730,20 +1041,74 @@
     <p class="page-desc reveal">A curated set of problems I've owned - from growth experiments to platform rewrites. Each one is a story of a hypothesis, the data, and what actually shipped.</p>
   </div>
 
-  <!-- FILTER BAR -->
-  <div class="filter-bar">
-    <button class="filter-btn active" data-filter="all">All work</button>
-    <button class="filter-btn" data-filter="growth">Growth & Conversion</button>
-    <button class="filter-btn" data-filter="search">Search & Discovery</button>
-    <button class="filter-btn" data-filter="ai">AI Products</button>
-    <button class="filter-btn" data-filter="platform">Platform & Ops</button>
+  <!-- TOOLBAR: search + filters + sort + count -->
+  <div class="toolbar" role="search" aria-label="Search and filter case studies">
+    <div class="toolbar-inner">
+
+      <!-- Search -->
+      <div class="search-wrap">
+        <svg class="search-icon" width="15" height="15" viewBox="0 0 15 15" fill="none">
+          <circle cx="6.5" cy="6.5" r="5" stroke="currentColor" stroke-width="1.3"/>
+          <path d="M10 10L13.5 13.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+        </svg>
+        <input
+          id="cs-search"
+          class="search-input"
+          type="search"
+          placeholder="Search by keyword, company, metric…"
+          aria-label="Search case studies"
+          autocomplete="off"
+        />
+        <button class="search-clear" id="search-clear-btn" aria-label="Clear search" hidden>✕</button>
+      </div>
+
+      <!-- Category filters -->
+      <div class="filter-pills" role="group" aria-label="Filter by category">
+        <button class="filter-btn active" data-filter="all">All <span class="filter-count"></span></button>
+        <button class="filter-btn" data-filter="growth">Growth <span class="filter-count"></span></button>
+        <button class="filter-btn" data-filter="search">Search <span class="filter-count"></span></button>
+        <button class="filter-btn" data-filter="platform">Platform <span class="filter-count"></span></button>
+        <button class="filter-btn" data-filter="ai">AI <span class="filter-count"></span></button>
+        <button class="filter-btn" data-filter="fintech">FinTech <span class="filter-count"></span></button>
+        <button class="filter-btn" data-filter="edtech">EdTech <span class="filter-count"></span></button>
+        <button class="filter-btn" data-filter="0to1">0→1 Builds <span class="filter-count"></span></button>
+      </div>
+
+      <!-- Sort -->
+      <div class="sort-wrap">
+        <label for="cs-sort" class="sr-only">Sort by</label>
+        <select id="cs-sort" class="sort-select" aria-label="Sort case studies">
+          <option value="default">Featured order</option>
+          <option value="recent">Most recent</option>
+          <option value="impact">Highest impact</option>
+        </select>
+      </div>
+
+    </div>
+
+    <!-- Results count + no-results message -->
+    <div class="toolbar-status">
+      <span id="results-count" class="results-count"></span>
+      <button class="clear-all-btn" id="clear-all-btn" hidden>Clear all filters</button>
+    </div>
   </div>
+
+  <!-- No results state -->
+  <div id="no-results" class="no-results" hidden>
+    <div class="no-results-icon">
+      <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><circle cx="14" cy="14" r="10" stroke="currentColor" stroke-width="1.5" opacity="0.3"/><path d="M22 22L29 29" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity="0.3"/></svg>
+    </div>
+    <p class="no-results-title">No case studies match</p>
+    <p class="no-results-sub">Try a different keyword or <button class="inline-clear-btn" onclick="clearAllFilters()">clear all filters</button></p>
+  </div>
+
+  <p id="filter-count-live" class="sr-only" aria-live="polite" aria-atomic="true"></p>
 
   <!-- WORK GRID -->
   <div class="work-grid" id="workGrid">
 
     <!-- 01 FEATURED - Pathao Full Scope -->
-    <a class="work-card featured reveal" data-tags="growth search platform" href="#" onclick="openModal('pathao-home'); return false;">
+    <a class="work-card featured reveal" data-tags="growth search platform" data-year="2026" data-impact="28" href="#" onclick="openModal('pathao-home'); return false;">
       <div class="card-banner banner-teal">
         <div class="banner-pattern"></div>
         <span class="banner-tag">Growth · Discovery · Platform</span>
@@ -789,7 +1154,7 @@
     </a>
 
     <!-- 02 - Pathao Food Web (dedicated page) -->
-    <a class="work-card reveal" data-tags="growth platform search" href="foodweb.html">
+    <a class="work-card reveal" data-tags="growth platform search 0to1" data-year="2025" data-impact="60" href="foodweb.html">
       <div class="card-banner" style="background: linear-gradient(135deg, #0d1f3c 0%, #1c4f8a 60%, #2563b0 100%);">
         <div class="banner-pattern"></div>
         <span class="banner-tag">0→1 Platform · SEO-First</span>
@@ -825,7 +1190,7 @@
     </a>
 
     <!-- 02 - Pathao Pickup (dedicated page) -->
-    <a class="work-card reveal" data-tags="growth platform" href="pickup.html">
+    <a class="work-card reveal" data-tags="growth platform 0to1" data-year="2025" data-impact="20" href="pickup.html">
       <div class="card-banner" style="background: linear-gradient(135deg, #0a3d30 0%, #127a58 100%);">
         <div class="banner-pattern"></div>
         <span class="banner-tag">0→1 Feature · New Order Type</span>
@@ -861,7 +1226,7 @@
     </a>
 
     <!-- 02 - Search Rebuild -->
-    <a class="work-card reveal" data-tags="search" href="#" onclick="openModal('pathao-search'); return false;">
+    <a class="work-card reveal" data-tags="search" data-year="2024" data-impact="22" href="#" onclick="openModal('pathao-search'); return false;">
       <div class="card-banner banner-blue">
         <div class="banner-pattern"></div>
         <span class="banner-tag">Search · Discovery</span>
@@ -892,7 +1257,7 @@
     </a>
 
     <!-- 03 - Behavioural Personalisation -->
-    <a class="work-card reveal" data-tags="search growth" href="#" onclick="openModal('pathao-personalisation'); return false;">
+    <a class="work-card reveal" data-tags="search growth" data-year="2023" data-impact="18" href="#" onclick="openModal('pathao-personalisation'); return false;">
       <div class="card-banner banner-slate">
         <div class="banner-pattern"></div>
         <span class="banner-tag">Personalisation</span>
@@ -922,7 +1287,7 @@
     </a>
 
     <!-- 04 - UX Pilot AI Growth -->
-    <a class="work-card reveal" data-tags="ai growth" href="#" onclick="openModal('uxpilot-growth'); return false;">
+    <a class="work-card reveal" data-tags="ai growth" data-year="2026" data-impact="0" href="#" onclick="openModal('uxpilot-growth'); return false;">
       <div class="card-banner banner-blue" style="background: linear-gradient(135deg, #0a1628 0%, #1c3d6e 100%);">
         <div class="banner-pattern"></div>
         <span class="banner-tag">AI · Activation</span>
@@ -949,7 +1314,7 @@
     </a>
 
     <!-- 05 - Merchant Platform -->
-    <a class="work-card reveal" data-tags="platform" href="#" onclick="openModal('pathao-merchant'); return false;">
+    <a class="work-card reveal" data-tags="platform" data-year="2024" data-impact="35" href="#" onclick="openModal('pathao-merchant'); return false;">
       <div class="card-banner banner-amber">
         <div class="banner-pattern"></div>
         <span class="banner-tag">Platform · Ops</span>
@@ -980,7 +1345,7 @@
     </a>
 
     <!-- 06 - Biniyog -->
-    <a class="work-card reveal" data-tags="platform growth" href="#" onclick="openModal('biniyog'); return false;">
+    <a class="work-card reveal" data-tags="platform growth fintech 0to1" data-year="2023" data-impact="30" href="#" onclick="openModal('biniyog'); return false;">
       <div class="card-banner banner-coral">
         <div class="banner-pattern"></div>
         <span class="banner-tag">FinTech · Full Product Build</span>
@@ -1017,7 +1382,7 @@
     </a>
 
     <!-- 07 - MyClassroom -->
-    <a class="work-card reveal" data-tags="platform" href="#" onclick="openModal('myclassroom'); return false;">
+    <a class="work-card reveal" data-tags="platform edtech 0to1" data-year="2022" data-impact="20" href="#" onclick="openModal('myclassroom'); return false;">
       <div class="card-banner" style="background: linear-gradient(135deg, #1a3a1a 0%, #2d7a3a 100%);">
         <div class="banner-pattern"></div>
         <span class="banner-tag">EdTech · LMS Build</span>
@@ -1050,6 +1415,9 @@
 
   </div><!-- end work-grid -->
 
+  <!-- PAGINATION -->
+  <div class="pagination" id="pagination" role="navigation" aria-label="Case study pages"></div>
+
   <!-- CTA STRIP -->
   <div class="cta-strip">
     <div class="cta-inner">
@@ -1064,434 +1432,540 @@
 
   <footer>© 2026 Akash Poddar · Dhaka, Bangladesh</footer>
 
-  <!-- ── MODALS ── -->
 
-  <!-- Pathao Homepage -->
-  <div class="modal-overlay" id="modal-pathao-home">
-    <div class="modal">
-      <div class="modal-banner banner-teal">
-        <div class="banner-pattern"></div>
-        <button class="modal-close" onclick="closeModal('pathao-home')">✕</button>
-        <span class="banner-company" style="color:rgba(255,255,255,0.7); font-family: var(--serif); font-style: italic;">Pathao · APM · Oct 2023 – Feb 2026</span>
-      </div>
-      <div class="modal-body">
-        <div class="modal-eyebrow">Case Study 01 · Full Scope</div>
-        <h2 class="modal-title">Pathao Food - Growth, Discovery & Platform at Scale</h2>
-
-        <div class="modal-section-label">Growth & Conversion</div>
-        <div class="modal-win-list">
-          <div class="modal-win"><div class="modal-win-dot"></div><span>Diagnosed funnel leakage across Food Home → Restaurant → Checkout; led A/B experiments lifting CVR from 25% to <strong>32% (+28%)</strong> while reducing search-driven navigation by 7%</span></div>
-          <div class="modal-win"><div class="modal-win-dot"></div><span>Automated collection ranking logic improving collection conversion by <strong>15%</strong> and cutting operational dependency by <strong>35%</strong></span></div>
-          <div class="modal-win"><div class="modal-win-dot"></div><span>Built dynamic promo recommendation and stacking logic lifting promo-to-order conversion by <strong>18%</strong> and reducing irrelevant promo exposure by 30%</span></div>
-          <div class="modal-win"><div class="modal-win-dot"></div><span>Launched cart abandonment automation recovering <strong>6% of abandoned carts</strong> and increasing reorder basket size by 20%</span></div>
-        </div>
-
-        <div class="modal-section-label">Personalisation & Discovery</div>
-        <div class="modal-win-list">
-          <div class="modal-win"><div class="modal-win-dot"></div><span>Introduced behavioural ranking with time-slot preference modelling, increasing personalised collection CTR by <strong>18%</strong></span></div>
-          <div class="modal-win"><div class="modal-win-dot"></div><span>Built similarity-driven and cross-area personalisation improving new-area conversion by <strong>8%</strong></span></div>
-          <div class="modal-win"><div class="modal-win-dot"></div><span>Rebuilt "Order Again" recommendation logic improving reorder conversion by <strong>10%</strong></span></div>
-          <div class="modal-win"><div class="modal-win-dot"></div><span>Launched co-order recommendations increasing attach rate by <strong>6%</strong> and contributing to <strong>4% AOV growth</strong></span></div>
-        </div>
-
-        <div class="modal-section-label">Search & Intent Capture</div>
-        <div class="modal-win-list">
-          <div class="modal-win"><div class="modal-win-dot"></div><span>Rebuilt restaurant search with intent-driven ranking, lifting search-to-order conversion by <strong>22%</strong></span></div>
-          <div class="modal-win"><div class="modal-win-dot"></div><span>Reduced zero-result searches by <strong>20%</strong> through Banglish normalisation and typo tolerance</span></div>
-        </div>
-
-        <div class="modal-section-label">UX & Friction Reduction</div>
-        <div class="modal-win-list">
-          <div class="modal-win"><div class="modal-win-dot"></div><span>Led UX revamps improving item-to-cart rate by <strong>6%</strong> and rating completion by <strong>15%</strong></span></div>
-        </div>
-
-        <div class="modal-section-label">Monetisation & Commercial</div>
-        <div class="modal-win-list">
-          <div class="modal-win"><div class="modal-win-dot"></div><span>Built paid keyword boosting increasing partner CTR by <strong>15%</strong></span></div>
-          <div class="modal-win"><div class="modal-win-dot"></div><span>Launched targeted telco and restaurant campaigns improving campaign conversion by <strong>20%</strong></span></div>
-          <div class="modal-win"><div class="modal-win-dot"></div><span>Introduced co-funded promotion models improving campaign ROI by <strong>20%+</strong></span></div>
-          <div class="modal-win"><div class="modal-win-dot"></div><span>Expanded monetisation with Pickup and cross-order recommendations, growing attach rate and AOV</span></div>
-        </div>
-
-        <div class="modal-section-label">Merchant Platform & Scalability</div>
-        <div class="modal-win-list">
-          <div class="modal-win"><div class="modal-win-dot"></div><span>Designed standardised POS API integrations reducing partner onboarding time by <strong>35%</strong></span></div>
-          <div class="modal-win"><div class="modal-win-dot"></div><span>Led Restaurant Web architecture revamp reducing operational errors by <strong>20%+</strong></span></div>
-          <div class="modal-win"><div class="modal-win-dot"></div><span>Introduced RBAC and multi-branch account management reducing unauthorised access by <strong>90%</strong></span></div>
-          <div class="modal-win"><div class="modal-win-dot"></div><span>Re-architected menu CRUD with variation support, reducing configuration issues by <strong>25%</strong></span></div>
-        </div>
-
-        <div class="modal-section-label">Platform Growth & Web</div>
-        <div class="modal-win-list">
-          <div class="modal-win"><div class="modal-win-dot"></div><span>Launched Pathao Food Web increasing organic impressions by <strong>60%</strong></span></div>
-          <div class="modal-win"><div class="modal-win-dot"></div><span>Enabled dynamic city configuration reducing new-city launch time by <strong>60%+</strong></span></div>
-        </div>
-
-        <div class="modal-section-label">Payments & Cashback</div>
-        <div class="modal-win-list">
-          <div class="modal-win"><div class="modal-win-dot"></div><span>Improved digital payment reliability to a <strong>98% success rate</strong></span></div>
-          <div class="modal-win"><div class="modal-win-dot"></div><span>Introduced cashback prioritisation increasing digital payment adoption by <strong>8%</strong></span></div>
-        </div>
-
-        <div class="modal-section-label">Experimentation & Ops</div>
-        <div class="modal-win-list">
-          <div class="modal-win"><div class="modal-win-dot"></div><span>Built an experimentation framework improving first-30-day conversion by <strong>30%+</strong></span></div>
-          <div class="modal-win"><div class="modal-win-dot"></div><span>Implemented operational access controls reducing configuration errors by <strong>90%</strong></span></div>
-        </div>
-
-        <div class="modal-section-label">Key Metrics</div>
-        <div class="modal-metrics">
-          <div class="modal-metric"><div class="modal-metric-num">+28%</div><div class="modal-metric-label">CVR lift (25→32%)</div></div>
-          <div class="modal-metric"><div class="modal-metric-num">+22%</div><div class="modal-metric-label">Search-to-order CR</div></div>
-          <div class="modal-metric"><div class="modal-metric-num">+18%</div><div class="modal-metric-label">Personalised CTR</div></div>
-          <div class="modal-metric"><div class="modal-metric-num">−35%</div><div class="modal-metric-label">Onboarding time</div></div>
-          <div class="modal-metric"><div class="modal-metric-num">+60%</div><div class="modal-metric-label">Organic impressions</div></div>
-          <div class="modal-metric"><div class="modal-metric-num">98%</div><div class="modal-metric-label">Payment success rate</div></div>
-        </div>
-
-        <div class="modal-section-label">Stack & Methods</div>
-        <div class="modal-stack">
-          <span class="modal-tag">A/B Testing</span>
-          <span class="modal-tag">Funnel Analysis</span>
-          <span class="modal-tag">Behavioural Ranking</span>
-          <span class="modal-tag">Intent Modelling</span>
-          <span class="modal-tag">Banglish NLP</span>
-          <span class="modal-tag">Promo Systems</span>
-          <span class="modal-tag">RBAC</span>
-          <span class="modal-tag">POS API</span>
-          <span class="modal-tag">SEO</span>
-          <span class="modal-tag">Experimentation Framework</span>
-          <span class="modal-tag">SQL Analytics</span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Pathao Search -->
-  <div class="modal-overlay" id="modal-pathao-search">
-    <div class="modal">
-      <div class="modal-banner banner-blue">
-        <div class="banner-pattern"></div>
-        <button class="modal-close" onclick="closeModal('pathao-search')">✕</button>
-        <span class="banner-company" style="color:rgba(255,255,255,0.7); font-family: var(--serif); font-style: italic;">Pathao · Search & Discovery · 2024</span>
-      </div>
-      <div class="modal-body">
-        <div class="modal-eyebrow">Case Study 02</div>
-        <h2 class="modal-title">Intent-Weighted Search Ranking at Scale</h2>
-        <div class="modal-section-label">The Problem</div>
-        <div class="modal-text">Search was the highest-intent entry point on the app - but users were dropping off due to typo sensitivity and a keyword-match model that couldn't read intent. A query like "biryani near me" returned restaurants that literally had "biryani near me" in their name.</div>
-        <div class="modal-section-label">What I Did</div>
-        <div class="modal-win-list">
-          <div class="modal-win"><div class="modal-win-dot"></div><span>Audited search drop-off funnels to isolate typo, zero-result, and irrelevant-result failure modes</span></div>
-          <div class="modal-win"><div class="modal-win-dot"></div><span>Rebuilt ranking with intent-weighted signals - category, cuisine, proximity, and popularity combined</span></div>
-          <div class="modal-win"><div class="modal-win-dot"></div><span>Implemented fuzzy matching and query correction to absorb typo drop-offs</span></div>
-          <div class="modal-win"><div class="modal-win-dot"></div><span>Shipped iteratively with holdout groups to measure incremental CR lift at each step</span></div>
-        </div>
-        <div class="modal-section-label">Outcomes</div>
-        <div class="modal-metrics">
-          <div class="modal-metric"><div class="modal-metric-num">+22%</div><div class="modal-metric-label">Search-to-order CR</div></div>
-          <div class="modal-metric"><div class="modal-metric-num">−20%</div><div class="modal-metric-label">Typo drop-offs</div></div>
-        </div>
-        <div class="modal-section-label">Stack & Methods</div>
-        <div class="modal-stack">
-          <span class="modal-tag">Search Ranking</span><span class="modal-tag">Intent Modelling</span><span class="modal-tag">Fuzzy Matching</span><span class="modal-tag">Holdout Experiments</span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Behavioural Personalisation -->
-  <div class="modal-overlay" id="modal-pathao-personalisation">
-    <div class="modal">
-      <div class="modal-banner banner-slate">
-        <div class="banner-pattern"></div>
-        <button class="modal-close" onclick="closeModal('pathao-personalisation')">✕</button>
-        <span class="banner-company" style="color:rgba(255,255,255,0.7); font-family: var(--serif); font-style: italic;">Pathao · Personalisation · 2023</span>
-      </div>
-      <div class="modal-body">
-        <div class="modal-eyebrow">Case Study 03</div>
-        <h2 class="modal-title">Behavioural Discovery - Time-Slot Modelling</h2>
-        <div class="modal-section-label">The Problem</div>
-        <div class="modal-text">Discovery was static - every user saw the same ranked list regardless of when they opened the app or what they'd ordered before. Lunch users saw dinner-heavy results. Weekend orderers saw weekday restaurants first. No personalisation = no relevance = low CTR.</div>
-        <div class="modal-section-label">What I Did</div>
-        <div class="modal-win-list">
-          <div class="modal-win"><div class="modal-win-dot"></div><span>Built a 6-month time-slot model segmenting user order history by day-part and day-of-week</span></div>
-          <div class="modal-win"><div class="modal-win-dot"></div><span>Introduced proximity + recency + frequency signals into the "Order Again" surface</span></div>
-          <div class="modal-win"><div class="modal-win-dot"></div><span>Built cross-area personalisation for users who frequently order outside their home zone (+8% new-area CVR)</span></div>
-          <div class="modal-win"><div class="modal-win-dot"></div><span>Launched co-order recommendations increasing attach rate by 6% and AOV by 4%</span></div>
-        </div>
-        <div class="modal-section-label">Outcomes</div>
-        <div class="modal-metrics">
-          <div class="modal-metric"><div class="modal-metric-num">+18%</div><div class="modal-metric-label">Personalised CTR</div></div>
-          <div class="modal-metric"><div class="modal-metric-num">+15%</div><div class="modal-metric-label">Engagement</div></div>
-          <div class="modal-metric"><div class="modal-metric-num">+10%</div><div class="modal-metric-label">Reorder CR</div></div>
-        </div>
-        <div class="modal-section-label">Stack & Methods</div>
-        <div class="modal-stack">
-          <span class="modal-tag">Behavioural Modelling</span><span class="modal-tag">Time-Slot Signals</span><span class="modal-tag">Collaborative Filtering</span><span class="modal-tag">A/B Testing</span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- UX Pilot -->
-  <div class="modal-overlay" id="modal-uxpilot-growth">
-    <div class="modal">
-      <div class="modal-banner" style="background: linear-gradient(135deg, #0a1628 0%, #1c3d6e 100%);">
-        <div class="banner-pattern"></div>
-        <button class="modal-close" onclick="closeModal('uxpilot-growth')">✕</button>
-        <span class="banner-company" style="color:rgba(255,255,255,0.7); font-family: var(--serif); font-style: italic;">UX Pilot AI · Activation & Growth · 2026</span>
-      </div>
-      <div class="modal-body">
-        <div class="modal-eyebrow">Case Study 04 · In Progress</div>
-        <h2 class="modal-title">Activation & Monetisation for an AI Design Tool</h2>
-        <div class="modal-section-label">Context</div>
-        <div class="modal-text">UX Pilot AI is an AI-powered prototyping platform. My mandate is to improve free-to-paid conversion by improving the activation experience - ensuring users hit meaningful value before the paywall, and that monetisation moments are timed to intent rather than session count.</div>
-        <div class="modal-section-label">Focus Areas</div>
-        <div class="modal-win-list">
-          <div class="modal-win"><div class="modal-win-dot"></div><span>Mapping the full activation funnel - from signup to first meaningful output - to identify drop-off stages</span></div>
-          <div class="modal-win"><div class="modal-win-dot"></div><span>Running cohort analyses segmented by signup source, feature path, and time-to-value</span></div>
-          <div class="modal-win"><div class="modal-win-dot"></div><span>Designing and running experiments around paywall placement, entitlement timing, and onboarding flow</span></div>
-          <div class="modal-win"><div class="modal-win-dot"></div><span>Partnering with engineering to simplify the core design generation workflow</span></div>
-        </div>
-        <div class="modal-section-label">Stack & Methods</div>
-        <div class="modal-stack">
-          <span class="modal-tag">PostHog</span><span class="modal-tag">Cohort Analysis</span><span class="modal-tag">Funnel Analysis</span><span class="modal-tag">Activation Mapping</span><span class="modal-tag">Experimentation</span>
-        </div>
-        <div class="modal-text" style="margin-top:16px; font-style: italic; font-size: 13px;">Full case study will be published as the work matures.</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Merchant Platform -->
-  <div class="modal-overlay" id="modal-pathao-merchant">
-    <div class="modal">
-      <div class="modal-banner banner-amber">
-        <div class="banner-pattern"></div>
-        <button class="modal-close" onclick="closeModal('pathao-merchant')">✕</button>
-        <span class="banner-company" style="color:rgba(255,255,255,0.7); font-family: var(--serif); font-style: italic;">Pathao · Platform · 2024</span>
-      </div>
-      <div class="modal-body">
-        <div class="modal-eyebrow">Case Study 05</div>
-        <h2 class="modal-title">Merchant Platform - POS Integration & Scalability</h2>
-        <div class="modal-section-label">The Problem</div>
-        <div class="modal-text">Onboarding a new restaurant onto Pathao took too long and was error-prone. Every partner integration was bespoke, ACL was manually managed, and menu configuration issues surfaced post-launch. Scaling city expansion was bottlenecked by ops, not market demand.</div>
-        <div class="modal-section-label">What I Did</div>
-        <div class="modal-win-list">
-          <div class="modal-win"><div class="modal-win-dot"></div><span>Defined a standardised POS API integration spec - one interface, multiple POS systems</span></div>
-          <div class="modal-win"><div class="modal-win-dot"></div><span>Rebuilt ACL and multi-branch management, reducing unauthorised access incidents by 90%</span></div>
-          <div class="modal-win"><div class="modal-win-dot"></div><span>Re-architected menu systems to eliminate configuration drift and reduce issues by 25%</span></div>
-          <div class="modal-win"><div class="modal-win-dot"></div><span>Launched SEO-first restaurant web pages, adding a new acquisition channel (+60% organic impressions)</span></div>
-          <div class="modal-win"><div class="modal-win-dot"></div><span>Cut city expansion setup time by 60% by packaging configuration into repeatable templates</span></div>
-        </div>
-        <div class="modal-section-label">Outcomes</div>
-        <div class="modal-metrics">
-          <div class="modal-metric"><div class="modal-metric-num">−35%</div><div class="modal-metric-label">Onboarding time</div></div>
-          <div class="modal-metric"><div class="modal-metric-num">−90%</div><div class="modal-metric-label">Unauthorised access</div></div>
-          <div class="modal-metric"><div class="modal-metric-num">+60%</div><div class="modal-metric-label">Organic impressions</div></div>
-        </div>
-        <div class="modal-section-label">Stack & Methods</div>
-        <div class="modal-stack">
-          <span class="modal-tag">API Design</span><span class="modal-tag">ACL</span><span class="modal-tag">SEO</span><span class="modal-tag">System Architecture</span><span class="modal-tag">Ops Automation</span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Biniyog -->
-  <div class="modal-overlay" id="modal-biniyog">
-    <div class="modal">
-      <div class="modal-banner banner-coral">
-        <div class="banner-pattern"></div>
-        <button class="modal-close" onclick="closeModal('biniyog')">✕</button>
-        <span class="banner-company" style="color:rgba(255,255,255,0.7); font-family: var(--serif); font-style: italic;">SciTech Innovations · FinTech · 2020–23 · biniyog.com.bd</span>
-      </div>
-      <div class="modal-body">
-        <div class="modal-eyebrow">Case Study 06 · 0→1 Product Build</div>
-        <h2 class="modal-title">Biniyog.com.bd - Bangladesh's All-in-One Retail Investment Platform</h2>
-
-        <div class="modal-section-label">Context & Role</div>
-        <div class="modal-text">Biniyog is Bangladesh's most comprehensive retail investment platform - covering DSE stock trading, IPO management, bank schemes, Sanchayapatra, and tax tools in one place. I was the <strong>sole PM</strong>, building the entire product from concept through 500K+ active users over three years at SciTech Innovations.</div>
-
-        <div class="modal-section-label">Core Trading Platform</div>
-        <div class="modal-win-list">
-          <div class="modal-win"><div class="modal-win-dot"></div><span>Designed and shipped end-to-end DSE stock trading: real-time portfolio tracking (P&L, dividends, bonus/rights), online buy/sell order execution, and live transaction status updates</span></div>
-          <div class="modal-win"><div class="modal-win-dot"></div><span>Built BO (Beneficiary Owner) account opening and linking flows, online fund deposit/withdrawal via payment gateway - enabling fully paperless investing for retail users</span></div>
-          <div class="modal-win"><div class="modal-win-dot"></div><span>Automated IPO application with active IPO listings, one-click applications, status tracking, and deadline notifications - eliminating broker visits for IPO participation</span></div>
-        </div>
-
-        <div class="modal-section-label">Research & Analytics Suite</div>
-        <div class="modal-win-list">
-          <div class="modal-win"><div class="modal-win-dot"></div><span>Integrated TradingView technical analysis charts with customisable indicators, support/resistance levels, and historical price trend analysis</span></div>
-          <div class="modal-win"><div class="modal-win-dot"></div><span>Built a fundamental + technical company screener filterable by P/E ratio, market cap, dividend yield, and sector - enabling data-driven stock selection</span></div>
-          <div class="modal-win"><div class="modal-win-dot"></div><span>Portfolio analysis module showing cross-holding risk, sector allocation, total P&L, and Hold/Sell/Buy signals per position</span></div>
-          <div class="modal-win"><div class="modal-win-dot"></div><span>Watchlist with customisable price-movement, volume, and market alerts - ensuring users never miss a key entry or exit signal</span></div>
-        </div>
-
-        <div class="modal-section-label">Paper Trading</div>
-        <div class="modal-win-list">
-          <div class="modal-win"><div class="modal-win-dot"></div><span>Built a zero-risk simulated trading environment - a first for Bangladesh retail - letting users test strategies and build conviction before committing real capital</span></div>
-        </div>
-
-        <div class="modal-section-label">Multi-Asset Investment Hub</div>
-        <div class="modal-win-list">
-          <div class="modal-win"><div class="modal-win-dot"></div><span>Bank scheme comparison across all major Bangladeshi banks with DPS/FDR interest calculator - graphical profit projection by tenure and rate</span></div>
-          <div class="modal-win"><div class="modal-win-dot"></div><span>Sanchayapatra (government savings certificates) scheme directory with eligibility and return information</span></div>
-          <div class="modal-win"><div class="modal-win-dot"></div><span>Tax rebate calculator: input income and investment breakdown to determine applicable rebates across all government-approved investment vehicles</span></div>
-        </div>
-
-        <div class="modal-section-label">Content & Education Engine</div>
-        <div class="modal-win-list">
-          <div class="modal-win"><div class="modal-win-dot"></div><span>DSE market news feed sourced from DSE database and online press; weekly newsletter covering macro + market summaries - driving retention and return visits</span></div>
-          <div class="modal-win"><div class="modal-win-dot"></div><span>Educational blog library covering fundamental analysis, technical patterns, and trading strategy - serving beginner to experienced investors and driving organic SEO acquisition</span></div>
-          <div class="modal-win"><div class="modal-win-dot"></div><span>bKash super-app integration - extended Biniyog's reach inside Bangladesh's largest MFS app, opening a new high-intent distribution channel</span></div>
-        </div>
-
-        <div class="modal-section-label">Scale & Outcomes</div>
-        <div class="modal-metrics">
-          <div class="modal-metric"><div class="modal-metric-num">500K+</div><div class="modal-metric-label">Active users</div></div>
-          <div class="modal-metric"><div class="modal-metric-num">99%</div><div class="modal-metric-label">Platform uptime</div></div>
-          <div class="modal-metric"><div class="modal-metric-num">+30%</div><div class="modal-metric-label">User engagement</div></div>
-          <div class="modal-metric"><div class="modal-metric-num">+25%</div><div class="modal-metric-label">Revenue growth</div></div>
-          <div class="modal-metric"><div class="modal-metric-num">+20%</div><div class="modal-metric-label">Conversion rate</div></div>
-          <div class="modal-metric"><div class="modal-metric-num">−30%</div><div class="modal-metric-label">Churn</div></div>
-        </div>
-
-        <div class="modal-section-label">Stack & Methods</div>
-        <div class="modal-stack">
-          <span class="modal-tag">DSE / Stock Trading</span><span class="modal-tag">IPO Automation</span><span class="modal-tag">Portfolio Analytics</span><span class="modal-tag">TradingView Charts</span><span class="modal-tag">Stock Screener</span><span class="modal-tag">Paper Trading</span><span class="modal-tag">Multi-asset Platform</span><span class="modal-tag">Payment Gateway</span><span class="modal-tag">System Architecture</span><span class="modal-tag">A/B Testing</span><span class="modal-tag">SEO / Content</span>
-        </div>
-        <a class="modal-cta" href="https://biniyog.com.bd" target="_blank" rel="noopener">Visit Biniyog.com.bd ↗</a>
-      </div>
-    </div>
-  </div>
-
-  <!-- MyClassroom -->
-  <div class="modal-overlay" id="modal-myclassroom">
-    <div class="modal">
-      <div class="modal-banner" style="background: linear-gradient(135deg, #1a3a1a 0%, #2d7a3a 100%);">
-        <div class="banner-pattern"></div>
-        <button class="modal-close" onclick="closeModal('myclassroom')">✕</button>
-        <span class="banner-company" style="color:rgba(255,255,255,0.7); font-family: var(--serif); font-style: italic;">SciTech Innovations · EdTech · 2020–23 · myclassroom.online</span>
-      </div>
-      <div class="modal-body">
-        <div class="modal-eyebrow">Case Study 07 · 0→1 Product Build</div>
-        <h2 class="modal-title">MyClassroom.online - Next-Generation LMS for K-12 to Corporate</h2>
-
-        <div class="modal-section-label">Context & Role</div>
-        <div class="modal-text">MyClassroom.online is a unified learning management platform built for schools (K-12), universities, and corporate training institutes. Designed to be simple, seamless, and scalable - no software installation required. I owned the full product lifecycle as PM, architecting a four-persona experience (students, teachers, parents, institutions) serving Bangladesh and international markets including Australia.</div>
-
-        <div class="modal-section-label">Virtual Classroom</div>
-        <div class="modal-win-list">
-          <div class="modal-win"><div class="modal-win-dot"></div><span>Shipped live and recorded virtual classroom with real-time + async chat, group-based learning tools, live stream and lesson recording capabilities - enabling remote education with zero software installation</span></div>
-          <div class="modal-win"><div class="modal-win-dot"></div><span>Automated attendance tracking built into the classroom layer - eliminating manual register management for teachers</span></div>
-        </div>
-
-        <div class="modal-section-label">Exam & Assessment Engine</div>
-        <div class="modal-win-list">
-          <div class="modal-win"><div class="modal-win-dot"></div><span>Built a secure, time-bound online exam system with automated marking and grading - cutting manual evaluation hours to zero</span></div>
-          <div class="modal-win"><div class="modal-win-dot"></div><span>Integrated question bank with algorithm-based random question generation per student, eliminating copy risk in online exams</span></div>
-          <div class="modal-win"><div class="modal-win-dot"></div><span>Fraud detection capability built into the exam flow - preventing academic dishonesty in remote settings</span></div>
-        </div>
-
-        <div class="modal-section-label">Assignment Management</div>
-        <div class="modal-win-list">
-          <div class="modal-win"><div class="modal-win-dot"></div><span>Designed time-bound assignment workflow with online submission, due-date enforcement, and engagement tracking - replacing all paper-based submission processes</span></div>
-          <div class="modal-win"><div class="modal-win-dot"></div><span>In-class time-bound exercises for real-time student engagement during live sessions</span></div>
-        </div>
-
-        <div class="modal-section-label">Student Portfolio & Analytics</div>
-        <div class="modal-win-list">
-          <div class="modal-win"><div class="modal-win-dot"></div><span>Shipped a performance analytics module giving teachers and parents real-time visibility into attendance, results, assignments, and engagement trends</span></div>
-          <div class="modal-win"><div class="modal-win-dot"></div><span>Enabled personalised education interventions and student appreciation programmes based on analytics data</span></div>
-        </div>
-
-        <div class="modal-section-label">Virtual Library & LMS</div>
-        <div class="modal-win-list">
-          <div class="modal-win"><div class="modal-win-dot"></div><span>Built a secured digital library supporting self-paced asynchronous learning with teacher-curated, filtered study materials and real-time content sharing for group and individual learning paths</span></div>
-        </div>
-
-        <div class="modal-section-label">Online Administration</div>
-        <div class="modal-win-list">
-          <div class="modal-win"><div class="modal-win-dot"></div><span>Designed a centralised school operations layer: smart routine and schedule generator, intuitive admin dashboard for full operational visibility, and school fee collection management</span></div>
-          <div class="modal-win"><div class="modal-win-dot"></div><span>Automated time-consuming manual administrative tasks - reducing institutional operational overhead significantly</span></div>
-        </div>
-
-        <div class="modal-section-label">Multi-Persona Architecture</div>
-        <div class="modal-win-list">
-          <div class="modal-win"><div class="modal-win-dot"></div><span><strong>Student:</strong> Single platform for all classes, resources, and assignments with real-time school environment navigation</span></div>
-          <div class="modal-win"><div class="modal-win-dot"></div><span><strong>Teacher:</strong> One platform to run online classes, manage assignments, run exams, track attendance, and assess students</span></div>
-          <div class="modal-win"><div class="modal-win-dot"></div><span><strong>Parent:</strong> Real-time tracking of tasks, results, attendance, and performance with direct teacher communication channel</span></div>
-          <div class="modal-win"><div class="modal-win-dot"></div><span><strong>Institution:</strong> Full operational management, teacher-student communication oversight, and administrative automation</span></div>
-        </div>
-
-        <div class="modal-section-label">Stack & Methods</div>
-        <div class="modal-stack">
-          <span class="modal-tag">LMS Architecture</span><span class="modal-tag">Virtual Classroom</span><span class="modal-tag">Exam Engine</span><span class="modal-tag">Question Bank</span><span class="modal-tag">Fraud Detection</span><span class="modal-tag">Multi-persona UX</span><span class="modal-tag">Analytics</span><span class="modal-tag">Scalable DB Design</span><span class="modal-tag">K-12 · University · Corporate</span>
-        </div>
-        <a class="modal-cta" href="https://myclassroom.online" target="_blank" rel="noopener">Visit MyClassroom.online ↗</a>
-      </div>
-    </div>
-  </div>
+  <!-- Modal container: injected dynamically, never pre-loaded -->
+  <div id="modal-root" role="dialog" aria-modal="true" aria-label="Case study detail" hidden></div>
 
   <script>
-    /* Filter */
-    const btns = document.querySelectorAll('.filter-btn');
-    const cards = document.querySelectorAll('.work-card[data-tags]');
-    btns.forEach(btn => {
-      btn.addEventListener('click', () => {
-        btns.forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        const f = btn.dataset.filter;
-        cards.forEach(c => {
-          const tags = c.dataset.tags || '';
-          c.style.display = (f === 'all' || tags.includes(f)) ? '' : 'none';
-        });
-      });
-    });
-
-    /* Modal open/close */
-    function openModal(id) {
-      document.getElementById('modal-' + id).classList.add('open');
-      document.body.style.overflow = 'hidden';
-    }
-
-    function closeModal(id) {
-      document.getElementById('modal-' + id).classList.remove('open');
-      document.body.style.overflow = '';
-    }
-
-    document.querySelectorAll('.modal-overlay').forEach(overlay => {
-      overlay.addEventListener('click', e => {
-        if (e.target === overlay) {
-          overlay.classList.remove('open');
-          document.body.style.overflow = '';
-        }
-      });
-    });
-
-    document.addEventListener('keydown', e => {
-      if (e.key === 'Escape') {
-        document.querySelectorAll('.modal-overlay.open').forEach(m => {
-          m.classList.remove('open');
-          document.body.style.overflow = '';
-        });
+    // ════════════════════════════════════════════════════════════════════════
+    // CASE STUDY DATA STORE — add new entries here + a card in the grid
+    // ════════════════════════════════════════════════════════════════════════
+    const STUDIES = {
+      'pathao-home': {
+        banner: 'banner-teal',
+        meta: 'Pathao · APM · Oct 2023 – Feb 2026',
+        eyebrow: 'Case Study 01 · Full Scope',
+        title: 'Pathao Food — Growth, Discovery & Platform at Scale',
+        sections: [
+          { label: 'Growth & Conversion', wins: [
+            'Diagnosed funnel leakage across Food Home → Restaurant → Checkout; led A/B experiments lifting CVR from 25% to <strong>32% (+28%)</strong> while reducing search-driven navigation by 7%',
+            'Automated collection ranking logic improving collection conversion by <strong>15%</strong> and cutting operational dependency by <strong>35%</strong>',
+            'Built dynamic promo recommendation and stacking logic lifting promo-to-order conversion by <strong>18%</strong> and reducing irrelevant promo exposure by 30%',
+            'Launched cart abandonment automation recovering <strong>6% of abandoned carts</strong> and increasing reorder basket size by 20%'
+          ]},
+          { label: 'Personalisation & Discovery', wins: [
+            'Introduced behavioural ranking with time-slot preference modelling, increasing personalised collection CTR by <strong>18%</strong>',
+            'Built similarity-driven and cross-area personalisation improving new-area conversion by <strong>8%</strong>',
+            'Rebuilt "Order Again" recommendation logic improving reorder conversion by <strong>10%</strong>',
+            'Launched co-order recommendations increasing attach rate by <strong>6%</strong> and contributing to <strong>4% AOV growth</strong>'
+          ]},
+          { label: 'Search & Intent Capture', wins: [
+            'Rebuilt restaurant search with intent-driven ranking, lifting search-to-order conversion by <strong>22%</strong>',
+            'Reduced zero-result searches by <strong>20%</strong> through Banglish normalisation and typo tolerance'
+          ]},
+          { label: 'UX & Friction Reduction', wins: [
+            'Led UX revamps improving item-to-cart rate by <strong>6%</strong> and rating completion by <strong>15%</strong>'
+          ]},
+          { label: 'Monetisation & Commercial', wins: [
+            'Built paid keyword boosting increasing partner CTR by <strong>15%</strong>',
+            'Launched targeted telco and restaurant campaigns improving campaign conversion by <strong>20%</strong>',
+            'Introduced co-funded promotion models improving campaign ROI by <strong>20%+</strong>',
+            'Expanded monetisation with Pickup and cross-order recommendations, growing attach rate and AOV'
+          ]},
+          { label: 'Merchant Platform & Scalability', wins: [
+            'Designed standardised POS API integrations reducing partner onboarding time by <strong>35%</strong>',
+            'Led Restaurant Web architecture revamp reducing operational errors by <strong>20%+</strong>',
+            'Introduced RBAC and multi-branch account management reducing unauthorised access by <strong>90%</strong>',
+            'Re-architected menu CRUD with variation support, reducing configuration issues by <strong>25%</strong>'
+          ]},
+          { label: 'Platform Growth & Web', wins: [
+            'Launched Pathao Food Web increasing organic impressions by <strong>60%</strong>',
+            'Enabled dynamic city configuration reducing new-city launch time by <strong>60%+</strong>'
+          ]},
+          { label: 'Payments & Cashback', wins: [
+            'Improved digital payment reliability to a <strong>98% success rate</strong>',
+            'Introduced cashback prioritisation increasing digital payment adoption by <strong>8%</strong>'
+          ]},
+          { label: 'Experimentation & Ops', wins: [
+            'Built an experimentation framework improving first-30-day conversion by <strong>30%+</strong>',
+            'Implemented operational access controls reducing configuration errors by <strong>90%</strong>'
+          ]}
+        ],
+        metrics: [
+          {num:'+28%',label:'CVR lift'},{num:'+22%',label:'Search-to-order CR'},
+          {num:'+18%',label:'Personalised CTR'},{num:'−35%',label:'Onboarding time'},
+          {num:'+60%',label:'Organic impressions'},{num:'98%',label:'Payment success'}
+        ],
+        tags: ['A/B Testing','Funnel Analysis','Behavioural Ranking','Intent Modelling','Banglish NLP','Promo Systems','RBAC','POS API','SEO','Experimentation','SQL Analytics']
+      },
+      'pathao-search': {
+        banner: 'banner-blue',
+        meta: 'Pathao · Search & Discovery · 2024',
+        eyebrow: 'Case Study — Search',
+        title: 'Intent-Weighted Search Ranking at Scale',
+        sections: [
+          { label: 'The Problem', text: `Search was the highest-intent entry point on the app — but users were dropping off due to typo sensitivity and a keyword-match model that couldn't read intent.` },
+          { label: 'What I Did', wins: [
+            'Audited search drop-off funnels to isolate typo, zero-result, and irrelevant-result failure modes',
+            'Rebuilt ranking with intent-weighted signals — category, cuisine, proximity, and popularity combined',
+            'Implemented fuzzy matching and query correction to absorb typo drop-offs',
+            'Shipped iteratively with holdout groups to measure incremental CR lift at each step'
+          ]}
+        ],
+        metrics: [{num:'+22%',label:'Search-to-order CR'},{num:'−20%',label:'Typo drop-offs'}],
+        tags: ['Search Ranking','Intent Modelling','Fuzzy Matching','Holdout Experiments']
+      },
+      'pathao-personalisation': {
+        banner: 'banner-slate',
+        meta: 'Pathao · Personalisation · 2023',
+        eyebrow: 'Case Study — Personalisation',
+        title: 'Behavioural Discovery — Time-Slot Modelling',
+        sections: [
+          { label: 'The Problem', text: `Discovery was static — every user saw the same ranked list regardless of when they opened the app or what they'd ordered before.` },
+          { label: 'What I Did', wins: [
+            'Built a 6-month time-slot model segmenting user order history by day-part and day-of-week',
+            'Introduced proximity + recency + frequency signals into the "Order Again" surface',
+            'Built cross-area personalisation improving new-area conversion by 8%',
+            'Launched co-order recommendations increasing attach rate by 6% and AOV by 4%'
+          ]}
+        ],
+        metrics: [{num:'+18%',label:'Personalised CTR'},{num:'+15%',label:'Engagement'},{num:'+10%',label:'Reorder CR'}],
+        tags: ['Behavioural Modelling','Time-Slot Signals','Collaborative Filtering','A/B Testing']
+      },
+      'uxpilot-growth': {
+        banner: '',
+        bannerStyle: 'background: linear-gradient(135deg, #0a1628 0%, #1c3d6e 100%);',
+        meta: 'UX Pilot AI · Activation & Growth · 2026',
+        eyebrow: 'Case Study — AI · In Progress',
+        title: 'Activation & Monetisation for an AI Design Tool',
+        sections: [
+          { label: 'Context', text: `UX Pilot AI is an AI-powered prototyping platform. My mandate is to improve free-to-paid conversion by ensuring users hit meaningful value before the paywall.` },
+          { label: 'Focus Areas', wins: [
+            'Mapping the full activation funnel from signup to first meaningful output',
+            'Running cohort analyses segmented by signup source, feature path, and time-to-value',
+            'Designing experiments around paywall placement, entitlement timing, and onboarding flow',
+            'Partnering with engineering to simplify the core design generation workflow'
+          ]}
+        ],
+        metrics: [],
+        tags: ['PostHog','Cohort Analysis','Funnel Analysis','Activation Mapping','Experimentation'],
+        note: 'Full case study will be published as the work matures.'
+      },
+      'pathao-merchant': {
+        banner: 'banner-amber',
+        meta: 'Pathao · Platform · 2024',
+        eyebrow: 'Case Study — Platform',
+        title: 'Merchant Platform — POS Integration & Scalability',
+        sections: [
+          { label: 'The Problem', text: `Onboarding a new restaurant onto Pathao took too long and was error-prone. Scaling city expansion was bottlenecked by ops, not market demand.` },
+          { label: 'What I Did', wins: [
+            'Defined a standardised POS API integration spec — one interface, multiple POS systems',
+            'Rebuilt ACL and multi-branch management, reducing unauthorised access by 90%',
+            'Re-architected menu systems to eliminate configuration drift and reduce issues by 25%',
+            'Launched SEO-first restaurant web pages (+60% organic impressions)',
+            'Cut city expansion setup time by 60% with repeatable configuration templates'
+          ]}
+        ],
+        metrics: [{num:'−35%',label:'Onboarding time'},{num:'−90%',label:'Unauthorised access'},{num:'+60%',label:'Organic impressions'}],
+        tags: ['API Design','ACL','SEO','System Architecture','Ops Automation']
+      },
+      'biniyog': {
+        banner: 'banner-coral',
+        meta: `SciTech Innovations · FinTech · 2020–23`,
+        eyebrow: 'Case Study · 0→1 FinTech Build',
+        title: `Biniyog.com.bd — Bangladesh's All-in-One Retail Investment Platform`,
+        sections: [
+          { label: 'Context & Role', text: `Biniyog is Bangladesh's most comprehensive retail investment platform. I was the <strong>sole PM</strong>, building from concept through 500K+ active users over three years.` },
+          { label: 'Core Trading Platform', wins: [
+            'Shipped end-to-end DSE trading: real-time portfolio tracking, buy/sell execution, live transaction status',
+            'Built BO account opening, fund deposit/withdrawal via payment gateway, automated IPO application'
+          ]},
+          { label: 'Research & Analytics', wins: [
+            'TradingView charts, company screener (P/E, market cap, dividend yield), portfolio P&L and Hold/Sell/Buy signals',
+            'Watchlist with price-movement, volume, and market alerts'
+          ]},
+          { label: 'Multi-Asset Hub', wins: [
+            'Bank scheme comparison, DPS/FDR interest calculator, Sanchayapatra directory, tax rebate calculator'
+          ]},
+          { label: 'Scale & Outcomes', wins: [
+            'Scaled to <strong>500,000+ active users</strong> at <strong>99% uptime</strong>',
+            'A/B testing drove <strong>+30% engagement</strong>, <strong>+25% revenue</strong>, <strong>+20% conversion</strong>, <strong>−30% churn</strong>'
+          ]}
+        ],
+        metrics: [{num:'500K+',label:'Active users'},{num:'99%',label:'Uptime'},{num:'+30%',label:'Engagement'},{num:'+25%',label:'Revenue'},{num:'+20%',label:'Conversion'},{num:'−30%',label:'Churn'}],
+        tags: ['DSE Trading','IPO Automation','Portfolio Analytics','TradingView','Stock Screener','Multi-asset','Payment Gateway','System Architecture'],
+        cta: { href: 'https://biniyog.com.bd', label: 'Visit Biniyog.com.bd ↗' }
+      },
+      'myclassroom': {
+        banner: '',
+        bannerStyle: 'background: linear-gradient(135deg, #1a3a1a 0%, #2d7a3a 100%);',
+        meta: `SciTech Innovations · EdTech · 2020–23`,
+        eyebrow: 'Case Study · 0→1 LMS Build',
+        title: `MyClassroom.online — Next-Generation LMS for K-12 to Corporate`,
+        sections: [
+          { label: 'Context & Role', text: `MyClassroom.online is a unified LMS for schools (K-12), universities, and corporate training. I owned the full lifecycle, architecting a four-persona experience.` },
+          { label: 'What Was Built', wins: [
+            'Live + recorded virtual classroom with real-time chat, group learning, and automated attendance',
+            'Secure exam engine with automated grading, randomised question bank, and fraud detection',
+            'Time-bound assignment workflow, online submission, and student performance analytics',
+            'Centralised admin: schedule generator, fee collection, and ops automation'
+          ]},
+          { label: 'Multi-Persona Architecture', wins: [
+            '<strong>Student:</strong> All classes, resources, and assignments in one place',
+            '<strong>Teacher:</strong> Run classes, exams, assignments, and track attendance',
+            '<strong>Parent:</strong> Real-time visibility into results, attendance, and engagement',
+            '<strong>Institution:</strong> Full operational management and administrative automation'
+          ]}
+        ],
+        metrics: [],
+        tags: ['LMS Architecture','Virtual Classroom','Exam Engine','Question Bank','Fraud Detection','Multi-persona UX','K-12 · University · Corporate'],
+        cta: { href: 'https://myclassroom.online', label: 'Visit MyClassroom.online ↗' }
       }
+    };
+
+    // ════════════════════════════════════════════════════════════════════════
+    // MODAL SYSTEM — lazy render, bottom-sheet on mobile, focus-managed
+    // ════════════════════════════════════════════════════════════════════════
+    const modalRoot = document.getElementById('modal-root');
+    let lastFocus = null;
+
+    function buildModalHTML(data) {
+      const bannerClass = data.banner || '';
+      const bannerStyle = data.bannerStyle ? ` style="${data.bannerStyle}"` : '';
+
+      let sectionsHTML = '';
+      for (const s of data.sections) {
+        sectionsHTML += `<div class="modal-section-label">${s.label}</div>`;
+        if (s.text)  sectionsHTML += `<div class="modal-text">${s.text}</div>`;
+        if (s.wins)  sectionsHTML += `<div class="modal-win-list">${
+          s.wins.map(w => `<div class="modal-win"><div class="modal-win-dot"></div><span>${w}</span></div>`).join('')
+        }</div>`;
+      }
+
+      const metricsHTML = (data.metrics && data.metrics.length)
+        ? `<div class="modal-section-label">Key Metrics</div>
+           <div class="modal-metrics">${data.metrics.map(m =>
+             `<div class="modal-metric"><div class="modal-metric-num">${m.num}</div><div class="modal-metric-label">${m.label}</div></div>`
+           ).join('')}</div>` : '';
+
+      const tagsHTML  = `<div class="modal-section-label">Stack & Methods</div>
+        <div class="modal-stack">${data.tags.map(t => `<span class="modal-tag">${t}</span>`).join('')}</div>`;
+      const ctaHTML   = data.cta  ? `<a class="modal-cta" href="${data.cta.href}" target="_blank" rel="noopener">${data.cta.label}</a>` : '';
+      const noteHTML  = data.note ? `<p class="modal-text" style="margin-top:16px;font-style:italic;font-size:13px;opacity:0.7;">${data.note}</p>` : '';
+
+      return `
+        <div class="modal" role="document">
+          <div class="modal-banner ${bannerClass}"${bannerStyle}>
+            <div class="banner-pattern"></div>
+            <button class="modal-close" aria-label="Close" id="modal-close-btn">✕</button>
+            <span class="banner-company" style="color:rgba(255,255,255,0.7);font-family:var(--serif);font-style:italic;">${data.meta}</span>
+          </div>
+          <div class="modal-body">
+            <div class="modal-eyebrow">${data.eyebrow}</div>
+            <h2 class="modal-title">${data.title}</h2>
+            ${sectionsHTML}
+            ${metricsHTML}
+            ${tagsHTML}
+            ${ctaHTML}
+            ${noteHTML}
+          </div>
+        </div>`;
+    }
+
+    function openModal(id) {
+      const data = STUDIES[id];
+      if (!data) return;
+      lastFocus = document.activeElement;
+      modalRoot.innerHTML = buildModalHTML(data);
+      modalRoot.removeAttribute('hidden');
+      modalRoot.classList.add('modal-overlay', 'open');
+      document.body.style.overflow = 'hidden';
+      const closeBtn = modalRoot.querySelector('#modal-close-btn');
+      if (closeBtn) { closeBtn.focus(); closeBtn.addEventListener('click', closeModal); }
+      modalRoot.addEventListener('keydown', handleModalKey);
+    }
+
+    function closeModal() {
+      modalRoot.classList.remove('open');
+      modalRoot.setAttribute('hidden', '');
+      modalRoot.innerHTML = '';
+      document.body.style.overflow = '';
+      modalRoot.removeEventListener('keydown', handleModalKey);
+      if (lastFocus) lastFocus.focus();
+    }
+
+    function handleModalKey(e) {
+      if (e.key === 'Escape') { closeModal(); return; }
+      if (e.key !== 'Tab') return;
+      const focusable = [...modalRoot.querySelectorAll('button, a[href], [tabindex]:not([tabindex="-1"])')];
+      if (!focusable.length) return;
+      const first = focusable[0], last = focusable[focusable.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    }
+
+    modalRoot.addEventListener('click', e => { if (e.target === modalRoot) closeModal(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape' && !modalRoot.hidden) closeModal(); });
+
+    // ════════════════════════════════════════════════════════════════════════
+    // SEARCH + FILTER + SORT + PAGINATION
+    // Designed for 100+ case studies. Pagination keeps the page fast:
+    // only PAGE_SIZE cards are visible at once regardless of total count.
+    // ════════════════════════════════════════════════════════════════════════
+    const PAGE_SIZE_OPTIONS = [6, 12, 24];
+    let PAGE_SIZE  = 6;   // default — sensible for both mobile and desktop
+    let currentPage = 1;
+
+    const allCards    = [...document.querySelectorAll('.work-card[data-tags]')];
+    const searchInput = document.getElementById('cs-search');
+    const clearBtn    = document.getElementById('search-clear-btn');
+    const clearAllBtn = document.getElementById('clear-all-btn');
+    const sortSelect  = document.getElementById('cs-sort');
+    const noResults   = document.getElementById('no-results');
+    const countEl     = document.getElementById('results-count');
+    const livEl       = document.getElementById('filter-count-live');
+    const filterBtns  = [...document.querySelectorAll('.filter-btn')];
+    const paginationEl = document.getElementById('pagination');
+    const grid        = document.getElementById('workGrid');
+
+    // Build search index once — avoids repeated DOM reads during filtering
+    const cardIndex = allCards.map(card => ({
+      el:     card,
+      tags:   card.dataset.tags || '',
+      year:   parseInt(card.dataset.year   || '0'),
+      impact: parseInt(card.dataset.impact || '0'),
+      // Searchable text: title + summary + tags (lowercased, cached)
+      text:   [
+        card.querySelector('.card-title')   && card.querySelector('.card-title').textContent,
+        card.querySelector('.card-summary') && card.querySelector('.card-summary').textContent,
+        card.dataset.tags
+      ].filter(Boolean).join(' ').toLowerCase(),
+      // Cache original inner HTML of highlight targets for restoration
+      origTitle:   card.querySelector('.card-title')   ? card.querySelector('.card-title').innerHTML   : '',
+      origSummary: card.querySelector('.card-summary') ? card.querySelector('.card-summary').innerHTML : '',
+    }));
+
+    let activeFilter = 'all';
+    let searchQuery  = '';
+
+    // Filter pill counts — computed once from total cards
+    filterBtns.forEach(btn => {
+      const f = btn.dataset.filter;
+      const n = f === 'all' ? allCards.length
+        : allCards.filter(c => (c.dataset.tags||'').includes(f)).length;
+      const badge = btn.querySelector('.filter-count');
+      if (badge) badge.textContent = n;
     });
 
-    /* Scroll reveals */
-    const reveals = document.querySelectorAll('.reveal');
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach((e, i) => {
-        if (e.isIntersecting) {
-          e.target.style.transitionDelay = (i * 0.07) + 's';
-          e.target.classList.add('visible');
-          io.unobserve(e.target);
-        }
+    // ── Core: apply filters → get matching set → paginate → render ──────────
+    function getMatching() {
+      const q = searchQuery.toLowerCase().trim();
+      let pool = [...cardIndex];
+
+      // Sort first (so pagination is consistent)
+      if (sortSelect.value === 'recent') {
+        pool.sort((a, b) => b.year - a.year);
+      } else if (sortSelect.value === 'impact') {
+        pool.sort((a, b) => b.impact - a.impact);
+      }
+
+      // Filter
+      return pool.filter(item => {
+        const matchTag    = activeFilter === 'all' || item.tags.includes(activeFilter);
+        const matchSearch = !q || item.text.includes(q);
+        return matchTag && matchSearch;
       });
-    }, { threshold: 0.1 });
-    reveals.forEach(r => io.observe(r));
-  </script>
+    }
+
+    function applyFilters(resetPage) {
+      if (resetPage) currentPage = 1;
+      const q        = searchQuery.toLowerCase().trim();
+      const matching = getMatching();
+      const total    = matching.length;
+      const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+      if (currentPage > totalPages) currentPage = totalPages;
+
+      const pageStart = (currentPage - 1) * PAGE_SIZE;
+      const pageEnd   = Math.min(pageStart + PAGE_SIZE, total);
+      const pageItems = matching.slice(pageStart, pageEnd);
+      const pageItemSet = new Set(pageItems.map(i => i.el));
+
+      // Show/hide all cards
+      allCards.forEach(el => { el.style.display = 'none'; });
+
+      pageItems.forEach(item => {
+        // Search highlight
+        if (q) {
+          highlightCard(item, q);
+        } else {
+          restoreCard(item);
+        }
+        item.el.style.display = '';
+      });
+
+      // Status
+      const showing = pageItems.length;
+      countEl.innerHTML = total > 0
+        ? `Showing <strong>${pageStart + 1}–${pageEnd}</strong> of <strong>${total}</strong> case ${total === 1 ? 'study' : 'studies'}`
+        : '';
+      livEl.textContent = `${showing} case ${showing === 1 ? 'study' : 'studies'} shown`;
+
+      noResults.hidden  = total > 0;
+      grid.hidden       = total === 0;
+
+      // Clear all visibility
+      const hasFilter = activeFilter !== 'all' || q;
+      clearAllBtn.hidden = !hasFilter;
+
+      // Render pagination
+      renderPagination(total, totalPages);
+    }
+
+    // ── Pagination renderer ──────────────────────────────────────────────────
+    function renderPagination(total, totalPages) {
+      if (total === 0) { paginationEl.innerHTML = ''; return; }
+
+      let html = '';
+
+      // Prev button
+      html += `<button class="page-btn" ${currentPage === 1 ? 'disabled' : ''} onclick="goToPage(${currentPage - 1})" aria-label="Previous page">←</button>`;
+
+      // Page numbers with smart ellipsis
+      const pages = getPageNumbers(currentPage, totalPages);
+      for (const p of pages) {
+        if (p === '…') {
+          html += `<span class="page-btn page-ellipsis">…</span>`;
+        } else {
+          html += `<button class="page-btn${p === currentPage ? ' active' : ''}" onclick="goToPage(${p})" aria-label="Page ${p}" aria-current="${p === currentPage ? 'page' : 'false'}">${p}</button>`;
+        }
+      }
+
+      // Next button
+      html += `<button class="page-btn" ${currentPage === totalPages ? 'disabled' : ''} onclick="goToPage(${currentPage + 1})" aria-label="Next page">→</button>`;
+
+      // Per-page selector
+      html += `<div class="per-page-wrap">
+        <label for="per-page-select" style="font-size:12px;color:var(--ink-muted);">Per page</label>
+        <select id="per-page-select" class="per-page-select" onchange="changePageSize(this.value)" aria-label="Items per page">
+          ${PAGE_SIZE_OPTIONS.map(n => `<option value="${n}"${n === PAGE_SIZE ? ' selected' : ''}>${n}</option>`).join('')}
+        </select>
+      </div>`;
+
+      paginationEl.innerHTML = html;
+    }
+
+    // Smart page number list: always show first, last, current ±1, with ellipsis
+    function getPageNumbers(current, total) {
+      if (total <= 7) return Array.from({length: total}, (_, i) => i + 1);
+      const pages = new Set([1, total, current, current - 1, current + 1].filter(p => p >= 1 && p <= total));
+      const sorted = [...pages].sort((a, b) => a - b);
+      const result = [];
+      for (let i = 0; i < sorted.length; i++) {
+        result.push(sorted[i]);
+        if (i < sorted.length - 1 && sorted[i + 1] - sorted[i] > 1) result.push('…');
+      }
+      return result;
+    }
+
+    function goToPage(page) {
+      currentPage = page;
+      applyFilters(false);
+      // Scroll to top of grid
+      grid.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function changePageSize(val) {
+      PAGE_SIZE = parseInt(val);
+      applyFilters(true);
+    }
+
+    // ── Highlight / restore ──────────────────────────────────────────────────
+    const escapeRe = s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+    function highlightCard(item, q) {
+      const re = new RegExp(`(${escapeRe(q)})`, 'gi');
+      if (item.el.querySelector('.card-title'))
+        item.el.querySelector('.card-title').innerHTML   = item.origTitle.replace(re, '<mark class="search-highlight">$1</mark>');
+      if (item.el.querySelector('.card-summary'))
+        item.el.querySelector('.card-summary').innerHTML = item.origSummary.replace(re, '<mark class="search-highlight">$1</mark>');
+    }
+
+    function restoreCard(item) {
+      if (item.el.querySelector('.card-title'))
+        item.el.querySelector('.card-title').innerHTML   = item.origTitle;
+      if (item.el.querySelector('.card-summary'))
+        item.el.querySelector('.card-summary').innerHTML = item.origSummary;
+    }
+
+    // ── Events ───────────────────────────────────────────────────────────────
+    searchInput.addEventListener('input', () => {
+      searchQuery = searchInput.value;
+      clearBtn.hidden = !searchQuery;
+      applyFilters(true);
+    });
+
+    clearBtn.addEventListener('click', () => {
+      searchInput.value = ''; searchQuery = '';
+      clearBtn.hidden = true;
+      searchInput.focus();
+      applyFilters(true);
+    });
+
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        filterBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        activeFilter = btn.dataset.filter;
+        applyFilters(true);
+      });
+    });
+
+    sortSelect.addEventListener('change', () => applyFilters(true));
+
+    function clearAllFilters() {
+      searchInput.value = ''; searchQuery = '';
+      clearBtn.hidden = true;
+      activeFilter = 'all';
+      filterBtns.forEach(b => b.classList.remove('active'));
+      filterBtns[0].classList.add('active');
+      sortSelect.value = 'default';
+      applyFilters(true);
+    }
+
+    clearAllBtn.addEventListener('click', clearAllFilters);
+
+    // ── Scroll reveals ────────────────────────────────────────────────────────
+    const revealObserver = new IntersectionObserver((entries) => {
+      let d = 0;
+      entries
+        .filter(e => e.isIntersecting)
+        .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)
+        .forEach(entry => {
+          entry.target.style.transitionDelay = (d++ * 0.07) + 's';
+          entry.target.classList.add('visible');
+          revealObserver.unobserve(entry.target);
+        });
+    }, { threshold: 0.08 });
+    document.querySelectorAll('.reveal').forEach(r => revealObserver.observe(r));
+
+    // ── Auto-sync JSON-LD from STUDIES ────────────────────────────────────────
+    try {
+      const ld = document.querySelector('script[type="application/ld+json"]');
+      if (ld) {
+        const obj = JSON.parse(ld.textContent);
+        obj.hasPart = Object.values(STUDIES).map(s => ({
+          '@type': 'Article',
+          name: s.title,
+          description: ((s.sections[0]&&s.sections[0].text)||(s.sections[0]&&s.sections[0].wins&&s.sections[0].wins[0])||'').replace(/<[^>]+>/g,'').slice(0,160),
+          author: { '@type': 'Person', name: 'Akash Poddar' }
+        }));
+        ld.textContent = JSON.stringify(obj);
+      }
+    } catch(e) {}
+
+    // ── Initial render ────────────────────────────────────────────────────────
+    applyFilters(true);
+</script>
 
 </body>
 </html>
