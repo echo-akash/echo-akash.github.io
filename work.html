@@ -1270,33 +1270,37 @@
       </div>
     </a>
 
-    <!-- 02 - Search Rebuild -->
-    <a class="work-card reveal" data-tags="search" data-year="2024" data-impact="22" href="#" onclick="openModal('pathao-search'); return false;">
+    <!-- 02 - Search Monetisation -->
+    <a class="work-card reveal" data-tags="search" data-year="2024" data-impact="50" href="searchpriority.html">
       <div class="card-banner banner-blue">
         <div class="banner-pattern"></div>
-        <span class="banner-tag">Search · Discovery</span>
+        <span class="banner-tag">Search · Monetisation</span>
         <span class="banner-company">Pathao · 2024</span>
       </div>
       <div class="card-body">
-        <h2 class="card-title">Intent-Weighted Search Ranking at Scale</h2>
-        <div class="card-summary">Users were falling off search due to typo sensitivity and poor intent matching. I rebuilt ranking with an intent-weighted model, reducing drop-offs and lifting search-to-order CR by 22%.</div>
+        <h2 class="card-title">Search That Sells - Paid Restaurant Ranking</h2>
+        <div class="card-summary">Pathao Food earned from commission alone. I introduced keyword-based paid tiers into search ranking - giving restaurant partners their first structured visibility product and opening a non-commission revenue stream.</div>
         <div class="card-metrics">
           <div class="c-metric">
-            <div class="c-metric-num">+22%</div>
-            <div class="c-metric-label">Search-to-order CR</div>
+            <div class="c-metric-num">+50%</div>
+            <div class="c-metric-label">Target footfall lift</div>
           </div>
           <div class="c-metric">
-            <div class="c-metric-num">−20%</div>
-            <div class="c-metric-label">Typo drop-offs</div>
+            <div class="c-metric-num">2</div>
+            <div class="c-metric-label">New paid tiers</div>
+          </div>
+          <div class="c-metric">
+            <div class="c-metric-num">9 lvl</div>
+            <div class="c-metric-label">Ranking hierarchy</div>
           </div>
         </div>
         <div class="card-footer">
           <div class="card-tags">
             <span class="card-tag">Search</span>
-            <span class="card-tag">NLP</span>
-            <span class="card-tag">Ranking</span>
+            <span class="card-tag">Revenue</span>
+            <span class="card-tag">B2B</span>
           </div>
-          <span class="card-cta">Read →</span>
+          <span class="card-cta">Full case study →</span>
         </div>
       </div>
     </a>
@@ -1545,20 +1549,22 @@
       },
       'pathao-search': {
         banner: 'banner-blue',
-        meta: 'Pathao · Search & Discovery · 2024',
+        meta: 'Pathao · Search & Monetisation · 2024',
         eyebrow: 'Case Study — Search',
-        title: 'Intent-Weighted Search Ranking at Scale',
+        title: 'Search That Sells — Paid Restaurant Ranking',
         sections: [
-          { label: 'The Problem', text: `Search was the highest-intent entry point on the app — but users were dropping off due to typo sensitivity and a keyword-match model that couldn't read intent.` },
+          { label: 'The Problem', text: `Pathao Food earned exclusively through commission. Restaurant partners had no structured way to invest in visibility — and 30 days of high-value search intent data sat in BigQuery, completely unused.` },
           { label: 'What I Did', wins: [
-            'Audited search drop-off funnels to isolate typo, zero-result, and irrelevant-result failure modes',
-            'Rebuilt ranking with intent-weighted signals — category, cuisine, proximity, and popularity combined',
-            'Implemented fuzzy matching and query correction to absorb typo drop-offs',
-            'Shipped iteratively with holdout groups to measure incremental CR lift at each step'
+            'Designed a 9-level deterministic ranking hierarchy inserting two paid tiers (Signature P2, Select P3) above the existing Featured slot',
+            'Worked with DS to build a keyword inventory from 30-day rolling search logs, scored by search frequency and conversion rate — restaurants cannot self-select keywords',
+            'Defined contract lifecycle rules (start/expiry dates, mutual exclusivity, immediate delete) to make the programme ops-manageable without engineering involvement',
+            'Specified four Food Ops Dashboard screens including a package management table defaulting to expiry-first sort',
+            'Extended paid ranking logic inside Collections search for consistent partner visibility across all search surfaces'
           ]}
         ],
-        metrics: [{num:'+22%',label:'Search-to-order CR'},{num:'−20%',label:'Typo drop-offs'}],
-        tags: ['Search Ranking','Intent Modelling','Fuzzy Matching','Holdout Experiments']
+        metrics: [{num:'+50%',label:'Target footfall lift'},{num:'2',label:'New paid tiers'},{num:'9lvl',label:'Ranking hierarchy'}],
+        tags: ['Search Ranking','Monetisation','B2B Product','Keyword Intelligence','Ops Tooling'],
+        link: 'searchpriority.html'
       },
       'pathao-personalisation': {
         banner: 'banner-slate',
