@@ -1305,7 +1305,42 @@
       </div>
     </a>
 
-    <!-- 03 - Behavioural Personalisation -->
+    <!-- 03 - Search Auto-Suggestion -->
+    <a class="work-card reveal" data-tags="search" data-year="2024" data-impact="30" href="searchsuggestion.html">
+      <div class="card-banner banner-teal">
+        <div class="banner-pattern"></div>
+        <span class="banner-tag">Search · Discovery</span>
+        <span class="banner-company">Pathao · 2024</span>
+      </div>
+      <div class="card-body">
+        <h2 class="card-title">Pathao Food Search - Find It Before You Finish Typing</h2>
+        <div class="card-summary">Search had no guidance while users typed - typos, ambiguous queries, and an unknown catalogue were costing us orders. I designed real-time auto-suggestions ranked by cuisine, dish, and restaurant using a city-wise popularity index.</div>
+        <div class="card-metrics">
+          <div class="c-metric">
+            <div class="c-metric-num">3</div>
+            <div class="c-metric-label">Suggestion types</div>
+          </div>
+          <div class="c-metric">
+            <div class="c-metric-num">2</div>
+            <div class="c-metric-label">Delivery phases</div>
+          </div>
+          <div class="c-metric">
+            <div class="c-metric-num">4</div>
+            <div class="c-metric-label">Popularity signals</div>
+          </div>
+        </div>
+        <div class="card-footer">
+          <div class="card-tags">
+            <span class="card-tag">Search</span>
+            <span class="card-tag">Discovery</span>
+            <span class="card-tag">Ranking</span>
+          </div>
+          <span class="card-cta">Full case study →</span>
+        </div>
+      </div>
+    </a>
+
+    <!-- 04 - Behavioural Personalisation -->
     <a class="work-card reveal" data-tags="search growth" data-year="2023" data-impact="18" href="#" onclick="openModal('pathao-personalisation'); return false;">
       <div class="card-banner banner-slate">
         <div class="banner-pattern"></div>
@@ -1565,6 +1600,25 @@
         metrics: [{num:'+50%',label:'Target footfall lift'},{num:'2',label:'New paid tiers'},{num:'9lvl',label:'Ranking hierarchy'}],
         tags: ['Search Ranking','Monetisation','B2B Product','Keyword Intelligence','Ops Tooling'],
         link: 'searchpriority.html'
+      },
+      'pathao-suggestion': {
+        banner: 'banner-teal',
+        meta: 'Pathao · Search & Discovery · 2024',
+        eyebrow: 'Case Study - Search',
+        title: 'Pathao Food Search - Find It Before You Finish Typing',
+        sections: [
+          { label: 'The Problem', text: `Search had no guidance while users typed. Typos, ambiguous queries, and an unknown catalogue were causing drop-offs — not because the food wasn't available, but because the connection between what users typed and what was in our catalogue was never made in real time.` },
+          { label: 'What I Did', wins: [
+            'Defined a 3-character trigger threshold and fixed suggestion priority order: cuisine first, then dish, then restaurant — with the exact typed word always pinned as P1',
+            'Specified prefix and fuzzy matching across all three suggestion types with case-insensitive input handling and Banglish support',
+            'Designed a two-phase delivery: Phase 1 shipped match-based suggestions; Phase 2 layered in a city-wise popularity index (rating, order count, CVR, checkout rate)',
+            'Handled edge cases explicitly — out-of-radius restaurant taps, zero-result fallbacks, and graceful API failure degradation back to Phase 1 behaviour',
+            'Excluded paid keyword ranking from the suggestion layer to protect relevance on partial, unresolved queries'
+          ]}
+        ],
+        metrics: [{num:'3',label:'Suggestion types'},{num:'2',label:'Delivery phases'},{num:'4',label:'Popularity signals'}],
+        tags: ['Search','Auto-Suggestion','Fuzzy Matching','Popularity Ranking','Discovery'],
+        link: 'searchsuggestion.html'
       },
       'pathao-personalisation': {
         banner: 'banner-slate',

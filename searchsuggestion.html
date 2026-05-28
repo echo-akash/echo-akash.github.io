@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-62DWPTYD6F"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-62DWPTYD6F');
+  </script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pathao Food Search Auto-Suggestion - Case Study | Akash Poddar</title>
+  <meta name="description" content="How I designed Pathao Food's search auto-suggestion feature - real-time suggestions ranked by cuisine, dish, and restaurant with a popularity-weighted algorithm that reduced search friction for 500K+ users." />
+  <link rel="canonical" href="https://echo-akash.github.io/searchsuggestion.html" />
+  <meta property="og:title" content="Pathao Food Search Auto-Suggestion - PM Case Study | Akash Poddar" />
+  <meta property="og:description" content="Designing real-time search suggestions for Pathao Food - reducing search friction and lifting order conversion for 500K+ users across Bangladesh and Nepal." />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://echo-akash.github.io/searchsuggestion.html" />
+  <meta property="og:image" content="https://echo-akash.github.io/og-image.png" />
+  <meta name="author" content="Akash Poddar" />
+  <meta name="robots" content="index, follow" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Pathao Food Search Auto-Suggestion - Product Case Study",
+    "description": "How Akash Poddar designed real-time search auto-suggestion for Pathao Food, reducing search friction and improving order conversion for 500K+ users.",
+    "author": { "@type": "Person", "name": "Akash Poddar", "url": "https://echo-akash.github.io/" },
+    "publisher": { "@type": "Person", "name": "Akash Poddar" }
+  }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,300;1,9..144,500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --ink: #0e0e0e;
+      --ink-mid: #444;
+      --ink-muted: #888;
+      --ink-faint: #bbb;
+      --surface: #f7f5f0;
+      --white: #ffffff;
+      --accent: #1c4f8a;
+      --accent-light: #e8f0fa;
+      --accent2: #2e7d6b;
+      --accent2-light: #e4f3ee;
+      --amber-light: #fef3e2;
+      --coral-light: #faeae7;
+      --purple-light: #f0ecfa;
+      --line: rgba(0,0,0,0.08);
+      --serif: 'Fraunces', Georgia, serif;
+      --sans: 'DM Sans', system-ui, sans-serif;
+      --radius: 10px;
+      --ease: cubic-bezier(0.16, 1, 0.3, 1);
+      --wide-w: 1000px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--sans); background: var(--surface); color: var(--ink); font-size: 15px; line-height: 1.6; overflow-x: hidden; }
+
+    /* ── NAV ── */
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 0 40px; height: 56px; background: rgba(247,245,240,0.88); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); }
+    .nav-logo { font-family: var(--serif); font-size: 16px; font-weight: 600; color: var(--ink); text-decoration: none; letter-spacing: -0.02em; }
+    .nav-links { display: flex; gap: 32px; list-style: none; }
+    .nav-links a { font-size: 13px; color: var(--ink-mid); text-decoration: none; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--accent); }
+    .nav-cta { font-size: 13px; padding: 7px 18px; background: var(--ink); color: var(--white); border-radius: 20px; text-decoration: none; transition: background 0.2s; }
+    .nav-cta:hover { background: var(--accent); }
+
+    /* ── HERO ── */
+    .cs-hero { background: var(--ink); padding: 120px 40px 80px; position: relative; overflow: hidden; }
+    .cs-hero-inner { max-width: var(--wide-w); margin: 0 auto; position: relative; z-index: 1; }
+    .cs-hero-grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px); background-size: 60px 60px; }
+    .cs-hero-shimmer { position: absolute; inset: 0; background: radial-gradient(ellipse 60% 60% at 75% 50%, rgba(28,79,138,0.12) 0%, transparent 70%); }
+    .cs-hero-bar { height: 4px; background: linear-gradient(90deg, #1c4f8a, #2e9e8a); border-radius: 2px; width: 64px; margin-bottom: 28px; }
+    .cs-meta-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 24px; }
+    .cs-tag { font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; padding: 5px 14px; border-radius: 20px; }
+    .tag-blue  { background: rgba(55,138,221,0.15); color: #85b7eb; border: 1px solid rgba(55,138,221,0.2); }
+    .tag-teal  { background: rgba(29,158,117,0.15); color: #5dcaa5; border: 1px solid rgba(29,158,117,0.2); }
+    .tag-purple{ background: rgba(130,90,200,0.15); color: #b89de0; border: 1px solid rgba(130,90,200,0.2); }
+    .tag-gray  { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.4); border: 1px solid rgba(255,255,255,0.1); }
+    .cs-hero-title { font-family: var(--serif); font-size: clamp(36px, 6vw, 64px); font-weight: 600; letter-spacing: -0.03em; line-height: 0.95; color: #fff; margin-bottom: 20px; }
+    .cs-hero-title em { font-style: italic; font-weight: 300; color: rgba(255,255,255,0.4); }
+    .cs-hero-sub { font-size: 17px; font-weight: 300; color: rgba(255,255,255,0.5); max-width: 640px; line-height: 1.7; margin-bottom: 48px; }
+    .cs-hero-sub strong { color: rgba(255,255,255,0.8); font-weight: 400; }
+    .cs-kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 40px; }
+    .cs-kpi { padding-right: 32px; border-right: 1px solid rgba(255,255,255,0.08); }
+    .cs-kpi:last-child { border-right: none; }
+    .cs-kpi-num { font-family: var(--serif); font-size: 32px; font-weight: 600; letter-spacing: -0.02em; color: #fff; line-height: 1; margin-bottom: 6px; }
+    .cs-kpi-num span { font-size: 20px; font-style: italic; font-weight: 300; color: rgba(255,255,255,0.35); }
+    .cs-kpi-label { font-size: 11px; color: rgba(255,255,255,0.35); line-height: 1.4; max-width: 130px; }
+
+    /* ── TOC ── */
+    .toc-bar { position: sticky; top: 56px; z-index: 90; background: var(--white); border-bottom: 1px solid var(--line); overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .toc-bar::-webkit-scrollbar { height: 3px; }
+    .toc-bar::-webkit-scrollbar-track { background: transparent; }
+    .toc-bar::-webkit-scrollbar-thumb { background: var(--line); border-radius: 2px; }
+    .toc-bar::-webkit-scrollbar-thumb:hover { background: var(--ink-faint); }
+    .toc-inner { max-width: var(--wide-w); margin: 0 auto; display: flex; padding: 0 40px; }
+    .toc-item { font-size: 12px; color: var(--ink-muted); text-decoration: none; padding: 14px 20px; white-space: nowrap; border-bottom: 2px solid transparent; transition: color 0.2s, border-color 0.2s; display: flex; align-items: center; gap: 6px; }
+    .toc-item:hover { color: var(--accent); border-bottom-color: var(--accent); }
+    .toc-item.active { color: var(--accent); border-bottom-color: var(--accent); }
+    .toc-num { font-size: 10px; color: var(--ink-faint); }
+
+    /* ── BODY ── */
+    .cs-body { max-width: var(--wide-w); margin: 0 auto; padding: 0 40px; }
+    .cs-section { padding: 72px 0 0; }
+    .cs-section:last-of-type { padding-bottom: 80px; }
+    .section-eyebrow { font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+    .section-eyebrow::after { content: ''; flex: 0 0 32px; height: 1px; background: var(--accent); opacity: 0.4; }
+    .cs-section h2 { font-family: var(--serif); font-size: 32px; font-weight: 600; letter-spacing: -0.02em; color: var(--ink); line-height: 1.15; margin-bottom: 28px; }
+    .cs-section h3 { font-family: var(--serif); font-size: 20px; font-weight: 600; letter-spacing: -0.01em; color: var(--ink); margin: 36px 0 14px; }
+    .cs-section p { font-size: 15px; color: var(--ink-mid); line-height: 1.8; font-weight: 300; margin-bottom: 16px; }
+    .cs-section p strong { color: var(--ink); font-weight: 500; }
+    .cs-divider { border: none; border-top: 1px solid var(--line); margin: 56px 0 0; }
+
+    /* ── CALLOUT ── */
+    .callout { background: var(--white); border-radius: var(--radius); border: 1px solid var(--line); border-left: 4px solid var(--accent); padding: 20px 24px; margin: 28px 0; font-size: 14.5px; color: var(--ink-mid); line-height: 1.75; font-weight: 300; }
+    .callout strong { color: var(--ink); font-weight: 500; }
+    .callout.amber  { border-left-color: #c47e20; background: var(--amber-light); }
+    .callout.teal   { border-left-color: #1d9e75; background: var(--accent2-light); }
+    .callout.coral  { border-left-color: #c0402a; background: var(--coral-light); }
+    .callout.purple { border-left-color: #7a5ab8; background: var(--purple-light); }
+
+    /* ── INSIGHT QUOTE ── */
+    .insight-quote { margin: 32px 0; padding: 28px 32px; background: var(--ink); border-radius: var(--radius); color: rgba(255,255,255,0.55); font-size: 16px; font-weight: 300; line-height: 1.8; }
+    .insight-quote strong { color: #fff; font-weight: 400; }
+    .insight-quote .iq-label { font-size: 10px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.25); margin-bottom: 10px; }
+
+    /* ── CARDS ── */
+    .card-grid   { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 24px 0; }
+    .card-grid-2 { grid-template-columns: repeat(2, 1fr); }
+    .grid-card { background: var(--white); border-radius: var(--radius); border: 1px solid var(--line); padding: 20px 22px; }
+    .grid-card-label { font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 8px; }
+    .grid-card-title { font-family: var(--serif); font-size: 17px; font-weight: 600; color: var(--ink); margin-bottom: 8px; line-height: 1.3; }
+    .grid-card-body  { font-size: 13px; color: var(--ink-mid); line-height: 1.65; font-weight: 300; }
+    .accent-top        { border-top: 3px solid var(--accent); }
+    .accent-top-teal   { border-top: 3px solid #1d9e75; }
+    .accent-top-amber  { border-top: 3px solid #c47e20; }
+    .accent-top-coral  { border-top: 3px solid #c0402a; }
+    .accent-top-purple { border-top: 3px solid #7a5ab8; }
+
+    /* ── WIN CHIPS ── */
+    .win-chips { display: flex; flex-direction: column; gap: 12px; margin: 24px 0; }
+    .win-chip { display: flex; gap: 12px; align-items: flex-start; font-size: 14px; color: var(--ink-mid); line-height: 1.7; }
+    .win-chip-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); flex-shrink: 0; margin-top: 7px; }
+    .win-chip strong { color: var(--ink); font-weight: 500; }
+
+    /* ── FLOW STEPS ── */
+    .flow-steps { display: flex; flex-direction: column; margin: 24px 0; }
+    .flow-step { display: grid; grid-template-columns: 48px 1fr; gap: 20px; position: relative; }
+    .flow-step::before { content: ''; position: absolute; left: 23px; top: 48px; bottom: -12px; width: 2px; background: var(--line); }
+    .flow-step:last-child::before { display: none; }
+    .flow-step-num { width: 48px; height: 48px; border-radius: 50%; background: var(--white); border: 1px solid var(--line); display: flex; align-items: center; justify-content: center; font-family: var(--serif); font-size: 16px; font-weight: 600; color: var(--accent); flex-shrink: 0; position: relative; z-index: 1; }
+    .flow-step-body { padding-top: 12px; padding-bottom: 24px; }
+    .flow-step-title { font-size: 14px; font-weight: 500; color: var(--ink); margin-bottom: 6px; }
+    .flow-step-desc  { font-size: 13px; color: var(--ink-mid); line-height: 1.65; font-weight: 300; }
+
+    /* ── SEARCH MOCKUP ── */
+    .search-mockup { background: var(--ink); border-radius: var(--radius); padding: 28px 32px; margin: 32px 0; }
+    .sm-label { font-size: 10px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.25); margin-bottom: 12px; }
+    .sm-bar { display: flex; align-items: center; gap: 10px; background: rgba(255,255,255,0.07); border-radius: 8px; padding: 10px 16px; margin-bottom: 16px; }
+    .sm-icon { color: rgba(255,255,255,0.3); font-size: 14px; }
+    .sm-typed { font-family: var(--serif); font-size: 18px; font-weight: 600; color: #fff; letter-spacing: -0.01em; }
+    .sm-cursor { display: inline-block; width: 2px; height: 18px; background: var(--accent); margin-left: 2px; border-radius: 1px; animation: blink 1s step-end infinite; vertical-align: middle; }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+    .sm-suggestions { display: flex; flex-direction: column; gap: 4px; }
+    .sm-row { display: flex; align-items: center; gap: 12px; padding: 9px 14px; border-radius: 7px; }
+    .sm-row.sm-exact { background: rgba(28,79,138,0.3); border: 1px solid rgba(28,79,138,0.4); }
+    .sm-row.sm-cuisine { background: rgba(29,158,117,0.1); border: 1px solid rgba(29,158,117,0.15); }
+    .sm-row.sm-dish { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); }
+    .sm-row.sm-restaurant { background: rgba(130,90,200,0.1); border: 1px solid rgba(130,90,200,0.15); }
+    .sm-row.sm-fallback { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); }
+    .sm-type-badge { font-size: 9px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; padding: 2px 7px; border-radius: 10px; white-space: nowrap; flex-shrink: 0; }
+    .sb-exact      { background: rgba(28,79,138,0.4); color: #85b7eb; }
+    .sb-cuisine    { background: rgba(29,158,117,0.25); color: #5dcaa5; }
+    .sb-dish       { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.5); }
+    .sb-restaurant { background: rgba(130,90,200,0.3); color: #c0a0f0; }
+    .sb-fallback   { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.3); }
+    .sm-text { font-size: 13px; color: rgba(255,255,255,0.85); flex: 1; }
+    .sm-text em { color: rgba(255,255,255,0.4); font-style: normal; font-size: 11px; }
+    .sm-pop { font-size: 11px; color: rgba(255,255,255,0.25); text-align: right; }
+
+    /* ── PRIORITY ORDER VISUAL ── */
+    .priority-stack { display: flex; flex-direction: column; gap: 0; margin: 28px 0; }
+    .priority-row { display: grid; grid-template-columns: 44px 1fr auto; align-items: center; gap: 14px; padding: 14px 20px; background: var(--white); border: 1px solid var(--line); border-top: none; }
+    .priority-row:first-child { border-top: 1px solid var(--line); border-radius: var(--radius) var(--radius) 0 0; }
+    .priority-row:last-child  { border-radius: 0 0 var(--radius) var(--radius); }
+    .priority-row.pr-typed    { background: #f0f5ff; border-left: 3px solid var(--accent); }
+    .priority-row.pr-cuisine  { background: var(--accent2-light); border-left: 3px solid #1d9e75; }
+    .priority-row.pr-dish     { background: var(--amber-light); border-left: 3px solid #c47e20; }
+    .priority-row.pr-restaurant{ background: var(--purple-light); border-left: 3px solid #7a5ab8; }
+    .pr-num { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: var(--serif); font-size: 14px; font-weight: 600; flex-shrink: 0; }
+    .prn-typed  { background: var(--accent); color: #fff; }
+    .prn-cuisine{ background: var(--accent2-light); color: var(--accent2); border: 1.5px solid #88c8b4; }
+    .prn-dish   { background: var(--amber-light); color: #7a4a10; border: 1.5px solid #d4a832; }
+    .prn-restaurant{ background: var(--purple-light); color: #5a3a98; border: 1.5px solid #c0a0e8; }
+    .pr-info strong { color: var(--ink); font-weight: 500; display: block; font-size: 13.5px; margin-bottom: 2px; }
+    .pr-info { font-size: 12.5px; color: var(--ink-mid); font-weight: 300; line-height: 1.4; }
+    .pr-tag { font-size: 10px; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase; padding: 3px 10px; border-radius: 20px; white-space: nowrap; border: 1px solid var(--line); background: var(--surface); color: var(--ink-muted); }
+
+    /* ── PHASE TABLE ── */
+    .phase-table { width: 100%; border-collapse: collapse; margin: 24px 0; }
+    .phase-table th { background: var(--surface); font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-muted); padding: 10px 16px; text-align: left; border-bottom: 1px solid var(--line); }
+    .phase-table td { padding: 14px 16px; border-bottom: 1px solid var(--line); font-size: 13px; color: var(--ink-mid); vertical-align: top; line-height: 1.6; }
+    .phase-table td:first-child { font-weight: 500; color: var(--ink); white-space: nowrap; }
+    .phase-table tr:last-child td { border-bottom: none; }
+    .phase-badge { display: inline-block; font-size: 10px; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase; padding: 3px 10px; border-radius: 20px; }
+    .pb-p1 { background: var(--accent-light); color: var(--accent); border: 1px solid #b5ceea; }
+    .pb-p2 { background: var(--accent2-light); color: var(--accent2); border: 1px solid #88c8b4; }
+
+    /* ── POPULARITY ALGO VISUAL ── */
+    .algo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 28px 0; }
+    .algo-card { background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); padding: 22px; }
+    .algo-card-label { font-size: 10px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 10px; }
+    .algo-card-title { font-family: var(--serif); font-size: 18px; font-weight: 600; color: var(--ink); margin-bottom: 14px; line-height: 1.3; }
+    .algo-signal { display: flex; gap: 10px; align-items: flex-start; margin-bottom: 8px; font-size: 13px; color: var(--ink-mid); line-height: 1.5; font-weight: 300; }
+    .algo-dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; margin-top: 6px; }
+    .ad-blue   { background: var(--accent); }
+    .ad-teal   { background: #1d9e75; }
+    .ad-amber  { background: #c47e20; }
+    .ad-purple { background: #7a5ab8; }
+
+    /* ── GTM PHASES ── */
+    .gtm-phases { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; margin: 24px 0; border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
+    .gtm-phase { padding: 22px 20px; border-right: 1px solid var(--line); background: var(--white); }
+    .gtm-phase:last-child { border-right: none; }
+    .gtm-phase-num   { font-family: var(--serif); font-size: 24px; font-weight: 600; color: var(--ink-faint); margin-bottom: 8px; }
+    .gtm-phase-title { font-size: 13px; font-weight: 500; color: var(--ink); margin-bottom: 8px; }
+    .gtm-phase-body  { font-size: 12px; color: var(--ink-mid); line-height: 1.6; font-weight: 300; }
+
+    /* ── METRICS ── */
+    .metrics-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 24px 0; }
+    .metric-card { background: var(--white); border-radius: var(--radius); border: 1px solid var(--line); padding: 20px 22px; }
+    .metric-type   { font-size: 10px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 8px; }
+    .metric-name   { font-size: 14px; font-weight: 500; color: var(--ink); margin-bottom: 6px; }
+    .metric-target { font-family: var(--serif); font-size: 22px; font-weight: 600; color: var(--accent); letter-spacing: -0.01em; margin-bottom: 4px; }
+    .metric-note   { font-size: 11px; color: var(--ink-faint); line-height: 1.4; }
+
+    /* ── RISK ── */
+    .risk-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 24px 0; }
+    .risk-card { background: var(--white); border-radius: var(--radius); border: 1px solid var(--line); padding: 20px; }
+    .risk-level { font-size: 10px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 8px; }
+    .r-high { color: #c0402a; }
+    .r-med  { color: #c47e20; }
+    .r-low  { color: #1d9e75; }
+    .risk-title { font-size: 14px; font-weight: 500; color: var(--ink); margin-bottom: 8px; line-height: 1.3; }
+    .risk-body  { font-size: 12.5px; color: var(--ink-mid); line-height: 1.6; font-weight: 300; }
+
+    /* ── LESSONS ── */
+    .lesson-list { display: flex; flex-direction: column; gap: 20px; margin: 24px 0; }
+    .lesson-item { display: grid; grid-template-columns: 32px 1fr; gap: 16px; }
+    .lesson-num  { font-family: var(--serif); font-size: 22px; font-weight: 600; color: var(--ink-faint); line-height: 1; padding-top: 2px; }
+    .lesson-title { font-size: 15px; font-weight: 500; color: var(--ink); margin-bottom: 6px; }
+    .lesson-body  { font-size: 13.5px; color: var(--ink-mid); line-height: 1.7; font-weight: 300; }
+    .lesson-body strong { color: var(--ink); font-weight: 500; }
+
+    /* ── FOOTER ── */
+    .cs-footer { background: var(--ink); padding: 64px 40px; }
+    .cs-footer-inner { max-width: var(--wide-w); margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 40px; flex-wrap: wrap; }
+    .cs-footer-title { font-family: var(--serif); font-size: 28px; font-weight: 600; color: #fff; letter-spacing: -0.02em; margin-bottom: 8px; }
+    .cs-footer-sub   { font-size: 14px; color: rgba(255,255,255,0.4); font-weight: 300; }
+    .cs-footer-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+    .footer-btn { padding: 10px 24px; border-radius: 40px; font-size: 13px; text-decoration: none; transition: all 0.2s; }
+    .footer-btn-primary { background: #fff; color: var(--ink); }
+    .footer-btn-primary:hover { background: #e0dcd4; }
+    .footer-btn-secondary { border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.6); }
+    .footer-btn-secondary:hover { border-color: rgba(255,255,255,0.5); color: #fff; }
+    footer { background: var(--ink); border-top: 1px solid rgba(255,255,255,0.06); padding: 20px 40px; text-align: center; font-size: 12px; color: rgba(255,255,255,0.2); }
+
+    /* ── REVEAL ── */
+    .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.6s var(--ease), transform 0.6s var(--ease); }
+    .reveal.visible { opacity: 1; transform: none; }
+
+    /* ── TABLET ── */
+    @media (max-width: 900px) {
+      .cs-kpi-row { grid-template-columns: repeat(2, 1fr); gap: 20px 0; }
+      .cs-kpi { padding-right: 20px; }
+      .card-grid { grid-template-columns: repeat(2, 1fr); }
+      .metrics-grid { grid-template-columns: repeat(2, 1fr); }
+      .risk-grid { grid-template-columns: repeat(2, 1fr); }
+      .gtm-phases { grid-template-columns: repeat(2, 1fr); }
+      .gtm-phase:nth-child(2) { border-right: none; }
+      .gtm-phase:nth-child(3) { border-top: 1px solid var(--line); border-right: none; }
+      .algo-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    /* ── MOBILE ── */
+    @media (max-width: 640px) {
+      nav { padding: 0 16px; }
+      .nav-links { display: none; }
+      .nav-cta { font-size: 12px; padding: 6px 14px; }
+
+      .cs-hero { padding: 88px 16px 48px; }
+      .cs-hero-title { font-size: clamp(32px, 10vw, 48px); }
+      .cs-hero-sub { font-size: 15px; margin-bottom: 36px; }
+      .cs-meta-row { gap: 8px; }
+      .cs-tag { font-size: 10px; padding: 4px 10px; }
+      .cs-kpi-row { grid-template-columns: repeat(2, 1fr); gap: 20px 0; }
+      .cs-kpi { padding: 0 16px 20px 0; border-right: 1px solid rgba(255,255,255,0.08); border-bottom: 1px solid rgba(255,255,255,0.08); }
+      .cs-kpi:nth-child(even) { border-right: none; padding-left: 16px; }
+      .cs-kpi:nth-last-child(-n+2) { border-bottom: none; }
+      .cs-kpi-num { font-size: 24px; }
+      .cs-kpi-num span { font-size: 16px; }
+
+      .toc-inner { padding: 0 12px; }
+      .toc-item { font-size: 11px; padding: 12px 10px; gap: 4px; }
+      .toc-num { display: none; }
+      .toc-bar::-webkit-scrollbar { display: none; }
+      .toc-bar { scrollbar-width: none; }
+
+      .cs-body { padding: 0 16px; }
+      .cs-section { padding: 48px 0 0; }
+      .cs-section h2 { font-size: 24px; }
+      .cs-section h3 { font-size: 17px; margin: 24px 0 10px; }
+      .cs-section p { font-size: 14px; }
+      .section-eyebrow { font-size: 10px; }
+      .cs-divider { margin: 40px 0 0; }
+
+      .card-grid, .card-grid-2 { grid-template-columns: 1fr; }
+      .callout { padding: 16px 18px; font-size: 13.5px; }
+      .insight-quote { padding: 20px; font-size: 15px; }
+
+      .search-mockup { padding: 20px; }
+      .sm-typed { font-size: 15px; }
+      .sm-pop { display: none; }
+
+      .priority-row { grid-template-columns: 40px 1fr; gap: 10px; padding: 12px 14px; }
+      .pr-tag { display: none; }
+
+      .algo-grid { grid-template-columns: 1fr; }
+      .gtm-phases { grid-template-columns: 1fr; }
+      .gtm-phase { border-right: none !important; border-top: 1px solid var(--line); }
+      .gtm-phase:first-child { border-top: none; }
+
+      .metrics-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+      .metric-card { padding: 16px; }
+      .metric-target { font-size: 18px; }
+      .risk-grid { grid-template-columns: 1fr; }
+      .phase-table { font-size: 12px; }
+      .phase-table th, .phase-table td { padding: 10px 12px; }
+
+      .lesson-item { grid-template-columns: 28px 1fr; gap: 12px; }
+      .lesson-num { font-size: 18px; }
+      .lesson-title { font-size: 14px; }
+      .lesson-body { font-size: 13px; }
+
+      .cs-footer { padding: 40px 16px; }
+      .cs-footer-inner { flex-direction: column; gap: 28px; }
+      .cs-footer-title { font-size: 22px; }
+      .cs-footer-actions { flex-direction: column; gap: 8px; }
+      .footer-btn { text-align: center; }
+      footer { padding: 20px 16px; }
+    }
+
+    @media (max-width: 380px) {
+      .cs-hero-title { font-size: 28px; }
+      .metrics-grid { grid-template-columns: 1fr; }
+      .toc-item { font-size: 10px; padding: 12px 8px; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a class="nav-logo" href="index.html">Akash Poddar</a>
+    <ul class="nav-links">
+      <li><a href="work.html">Case Studies</a></li>
+      <li><a href="index.html#experience">Experience</a></li>
+      <li><a href="index.html#contact">Contact</a></li>
+    </ul>
+    <a class="nav-cta" href="mailto:akash.poddar.0799@gmail.com">Get in touch</a>
+  </nav>
+
+  <!-- HERO -->
+  <div class="cs-hero">
+    <div class="cs-hero-grid"></div>
+    <div class="cs-hero-shimmer"></div>
+    <div class="cs-hero-inner">
+      <div class="cs-hero-bar"></div>
+      <div class="cs-meta-row">
+        <span class="cs-tag tag-blue">Search</span>
+        <span class="cs-tag tag-teal">Discovery</span>
+        <span class="cs-tag tag-purple">UX</span>
+        <span class="cs-tag tag-gray">Pathao Food &middot; 2024</span>
+      </div>
+      <h1 class="cs-hero-title">Find it before<br><em>you finish typing.</em></h1>
+      <p class="cs-hero-sub">
+        How I designed Pathao Food's <strong>real-time search auto-suggestion</strong> &mdash; guiding users to the right result before they finished typing, surfacing cuisine, dish, and restaurant suggestions ranked by <strong>city-level popularity signals</strong>, and reducing the friction that was costing us orders every day.
+      </p>
+      <div class="cs-kpi-row">
+        <div class="cs-kpi">
+          <div class="cs-kpi-num">3<span>chr</span></div>
+          <div class="cs-kpi-label">Minimum input before suggestions appear</div>
+        </div>
+        <div class="cs-kpi">
+          <div class="cs-kpi-num">3</div>
+          <div class="cs-kpi-label">Suggestion types: cuisine, dish, restaurant</div>
+        </div>
+        <div class="cs-kpi">
+          <div class="cs-kpi-num">2</div>
+          <div class="cs-kpi-label">Phases: match-first, then popularity-ranked</div>
+        </div>
+        <div class="cs-kpi">
+          <div class="cs-kpi-num">4</div>
+          <div class="cs-kpi-label">Popularity signals powering Phase 2 ranking</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOC -->
+  <nav class="toc-bar" aria-label="Table of contents">
+    <div class="toc-inner">
+      <a href="#background"  class="toc-item active"><span class="toc-num">01</span> Background</a>
+      <a href="#problem"     class="toc-item"><span class="toc-num">02</span> Problem</a>
+      <a href="#users"       class="toc-item"><span class="toc-num">03</span> Users</a>
+      <a href="#approach"    class="toc-item"><span class="toc-num">04</span> My Approach</a>
+      <a href="#suggestion"  class="toc-item"><span class="toc-num">05</span> Suggestion Design</a>
+      <a href="#ranking"     class="toc-item"><span class="toc-num">06</span> Ranking &amp; Popularity</a>
+      <a href="#edgecases"   class="toc-item"><span class="toc-num">07</span> Edge Cases</a>
+      <a href="#phasing"     class="toc-item"><span class="toc-num">08</span> Phasing</a>
+      <a href="#gtm"         class="toc-item"><span class="toc-num">09</span> GTM</a>
+      <a href="#metrics"     class="toc-item"><span class="toc-num">10</span> Metrics</a>
+      <a href="#risks"       class="toc-item"><span class="toc-num">11</span> Risks</a>
+      <a href="#lessons"     class="toc-item"><span class="toc-num">12</span> Lessons</a>
+    </div>
+  </nav>
+
+  <div class="cs-body">
+
+    <!-- 01 BACKGROUND -->
+    <section class="cs-section" id="background">
+      <div class="section-eyebrow">01 &mdash; Background</div>
+      <h2>Search was our highest-intent moment. We were making it harder than it needed to be.</h2>
+      <p>By 2024, Pathao Food served 500,000+ users across Bangladesh and Nepal. For most of them, the search bar was their primary navigation tool &mdash; not category tiles, not the homepage carousel. When someone was hungry and knew roughly what they wanted, they typed. That intent moment was the most valuable interaction in the entire product.</p>
+      <p>But the search experience at that point was entirely reactive. A user typed their full query, hit search, and got results. No guidance along the way. No hints about what was available. No nudge toward a popular variant of what they were looking for. You were on your own until you'd committed to a full search term.</p>
+      <p>For a platform operating across two countries with thousands of restaurants, varied menu naming conventions, and users typing in both English and Banglish, this meant a significant share of searches ended in either zero results, irrelevant results, or abandoned sessions &mdash; not because the food wasn't available, but because the connection between what the user typed and what was in our catalogue was never made.</p>
+      <div class="card-grid reveal">
+        <div class="grid-card accent-top">
+          <div class="grid-card-label">The Friction</div>
+          <div class="grid-card-title">Full-commit search with no guidance</div>
+          <div class="grid-card-body">Users had to type a complete query before receiving any feedback. A slight misspelling, a Banglish variation, or an unfamiliar restaurant name meant zero results with no recovery path. The search bar offered no signal about what the platform actually contained.</div>
+        </div>
+        <div class="grid-card accent-top-amber">
+          <div class="grid-card-label">The Opportunity</div>
+          <div class="grid-card-title">Real-time guidance at the highest-intent moment</div>
+          <div class="grid-card-body">Suggesting relevant options as the user types transforms search from a guessing game into a guided experience. The user gets faster to what they want. Drop-offs from failed searches decrease. And the platform gets to surface popular, high-converting options at exactly the right moment.</div>
+        </div>
+        <div class="grid-card accent-top-teal">
+          <div class="grid-card-label">The Context</div>
+          <div class="grid-card-title">Part of a broader search renovation</div>
+          <div class="grid-card-body">This feature was designed alongside the Search Prioritisation of Paid Restaurants work. Together they formed the two sides of Pathao Food's search renovation: one improving the commercial layer, this one improving the user experience layer. Both depended on the same underlying data infrastructure.</div>
+        </div>
+      </div>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 02 PROBLEM -->
+    <section class="cs-section" id="problem">
+      <div class="section-eyebrow">02 &mdash; Problem</div>
+      <h2>Three failure modes, all happening in the same search bar.</h2>
+      <p>Before starting on solution design, I mapped out where search was actually losing users. There were three distinct failure modes, each hitting a different type of user for a different reason.</p>
+      <div class="insight-quote reveal">
+        <div class="iq-label">The core question</div>
+        <strong>How do you guide users to the right result before they've even finished typing &mdash; without surfacing irrelevant noise and without making the experience feel cluttered?</strong> The suggestion list had to earn its place in the UI on every keystroke, or users would learn to ignore it.
+      </div>
+      <div class="card-grid reveal">
+        <div class="grid-card accent-top-coral">
+          <div class="grid-card-label">Failure Mode 1</div>
+          <div class="grid-card-title">The committed typo</div>
+          <div class="grid-card-body">A user types "Kachi" instead of "Kacchi" and gets zero results. They don't know if the dish doesn't exist on the platform or if they just misspelled it. Most don't retry &mdash; they abandon. Real-time suggestions using fuzzy matching would catch this before it became a dead end.</div>
+        </div>
+        <div class="grid-card accent-top-amber">
+          <div class="grid-card-label">Failure Mode 2</div>
+          <div class="grid-card-title">The ambiguous intent</div>
+          <div class="grid-card-body">A user types "cake" and gets 80 results across restaurants, dishes, and categories. They wanted a specific thing but searched too broadly. Suggestions that guide them toward "Chocolate Cake" or "Birthday Cake" &mdash; ranked by what the city is actually ordering &mdash; would turn a noisy result page into a directed one.</div>
+        </div>
+        <div class="grid-card accent-top-purple">
+          <div class="grid-card-label">Failure Mode 3</div>
+          <div class="grid-card-title">The unknown catalogue</div>
+          <div class="grid-card-body">A user opens the app wanting something but isn't sure what to search for. With no suggestions, they're browsing blind. Real-time suggestions that surface popular cuisines and dishes as they begin typing create a discovery layer that turns partial intent into a concrete choice.</div>
+        </div>
+      </div>
+      <p>All three failure modes shared one root cause: <strong>the user had no visibility into the platform's catalogue while forming their query.</strong> The fix wasn't just faster search results &mdash; it was making the search bar itself informative from the first keystroke.</p>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 03 USERS -->
+    <section class="cs-section" id="users">
+      <div class="section-eyebrow">03 &mdash; Users</div>
+      <h2>Two types of users the feature had to work for simultaneously.</h2>
+      <p>When I scoped the user need, two distinct mental models emerged. Designing for one while ignoring the other would make the feature feel wrong for half the user base.</p>
+      <div class="card-grid card-grid-2 reveal">
+        <div class="grid-card accent-top">
+          <div class="grid-card-label">The Purposeful Searcher</div>
+          <div class="grid-card-title">Knows what they want, wants to get there fast</div>
+          <div class="grid-card-body">Already has a specific dish or restaurant in mind. For them, the suggestion list is a shortcut &mdash; they want to tap a suggestion at 3 characters rather than type the full 12-character restaurant name. Speed and accuracy matter most. A wrong suggestion is a distraction, not a discovery. The "exact typed word first" rule was designed specifically for this user: they can always tap their own partial query and proceed to results without waiting for a perfect suggestion.</div>
+        </div>
+        <div class="grid-card accent-top-teal">
+          <div class="grid-card-label">The Exploratory Searcher</div>
+          <div class="grid-card-title">Knows a vague category, open to suggestions</div>
+          <div class="grid-card-body">Types "biry" because they're in the mood for biryani but haven't decided where from. For this user, the suggestion list is a menu of what's popular near them. Popularity-ranked suggestions are the feature. Surfacing "Kacchi Biryani" or "Chicken Biryani" ranked by what the city is ordering heavily guides them toward high-converting choices they'd have been happy with anyway, reducing their decision effort to a single tap.</div>
+        </div>
+      </div>
+      <div class="callout teal">
+        <strong>The design implication:</strong> Both users are served by the same feature, but they use it in opposite ways. The purposeful searcher needs suggestions to be fast and non-intrusive. The exploratory searcher needs suggestions to be informative and ranked by quality. The solution &mdash; always showing the exact typed word first, then ranked suggestions below &mdash; satisfies both simultaneously without compromising either.
+      </div>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 04 APPROACH -->
+    <section class="cs-section" id="approach">
+      <div class="section-eyebrow">04 &mdash; My Approach</div>
+      <h2>Four decisions that shaped everything downstream.</h2>
+      <p>Before writing a single acceptance criterion, I made four foundational product decisions that constrained the solution space and ensured the feature would hold up under real usage conditions.</p>
+      <div class="flow-steps reveal">
+        <div class="flow-step">
+          <div class="flow-step-num">1</div>
+          <div class="flow-step-body">
+            <div class="flow-step-title">Three characters before anything appears</div>
+            <div class="flow-step-desc">I chose a 3-character minimum threshold rather than 1 or 2 for two reasons. At 1&ndash;2 characters, the suggestion space is so broad that results are noise &mdash; every restaurant, dish, and cuisine in the catalogue potentially matches. At 3 characters, we have enough signal to return meaningful, specific suggestions. It also avoids the performance cost of firing a suggestion API on every single keypress, which on mobile networks in Bangladesh would have introduced visible latency.</div>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-step-num">2</div>
+          <div class="flow-step-body">
+            <div class="flow-step-title">Always show the exact typed word as the first result</div>
+            <div class="flow-step-desc">Regardless of how good the suggestions below are, the user's own input always appears first. This means a user who knows exactly what they want can tap the first item and proceed without reading the list. It also means the suggestion list never "hijacks" intent &mdash; the user is always one tap away from searching exactly what they typed. This was a trust decision as much as a usability one.</div>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-step-num">3</div>
+          <div class="flow-step-body">
+            <div class="flow-step-title">Suggestions ranked by type: cuisine first, then dish, then restaurant</div>
+            <div class="flow-step-desc">When a query could match across all three types, the order matters. I prioritised cuisine first because it has the broadest redirect value &mdash; a cuisine suggestion leads users to a curated collection of relevant restaurants, which is typically a better discovery experience than jumping directly to a specific restaurant. Dishes come second because they represent specific intent. Restaurants come last because name-matching is already handled well by the existing search result ranking.</div>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-step-num">4</div>
+          <div class="flow-step-body">
+            <div class="flow-step-title">Phase the complexity: ship matching first, add popularity ranking second</div>
+            <div class="flow-step-desc">Rather than blocking launch on the full popularity-scoring algorithm, I split the work into two phases. Phase 1 would ship prefix and fuzzy matching with a basic ranking order. Phase 2 would layer in the DS-backed popularity index. This let us get user value into production quickly while the data science team built the more complex scoring model. Each phase had a clear scope gate so the team knew exactly what constituted "done" at each stage.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 05 SUGGESTION DESIGN -->
+    <section class="cs-section" id="suggestion">
+      <div class="section-eyebrow">05 &mdash; Suggestion Design</div>
+      <h2>What the user sees &mdash; and exactly what each suggestion does.</h2>
+      <p>The suggestion list has a fixed structure. After the user types 3 or more characters, results appear and update in real time with each additional keystroke. Every item in the list has a defined type and a defined action when tapped. I specified both precisely to eliminate ambiguity for the engineering team and to ensure consistent behaviour across all input variations.</p>
+
+      <div class="search-mockup reveal">
+        <div class="sm-label">User types "bir" &rarr; suggestions appear</div>
+        <div class="sm-bar">
+          <span class="sm-icon">🔍</span>
+          <span class="sm-typed">bir</span>
+          <span class="sm-cursor"></span>
+        </div>
+        <div class="sm-suggestions">
+          <div class="sm-row sm-exact">
+            <span class="sm-type-badge sb-exact">Exact</span>
+            <span class="sm-text">bir <em>&rarr; search results for "bir"</em></span>
+            <span class="sm-pop">Always first</span>
+          </div>
+          <div class="sm-row sm-cuisine">
+            <span class="sm-type-badge sb-cuisine">Cuisine</span>
+            <span class="sm-text">Biryani <em>&rarr; cuisine results</em></span>
+            <span class="sm-pop">High city popularity</span>
+          </div>
+          <div class="sm-row sm-dish">
+            <span class="sm-type-badge sb-dish">Dish</span>
+            <span class="sm-text">Kacchi Biryani <em>&rarr; item results</em></span>
+            <span class="sm-pop">High order rate</span>
+          </div>
+          <div class="sm-row sm-dish">
+            <span class="sm-type-badge sb-dish">Dish</span>
+            <span class="sm-text">Chicken Biryani <em>&rarr; item results</em></span>
+            <span class="sm-pop">High order rate</span>
+          </div>
+          <div class="sm-row sm-restaurant">
+            <span class="sm-type-badge sb-restaurant">Restaurant</span>
+            <span class="sm-text">Biryani Express <em>&rarr; restaurant page</em></span>
+            <span class="sm-pop">Prefix match</span>
+          </div>
+        </div>
+      </div>
+
+      <h3>Suggestion type priority order</h3>
+      <p>Within the suggestion list, items are ordered by type first (cuisine before dish before restaurant), then by popularity within each type. Here's the full hierarchy I defined:</p>
+      <div class="priority-stack reveal">
+        <div class="priority-row pr-typed">
+          <div class="pr-num prn-typed">1</div>
+          <div class="pr-info"><strong>Exact Typed Word</strong>The user's raw input, always shown first regardless of match quality. Tapping takes the user to search results for their exact query &mdash; default tab is Restaurant.</div>
+          <span class="pr-tag">Always P1</span>
+        </div>
+        <div class="priority-row pr-cuisine">
+          <div class="pr-num prn-cuisine">2</div>
+          <div class="pr-info"><strong>Cuisine Suggestions</strong>Matched by prefix or fuzzy on cuisine name. Ranked by city-level popularity. Tapping redirects to cuisine-filtered search results.</div>
+          <span class="pr-tag">Prefix / Fuzzy</span>
+        </div>
+        <div class="priority-row pr-dish">
+          <div class="pr-num prn-dish">3</div>
+          <div class="pr-info"><strong>Dish Suggestions</strong>Matched by name prefix or fuzzy. Dishes must be frequently ordered across the platform. Popularity ranked city-wise. Tapping opens item-tab search results.</div>
+          <span class="pr-tag">City-wise pop.</span>
+        </div>
+        <div class="priority-row pr-restaurant">
+          <div class="pr-num prn-restaurant">4</div>
+          <div class="pr-info"><strong>Restaurant Suggestions</strong>Matched by name prefix or fuzzy. Ranked first by prefix/fuzzy match quality, then by popularity. Tapping opens that restaurant's page directly.</div>
+          <span class="pr-tag">Popularity</span>
+        </div>
+      </div>
+
+      <h3>What happens when a user taps a suggestion</h3>
+      <p>I was explicit in the spec about what "tapping" means for each suggestion type, because the destination is different depending on what was tapped &mdash; and getting this wrong would send users to the wrong place, undermining the whole value of the feature.</p>
+      <div class="win-chips reveal">
+        <div class="win-chip">
+          <div class="win-chip-dot"></div>
+          <span><strong>Tapping the exact typed word:</strong> Performs a search with the user's raw query. Lands on the Restaurant tab of the search results page by default. Equivalent to pressing the search button &mdash; just faster to reach.</span>
+        </div>
+        <div class="win-chip">
+          <div class="win-chip-dot"></div>
+          <span><strong>Tapping a cuisine suggestion:</strong> Performs a search filtered to that cuisine, showing all restaurants and dishes that match. Broader intent, broader result set.</span>
+        </div>
+        <div class="win-chip">
+          <div class="win-chip-dot"></div>
+          <span><strong>Tapping a dish suggestion:</strong> Performs a search on the Item tab, filtered to that dish name. Shows all restaurants offering that dish across the user's area. High intent, narrow result set.</span>
+        </div>
+        <div class="win-chip">
+          <div class="win-chip-dot"></div>
+          <span><strong>Tapping a restaurant suggestion:</strong> Opens that restaurant's menu page directly. The user bypasses the search results page entirely and lands in the restaurant they selected. Fastest path for a user who knows exactly where they want to order.</span>
+        </div>
+      </div>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 06 RANKING & POPULARITY -->
+    <section class="cs-section" id="ranking">
+      <div class="section-eyebrow">06 &mdash; Ranking &amp; Popularity Algorithm</div>
+      <h2>Making the list smarter: from match-based to popularity-weighted.</h2>
+      <p>Phase 1 suggestions were ordered by match type (prefix before fuzzy) and then alphabetically within each type. This was good enough for the initial launch but left value on the table: alphabetical ranking has nothing to do with what a user actually wants. "Aarong Biryani" ranking above "Kacchi Biryani" because of the alphabet is not useful to anyone.</p>
+      <p>Phase 2 replaced this with a <strong>city-wise popularity index</strong> that I specified in collaboration with our data science and backend teams. The index was designed to surface what users in a given city are actually engaging with &mdash; not globally, but locally, because food preferences and ordering patterns vary significantly between Dhaka, Chittagong, and Kathmandu.</p>
+      <div class="algo-grid reveal">
+        <div class="algo-card">
+          <div class="algo-card-label">Restaurant Popularity Signals</div>
+          <div class="algo-card-title">Four inputs to rank restaurant suggestions</div>
+          <div class="algo-signal"><span class="algo-dot ad-blue"></span>Average Rating &mdash; proxy for consistent food quality</div>
+          <div class="algo-signal"><span class="algo-dot ad-teal"></span>Total Order Count &mdash; reveals sustained real-world demand</div>
+          <div class="algo-signal"><span class="algo-dot ad-amber"></span>Conversion Rate &mdash; % of restaurant page views leading to an order</div>
+          <div class="algo-signal"><span class="algo-dot ad-purple"></span>Checkout Rate &mdash; % of users who add to cart and complete the order</div>
+        </div>
+        <div class="algo-card">
+          <div class="algo-card-label">Dish Popularity Signals</div>
+          <div class="algo-card-title">Two inputs to rank dish suggestions</div>
+          <div class="algo-signal"><span class="algo-dot ad-amber"></span>Conversion Rate &mdash; how often a dish tile view leads to an order</div>
+          <div class="algo-signal"><span class="algo-dot ad-purple"></span>Checkout Rate &mdash; from food tile click to successful checkout</div>
+          <div style="margin-top: 14px; font-size: 12.5px; color: var(--ink-muted); font-weight: 300; line-height: 1.55;">Dishes rely on conversion signals rather than ratings because dish-level ratings are sparse and often unreliable. Conversion and checkout rates are objective, high-volume signals that directly measure user intent completion.</div>
+        </div>
+      </div>
+      <div class="callout amber">
+        <strong>Why conversion rate, not just order count?</strong> Order count alone is biased toward older, more established restaurants that have had more time to accumulate orders. Conversion rate normalises for recency &mdash; a newer restaurant with a high conversion rate is genuinely compelling to users right now, and should rank above an older one with a higher raw order count but declining engagement. I pushed for conversion rate as a mandatory signal in the index precisely to avoid the "incumbency advantage" problem.
+      </div>
+      <h3>Key guardrails I built into the ranking design</h3>
+      <div class="win-chips reveal">
+        <div class="win-chip">
+          <div class="win-chip-dot"></div>
+          <span><strong>The exact typed word is always P1, immovable:</strong> No matter how popular a suggestion is, the user's own input always appears first. The popularity ranking only applies within the typed-ahead suggestions below it, never displacing the exact-input result.</span>
+        </div>
+        <div class="win-chip">
+          <div class="win-chip-dot"></div>
+          <span><strong>Suggestions re-rank in real time after 3 characters:</strong> Each additional character the user types refines the match pool, and the popularity index re-applies to the narrowed pool. A longer input narrows the field; popularity determines the order within that narrowed field.</span>
+        </div>
+        <div class="win-chip">
+          <div class="win-chip-dot"></div>
+          <span><strong>Popularity data is city-specific, not global:</strong> The index is computed and refreshed per city, not as a platform-wide aggregate. "Popular" in Dhaka is not the same as "popular" in Kathmandu. A Dhaka user should see Dhaka's ordering preferences, not Bangladesh-plus-Nepal combined.</span>
+        </div>
+        <div class="win-chip">
+          <div class="win-chip-dot"></div>
+          <span><strong>Fallback to match-based sorting if popularity data fails:</strong> If the popularity API returns an error or has no data for a given entity, the system gracefully falls back to Phase 1 match-based sorting. No broken suggestion lists, no crashes &mdash; just a slightly less curated experience until the data is available again.</span>
+        </div>
+      </div>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 07 EDGE CASES -->
+    <section class="cs-section" id="edgecases">
+      <div class="section-eyebrow">07 &mdash; Edge Cases &amp; Hard Decisions</div>
+      <h2>The decisions that only reveal themselves when you think carefully about what can go wrong.</h2>
+      <p>Edge case handling is where a lot of search features quietly break in production. I worked through these explicitly during spec-writing, because ambiguity here turns into engineering bugs or poor user experiences that are hard to trace back to their root cause.</p>
+      <div class="card-grid reveal">
+        <div class="grid-card accent-top">
+          <div class="grid-card-label">Edge Case 1</div>
+          <div class="grid-card-title">Restaurant is out of the user's delivery radius</div>
+          <div class="grid-card-body">A restaurant suggestion might be a legitimate prefix match but outside the user's current delivery area. For Phase 1, discovery radius checks were deliberately excluded from the suggestion layer &mdash; adding radius filtering to every real-time suggestion query would have significantly increased latency and complexity. If an out-of-radius restaurant is tapped, the system shows results for similar restaurants based on the tapped restaurant's cuisine and dishes. The user gets a useful redirect, not a dead end.</div>
+        </div>
+        <div class="grid-card accent-top-teal">
+          <div class="grid-card-label">Edge Case 2</div>
+          <div class="grid-card-title">Zero suggestions returned for a valid input</div>
+          <div class="grid-card-body">Sometimes a 3+ character input genuinely matches nothing in the catalogue &mdash; a new restaurant name, a regional dish variant, or a Banglish spelling the system hasn't seen. Rather than showing a blank suggestion list (which feels broken), the system shows two specific fallback options: "Show results for [input] in Restaurants" and "Show results for [input] in Items." The user always has an escape route that makes sense.</div>
+        </div>
+        <div class="grid-card accent-top-purple">
+          <div class="grid-card-label">Edge Case 3</div>
+          <div class="grid-card-title">Case sensitivity and Banglish input</div>
+          <div class="grid-card-body">Input matching is fully case-insensitive &mdash; "Biryani," "biryani," and "BIRYANI" are treated identically. Banglish input (Bengali words typed in English letters) required specific handling in the fuzzy matching layer, since there's no single canonical Banglish spelling for most Bengali food terms. Fuzzy matching was scoped to absorb the most common variants without generating false positives for completely unrelated queries.</div>
+        </div>
+      </div>
+      <div class="callout purple">
+        <strong>Why paid restaurant prioritisation was excluded from suggestions in Phase 1:</strong> The Search Prioritisation of Paid Restaurants feature (Signature and Select tiers) was being designed in parallel. I made the deliberate call to keep paid keyword ranking out of the suggestion layer for Phase 1. Auto-suggestion fires on partial, unresolved queries &mdash; applying commercial ranking to a 3-character input before we know what the user actually intends felt like the wrong place to introduce commercial bias. Phase 2 would revisit this with cleaner intent signals in place.
+      </div>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 08 PHASING -->
+    <section class="cs-section" id="phasing">
+      <div class="section-eyebrow">08 &mdash; Phasing Strategy</div>
+      <h2>Ship user value fast. Add sophistication in the next sprint.</h2>
+      <p>I split the feature into two clearly scoped phases. The decision wasn't just a delivery convenience &mdash; it reflected a genuine product sequencing choice: get the matching infrastructure into users' hands first, validate that suggestions were being used and were driving positive outcomes, then layer in the complexity of popularity ranking only after we'd confirmed the core mechanic worked.</p>
+      <table class="phase-table reveal">
+        <thead>
+          <tr>
+            <th>Dimension</th>
+            <th><span class="phase-badge pb-p1">Phase 1 &mdash; Match First</span></th>
+            <th><span class="phase-badge pb-p2">Phase 2 &mdash; Popularity Ranked</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Suggestion trigger</td>
+            <td>3+ characters, real-time as user types</td>
+            <td>Same, plus re-ranking applied after match pool is assembled</td>
+          </tr>
+          <tr>
+            <td>Matching logic</td>
+            <td>Prefix and fuzzy match on name</td>
+            <td>Same prefix and fuzzy matching, unchanged</td>
+          </tr>
+          <tr>
+            <td>Ranking within type</td>
+            <td>Match quality (prefix before fuzzy), then alphabetical</td>
+            <td>City-wise popularity index (rating, order count, CVR, checkout rate)</td>
+          </tr>
+          <tr>
+            <td>Radius filtering</td>
+            <td>Not applied - excluded for performance</td>
+            <td>Not applied - decision deferred pending latency review</td>
+          </tr>
+          <tr>
+            <td>Paid keyword ranking</td>
+            <td>Not applied - intentionally excluded</td>
+            <td>Not applied - kept out of suggestion layer by design</td>
+          </tr>
+          <tr>
+            <td>Fallback on no results</td>
+            <td>Two redirect options: Restaurant tab / Item tab</td>
+            <td>Same, plus graceful fallback to Phase 1 if popularity API fails</td>
+          </tr>
+          <tr>
+            <td>Data dependency</td>
+            <td>Search index only</td>
+            <td>DS-managed popularity index, city-wise, periodically refreshed</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="callout">
+        <strong>Why this phasing was the right call:</strong> The risk of shipping Phase 1 and 2 together was that a bug in the popularity scoring system could take down the entire suggestion feature. By decoupling them, Phase 1 could be independently stable. If Phase 2 broke, it failed gracefully back to Phase 1 behaviour. Users always had suggestions; the question was just how well-ranked they were.
+      </div>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 09 GTM -->
+    <section class="cs-section" id="gtm">
+      <div class="section-eyebrow">09 &mdash; Go-to-Market</div>
+      <h2>A feature that only works if users discover it naturally.</h2>
+      <p>Auto-suggestion is a feature that should require zero onboarding. If a user has to be taught that suggestions appear when they type, the feature has already failed. My GTM approach reflected this: no tutorial, no tooltip, no splash screen. The feature earns its place by being genuinely useful the first time a user types 3 characters into the search bar.</p>
+      <div class="gtm-phases reveal">
+        <div class="gtm-phase">
+          <div class="gtm-phase-num">01</div>
+          <div class="gtm-phase-title">Internal QA &amp; Staging Validation</div>
+          <div class="gtm-phase-body">End-to-end testing of all suggestion types across the canonical edge cases: the typo scenario, the zero-results scenario, the out-of-radius restaurant tap, case sensitivity, and the minimum 3-character threshold. QA team validates all paths using the documented acceptance criteria before any production deployment.</div>
+        </div>
+        <div class="gtm-phase">
+          <div class="gtm-phase-num">02</div>
+          <div class="gtm-phase-title">Phase 1 Production Release</div>
+          <div class="gtm-phase-body">Match-based suggestions shipped to production. No feature flag needed &mdash; the feature is additive and has no impact on existing search result behaviour. Analytics events instrumented for suggestion appear rate, tap rate by type (cuisine/dish/restaurant), and search initiation source (suggestion tap vs manual search). Monitor for 2 weeks before Phase 2.</div>
+        </div>
+        <div class="gtm-phase">
+          <div class="gtm-phase-num">03</div>
+          <div class="gtm-phase-title">Phase 2 &mdash; Popularity Layer</div>
+          <div class="gtm-phase-body">DS delivers the city-wise popularity index. BE integrates the scoring API. QA validates fallback behaviour when the popularity API returns errors. A/B comparison of suggestion engagement rates between Phase 1 and Phase 2 cohorts validates that popularity ranking improves tap-through and downstream order conversion before full rollout.</div>
+        </div>
+      </div>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 10 METRICS -->
+    <section class="cs-section" id="metrics">
+      <div class="section-eyebrow">10 &mdash; Metrics</div>
+      <h2>What success looks like across the funnel.</h2>
+      <p>I defined metrics at three layers: feature adoption (are users actually using the suggestions?), search quality (are suggestions reducing failed searches?), and business impact (are they converting to orders?). A feature that gets taps but doesn't reduce zero-result searches or improve conversion isn't working &mdash; users might be tapping suggestions and still not finding what they want.</p>
+      <div class="metrics-grid reveal">
+        <div class="metric-card accent-top">
+          <div class="metric-type">Adoption &mdash; Primary</div>
+          <div class="metric-name">Suggestion tap rate</div>
+          <div class="metric-target">&gt;30%</div>
+          <div class="metric-note">Target: more than 30% of search sessions that trigger suggestions end with a tap on a suggestion rather than manual search submission.</div>
+        </div>
+        <div class="metric-card accent-top-teal">
+          <div class="metric-type">Quality &mdash; Primary</div>
+          <div class="metric-name">Zero-result search rate</div>
+          <div class="metric-target">&#8595; target</div>
+          <div class="metric-note">Suggestions guide users away from misspelled or ambiguous queries. A measurable drop in zero-result searches validates that the fuzzy matching is doing its job.</div>
+        </div>
+        <div class="metric-card accent-top-amber">
+          <div class="metric-type">Conversion &mdash; Primary</div>
+          <div class="metric-name">Search-to-order CR for suggestion-initiated searches</div>
+          <div class="metric-target">vs baseline</div>
+          <div class="metric-note">Sessions where the user tapped a suggestion vs. sessions where they typed a full query manually. The hypothesis: suggestion-started sessions convert better because the intent is more precisely matched.</div>
+        </div>
+        <div class="metric-card accent-top-purple">
+          <div class="metric-type">Phase 2 &mdash; Secondary</div>
+          <div class="metric-name">Tap rate on top-3 suggestions vs. lower positions</div>
+          <div class="metric-target">Concentration</div>
+          <div class="metric-note">A healthy popularity ranking concentrates taps on the top 1&ndash;3 suggestions. If taps are evenly distributed across all positions, it signals that the popularity ranking isn't adding signal above alphabetical ordering.</div>
+        </div>
+        <div class="metric-card accent-top-coral">
+          <div class="metric-type">Quality &mdash; Guard Rail</div>
+          <div class="metric-name">Fallback rate (no-suggestion triggers)</div>
+          <div class="metric-target">Monitor</div>
+          <div class="metric-note">How often does a 3+ character input return zero suggestions and show the fallback redirect options? A high fallback rate indicates catalogue gaps or matching gaps that need DS or ops attention.</div>
+        </div>
+        <div class="metric-card accent-top">
+          <div class="metric-type">Search Behaviour</div>
+          <div class="metric-name">Avg. query length before suggestion tap</div>
+          <div class="metric-target">Trending &#8595;</div>
+          <div class="metric-note">If suggestions are working, users should be tapping sooner &mdash; at 3&ndash;5 characters rather than typing 8&ndash;12 character full queries. A declining average query length before tap is a proxy for reduced search friction.</div>
+        </div>
+      </div>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 11 RISKS -->
+    <section class="cs-section" id="risks">
+      <div class="section-eyebrow">11 &mdash; Risks</div>
+      <h2>What could go wrong, and how I designed around it.</h2>
+      <div class="risk-grid reveal">
+        <div class="risk-card">
+          <div class="risk-level r-high">High</div>
+          <div class="risk-title">Latency on slow mobile networks makes suggestions feel broken</div>
+          <div class="risk-body">Auto-suggestions fire on every keystroke after 3 characters. On 3G networks common in parts of Bangladesh, a naive implementation would show stale suggestions lagging behind the user's typing. Mitigated by debouncing the API call (firing only when the user pauses typing for &gt;150ms) and by the 3-character minimum which reduces the frequency of calls on short inputs.</div>
+        </div>
+        <div class="risk-card">
+          <div class="risk-level r-high">High</div>
+          <div class="risk-title">Popularity index surfaces stale data</div>
+          <div class="risk-body">If the city-wise popularity index isn't refreshed frequently enough, the rankings would reflect last month's ordering patterns rather than current ones. Seasonal dishes (e.g. Iftar items) ranking highly outside Ramadan would create a bad experience. Mitigated by specifying a mandatory refresh cadence for the DS pipeline and by the graceful fallback to match-based sorting if the index is unavailable.</div>
+        </div>
+        <div class="risk-card">
+          <div class="risk-level r-high">High</div>
+          <div class="risk-title">Fuzzy matching generates irrelevant results</div>
+          <div class="risk-body">Too-aggressive fuzzy matching would surface restaurants and dishes with no meaningful connection to the user's input. A search for "bir" could fuzzy-match to completely unrelated names. Mitigated by tuning the fuzzy match threshold carefully during QA, and by setting the 3-character minimum which provides enough signal to constrain the fuzzy match pool meaningfully.</div>
+        </div>
+        <div class="risk-card">
+          <div class="risk-level r-med">Medium</div>
+          <div class="risk-title">Out-of-radius restaurant taps lead to dead ends</div>
+          <div class="risk-body">Users tapping an out-of-radius restaurant suggestion and landing on an "unavailable in your area" message would be a frustrating experience. Mitigated by the Phase 1 design decision: any out-of-radius tap redirects to similar restaurants by cuisine and dishes rather than throwing an error. Radius filtering will be revisited in a future phase when the performance cost can be properly assessed.</div>
+        </div>
+        <div class="risk-card">
+          <div class="risk-level r-med">Medium</div>
+          <div class="risk-title">Suggestion list clutters the screen on mobile</div>
+          <div class="risk-body">A long suggestion list on a mobile screen could cover the keyboard and feel overwhelming. Mitigated by capping the list at a small number of visible items, designing the list to scroll within its container rather than pushing page content, and by the type-priority ordering which ensures the most relevant suggestions appear at the top without the user having to scroll far.</div>
+        </div>
+        <div class="risk-card">
+          <div class="risk-level r-low">Low</div>
+          <div class="risk-title">Popularity index penalises new restaurants</div>
+          <div class="risk-body">New restaurants have zero order history and will rank at the bottom of suggestion lists indefinitely. This was a known and accepted trade-off for Phase 2. The fallback to match-based sorting helps here &mdash; a new restaurant with a good name prefix match will still appear, just ranked lower. A "new restaurant boost" for recently onboarded partners was flagged as a Phase 3 consideration.</div>
+        </div>
+      </div>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 12 LESSONS -->
+    <section class="cs-section" id="lessons">
+      <div class="section-eyebrow">12 &mdash; Lessons</div>
+      <h2>What building this taught me about search UX and phased delivery.</h2>
+      <div class="lesson-list reveal">
+        <div class="lesson-item">
+          <div class="lesson-num">01</div>
+          <div>
+            <div class="lesson-title">The first result in a suggestion list is a trust contract, not a design choice</div>
+            <div class="lesson-body">Showing the exact typed word first &mdash; always, without exception &mdash; was the single most important decision in the feature design. It communicates to the user: "we will never override your intent." Once I framed it that way, it stopped being a debate about whether a popular suggestion should sometimes rank above the user's input, and became a non-negotiable product principle. <strong>A suggestion list that occasionally hijacks your query is a suggestion list users will stop trusting.</strong></div>
+          </div>
+        </div>
+        <div class="lesson-item">
+          <div class="lesson-num">02</div>
+          <div>
+            <div class="lesson-title">Phasing by complexity, not by feature, gave us a better feedback loop</div>
+            <div class="lesson-body">The temptation was to phase by splitting features: launch cuisine suggestions first, then dish, then restaurant. Instead I phased by complexity: launch all three types with simple ranking (Phase 1), then improve ranking quality for all types simultaneously (Phase 2). <strong>This meant every Phase 1 metric measured the feature at its full breadth, making Phase 2 impact cleanly attributable to the ranking improvement rather than confounded by new suggestion types arriving.</strong></div>
+          </div>
+        </div>
+        <div class="lesson-item">
+          <div class="lesson-num">03</div>
+          <div>
+            <div class="lesson-title">Fallback behaviour is a feature, not an afterthought</div>
+            <div class="lesson-body">Specifying the fallback states &mdash; what happens when there are no matches, what happens when the popularity API fails, what happens when a tapped restaurant is out of radius &mdash; took about a quarter of the total specification time. It would have been easy to defer these to engineering judgment. But in a real-time search feature, the failure cases are precisely the moments when user trust is most at risk. <strong>A spec that describes only the happy path is a spec that hasn't been thought through.</strong></div>
+          </div>
+        </div>
+        <div class="lesson-item">
+          <div class="lesson-num">04</div>
+          <div>
+            <div class="lesson-title">City-level data is not a nice-to-have - it is the feature</div>
+            <div class="lesson-body">When the DS team initially proposed a single global popularity index for simplicity, I pushed back on it. Food preferences in Chittagong are meaningfully different from Dhaka; Kathmandu is entirely different from both. A global index would surface Dhaka's ordering patterns to every user, making suggestions actively misleading for users in other cities. <strong>Relevance at the right geographic granularity is not a refinement to add later &mdash; it's what makes the feature trustworthy from day one.</strong></div>
+          </div>
+        </div>
+        <div class="lesson-item">
+          <div class="lesson-num">05</div>
+          <div>
+            <div class="lesson-title">Debouncing is a product decision, not just a technical optimisation</div>
+            <div class="lesson-body">When latency concerns came up during technical planning, the engineering team's first suggestion was to debounce API calls to reduce server load. My contribution was reframing this: debouncing also makes the feature feel more intentional to the user. A suggestion list that flickers and updates on every single keystroke feels jittery and hard to read. A list that updates when the user pauses feels responsive and considered. <strong>The right debounce window is not determined by server load alone &mdash; it should be set by what produces the best-feeling user experience.</strong></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div><!-- end cs-body -->
+
+  <div class="cs-footer">
+    <div class="cs-footer-inner">
+      <div>
+        <div class="cs-footer-title">Read more of my work</div>
+        <div class="cs-footer-sub">Search Monetisation, Pickup, Dish Taxonomy, Food Web, and more</div>
+      </div>
+      <div class="cs-footer-actions">
+        <a class="footer-btn footer-btn-primary" href="work.html">All case studies</a>
+        <a class="footer-btn footer-btn-secondary" href="searchpriority.html">Read: Search Monetisation</a>
+        <a class="footer-btn footer-btn-secondary" href="mailto:akash.poddar.0799@gmail.com">Get in touch</a>
+      </div>
+    </div>
+  </div>
+  <footer>&copy; 2026 Akash Poddar &middot; Dhaka, Bangladesh</footer>
+
+  <script>
+    const reveals = document.querySelectorAll('.reveal');
+    const io = new IntersectionObserver((entries) => {
+      let d = 0;
+      entries.filter(e => e.isIntersecting)
+        .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)
+        .forEach(entry => {
+          entry.target.style.transitionDelay = (d++ * 0.06) + 's';
+          entry.target.classList.add('visible');
+          io.unobserve(entry.target);
+        });
+    }, { threshold: 0.08 });
+    reveals.forEach(r => io.observe(r));
+
+    const tocItems = document.querySelectorAll('.toc-item');
+    const sections = document.querySelectorAll('.cs-section[id]');
+    const tocObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          tocItems.forEach(t => t.classList.remove('active'));
+          const active = document.querySelector(`.toc-item[href="#${entry.target.id}"]`);
+          if (active) active.classList.add('active');
+        }
+      });
+    }, { threshold: 0, rootMargin: '-101px 0px -85% 0px' });
+    sections.forEach(s => tocObserver.observe(s));
+  </script>
+
+</body>
+</html>
