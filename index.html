@@ -626,6 +626,21 @@
       grid-template-columns: 1fr auto;
       gap: 24px;
       align-items: center;
+      text-decoration: none;
+      color: inherit;
+      cursor: pointer;
+      transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+    }
+    .pub-card:hover {
+      border-color: var(--accent);
+      box-shadow: 0 4px 20px rgba(28, 79, 138, 0.08);
+      transform: translateY(-2px);
+    }
+    .pub-card:hover .pub-icon {
+      background: var(--accent);
+    }
+    .pub-card:hover .pub-icon svg {
+      fill: var(--white);
     }
 
     .pub-quote {
@@ -1277,16 +1292,16 @@
       <h2 class="section-title">Publication</h2>
       <div class="section-line"></div>
     </div>
-    <div class="pub-card reveal">
+    <a class="pub-card reveal" href="https://www.taylorfrancis.com/chapters/edit/10.1201/9781003256069-15/seniorsaid-requirements-elicitation-development-mobile-app-seniors-maliha-sultana-akash-poddar-muhammad-nazrul-islam-tasmiah-tamzid-anannya" target="_blank" rel="noopener noreferrer">
       <div>
-        <div class="pub-quote">Research Paper</div>
+        <div class="pub-quote">Research Paper &nbsp;↗</div>
         <div class="pub-title">SeniorsAid: Requirements, Elicitation, and Development of a Mobile App for Seniors</div>
         <div class="pub-desc">Co-authored research on accessible mobile application design, covering requirements elicitation methodologies and development considerations for senior users - bridging human-centred design with practical engineering constraints.</div>
       </div>
       <div class="pub-icon">
         <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm-1 1.5L18.5 9H13V3.5zM6 20V4h5v7h7v9H6z"/></svg>
       </div>
-    </div>
+    </a>
   </section>
 
   <!-- CERTIFICATIONS -->
