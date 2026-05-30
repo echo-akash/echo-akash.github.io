@@ -1,0 +1,1016 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-62DWPTYD6F"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-62DWPTYD6F');
+  </script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27><rect width=%2732%27 height=%2732%27 rx=%274%27 fill=%27%230e0e0e%27/><text x=%2716%27 y=%2722%27 font-family=%27Georgia,serif%27 font-size=%2714%27 font-weight=%27600%27 fill=%27%23f7f5f0%27 text-anchor=%27middle%27>AP</text></svg>" />
+  <title>Pathao Food "Picks For You" - Personalisation Engine | Akash Poddar</title>
+  <meta name="description" content="How I built Pathao Food's personalised restaurant recommendation engine - a diversified model blending user history, lookalike users, and taste profiles to surface the right restaurant at the right moment." />
+  <link rel="canonical" href="https://echo-akash.github.io/picksforyou.html" />
+  <meta property="og:title" content="Pathao Food Picks For You - PM Case Study | Akash Poddar" />
+  <meta property="og:description" content="Building a personalised restaurant recommendation engine for Pathao Food - diversified picks that drove measurable CTR and conversion uplift." />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://echo-akash.github.io/picksforyou.html" />
+  <meta property="og:image" content="https://echo-akash.github.io/og-image.png" />
+  <meta name="author" content="Akash Poddar" />
+  <meta name="robots" content="index, follow" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Pathao Food Picks For You - Personalisation Engine Case Study",
+    "description": "How Akash Poddar built the personalised restaurant recommendation engine powering the Picks For You collection on Pathao Food, driving higher CTR and order conversion.",
+    "author": { "@type": "Person", "name": "Akash Poddar", "url": "https://echo-akash.github.io/" },
+    "publisher": { "@type": "Person", "name": "Akash Poddar" }
+  }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,300;1,9..144,500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --ink: #0e0e0e;
+      --ink-mid: #444;
+      --ink-muted: #696969;
+      --ink-faint: #bbb;
+      --surface: #f7f5f0;
+      --white: #ffffff;
+      --accent: #1c7a5a;
+      --accent-light: #e3f4ed;
+      --accent2: #1c4f8a;
+      --accent2-light: #e8f0fa;
+      --amber-light: #fef3e2;
+      --coral-light: #faeae7;
+      --line: rgba(0,0,0,0.08);
+      --serif: 'Fraunces', Georgia, serif;
+      --sans: 'DM Sans', system-ui, sans-serif;
+      --radius: 10px;
+      --ease: cubic-bezier(0.16, 1, 0.3, 1);
+      --wide-w: 1000px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+    }
+    body { font-family: var(--sans); background: var(--surface); color: var(--ink); font-size: 15px; line-height: 1.6; overflow-x: hidden; }
+
+    /* ── NAV ── */
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 0 40px; height: 56px; background: rgba(247,245,240,0.88); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); }
+    .nav-logo { font-family: var(--serif); font-size: 16px; font-weight: 600; color: var(--ink); text-decoration: none; letter-spacing: -0.02em; }
+    .nav-links { display: flex; gap: 32px; list-style: none; }
+    .nav-links a { font-size: 13px; color: var(--ink-mid); text-decoration: none; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--accent); }
+    .nav-cta { font-size: 13px; padding: 7px 18px; background: var(--ink); color: var(--white); border-radius: 20px; text-decoration: none; transition: background 0.2s; }
+    .nav-cta:hover { background: var(--accent); }
+
+    /* ── HERO ── */
+    .cs-hero { background: var(--ink); padding: 120px 40px 80px; position: relative; overflow: hidden; }
+    .cs-hero-inner { max-width: var(--wide-w); margin: 0 auto; position: relative; z-index: 1; }
+    .cs-hero-grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px); background-size: 60px 60px; }
+    .cs-hero-shimmer { position: absolute; inset: 0; background: radial-gradient(ellipse 60% 60% at 72% 50%, rgba(28,122,90,0.14) 0%, transparent 70%); }
+    .cs-hero-bar { height: 4px; background: linear-gradient(90deg, #1c7a5a, #2e9e6b); border-radius: 2px; width: 64px; margin-bottom: 28px; }
+    .cs-meta-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 24px; }
+    .cs-tag { font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; padding: 5px 14px; border-radius: 20px; }
+    .tag-teal   { background: rgba(28,122,90,0.18); color: #5dcaa5; border: 1px solid rgba(28,122,90,0.25); }
+    .tag-blue   { background: rgba(55,138,221,0.15); color: #85b7eb; border: 1px solid rgba(55,138,221,0.2); }
+    .tag-purple { background: rgba(130,90,200,0.15); color: #b89de0; border: 1px solid rgba(130,90,200,0.2); }
+    .tag-gray   { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.45); border: 1px solid rgba(255,255,255,0.1); }
+    .cs-hero-title { font-family: var(--serif); font-size: clamp(36px, 6vw, 64px); font-weight: 600; letter-spacing: -0.03em; line-height: 0.95; color: #fff; margin-bottom: 20px; }
+    .cs-hero-title em { font-style: italic; font-weight: 300; color: rgba(255,255,255,0.38); }
+    .cs-hero-sub { font-size: 17px; font-weight: 300; color: rgba(255,255,255,0.5); max-width: 640px; line-height: 1.7; margin-bottom: 48px; }
+    .cs-hero-sub strong { color: rgba(255,255,255,0.8); font-weight: 400; }
+    .cs-kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 40px; }
+    .cs-kpi { padding-right: 32px; border-right: 1px solid rgba(255,255,255,0.08); }
+    .cs-kpi:last-child { border-right: none; }
+    .cs-kpi-num { font-family: var(--serif); font-size: 32px; font-weight: 600; letter-spacing: -0.02em; color: #fff; line-height: 1; margin-bottom: 6px; }
+    .cs-kpi-num span { font-size: 20px; font-style: italic; font-weight: 300; color: rgba(255,255,255,0.35); }
+    .cs-kpi-label { font-size: 11px; color: rgba(255,255,255,0.38); line-height: 1.4; max-width: 130px; }
+
+    /* ── TOC ── */
+    .toc-bar { position: sticky; top: 56px; z-index: 90; background: var(--white); border-bottom: 1px solid var(--line); overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .toc-bar::-webkit-scrollbar { height: 3px; }
+    .toc-bar::-webkit-scrollbar-track { background: transparent; }
+    .toc-bar::-webkit-scrollbar-thumb { background: var(--line); border-radius: 2px; }
+    .toc-bar::-webkit-scrollbar-thumb:hover { background: var(--ink-faint); }
+    @media (max-width: 640px) { .toc-bar::-webkit-scrollbar { display: none; } .toc-bar { scrollbar-width: none; } }
+    .toc-inner { max-width: var(--wide-w); margin: 0 auto; display: flex; padding: 0 40px; }
+    .toc-item { font-size: 12px; color: var(--ink-muted); text-decoration: none; padding: 14px 20px; white-space: nowrap; border-bottom: 2px solid transparent; transition: color 0.2s, border-color 0.2s; display: flex; align-items: center; gap: 6px; }
+    .toc-item:hover { color: var(--accent); border-bottom-color: var(--accent); }
+    .toc-item.active { color: var(--accent); border-bottom-color: var(--accent); }
+    .toc-num { font-size: 10px; color: var(--ink-faint); }
+
+    /* ── BODY ── */
+    .cs-body { max-width: var(--wide-w); margin: 0 auto; padding: 0 40px; }
+    .cs-section { padding: 72px 0 0; }
+    .cs-section:last-of-type { padding-bottom: 80px; }
+    .section-eyebrow { font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+    .section-eyebrow::after { content: ''; flex: 0 0 32px; height: 1px; background: var(--accent); opacity: 0.4; }
+    .cs-section h2 { font-family: var(--serif); font-size: 32px; font-weight: 600; letter-spacing: -0.02em; color: var(--ink); line-height: 1.15; margin-bottom: 28px; }
+    .cs-section h3 { font-family: var(--serif); font-size: 20px; font-weight: 600; letter-spacing: -0.01em; color: var(--ink); margin: 36px 0 14px; }
+    .cs-section p { font-size: 15px; color: var(--ink-mid); line-height: 1.8; font-weight: 300; margin-bottom: 16px; }
+    .cs-section p strong { color: var(--ink); font-weight: 500; }
+    .cs-divider { border: none; border-top: 1px solid var(--line); margin: 56px 0 0; }
+
+    /* ── CALLOUT / BLOCKQUOTE ── */
+    .callout { background: var(--accent-light); border-left: 3px solid var(--accent); border-radius: 0 var(--radius) var(--radius) 0; padding: 20px 24px; margin: 28px 0; }
+    .callout p { margin-bottom: 0; color: var(--ink); font-weight: 400; }
+    .callout p strong { color: var(--accent); }
+    .callout-blue { background: var(--accent2-light); border-left-color: var(--accent2); }
+    .callout-blue p { color: var(--ink); }
+    .callout-amber { background: var(--amber-light); border-left-color: #d97706; }
+
+    /* ── TWO-COL ── */
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 28px 0; }
+    .two-col-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin: 28px 0; }
+
+    /* ── CARD ── */
+    .card { background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); padding: 24px; }
+    .card-label { font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; }
+    .card h4 { font-family: var(--serif); font-size: 17px; font-weight: 600; color: var(--ink); margin-bottom: 8px; line-height: 1.3; }
+    .card p { font-size: 13.5px; color: var(--ink-mid); line-height: 1.7; margin-bottom: 0; }
+
+    /* ── SIGNAL TABLE ── */
+    .signal-table { width: 100%; border-collapse: collapse; margin: 28px 0; font-size: 13.5px; }
+    .signal-table th { text-align: left; font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-muted); padding: 12px 16px; border-bottom: 2px solid var(--line); }
+    .signal-table td { padding: 14px 16px; border-bottom: 1px solid var(--line); color: var(--ink-mid); vertical-align: top; line-height: 1.6; }
+    .signal-table td:first-child { font-weight: 500; color: var(--ink); white-space: nowrap; }
+    .signal-table tr:last-child td { border-bottom: none; }
+    .signal-table tr:hover td { background: rgba(28,122,90,0.03); }
+
+    /* ── STEP LIST ── */
+    .step-list { display: flex; flex-direction: column; gap: 0; margin: 28px 0; }
+    .step-item { display: grid; grid-template-columns: 56px 1fr; gap: 0 20px; padding: 28px 0; border-top: 1px solid var(--line); align-items: start; }
+    .step-item:last-child { border-bottom: 1px solid var(--line); }
+    .step-num { font-family: var(--serif); font-size: 28px; font-weight: 600; color: var(--accent); letter-spacing: -0.02em; line-height: 1; padding-top: 4px; }
+    .step-title { font-family: var(--serif); font-size: 18px; font-weight: 600; color: var(--ink); margin-bottom: 8px; line-height: 1.2; }
+    .step-body { font-size: 14px; color: var(--ink-mid); line-height: 1.75; font-weight: 300; }
+    .step-body strong { color: var(--ink); font-weight: 500; }
+
+    /* ── PHASE CARDS ── */
+    .phase-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 28px 0; }
+    .phase-card { background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); padding: 28px; position: relative; overflow: hidden; }
+    .phase-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; }
+    .phase-v1::before { background: var(--accent2); }
+    .phase-v2::before { background: var(--accent); }
+    .phase-badge { font-size: 10px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; padding: 4px 10px; border-radius: 20px; display: inline-block; margin-bottom: 14px; }
+    .badge-v1 { background: var(--accent2-light); color: var(--accent2); }
+    .badge-v2 { background: var(--accent-light); color: var(--accent); }
+    .phase-title { font-family: var(--serif); font-size: 19px; font-weight: 600; color: var(--ink); margin-bottom: 12px; line-height: 1.2; }
+    .phase-body { font-size: 13.5px; color: var(--ink-mid); line-height: 1.75; }
+    .phase-feature-list { margin-top: 16px; display: flex; flex-direction: column; gap: 8px; }
+    .phase-feature { display: flex; gap: 10px; font-size: 13px; color: var(--ink-mid); line-height: 1.5; }
+    .phase-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; margin-top: 6px; }
+    .dot-v1 { background: var(--accent2); }
+    .dot-v2 { background: var(--accent); }
+
+    /* ── PERSONA ── */
+    .persona-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 28px 0; }
+    .persona-card { background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); padding: 24px; }
+    .persona-icon { width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: var(--serif); font-size: 16px; font-weight: 600; margin-bottom: 14px; }
+    .pi-teal { background: var(--accent-light); color: var(--accent); }
+    .pi-blue { background: var(--accent2-light); color: var(--accent2); }
+    .persona-name { font-family: var(--serif); font-size: 17px; font-weight: 600; color: var(--ink); margin-bottom: 4px; }
+    .persona-role { font-size: 12px; color: var(--ink-muted); margin-bottom: 12px; }
+    .persona-body { font-size: 13.5px; color: var(--ink-mid); line-height: 1.7; }
+
+    /* ── EXAMPLE WALKTHROUGH ── */
+    .example-box { background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); padding: 28px; margin: 28px 0; }
+    .example-label { font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 14px; }
+    .example-row { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 12px; }
+    .example-row:last-child { margin-bottom: 0; }
+    .example-arrow { font-size: 16px; color: var(--accent); flex-shrink: 0; line-height: 1.5; }
+    .example-text { font-size: 14px; color: var(--ink-mid); line-height: 1.7; }
+    .example-text strong { color: var(--ink); font-weight: 500; }
+
+    /* ── DIVERSITY RULE ── */
+    .rule-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin: 28px 0; }
+    .rule-card { background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px; display: flex; gap: 14px; align-items: flex-start; }
+    .rule-icon { font-size: 22px; flex-shrink: 0; line-height: 1; }
+    .rule-title { font-size: 14px; font-weight: 500; color: var(--ink); margin-bottom: 4px; }
+    .rule-body { font-size: 13px; color: var(--ink-mid); line-height: 1.6; }
+
+    /* ── METRIC STRIP ── */
+    .metric-strip { background: var(--ink); border-radius: var(--radius); padding: 36px; margin: 28px 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; border: 1px solid rgba(255,255,255,0.04); }
+    .ms-cell { padding-right: 32px; border-right: 1px solid rgba(255,255,255,0.08); }
+    .ms-cell:last-child { border-right: none; padding-right: 0; padding-left: 32px; }
+    .ms-cell:first-child { padding-left: 0; }
+    .ms-num { font-family: var(--serif); font-size: 36px; font-weight: 600; letter-spacing: -0.02em; color: #fff; line-height: 1; margin-bottom: 6px; }
+    .ms-num span { font-size: 22px; font-style: italic; font-weight: 300; color: rgba(255,255,255,0.35); }
+    .ms-label { font-size: 12px; color: rgba(255,255,255,0.45); line-height: 1.4; }
+
+    /* ── RISK GRID ── */
+    .risk-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 28px 0; }
+    .risk-card { background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); padding: 22px; }
+    .risk-level { font-size: 10px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; padding: 3px 10px; border-radius: 20px; display: inline-block; margin-bottom: 10px; }
+    .r-high { background: #faeae7; color: #8c3320; }
+    .r-med  { background: var(--amber-light); color: #92600a; }
+    .r-low  { background: var(--accent-light); color: var(--accent); }
+    .risk-title { font-size: 14px; font-weight: 500; color: var(--ink); margin-bottom: 8px; line-height: 1.35; }
+    .risk-body { font-size: 13px; color: var(--ink-mid); line-height: 1.7; }
+
+    /* ── LESSON LIST ── */
+    .lesson-list { display: flex; flex-direction: column; gap: 0; margin: 28px 0; }
+    .lesson-item { display: grid; grid-template-columns: 48px 1fr; gap: 0 20px; padding: 28px 0; border-top: 1px solid var(--line); }
+    .lesson-item:last-child { border-bottom: 1px solid var(--line); }
+    .lesson-num { font-family: var(--serif); font-size: 24px; font-weight: 600; color: var(--accent); opacity: 0.4; line-height: 1; padding-top: 4px; }
+    .lesson-title { font-family: var(--serif); font-size: 18px; font-weight: 600; color: var(--ink); margin-bottom: 8px; line-height: 1.2; }
+    .lesson-body { font-size: 14px; color: var(--ink-mid); line-height: 1.75; font-weight: 300; }
+    .lesson-body strong { color: var(--ink); font-weight: 500; }
+
+    /* ── APPENDIX BAND ── */
+    .appendix-band { background: #111; border-top: 1px solid rgba(255,255,255,0.06); padding: 80px 40px; }
+    .appendix-inner { max-width: var(--wide-w); margin: 0 auto; }
+    .appendix-header { margin-bottom: 56px; }
+    .appendix-eyebrow { font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); margin-bottom: 12px; }
+    .appendix-title { font-family: var(--serif); font-size: 32px; font-weight: 600; letter-spacing: -0.02em; color: #fff; margin-bottom: 12px; }
+    .appendix-sub { font-size: 15px; color: rgba(255,255,255,0.4); font-weight: 300; max-width: 560px; line-height: 1.7; }
+    .appendix-block { margin-bottom: 56px; }
+    .appendix-block:last-child { margin-bottom: 0; }
+    .appendix-block-label { font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.3); margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .appendix-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .appendix-table th { text-align: left; font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,255,255,0.3); padding: 10px 16px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+    .appendix-table td { padding: 14px 16px; border-bottom: 1px solid rgba(255,255,255,0.06); color: rgba(255,255,255,0.55); vertical-align: top; line-height: 1.65; }
+    .appendix-table td:first-child { color: rgba(255,255,255,0.25); font-size: 11px; white-space: nowrap; font-weight: 500; letter-spacing: 0.04em; }
+    .appendix-table tr:last-child td { border-bottom: none; }
+    .appendix-table tr:hover td { background: rgba(255,255,255,0.02); }
+    .appendix-flow-intro { font-size: 14px; color: rgba(255,255,255,0.4); margin-bottom: 28px; font-weight: 300; }
+    .flow-steps { display: flex; flex-direction: column; }
+    .flow-arrow { text-align: center; color: rgba(255,255,255,0.15); font-size: 18px; padding: 4px 0; padding-left: 24px; }
+    .flow-step { display: grid; grid-template-columns: 40px 1fr; gap: 0 16px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); border-radius: var(--radius); padding: 18px 20px; align-items: start; }
+    .flow-step-final { background: rgba(28,122,90,0.08); border-color: rgba(28,122,90,0.25); }
+    .flow-step-num { font-family: var(--serif); font-size: 18px; font-weight: 600; color: var(--accent); line-height: 1; padding-top: 2px; }
+    .flow-step-final .flow-step-num { font-size: 20px; }
+    .flow-step-title { font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.7); margin-bottom: 5px; }
+    .flow-step-text { font-size: 12.5px; color: rgba(255,255,255,0.38); line-height: 1.65; }
+    .flow-yes { color: #5dcaa5; }
+    .flow-no  { color: rgba(255,100,80,0.7); }
+
+    @media (max-width: 768px) {
+      .appendix-band { padding: 56px 20px; }
+      .appendix-table { font-size: 12px; }
+      .appendix-table th, .appendix-table td { padding: 10px 10px; }
+    }
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.7s var(--ease), transform 0.7s var(--ease); }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* ── FOOTER ── */
+    footer { background: var(--ink); border-top: 1px solid rgba(255,255,255,0.06); padding: 24px 40px; text-align: center; font-size: 12px; color: rgba(255,255,255,0.55); }
+    footer a { color: rgba(255,255,255,0.55); text-decoration: none; }
+    footer a:hover { color: var(--white); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      nav { padding: 0 20px; }
+      .nav-links { display: none; }
+      .cs-hero { padding: 100px 20px 60px; }
+      .cs-kpi-row { grid-template-columns: 1fr 1fr; gap: 24px 0; border-top: 1px solid rgba(255,255,255,0.08); }
+      .cs-kpi { border-right: none; padding-right: 0; }
+      .cs-kpi:nth-child(odd) { border-right: 1px solid rgba(255,255,255,0.08); padding-right: 16px; }
+      .toc-inner { padding: 0 20px; }
+      .cs-body { padding: 0 20px; }
+      .two-col, .two-col-3, .phase-grid, .persona-grid, .rule-grid, .risk-grid { grid-template-columns: 1fr; }
+      .metric-strip { grid-template-columns: 1fr 1fr; gap: 24px; }
+      .ms-cell { border-right: none !important; padding: 0 !important; }
+      .ms-cell:nth-child(odd) { border-right: 1px solid rgba(255,255,255,0.08) !important; padding-right: 16px !important; }
+      footer { padding: 20px; }
+    }
+    @media (max-width: 480px) {
+      .cs-kpi-row { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a class="nav-logo" href="index.html">Akash Poddar</a>
+    <ul class="nav-links">
+      <li><a href="work.html">Case Studies</a></li>
+      <li><a href="index.html#experience">Experience</a></li>
+      <li><a href="index.html#skills">Skills</a></li>
+      <li><a href="index.html#contact">Contact</a></li>
+    </ul>
+    <a class="nav-cta" href="index.html#contact">Get in touch</a>
+  </nav>
+
+  <!-- HERO -->
+  <div class="cs-hero">
+    <div class="cs-hero-grid"></div>
+    <div class="cs-hero-shimmer"></div>
+    <div class="cs-hero-inner">
+      <div class="cs-hero-bar"></div>
+      <div class="cs-meta-row">
+        <span class="cs-tag tag-teal">Personalisation</span>
+        <span class="cs-tag tag-blue">ML · Recommendation</span>
+        <span class="cs-tag tag-purple">Growth</span>
+        <span class="cs-tag tag-gray">Pathao Food · 2025</span>
+      </div>
+      <h1 class="cs-hero-title">Picks For You<br><em>Restaurant Personalisation Engine</em></h1>
+      <p class="cs-hero-sub">How I took Pathao Food's homepage from a one-size-fits-all carousel to a <strong>personalised recommendation engine</strong> that surfaces the right restaurant for each user - and how iterating from V1 to V2 made it measurably better across every metric that mattered.</p>
+      <div class="cs-kpi-row">
+        <div class="cs-kpi">
+          <div class="cs-kpi-num">↑<span>CTR</span></div>
+          <div class="cs-kpi-label">Picks For You collection click-through rate post-launch</div>
+        </div>
+        <div class="cs-kpi">
+          <div class="cs-kpi-num">↑<span>CVR</span></div>
+          <div class="cs-kpi-label">Order conversion from carousel tap - clicks turning into placed orders</div>
+        </div>
+        <div class="cs-kpi">
+          <div class="cs-kpi-num">↓<span>0-click</span></div>
+          <div class="cs-kpi-label">Homepage sessions where Picks For You received zero engagement</div>
+        </div>
+        <div class="cs-kpi">
+          <div class="cs-kpi-num">↑<span>Discovery</span></div>
+          <div class="cs-kpi-label">Orders placed at restaurants users had never previously ordered from</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOC -->
+  <nav class="toc-bar" aria-label="Table of contents">
+    <div class="toc-inner">
+      <a class="toc-item active" href="#background"><span class="toc-num">01</span> Background</a>
+      <a class="toc-item" href="#problem"><span class="toc-num">02</span> Problem</a>
+      <a class="toc-item" href="#users"><span class="toc-num">03</span> Users</a>
+      <a class="toc-item" href="#approach"><span class="toc-num">04</span> My Approach</a>
+      <a class="toc-item" href="#v1"><span class="toc-num">05</span> V1 Design</a>
+      <a class="toc-item" href="#v2"><span class="toc-num">06</span> V2 Design</a>
+      <a class="toc-item" href="#experiments"><span class="toc-num">07</span> A/B Testing</a>
+      <a class="toc-item" href="#metrics"><span class="toc-num">08</span> Metrics</a>
+      <a class="toc-item" href="#risks"><span class="toc-num">09</span> Risks</a>
+      <a class="toc-item" href="#lessons"><span class="toc-num">10</span> Lessons</a>
+    </div>
+  </nav>
+
+  <!-- BODY -->
+  <div class="cs-body">
+
+    <!-- 01 BACKGROUND -->
+    <section class="cs-section" id="background">
+      <div class="section-eyebrow">01 &mdash; Background</div>
+      <h2>The homepage carousel that wasn't earning its position.</h2>
+      <p>Pathao Food's homepage had a section called <strong>"Picks For You"</strong> - a curated carousel of recommended restaurants displayed prominently when users opened the app. On paper, it was prime real estate: the first thing a hungry user sees when they open the app at lunchtime.</p>
+      <p>In practice, it was doing something far less interesting. The restaurants shown were essentially the same for everyone - popular restaurants in the user's delivery zone, maybe with some light recency weighting, but nothing that felt personal. <strong>For a returning user who orders biryani three times a week, seeing a burger joint they've never touched ranked above their regular spot wasn't discovery - it was friction.</strong></p>
+      <p>The data reflected this. Homepage conversion was lower than it should be for a feature occupying the most valuable vertical space on the screen. Users were scrolling past the carousel to search manually - which meant the carousel wasn't doing its job. This is what made Picks For You a P0 initiative.</p>
+      <div class="callout reveal">
+        <p><strong>The brief I gave myself:</strong> Make "Picks For You" earn its name. If the collection says "for you," the restaurants in it should actually reflect something true about the person looking at it.</p>
+      </div>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 02 PROBLEM -->
+    <section class="cs-section" id="problem">
+      <div class="section-eyebrow">02 &mdash; Problem</div>
+      <h2>Three failure modes, not one.</h2>
+      <p>When I dug into the problem, what looked like one issue was actually three separate failure modes stacked on top of each other. Solving only one of them would leave the other two dragging on results.</p>
+
+      <div class="step-list reveal">
+        <div class="step-item">
+          <div class="step-num">01</div>
+          <div>
+            <div class="step-title">Generic ranking with no personal signal</div>
+            <div class="step-body">The most fundamental issue. Picks For You was essentially a popular-in-zone list. Every user in Banani at noon saw the same restaurants in the same order. <strong>There was no cuisine preference weighting, no order history influence, no budget consideration.</strong> A user who exclusively orders rice-based meals would see pizza restaurants ranked above their regular spots simply because those restaurants had more aggregate orders in the zone.</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">02</div>
+          <div>
+            <div class="step-title">No discovery mechanism - just repetition</div>
+            <div class="step-body">Even when users did find restaurants they liked, the carousel tended to resurface the same options repeatedly. <strong>Choice fatigue was building.</strong> If you're seeing the same 8 restaurants every time you open the app, you stop looking at the carousel. The feature needed to balance familiarity (restaurants the user has ordered from before) with genuine discovery (new restaurants they'd likely enjoy based on their taste profile).</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">03</div>
+          <div>
+            <div class="step-title">Area-switching broke personalisation entirely</div>
+            <div class="step-body">This was the subtler issue, exposed as we looked more carefully at the data. When a user opened the app in a new delivery zone - visiting a different neighbourhood, or travelling to a different city - the personalisation completely collapsed. <strong>The system had no order history for that zone, so it fell back to generic popularity ranking,</strong> showing the user restaurants that bore no connection to what they'd demonstrated they actually like. A user who loves biryani in Dhaka visiting Chittagong would see completely unrelated restaurants.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 03 USERS -->
+    <section class="cs-section" id="users">
+      <div class="section-eyebrow">03 &mdash; Users</div>
+      <h2>Two types of users the feature had to serve simultaneously.</h2>
+      <p>I identified two distinct user modes that the recommendation engine needed to handle well - not two different user segments, but two different states the same user could be in on any given day.</p>
+      <div class="persona-grid reveal">
+        <div class="persona-card">
+          <div class="persona-icon pi-teal">AK</div>
+          <div class="persona-name">The Regular</div>
+          <div class="persona-role">Ordering from a familiar zone, familiar cuisine</div>
+          <div class="persona-body">Akash orders biryani or kebabs from Banani 4–5 times a week, mostly at lunch. He's not looking for discovery - he wants speed and confidence. The right recommendation for him surfaces his go-to spots at the top, immediately. He'll skip the carousel if it shows him things unrelated to his taste. For this user, personalisation means <strong>familiar favourites, ranked right.</strong></div>
+        </div>
+        <div class="persona-card">
+          <div class="persona-icon pi-blue">SR</div>
+          <div class="persona-name">The Explorer</div>
+          <div class="persona-role">Ordering from a new zone, or bored with their usual options</div>
+          <div class="persona-body">Same user, different day. Akash is visiting Uttara for a meeting, or he's just tired of his usual spots. He wants the app to make an intelligent suggestion - not popularity-driven noise, but <strong>something that fits his known preferences</strong> even in unfamiliar territory. For this user, personalisation means: "I know you like biryani in Banani - here's the equivalent in Uttara."</div>
+        </div>
+      </div>
+      <p>The critical insight from framing it this way: <strong>both states require the same underlying infrastructure - a rich user taste profile and a restaurant similarity model</strong> - they just apply it differently. The Regular needs profile-to-familiar-restaurant matching; the Explorer needs profile-to-lookalike-restaurant matching across zones. V1 solved the first problem. V2 solved both.</p>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 04 APPROACH -->
+    <section class="cs-section" id="approach">
+      <div class="section-eyebrow">04 &mdash; My Approach</div>
+      <h2>Four decisions that shaped the entire product.</h2>
+      <p>Before writing a single requirement, I made four strategic calls that defined the shape of the solution. Each one had a meaningful trade-off and I want to be transparent about why I landed where I did.</p>
+
+      <div class="step-list reveal">
+        <div class="step-item">
+          <div class="step-num">01</div>
+          <div>
+            <div class="step-title">Build a taste profile, not just an order history</div>
+            <div class="step-body">The simplest version of personalisation would have been: "show them restaurants they've ordered from before." That's not personalisation - it's a browsing history. I pushed for a layer of abstraction: <strong>tag each user with cuisine preferences, budget range, order timing, and frequency patterns.</strong> This "taste profile" is what makes the system generalise - it's how you can recommend a restaurant the user has never tried but would probably love. Engineering pushback was real (it required a separate DS pipeline), but it was the right call.</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">02</div>
+          <div>
+            <div class="step-title">Use lookalike users, not just similar restaurants</div>
+            <div class="step-body">I wanted two complementary signals: <strong>user-user similarity</strong> (find users with similar behaviour and see what they've ordered) and <strong>restaurant-restaurant similarity</strong> (find restaurants similar to the user's past orders by cuisine, pricing, and dish profile). Most recommendation systems use one of these; using both creates a more robust signal. Restaurant similarity alone would over-index on familiar cuisine; user similarity alone would be too slow for new users with thin history.</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">03</div>
+          <div>
+            <div class="step-title">Mandate diversity - don't just rank by predicted preference</div>
+            <div class="step-body">Left to itself, a recommendation system that ranks purely by predicted match score will surface the same three or four dominant restaurants in every session. I wrote explicit diversity constraints into the spec: <strong>no more than three restaurants from the same cuisine in sequence, a 60/40 split between familiar and new, and budget spectrum coverage.</strong> This was a deliberate decision to cap relevance in the name of discovery quality - and it was the right trade-off.</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">04</div>
+          <div>
+            <div class="step-title">Ship V1 clean, then iterate to V2 - not the other way around</div>
+            <div class="step-body">Cross-area personalisation (the "Explorer" problem) was the harder engineering problem. I could have held the feature until it was solved, but that would have delayed the bigger, more impactful core personalisation by months. <strong>I shipped V1 with strong within-zone personalisation and a clear V2 commitment for cross-area extension.</strong> This gave us real-world signal from V1 to calibrate V2, and meant the core user experience improved on a faster timeline.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 05 V1 DESIGN -->
+    <section class="cs-section" id="v1">
+      <div class="section-eyebrow">05 &mdash; V1 Design</div>
+      <h2>Building the personalisation foundation - user signals, lookalikes, and diversity rules.</h2>
+      <p>V1 was the ground-up build. Before V1, there was no taste profile infrastructure, no user-user similarity model, and no restaurant diversity logic. Everything in this version was built from scratch.</p>
+
+      <h3>The signal stack</h3>
+      <p>I defined four input signals for the recommendation engine, ordered by the specificity of personal information they carry:</p>
+
+      <table class="signal-table reveal">
+        <thead>
+          <tr>
+            <th>Signal</th>
+            <th>What it captures</th>
+            <th>Why it matters</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>User Order History</td>
+            <td>Cuisine types, order frequency, basket size, meal timing, delivery zones</td>
+            <td>The highest-fidelity signal - revealed preference, not stated preference</td>
+          </tr>
+          <tr>
+            <td>Lookalike User Pool</td>
+            <td>Restaurants ordered by users with similar behavioural vectors</td>
+            <td>Extends recommendations beyond the user's own history; helps cold-start</td>
+          </tr>
+          <tr>
+            <td>Taste Diversity Score</td>
+            <td>How varied or repetitive the user's recent orders have been</td>
+            <td>High repetition = show more familiar; high variety = increase discovery weight</td>
+          </tr>
+          <tr>
+            <td>Restaurant Metadata</td>
+            <td>Cuisine, pricing tier, delivery time, MPF tier, rating</td>
+            <td>Enables budget and preference filtering; feeds the similarity model</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>The diversification rules</h3>
+      <p>Having a ranked list of personalised restaurants is a necessary but not sufficient condition for a good carousel. I wrote four explicit diversity constraints that the algorithm had to respect:</p>
+
+      <div class="rule-grid reveal">
+        <div class="rule-card">
+          <div class="rule-icon">🍽️</div>
+          <div>
+            <div class="rule-title">Cuisine cap</div>
+            <div class="rule-body">No more than 3 restaurants from the same cuisine type appearing consecutively in the ranked output. Prevents the list from feeling monotonous.</div>
+          </div>
+        </div>
+        <div class="rule-card">
+          <div class="rule-icon">⚖️</div>
+          <div>
+            <div class="rule-title">Familiar vs. new balance</div>
+            <div class="rule-body">60% of shown restaurants should be familiar (ordered before or from lookalike pool); 40% should be new but aligned with taste profile.</div>
+          </div>
+        </div>
+        <div class="rule-card">
+          <div class="rule-icon">💰</div>
+          <div>
+            <div class="rule-title">Budget spectrum</div>
+            <div class="rule-body">Include both budget-friendly and premium options within the user's demonstrated price range. Avoid clustering entirely at one price point.</div>
+          </div>
+        </div>
+        <div class="rule-card">
+          <div class="rule-icon">📍</div>
+          <div>
+            <div class="rule-title">Locality awareness</div>
+            <div class="rule-body">Prioritise restaurants from the user's home delivery zone. Proximity is a strong signal for conversion - a great recommendation too far away is useless.</div>
+          </div>
+        </div>
+      </div>
+
+      <h3>The ranking algorithm</h3>
+      <p>After diversification filtering, the final ranking combined five signals into a composite score:</p>
+      <div class="callout reveal">
+        <p><strong>Ranking factors (in priority order):</strong> Proximity → Cuisine match to taste profile → Restaurant rating → Frequency of occurrence in lookalike pool → Location match with user's delivery area. A restaurant scoring high on all five would rank at the top; the diversity rules ensured no single cuisine dominated even when multiple high-scorers shared a cuisine type.</p>
+      </div>
+
+      <h3>A concrete example</h3>
+      <div class="example-box reveal">
+        <div class="example-label">User: Akash - frequent biryani and kebab orders from Banani, lunch-heavy, mid-budget</div>
+        <div class="example-row"><div class="example-arrow">→</div><div class="example-text"><strong>User-user similarity:</strong> System identifies 40 users with similar behavioural vectors (rice-based meals, Banani zone, mid-basket). Pulls restaurants they frequently ordered.</div></div>
+        <div class="example-row"><div class="example-arrow">→</div><div class="example-text"><strong>Restaurant-restaurant similarity:</strong> Finds restaurants similar to Akash's past orders by cuisine and pricing - e.g. "Biryani Express," "Spice N Rice."</div></div>
+        <div class="example-row"><div class="example-arrow">→</div><div class="example-text"><strong>Merge and rank:</strong> Combines both lists, applies composite score. "The Kebab Factory" and "Dhaka Biryani House" rise to the top.</div></div>
+        <div class="example-row"><div class="example-arrow">→</div><div class="example-text"><strong>Diversity pass:</strong> Ensures the top 8 slots include at least 2 cuisine types and at least 2 restaurants Akash hasn't ordered from before.</div></div>
+        <div class="example-row"><div class="example-arrow">→</div><div class="example-text"><strong>Final output:</strong> Akash opens the app at 12:30 PM and sees a carousel led by familiar favourites, followed by discovery recommendations that actually fit his taste.</div></div>
+      </div>
+
+      <h3>Fallback logic</h3>
+      <p>I defined explicit fallback behaviour for the cases where personalised data wasn't available - new users with thin history, areas with insufficient order data, or DS pipeline failures. In all cases the fallback was <strong>trending/popular restaurants in the user's zone</strong>, with a silent degradation to pure popularity ranking. I specified this not as an afterthought but as a first-class requirement - a feature that fails gracefully is more trustworthy than one that breaks visibly.</p>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 06 V2 DESIGN -->
+    <section class="cs-section" id="v2">
+      <div class="section-eyebrow">06 &mdash; V2 Design</div>
+      <h2>Making it work everywhere - personalized sorting and cross-area recommendations.</h2>
+      <p>V1 solved the core personalisation problem within familiar zones. But V1's data revealed two remaining gaps: popular restaurants within the collection still appeared in a generic order rather than a personalised one, and users who browsed from a new area saw the personalisation collapse. V2 addressed both.</p>
+
+      <div class="phase-grid reveal">
+        <div class="phase-card phase-v1">
+          <span class="phase-badge badge-v1">V1 Limitation</span>
+          <div class="phase-title">Popular restaurants ranked generically</div>
+          <p class="phase-body">In V1, the "popular in zone" pool that fed the collection was sorted by aggregate popularity - the same ranking every user saw. User A who loves biryani and User B who loves pizza would see the same popular restaurants in the same order within the personalised results. The personalisation was at the inclusion level but not the sort order level.</p>
+        </div>
+        <div class="phase-card phase-v2">
+          <span class="phase-badge badge-v2">V2 Fix</span>
+          <div class="phase-title">Personalised sorting within the collection</div>
+          <div class="phase-feature-list">
+            <div class="phase-feature"><div class="phase-dot dot-v2"></div><div>Apply the same personalised ranking algorithm from the "Personalised Restaurant Ranking" feature to sort restaurants within Picks For You.</div></div>
+            <div class="phase-feature"><div class="phase-dot dot-v2"></div><div>Sorting signals: user's order history (cuisine, basket size, frequency, meal timing) combined with restaurant features (rating, cuisine match, similarity score).</div></div>
+            <div class="phase-feature"><div class="phase-dot dot-v2"></div><div>Outcome: every user's Picks For You feed shows the same eligible restaurants in a different personalised order. Akash's biryani spots rise; a pizza-first user sees different restaurants ranked at the top.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="phase-grid reveal">
+        <div class="phase-card phase-v1">
+          <span class="phase-badge badge-v1">V1 Limitation</span>
+          <div class="phase-title">New area = personalisation collapse</div>
+          <p class="phase-body">When a user opened the app in a delivery zone with no order history, V1 had nothing to work with. The system fell back to generic popularity for that zone - showing the user restaurants that had no connection to their demonstrated preferences. Personalisation was essentially absent for the "Explorer" use case.</p>
+        </div>
+        <div class="phase-card phase-v2">
+          <span class="phase-badge badge-v2">V2 Fix</span>
+          <div class="phase-title">Cross-area personalisation via cuisine mapping</div>
+          <div class="phase-feature-list">
+            <div class="phase-feature"><div class="phase-dot dot-v2"></div><div>When a user browses a new area with no local history, map their taste profile from other zones to restaurants in the new zone via cuisine and dish similarity.</div></div>
+            <div class="phase-feature"><div class="phase-dot dot-v2"></div><div>Akash loves biryani in Gulshan → visiting Uttara → system finds biryani restaurants in Uttara matching similar cuisine/price profile.</div></div>
+            <div class="phase-feature"><div class="phase-dot dot-v2"></div><div>Context sensitivity: recommendations auto-refresh when the user's delivery area changes. Area change is the trigger for re-running the cross-area mapping.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout callout-blue reveal">
+        <p><strong>The V2 acceptance criteria I wrote:</strong> (1) Popular restaurants in Picks For You sorted using personalised ranking. (2) New-area browsing shows cuisine/type lookalike recommendations from the user's other zones. (3) Recommendations adapt dynamically when area changes. (4) Fallback to top-rated nearby restaurants when no cross-area match exists. All four had to pass for V2 to ship.</p>
+      </div>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 07 A/B TESTING -->
+    <section class="cs-section" id="experiments">
+      <div class="section-eyebrow">07 &mdash; A/B Testing</div>
+      <h2>Testing two questions at once - position and behaviour.</h2>
+      <p>Personalisation quality is only part of the conversion equation. Two external factors - where the carousel sits on the homepage and whether it auto-scrolls - could independently affect whether users even engaged with the personalised results. I designed an A/B testing framework to measure both.</p>
+
+      <div class="two-col reveal">
+        <div class="card">
+          <div class="card-label">Experiment 1</div>
+          <h4>Carousel Position</h4>
+          <p>Testing whether "Picks For You" performs better in the 1st carousel slot versus the 3rd slot on the food homepage. Hypothesis: personalised content earns first position; placing it there lifts CTR by reducing the scroll required to reach the most relevant recommendation. Multiple cohorts with different position assignments, all controlled through the A/B framework.</p>
+        </div>
+        <div class="card">
+          <div class="card-label">Experiment 2</div>
+          <h4>Auto-scroll Behaviour</h4>
+          <p>Testing auto-scroll ON versus OFF within the collection. The risk with auto-scroll is that it skips the highest-ranked, most personalised restaurants before the user sees them. When auto-scroll is OFF, users immediately see the top-ranked options - exactly the ones with the highest similarity score. The hypothesis was that removing auto-scroll would increase engagement with high-similarity restaurants.</p>
+        </div>
+      </div>
+
+      <div class="callout reveal">
+        <p><strong>Why this mattered:</strong> A personalised recommendation engine that's buried on the homepage or auto-scrolled past before users notice it doesn't convert. These experiments were about making sure the engineering work we put into personalisation could actually be measured. Good personalisation in a bad position gives you noisy data and real users a worse experience.</p>
+      </div>
+
+      <h3>How I set it up</h3>
+      <p>I specified the A/B framework requirements in the same PRD as the recommendation engine itself - because you can't retrofit testability. The framework needed to support:</p>
+      <div class="two-col-3 reveal">
+        <div class="card">
+          <div class="card-label">Cohort Control</div>
+          <p>Multiple cohorts simultaneously receiving different carousel positions (1st, 3rd, etc.), with consistent assignment across sessions for the same user.</p>
+        </div>
+        <div class="card">
+          <div class="card-label">Behaviour Toggle</div>
+          <p>Server-side toggle for auto-scroll ON/OFF, configurable per cohort without requiring an app release. Essential for running the experiment at speed.</p>
+        </div>
+        <div class="card">
+          <div class="card-label">Clean Attribution</div>
+          <p>Tracking CTR and conversion attributable specifically to Picks For You interactions, isolated from other homepage carousels to avoid contamination.</p>
+        </div>
+      </div>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 08 METRICS -->
+    <section class="cs-section" id="metrics">
+      <div class="section-eyebrow">08 &mdash; Metrics</div>
+      <h2>What success looked like - and what we measured to know.</h2>
+
+      <div class="callout reveal">
+        <p><strong>North Star:</strong> Uplift in Picks For You collection CTR - the single number that tells you whether personalisation is earning user attention on the homepage. Everything else either explains why CTR moved, or guards against gaming it.</p>
+      </div>
+
+      <table class="signal-table reveal">
+        <thead>
+          <tr>
+            <th>Layer</th>
+            <th>Metric</th>
+            <th>Why it's on the dashboard</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Engagement</td>
+            <td>CTR on Picks For You collection</td>
+            <td>Primary signal - did the recommendation earn a tap? If a user sees the carousel and scrolls past, the recommendation failed.</td>
+          </tr>
+          <tr>
+            <td>Engagement</td>
+            <td>Zero-click homepage sessions on Picks For You</td>
+            <td>Diagnostic metric. A high zero-click rate signals a systematic recommendation quality problem - not variance. Tracking the reduction tells you personalisation is working, not just that CTR improved for an unrelated reason.</td>
+          </tr>
+          <tr>
+            <td>Conversion</td>
+            <td>Order conversion rate from Picks For You tap</td>
+            <td>Closes the loop from carousel tap to placed order. CTR without conversion means we're surfacing restaurants users find interesting but don't actually want to order from - clicks without revenue.</td>
+          </tr>
+          <tr>
+            <td>Conversion</td>
+            <td>Repeat order rate on recommended restaurants</td>
+            <td>Measures whether recommendations surface restaurants users come back to independently - a signal that the recommendation matched genuine preference, not just triggered a one-off curiosity click.</td>
+          </tr>
+          <tr>
+            <td>Discovery</td>
+            <td>% of orders from restaurants never previously ordered from</td>
+            <td>Measures whether the 40% "new but aligned" discovery slot is actually working. If this stays flat, the diversity rules aren't generating genuine new discovery - they're just cycling through the same pool.</td>
+          </tr>
+          <tr>
+            <td>Discovery</td>
+            <td>Cuisine diversity index per user (V2)</td>
+            <td>Tracks whether users are ordering from a broader range of cuisines over time after personalisation launches. A narrowing index would be an early filter-bubble warning signal.</td>
+          </tr>
+          <tr>
+            <td>System</td>
+            <td>Recommendation freshness - % of sessions served from updated model</td>
+            <td>Confirms the DS pipeline is refreshing taste profiles and similarity models on schedule. Stale models produce increasingly irrelevant recommendations over time without any visible error.</td>
+          </tr>
+          <tr>
+            <td>System</td>
+            <td>Fallback trigger rate</td>
+            <td>The % of sessions where personalisation data wasn't available and the system fell back to popular-in-zone. A rising fallback rate signals a pipeline problem before users report degraded quality.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>What I deliberately excluded</h3>
+      <p><strong>Time spent on homepage.</strong> A feature that improves recommendation relevance should reduce browsing time, not increase it. If Picks For You is working, users find what they want faster and place orders sooner. Optimising for session duration would mean optimising for friction.</p>
+      <p><strong>Aggregate homepage impressions.</strong> Impressions go up when quality goes down - a confusing carousel generates more scroll behaviour, which inflates impression counts. Tracking impressions as a success signal would reward a worse product.</p>
+
+      <div class="callout callout-blue reveal">
+        <p><strong>A/B experiment metrics (separate layer):</strong> The position test tracked CTR differential between cohorts (1st vs. 3rd carousel slot). The auto-scroll test tracked tap rate on the top-3 ranked restaurants - the hypothesis being that turning off auto-scroll would increase engagement with the highest-similarity results, since users would see them immediately rather than having them scroll past. Both were instrumented independently of the core recommendation metrics to avoid signal contamination.</p>
+      </div>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 09 RISKS -->
+    <section class="cs-section" id="risks">
+      <div class="section-eyebrow">09 &mdash; Risks</div>
+      <h2>What could go wrong - and how I designed against it.</h2>
+      <div class="risk-grid reveal">
+        <div class="risk-card">
+          <div class="risk-level r-high">High</div>
+          <div class="risk-title">Filter bubble: personalisation reinforces existing taste rather than expanding it</div>
+          <div class="risk-body">A pure preference-matching engine would show users increasingly narrow options over time - the biryani user only ever sees biryani. This is a long-term retention risk. Mitigated directly in the spec by the 40% "new but aligned" discovery slot and the cuisine diversity cap. The feature is designed to surface novelty, not just familiarity. The diversity rules were non-negotiable.</div>
+        </div>
+        <div class="risk-card">
+          <div class="risk-level r-high">High</div>
+          <div class="risk-title">Cold-start for new users produces a generic experience</div>
+          <div class="risk-body">Users with fewer than ~5 orders have insufficient history for the taste profile and lookalike models to produce good signals. The result would be a personalised-looking carousel with generic content - which feels worse than an openly generic carousel. Mitigated by the fallback specification: below a history threshold, degrade gracefully to trending/popular-in-zone with no pretence of personalisation.</div>
+        </div>
+        <div class="risk-card">
+          <div class="risk-level r-high">High</div>
+          <div class="risk-title">Stale taste profiles make recommendations irrelevant over time</div>
+          <div class="risk-body">A taste profile built on order history from 6 months ago may not reflect current preferences. Seasonal changes, lifestyle changes, or simply evolving taste could make the profile a liability rather than an asset. Mitigated by specifying recency weighting in the profile generation - recent orders carry more signal than old ones - and by including order recency in the "taste diversity score" that modulates how much weight the system gives to historical vs. recent behaviour.</div>
+        </div>
+        <div class="risk-card">
+          <div class="risk-level r-med">Medium</div>
+          <div class="risk-title">Cross-area mapping surfaces irrelevant lookalikes</div>
+          <div class="risk-body">The quality of cross-area recommendations depends entirely on how well the cuisine and dish similarity model generalises. A "biryani restaurant in Gulshan" and a "biryani restaurant in Uttara" may be very different in quality, price point, and style. If the mapping is too loose, users get recommendations that feel generic anyway. Mitigated by specifying that cross-area matching must use cuisine AND pricing tier - both must match, not just cuisine alone.</div>
+        </div>
+        <div class="risk-card">
+          <div class="risk-level r-med">Medium</div>
+          <div class="risk-title">A/B test results confounded by the A/B framework itself</div>
+          <div class="risk-body">If cohort assignment isn't stable across sessions, users may flip between variants, contaminating results. A user who sees position 1 one day and position 3 the next doesn't produce clean data for either cohort. Mitigated by requiring user-level (not session-level) cohort assignment in the framework specification, with consistency checks in the analytics tracking.</div>
+        </div>
+        <div class="risk-card">
+          <div class="risk-level r-low">Low</div>
+          <div class="risk-title">Restaurant de-duplication across carousels</div>
+          <div class="risk-body">If the same restaurant appears in both Picks For You and another carousel on the same homepage, it reduces the perceived freshness of the recommendations and wastes carousel real estate. Mitigated by specifying a de-duplication pass across all homepage carousels before final rendering - a restaurant that appears in Picks For You should not appear in any other carousel below it.</div>
+        </div>
+      </div>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 10 LESSONS -->
+    <section class="cs-section" id="lessons">
+      <div class="section-eyebrow">10 &mdash; Lessons</div>
+      <h2>What building this taught me about personalisation and shipping in phases.</h2>
+      <div class="lesson-list reveal">
+        <div class="lesson-item">
+          <div class="lesson-num">01</div>
+          <div>
+            <div class="lesson-title">Personalisation without diversity is just a preference echo chamber</div>
+            <div class="lesson-body">The temptation in a recommendation system is to maximise relevance - show users more of what they've already demonstrated they like, ranked by similarity score. I resisted this, and I'm glad I did. <strong>The 40% discovery slot and the cuisine diversity cap weren't compromises on quality - they were quality.</strong> A carousel that shows you the same five restaurants with higher confidence is less useful than one that shows you four familiar and four genuinely good new options. Relevance and discovery are not opposing forces in a well-designed recommendation system.</div>
+          </div>
+        </div>
+        <div class="lesson-item">
+          <div class="lesson-num">02</div>
+          <div>
+            <div class="lesson-title">Phasing by iteration boundary, not by feature scope, gave us cleaner data</div>
+            <div class="lesson-body">I could have tried to ship V1 and V2 together - building personalised sorting and cross-area mapping at the same time as the base recommendation engine. Instead I drew the line at a natural product boundary: V1 solves the core problem (personalisation in familiar zones), V2 solves the harder extension (personalisation anywhere). <strong>This meant V1 metrics reflected the base recommendation quality in isolation, which made V2 impact attributable to the specific V2 changes rather than confounded with everything else.</strong> Phased delivery is often presented as a resourcing trade-off; it's also an analytical trade-off that's worth making deliberately.</div>
+          </div>
+        </div>
+        <div class="lesson-item">
+          <div class="lesson-num">03</div>
+          <div>
+            <div class="lesson-title">Testability has to be designed in, not bolted on</div>
+            <div class="lesson-body">I included the A/B testing framework requirements in the same PRD as the recommendation engine. The PM instinct to ship the feature first and instrument it later is a trap - by the time you want clean A/B data, the feature is already live and you're trying to retrofit cohort assignment into a running system. <strong>Specifying the experiment framework alongside the feature meant we could measure carousel position and auto-scroll effects from day one,</strong> which gave the business actual evidence rather than intuition about what configuration to commit to.</div>
+          </div>
+        </div>
+        <div class="lesson-item">
+          <div class="lesson-num">04</div>
+          <div>
+            <div class="lesson-title">The fallback is a first-class product requirement, not an edge case</div>
+            <div class="lesson-body">Every state where personalisation data isn't available - new users, new areas, pipeline failures - needed an explicit, specified fallback. I wrote these as acceptance criteria, not as footnotes. <strong>A recommendation carousel that breaks or degrades visibly for 15% of sessions is not a feature that's 85% shipped - it's a feature with a 15% failure rate that users will remember.</strong> Fallback quality is part of product quality.</div>
+          </div>
+        </div>
+        <div class="lesson-item">
+          <div class="lesson-num">05</div>
+          <div>
+            <div class="lesson-title">Cross-functional alignment on scope is the hardest and most important work</div>
+            <div class="lesson-body">This feature required real coordination across Data Science Engineering (for the similarity models and taste profile pipeline), Backend (for the API layer, caching, and fallback logic), and Product (for the diversity rules, ranking logic, and A/B framework). The biggest risk to the timeline was not engineering complexity - it was scope misalignment between teams. <strong>Writing clear dependencies, writing explicit acceptance criteria that each team could verify against, and holding joint reviews before each phase moved to implementation was the work that made the feature ship on time.</strong></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div><!-- /cs-body -->
+
+  <!-- APPENDIX - full-width dark band -->
+  <div class="appendix-band">
+    <div class="appendix-inner">
+
+      <div class="appendix-header">
+        <div class="appendix-eyebrow">Appendix - The Evidence</div>
+        <h2 class="appendix-title">Functional Spec Excerpts</h2>
+        <p class="appendix-sub">The actual requirement artefacts behind the product - user stories, acceptance criteria, and the algorithm decision flow as written in the PRD.</p>
+      </div>
+
+      <!-- USER STORIES -->
+      <div class="appendix-block reveal">
+        <div class="appendix-block-label">Appendix A - User Stories</div>
+        <table class="appendix-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>As a…</th>
+              <th>I want…</th>
+              <th>So that…</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>US.1</td>
+              <td>Returning user with order history</td>
+              <td>the Picks For You carousel to surface restaurants that match my cuisine preferences and budget</td>
+              <td>I spend less time scrolling and find something to order faster</td>
+            </tr>
+            <tr>
+              <td>US.2</td>
+              <td>User visiting a new delivery zone</td>
+              <td>to see restaurant recommendations that reflect my preferences from other areas - not a generic popular list</td>
+              <td>personalisation follows me across the app, even in zones where I have no order history</td>
+            </tr>
+            <tr>
+              <td>US.3</td>
+              <td>User who orders the same 3–4 restaurants repeatedly</td>
+              <td>to be shown at least some restaurants I haven't tried before - but ones that fit my taste profile</td>
+              <td>I can discover new options without feeling like the app is showing me random noise</td>
+            </tr>
+            <tr>
+              <td>US.4</td>
+              <td>New user with fewer than 5 orders</td>
+              <td>to see a sensible carousel even before the system knows my preferences</td>
+              <td>the app doesn't feel broken or irrelevant during my first few sessions</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- ACCEPTANCE CRITERIA -->
+      <div class="appendix-block reveal">
+        <div class="appendix-block-label">Appendix B - Acceptance Criteria (V1)</div>
+        <table class="appendix-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Criteria</th>
+              <th>Owner</th>
+              <th>Verified by</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>AC.1</td>
+              <td>Picks For You must use the user's order history (cuisine, basket size, delivery zone, meal time) as primary ranking signal - not aggregate popularity</td>
+              <td>DSE</td>
+              <td>QA: two users with different taste profiles must receive different carousel outputs in the same zone</td>
+            </tr>
+            <tr>
+              <td>AC.2</td>
+              <td>No more than 3 restaurants from the same cuisine type must appear consecutively in the output</td>
+              <td>DSE</td>
+              <td>QA: run output for a user with a single dominant cuisine - verify cuisine cap applies</td>
+            </tr>
+            <tr>
+              <td>AC.3</td>
+              <td>At least 40% of recommended restaurants must be restaurants the user has not previously ordered from but match their taste profile</td>
+              <td>DSE</td>
+              <td>Analytics: discovery % metric tracked per session from day one</td>
+            </tr>
+            <tr>
+              <td>AC.4</td>
+              <td>If no personalised data is available (new user, pipeline failure), carousel must silently fall back to trending/popular-in-zone - no error state shown to user</td>
+              <td>BE</td>
+              <td>QA: simulate pipeline timeout - verify fallback content renders within SLA</td>
+            </tr>
+            <tr>
+              <td>AC.5</td>
+              <td>The same restaurant must not appear in more than one homepage carousel at a time (de-duplication pass required)</td>
+              <td>BE</td>
+              <td>QA: verify no duplicate restaurant IDs across all carousels rendered on the same homepage load</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- ALGORITHM FLOW -->
+      <div class="appendix-block reveal">
+        <div class="appendix-block-label">Appendix C - Algorithm Decision Flow</div>
+        <p class="appendix-flow-intro">How the system decides what goes into Picks For You for a given user session.</p>
+        <div class="flow-steps">
+          <div class="flow-step">
+            <div class="flow-step-num">1</div>
+            <div class="flow-step-body">
+              <div class="flow-step-title">Input collection</div>
+              <div class="flow-step-text">Receive: User ID · Current location (lat/long) · Previously ordered restaurants · Session timestamp</div>
+            </div>
+          </div>
+          <div class="flow-arrow">↓</div>
+          <div class="flow-step">
+            <div class="flow-step-num">2</div>
+            <div class="flow-step-body">
+              <div class="flow-step-title">History check</div>
+              <div class="flow-step-text">Does the user have ≥ 5 orders? <span class="flow-yes">YES → proceed to taste profile.</span> <span class="flow-no">NO → serve trending/popular fallback. END.</span></div>
+            </div>
+          </div>
+          <div class="flow-arrow">↓</div>
+          <div class="flow-step">
+            <div class="flow-step-num">3</div>
+            <div class="flow-step-body">
+              <div class="flow-step-title">Source A - User-user similarity</div>
+              <div class="flow-step-text">Cluster users with similar behavioural vectors (cuisine type, basket size, meal timing, delivery zones). Pull restaurants frequently ordered by the 40 nearest lookalike users.</div>
+            </div>
+          </div>
+          <div class="flow-arrow">↓</div>
+          <div class="flow-step">
+            <div class="flow-step-num">4</div>
+            <div class="flow-step-body">
+              <div class="flow-step-title">Source B - Restaurant-restaurant similarity</div>
+              <div class="flow-step-text">Identify restaurants similar to the user's past orders by cuisine type, pricing tier, and dish category. Excludes restaurants already in Source A to avoid duplication before merge.</div>
+            </div>
+          </div>
+          <div class="flow-arrow">↓</div>
+          <div class="flow-step">
+            <div class="flow-step-num">5</div>
+            <div class="flow-step-body">
+              <div class="flow-step-title">Merge + composite score</div>
+              <div class="flow-step-text">Combine Sources A and B. Apply composite ranking: Proximity → Cuisine match → Rating → Lookalike frequency → Delivery area match.</div>
+            </div>
+          </div>
+          <div class="flow-arrow">↓</div>
+          <div class="flow-step">
+            <div class="flow-step-num">6</div>
+            <div class="flow-step-body">
+              <div class="flow-step-title">Diversity pass</div>
+              <div class="flow-step-text">Apply 4 diversity rules: cuisine cap (max 3 consecutive same cuisine) · 60/40 familiar/new split · budget spectrum coverage · locality filter. Re-rank output to enforce all four rules simultaneously.</div>
+            </div>
+          </div>
+          <div class="flow-arrow">↓</div>
+          <div class="flow-step">
+            <div class="flow-step-num">7</div>
+            <div class="flow-step-body">
+              <div class="flow-step-title">De-duplication pass</div>
+              <div class="flow-step-text">Remove any restaurant already appearing in another homepage carousel. Ensures Picks For You contains exclusively unique recommendations not visible elsewhere on the screen.</div>
+            </div>
+          </div>
+          <div class="flow-arrow">↓</div>
+          <div class="flow-step flow-step-final">
+            <div class="flow-step-num">✓</div>
+            <div class="flow-step-body">
+              <div class="flow-step-title">Final output</div>
+              <div class="flow-step-text">Scored, ranked, diversity-enforced list of personalised restaurants → served to "Picks For You" carousel. Cached per user session for homepage load performance.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div><!-- /appendix-band -->
+
+  <!-- FOOTER -->
+  <footer>
+    <a href="work.html">← Back to all case studies</a>
+    &nbsp;&nbsp;·&nbsp;&nbsp;
+    <a href="index.html">Akash Poddar</a>
+    &nbsp;&nbsp;·&nbsp;&nbsp;
+    <a href="index.html#contact">Get in touch</a>
+  </footer>
+
+  <script>
+    const reveals = document.querySelectorAll('.reveal');
+    const io = new IntersectionObserver((entries) => {
+      let d = 0;
+      entries.filter(e => e.isIntersecting)
+        .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)
+        .forEach(entry => {
+          entry.target.style.transitionDelay = (d++ * 0.06) + 's';
+          entry.target.classList.add('visible');
+          io.unobserve(entry.target);
+        });
+    }, { threshold: 0.08 });
+    reveals.forEach(r => io.observe(r));
+
+    const tocItems = document.querySelectorAll('.toc-item');
+    const sections = document.querySelectorAll('.cs-section[id]');
+    const tocObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          tocItems.forEach(t => t.classList.remove('active'));
+          const active = document.querySelector(`.toc-item[href="#${entry.target.id}"]`);
+          if (active) active.classList.add('active');
+        }
+      });
+    }, { threshold: 0, rootMargin: '-101px 0px -85% 0px' });
+    sections.forEach(s => tocObserver.observe(s));
+  </script>
+
+</body>
+</html>
