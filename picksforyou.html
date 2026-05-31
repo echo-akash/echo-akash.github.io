@@ -143,7 +143,7 @@
     .signal-table { width: 100%; border-collapse: collapse; margin: 28px 0; font-size: 13.5px; }
     .signal-table th { text-align: left; font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-muted); padding: 12px 16px; border-bottom: 2px solid var(--line); }
     .signal-table td { padding: 14px 16px; border-bottom: 1px solid var(--line); color: var(--ink-mid); vertical-align: top; line-height: 1.6; }
-    .signal-table td:first-child { font-weight: 500; color: var(--ink); white-space: nowrap; }
+    .signal-table td:first-child { font-weight: 500; color: var(--ink); }
     .signal-table tr:last-child td { border-bottom: none; }
     .signal-table tr:hover td { background: rgba(28,122,90,0.03); }
 
@@ -255,11 +255,6 @@
     .flow-yes { color: #5dcaa5; }
     .flow-no  { color: rgba(255,100,80,0.7); }
 
-    @media (max-width: 768px) {
-      .appendix-band { padding: 56px 20px; }
-      .appendix-table { font-size: 12px; }
-      .appendix-table th, .appendix-table td { padding: 10px 10px; }
-    }
     .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.7s var(--ease), transform 0.7s var(--ease); }
     .reveal.visible { opacity: 1; transform: translateY(0); }
 
@@ -268,24 +263,154 @@
     footer a { color: rgba(255,255,255,0.55); text-decoration: none; }
     footer a:hover { color: var(--white); }
 
-    /* ── RESPONSIVE ── */
+    /* ── TABLE SCROLL WRAPPER (light tables) ── */
+    .table-scroll { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 28px 0; }
+    .table-scroll .signal-table { margin: 0; }
+
+    /* ══════════════════════════════════════════
+       RESPONSIVE — 768px (tablet / mobile)
+    ══════════════════════════════════════════ */
     @media (max-width: 768px) {
+
+      /* Nav */
       nav { padding: 0 20px; }
       .nav-links { display: none; }
-      .cs-hero { padding: 100px 20px 60px; }
-      .cs-kpi-row { grid-template-columns: 1fr 1fr; gap: 24px 0; border-top: 1px solid rgba(255,255,255,0.08); }
-      .cs-kpi { border-right: none; padding-right: 0; }
-      .cs-kpi:nth-child(odd) { border-right: 1px solid rgba(255,255,255,0.08); padding-right: 16px; }
-      .toc-inner { padding: 0 20px; }
+
+      /* Hero */
+      .cs-hero { padding: 96px 20px 56px; }
+      .cs-hero-title { font-size: clamp(30px, 8vw, 48px); }
+      .cs-hero-sub { font-size: 15px; margin-bottom: 36px; }
+      .cs-kpi-row { grid-template-columns: 1fr 1fr; gap: 24px 16px; padding-top: 32px; }
+      .cs-kpi { border-right: none !important; padding-right: 0 !important; padding-left: 0 !important; }
+      .cs-kpi:nth-child(odd) { border-right: 1px solid rgba(255,255,255,0.08) !important; padding-right: 16px !important; }
+      .cs-kpi-num { font-size: 26px; }
+
+      /* TOC */
+      .toc-inner { padding: 0 16px; }
+      .toc-item { padding: 12px 14px; font-size: 11px; }
+
+      /* Body */
       .cs-body { padding: 0 20px; }
-      .two-col, .two-col-3, .phase-grid, .persona-grid, .rule-grid, .risk-grid { grid-template-columns: 1fr; }
-      .metric-strip { grid-template-columns: 1fr 1fr; gap: 24px; }
+      .cs-section { padding: 52px 0 0; }
+      .cs-section h2 { font-size: 24px; }
+      .cs-section h3 { font-size: 17px; margin: 28px 0 12px; }
+      .cs-section p { font-size: 14px; }
+
+      /* Two-col grids → single column */
+      .two-col,
+      .two-col-3,
+      .phase-grid,
+      .persona-grid,
+      .rule-grid,
+      .risk-grid { grid-template-columns: 1fr; }
+
+      /* Metric strip → 2 col */
+      .metric-strip { grid-template-columns: 1fr 1fr; gap: 20px; padding: 24px; }
       .ms-cell { border-right: none !important; padding: 0 !important; }
       .ms-cell:nth-child(odd) { border-right: 1px solid rgba(255,255,255,0.08) !important; padding-right: 16px !important; }
+      .ms-num { font-size: 28px; }
+
+      /* Step / lesson number columns — tighten */
+      .step-item { grid-template-columns: 40px 1fr; gap: 0 14px; padding: 22px 0; }
+      .step-num { font-size: 22px; }
+      .step-title { font-size: 16px; }
+      .step-body { font-size: 13px; }
+      .lesson-item { grid-template-columns: 40px 1fr; gap: 0 14px; padding: 22px 0; }
+      .lesson-num { font-size: 20px; }
+      .lesson-title { font-size: 16px; }
+      .lesson-body { font-size: 13px; }
+
+      /* Signal table (light bg) — horizontal scroll */
+      .signal-table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; white-space: nowrap; font-size: 12.5px; }
+      .signal-table thead,
+      .signal-table tbody,
+      .signal-table tr { display: table; width: 100%; table-layout: fixed; }
+      /* Undo the nowrap on first column so it can wrap within its cell */
+      .signal-table td:first-child { white-space: normal; min-width: 90px; }
+      .signal-table th,
+      .signal-table td { padding: 10px 12px; }
+      /* Give columns sensible min-widths so the scroll is usable */
+      .signal-table th:nth-child(1), .signal-table td:nth-child(1) { min-width: 100px; }
+      .signal-table th:nth-child(2), .signal-table td:nth-child(2) { min-width: 160px; }
+      .signal-table th:nth-child(3), .signal-table td:nth-child(3) { min-width: 180px; }
+
+      /* Appendix */
+      .appendix-band { padding: 52px 20px 64px; }
+      .appendix-title { font-size: 24px; }
+      .appendix-sub { font-size: 14px; }
+
+      /* Appendix tables → stacked card layout on mobile */
+      .appendix-table { display: block; }
+      .appendix-table thead { display: none; }      /* hide header row */
+      .appendix-table tbody { display: block; }
+      .appendix-table tr {
+        display: block;
+        border: 1px solid rgba(255,255,255,0.08);
+        border-radius: var(--radius);
+        padding: 16px;
+        margin-bottom: 12px;
+        background: rgba(255,255,255,0.02);
+      }
+      .appendix-table tr:last-child { border-bottom: 1px solid rgba(255,255,255,0.08); }
+      .appendix-table td {
+        display: block;
+        padding: 6px 0;
+        border: none;
+        font-size: 13px;
+        line-height: 1.6;
+        white-space: normal;
+      }
+      /* ID / # cell — shown as a small badge at top */
+      .appendix-table td:first-child {
+        font-size: 10px;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--accent) !important;
+        white-space: normal;
+        padding-bottom: 8px;
+        margin-bottom: 4px;
+        border-bottom: 1px solid rgba(255,255,255,0.06);
+      }
+      /* Show column label before each cell using data-label */
+      .appendix-table td[data-label]::before {
+        content: attr(data-label);
+        display: block;
+        font-size: 10px;
+        font-weight: 500;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: rgba(255,255,255,0.25);
+        margin-bottom: 3px;
+      }
+
+      /* Flow steps — tighten grid */
+      .flow-step { grid-template-columns: 32px 1fr; gap: 0 12px; padding: 14px 16px; }
+      .flow-step-num { font-size: 15px; }
+      .flow-step-title { font-size: 12px; }
+      .flow-step-text { font-size: 12px; }
+
       footer { padding: 20px; }
     }
+
+    /* ══════════════════════════════════════════
+       RESPONSIVE — 480px (small phones)
+    ══════════════════════════════════════════ */
     @media (max-width: 480px) {
-      .cs-kpi-row { grid-template-columns: 1fr 1fr; }
+      .cs-hero { padding: 88px 16px 48px; }
+      .cs-body { padding: 0 16px; }
+      .cs-kpi-row { grid-template-columns: 1fr 1fr; gap: 20px 12px; }
+      .cs-kpi-num { font-size: 22px; }
+      .cs-kpi-label { font-size: 10px; }
+      .metric-strip { grid-template-columns: 1fr 1fr; padding: 20px 16px; gap: 16px; }
+      .ms-num { font-size: 24px; }
+      .callout { padding: 16px 18px; }
+      .example-box { padding: 20px 16px; }
+      .appendix-band { padding: 44px 16px 56px; }
+      .card { padding: 18px; }
+      .rule-card { padding: 16px; }
+      .phase-card { padding: 20px; }
+      .risk-card { padding: 18px; }
     }
   </style>
 </head>
@@ -473,6 +598,7 @@
       <h3>The signal stack</h3>
       <p>I defined four input signals for the recommendation engine, ordered by the specificity of personal information they carry:</p>
 
+      <div class="table-scroll">
       <table class="signal-table reveal">
         <thead>
           <tr>
@@ -504,6 +630,7 @@
           </tr>
         </tbody>
       </table>
+      </div>
 
       <h3>The diversification rules</h3>
       <p>Having a ranked list of personalised restaurants is a necessary but not sufficient condition for a good carousel. I wrote four explicit diversity constraints that the algorithm had to respect:</p>
@@ -657,6 +784,7 @@
         <p><strong>North Star:</strong> Uplift in Picks For You collection CTR - the single number that tells you whether personalisation is earning user attention on the homepage. Everything else either explains why CTR moved, or guards against gaming it.</p>
       </div>
 
+      <div class="table-scroll">
       <table class="signal-table reveal">
         <thead>
           <tr>
@@ -708,6 +836,7 @@
           </tr>
         </tbody>
       </table>
+      </div>
 
       <h3>What I deliberately excluded</h3>
       <p><strong>Time spent on homepage.</strong> A feature that improves recommendation relevance should reduce browsing time, not increase it. If Picks For You is working, users find what they want faster and place orders sooner. Optimising for session duration would mean optimising for friction.</p>
@@ -828,27 +957,27 @@
           <tbody>
             <tr>
               <td>US.1</td>
-              <td>Returning user with order history</td>
-              <td>the Picks For You carousel to surface restaurants that match my cuisine preferences and budget</td>
-              <td>I spend less time scrolling and find something to order faster</td>
+              <td data-label="As a…">Returning user with order history</td>
+              <td data-label="I want…">the Picks For You carousel to surface restaurants that match my cuisine preferences and budget</td>
+              <td data-label="So that…">I spend less time scrolling and find something to order faster</td>
             </tr>
             <tr>
               <td>US.2</td>
-              <td>User visiting a new delivery zone</td>
-              <td>to see restaurant recommendations that reflect my preferences from other areas - not a generic popular list</td>
-              <td>personalisation follows me across the app, even in zones where I have no order history</td>
+              <td data-label="As a…">User visiting a new delivery zone</td>
+              <td data-label="I want…">to see restaurant recommendations that reflect my preferences from other areas - not a generic popular list</td>
+              <td data-label="So that…">personalisation follows me across the app, even in zones where I have no order history</td>
             </tr>
             <tr>
               <td>US.3</td>
-              <td>User who orders the same 3–4 restaurants repeatedly</td>
-              <td>to be shown at least some restaurants I haven't tried before - but ones that fit my taste profile</td>
-              <td>I can discover new options without feeling like the app is showing me random noise</td>
+              <td data-label="As a…">User who orders the same 3–4 restaurants repeatedly</td>
+              <td data-label="I want…">to be shown at least some restaurants I haven't tried before - but ones that fit my taste profile</td>
+              <td data-label="So that…">I can discover new options without feeling like the app is showing me random noise</td>
             </tr>
             <tr>
               <td>US.4</td>
-              <td>New user with fewer than 5 orders</td>
-              <td>to see a sensible carousel even before the system knows my preferences</td>
-              <td>the app doesn't feel broken or irrelevant during my first few sessions</td>
+              <td data-label="As a…">New user with fewer than 5 orders</td>
+              <td data-label="I want…">to see a sensible carousel even before the system knows my preferences</td>
+              <td data-label="So that…">the app doesn't feel broken or irrelevant during my first few sessions</td>
             </tr>
           </tbody>
         </table>
@@ -869,33 +998,33 @@
           <tbody>
             <tr>
               <td>AC.1</td>
-              <td>Picks For You must use the user's order history (cuisine, basket size, delivery zone, meal time) as primary ranking signal - not aggregate popularity</td>
-              <td>DSE</td>
-              <td>QA: two users with different taste profiles must receive different carousel outputs in the same zone</td>
+              <td data-label="Criteria">Picks For You must use the user's order history (cuisine, basket size, delivery zone, meal time) as primary ranking signal - not aggregate popularity</td>
+              <td data-label="Owner">DSE</td>
+              <td data-label="Verified by">QA: two users with different taste profiles must receive different carousel outputs in the same zone</td>
             </tr>
             <tr>
               <td>AC.2</td>
-              <td>No more than 3 restaurants from the same cuisine type must appear consecutively in the output</td>
-              <td>DSE</td>
-              <td>QA: run output for a user with a single dominant cuisine - verify cuisine cap applies</td>
+              <td data-label="Criteria">No more than 3 restaurants from the same cuisine type must appear consecutively in the output</td>
+              <td data-label="Owner">DSE</td>
+              <td data-label="Verified by">QA: run output for a user with a single dominant cuisine - verify cuisine cap applies</td>
             </tr>
             <tr>
               <td>AC.3</td>
-              <td>At least 40% of recommended restaurants must be restaurants the user has not previously ordered from but match their taste profile</td>
-              <td>DSE</td>
-              <td>Analytics: discovery % metric tracked per session from day one</td>
+              <td data-label="Criteria">At least 40% of recommended restaurants must be restaurants the user has not previously ordered from but match their taste profile</td>
+              <td data-label="Owner">DSE</td>
+              <td data-label="Verified by">Analytics: discovery % metric tracked per session from day one</td>
             </tr>
             <tr>
               <td>AC.4</td>
-              <td>If no personalised data is available (new user, pipeline failure), carousel must silently fall back to trending/popular-in-zone - no error state shown to user</td>
-              <td>BE</td>
-              <td>QA: simulate pipeline timeout - verify fallback content renders within SLA</td>
+              <td data-label="Criteria">If no personalised data is available (new user, pipeline failure), carousel must silently fall back to trending/popular-in-zone - no error state shown to user</td>
+              <td data-label="Owner">BE</td>
+              <td data-label="Verified by">QA: simulate pipeline timeout - verify fallback content renders within SLA</td>
             </tr>
             <tr>
               <td>AC.5</td>
-              <td>The same restaurant must not appear in more than one homepage carousel at a time (de-duplication pass required)</td>
-              <td>BE</td>
-              <td>QA: verify no duplicate restaurant IDs across all carousels rendered on the same homepage load</td>
+              <td data-label="Criteria">The same restaurant must not appear in more than one homepage carousel at a time (de-duplication pass required)</td>
+              <td data-label="Owner">BE</td>
+              <td data-label="Verified by">QA: verify no duplicate restaurant IDs across all carousels rendered on the same homepage load</td>
             </tr>
           </tbody>
         </table>
