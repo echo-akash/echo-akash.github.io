@@ -34,7 +34,10 @@
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,300;1,9..144,500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+  <meta name="theme-color" content="#0e0e0e" />
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,300;1,9..144,500&family=DM+Sans:wght@300;400;500&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,300;1,9..144,500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" /></noscript>
   <style>
     :root {
       --ink: #0e0e0e;
@@ -111,7 +114,7 @@
 
     /* ── BODY ── */
     .cs-body { max-width: var(--wide-w); margin: 0 auto; padding: 0 40px; }
-    .cs-section { padding: 72px 0 0; }
+    .cs-section { padding: 72px 0 0; content-visibility: auto; contain-intrinsic-size: 0 600px; }
     .cs-section:last-of-type { padding-bottom: 80px; }
     .section-eyebrow { font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
     .section-eyebrow::after { content: ''; flex: 0 0 32px; height: 1px; background: var(--accent); opacity: 0.4; }
@@ -255,7 +258,7 @@
     .flow-yes { color: #5dcaa5; }
     .flow-no  { color: rgba(255,100,80,0.7); }
 
-    .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.7s var(--ease), transform 0.7s var(--ease); }
+    .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.6s var(--ease), transform 0.6s var(--ease); }
     .reveal.visible { opacity: 1; transform: translateY(0); }
 
     /* ── FOOTER ── */
@@ -263,12 +266,12 @@
     footer a { color: rgba(255,255,255,0.55); text-decoration: none; }
     footer a:hover { color: var(--white); }
 
-    /* ── TABLE SCROLL WRAPPER (light tables) ── */
-    .table-scroll { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 28px 0; }
-    .table-scroll .signal-table { margin: 0; }
+    /* ── TABLE STACKED CARD (mobile) — shared base rules applied via media query ── */
+    /* data-label pseudo-element label colour for light-bg tables */
+    .signal-table td[data-label]::before { display: none; }
 
     /* ══════════════════════════════════════════
-       RESPONSIVE — 768px (tablet / mobile)
+       RESPONSIVE — 768px
     ══════════════════════════════════════════ */
     @media (max-width: 768px) {
 
@@ -277,24 +280,29 @@
       .nav-links { display: none; }
 
       /* Hero */
-      .cs-hero { padding: 96px 20px 56px; }
-      .cs-hero-title { font-size: clamp(30px, 8vw, 48px); }
-      .cs-hero-sub { font-size: 15px; margin-bottom: 36px; }
-      .cs-kpi-row { grid-template-columns: 1fr 1fr; gap: 24px 16px; padding-top: 32px; }
+      .cs-hero { padding: 96px 20px 52px; }
+      .cs-hero-title { font-size: clamp(28px, 8vw, 44px); }
+      .cs-hero-sub { font-size: 14px; margin-bottom: 32px; }
+      .cs-kpi-row { grid-template-columns: 1fr 1fr; gap: 24px 16px; padding-top: 28px; }
       .cs-kpi { border-right: none !important; padding-right: 0 !important; padding-left: 0 !important; }
-      .cs-kpi:nth-child(odd) { border-right: 1px solid rgba(255,255,255,0.08) !important; padding-right: 16px !important; }
-      .cs-kpi-num { font-size: 26px; }
+      .cs-kpi:nth-child(odd) { border-right: 1px solid rgba(255,255,255,0.1) !important; padding-right: 16px !important; }
+      .cs-kpi-num { font-size: 24px; }
+      .cs-kpi-label { font-size: 11px; }
 
       /* TOC */
       .toc-inner { padding: 0 16px; }
-      .toc-item { padding: 12px 14px; font-size: 11px; }
+      .toc-item { padding: 12px 12px; font-size: 11px; }
 
       /* Body */
       .cs-body { padding: 0 20px; }
-      .cs-section { padding: 52px 0 0; }
-      .cs-section h2 { font-size: 24px; }
-      .cs-section h3 { font-size: 17px; margin: 28px 0 12px; }
-      .cs-section p { font-size: 14px; }
+      .cs-section { padding: 48px 0 0; }
+      .cs-section h2 { font-size: 22px; margin-bottom: 20px; }
+      .cs-section h3 { font-size: 17px; margin: 24px 0 10px; }
+      .cs-section p { font-size: 14px; line-height: 1.75; }
+      .cs-divider { margin: 40px 0 0; }
+
+      /* Callouts */
+      .callout { padding: 16px 18px; }
 
       /* Two-col grids → single column */
       .two-col,
@@ -305,86 +313,117 @@
       .risk-grid { grid-template-columns: 1fr; }
 
       /* Metric strip → 2 col */
-      .metric-strip { grid-template-columns: 1fr 1fr; gap: 20px; padding: 24px; }
+      .metric-strip { grid-template-columns: 1fr 1fr; gap: 20px; padding: 24px 20px; }
       .ms-cell { border-right: none !important; padding: 0 !important; }
       .ms-cell:nth-child(odd) { border-right: 1px solid rgba(255,255,255,0.08) !important; padding-right: 16px !important; }
-      .ms-num { font-size: 28px; }
+      .ms-num { font-size: 26px; }
 
-      /* Step / lesson number columns — tighten */
-      .step-item { grid-template-columns: 40px 1fr; gap: 0 14px; padding: 22px 0; }
+      /* Steps */
+      .step-item { grid-template-columns: 40px 1fr; gap: 0 14px; padding: 20px 0; }
       .step-num { font-size: 22px; }
       .step-title { font-size: 16px; }
-      .step-body { font-size: 13px; }
-      .lesson-item { grid-template-columns: 40px 1fr; gap: 0 14px; padding: 22px 0; }
+      .step-body { font-size: 13.5px; }
+
+      /* Lessons */
+      .lesson-item { grid-template-columns: 40px 1fr; gap: 0 14px; padding: 20px 0; }
       .lesson-num { font-size: 20px; }
       .lesson-title { font-size: 16px; }
-      .lesson-body { font-size: 13px; }
+      .lesson-body { font-size: 13.5px; }
 
-      /* Signal table (light bg) — horizontal scroll */
-      .signal-table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; white-space: nowrap; font-size: 12.5px; }
-      .signal-table thead,
-      .signal-table tbody,
-      .signal-table tr { display: table; width: 100%; table-layout: fixed; }
-      /* Undo the nowrap on first column so it can wrap within its cell */
-      .signal-table td:first-child { white-space: normal; min-width: 90px; }
-      .signal-table th,
-      .signal-table td { padding: 10px 12px; }
-      /* Give columns sensible min-widths so the scroll is usable */
-      .signal-table th:nth-child(1), .signal-table td:nth-child(1) { min-width: 100px; }
-      .signal-table th:nth-child(2), .signal-table td:nth-child(2) { min-width: 160px; }
-      .signal-table th:nth-child(3), .signal-table td:nth-child(3) { min-width: 180px; }
+      /* Example box */
+      .example-box { padding: 20px 16px; }
 
-      /* Appendix */
-      .appendix-band { padding: 52px 20px 64px; }
-      .appendix-title { font-size: 24px; }
-      .appendix-sub { font-size: 14px; }
-
-      /* Appendix tables → stacked card layout on mobile */
-      .appendix-table { display: block; }
-      .appendix-table thead { display: none; }      /* hide header row */
-      .appendix-table tbody { display: block; }
-      .appendix-table tr {
+      /* ── SIGNAL TABLE → stacked cards (light bg) ── */
+      .signal-table { border-collapse: separate; border-spacing: 0; font-size: 13px; }
+      .signal-table thead { display: none; }
+      .signal-table tbody { display: flex; flex-direction: column; gap: 12px; }
+      .signal-table tr {
         display: block;
-        border: 1px solid rgba(255,255,255,0.08);
+        background: var(--white);
+        border: 1px solid var(--line);
         border-radius: var(--radius);
         padding: 16px;
-        margin-bottom: 12px;
-        background: rgba(255,255,255,0.02);
       }
-      .appendix-table tr:last-child { border-bottom: 1px solid rgba(255,255,255,0.08); }
+      .signal-table td {
+        display: block;
+        padding: 4px 0;
+        border: none;
+        white-space: normal;
+        font-size: 13.5px;
+        line-height: 1.65;
+      }
+      /* First cell = signal name — styled as label */
+      .signal-table td:first-child {
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--accent);
+        padding-bottom: 8px;
+        margin-bottom: 4px;
+        border-bottom: 1px solid var(--line);
+      }
+      /* Show column label before cells 2 and 3 */
+      .signal-table td[data-label]::before {
+        content: attr(data-label);
+        display: block;
+        font-size: 10px;
+        font-weight: 500;
+        letter-spacing: 0.07em;
+        text-transform: uppercase;
+        color: var(--ink-muted);
+        margin-top: 8px;
+        margin-bottom: 2px;
+      }
+
+      /* ── APPENDIX TABLE → stacked cards (dark bg) ── */
+      .appendix-table { border-collapse: separate; border-spacing: 0; }
+      .appendix-table thead { display: none; }
+      .appendix-table tbody { display: flex; flex-direction: column; gap: 12px; }
+      .appendix-table tr {
+        display: block;
+        border: 1px solid rgba(255,255,255,0.09);
+        border-radius: var(--radius);
+        padding: 16px;
+        background: rgba(255,255,255,0.025);
+      }
       .appendix-table td {
         display: block;
-        padding: 6px 0;
+        padding: 4px 0;
         border: none;
         font-size: 13px;
-        line-height: 1.6;
+        line-height: 1.65;
         white-space: normal;
+        color: rgba(255,255,255,0.6);
       }
-      /* ID / # cell — shown as a small badge at top */
       .appendix-table td:first-child {
         font-size: 10px;
         font-weight: 600;
         letter-spacing: 0.1em;
         text-transform: uppercase;
         color: var(--accent) !important;
-        white-space: normal;
         padding-bottom: 8px;
         margin-bottom: 4px;
-        border-bottom: 1px solid rgba(255,255,255,0.06);
+        border-bottom: 1px solid rgba(255,255,255,0.07);
       }
-      /* Show column label before each cell using data-label */
       .appendix-table td[data-label]::before {
         content: attr(data-label);
         display: block;
         font-size: 10px;
         font-weight: 500;
-        letter-spacing: 0.08em;
+        letter-spacing: 0.07em;
         text-transform: uppercase;
-        color: rgba(255,255,255,0.25);
-        margin-bottom: 3px;
+        color: rgba(255,255,255,0.28);
+        margin-top: 8px;
+        margin-bottom: 2px;
       }
 
-      /* Flow steps — tighten grid */
+      /* Appendix general */
+      .appendix-band { padding: 52px 20px 60px; }
+      .appendix-title { font-size: 24px; }
+      .appendix-sub { font-size: 14px; }
+
+      /* Flow steps */
       .flow-step { grid-template-columns: 32px 1fr; gap: 0 12px; padding: 14px 16px; }
       .flow-step-num { font-size: 15px; }
       .flow-step-title { font-size: 12px; }
@@ -397,16 +436,14 @@
        RESPONSIVE — 480px (small phones)
     ══════════════════════════════════════════ */
     @media (max-width: 480px) {
-      .cs-hero { padding: 88px 16px 48px; }
+      .cs-hero { padding: 88px 16px 44px; }
       .cs-body { padding: 0 16px; }
-      .cs-kpi-row { grid-template-columns: 1fr 1fr; gap: 20px 12px; }
+      .appendix-band { padding: 44px 16px 52px; }
+      .cs-kpi-row { gap: 20px 12px; }
       .cs-kpi-num { font-size: 22px; }
       .cs-kpi-label { font-size: 10px; }
-      .metric-strip { grid-template-columns: 1fr 1fr; padding: 20px 16px; gap: 16px; }
-      .ms-num { font-size: 24px; }
-      .callout { padding: 16px 18px; }
-      .example-box { padding: 20px 16px; }
-      .appendix-band { padding: 44px 16px 56px; }
+      .metric-strip { padding: 20px 16px; gap: 16px; }
+      .ms-num { font-size: 22px; }
       .card { padding: 18px; }
       .rule-card { padding: 16px; }
       .phase-card { padding: 20px; }
@@ -598,7 +635,6 @@
       <h3>The signal stack</h3>
       <p>I defined four input signals for the recommendation engine, ordered by the specificity of personal information they carry:</p>
 
-      <div class="table-scroll">
       <table class="signal-table reveal">
         <thead>
           <tr>
@@ -610,27 +646,26 @@
         <tbody>
           <tr>
             <td>User Order History</td>
-            <td>Cuisine types, order frequency, basket size, meal timing, delivery zones</td>
-            <td>The highest-fidelity signal - revealed preference, not stated preference</td>
+            <td data-label="What it captures">Cuisine types, order frequency, basket size, meal timing, delivery zones</td>
+            <td data-label="Why it matters">The highest-fidelity signal - revealed preference, not stated preference</td>
           </tr>
           <tr>
             <td>Lookalike User Pool</td>
-            <td>Restaurants ordered by users with similar behavioural vectors</td>
-            <td>Extends recommendations beyond the user's own history; helps cold-start</td>
+            <td data-label="What it captures">Restaurants ordered by users with similar behavioural vectors</td>
+            <td data-label="Why it matters">Extends recommendations beyond the user's own history; helps cold-start</td>
           </tr>
           <tr>
             <td>Taste Diversity Score</td>
-            <td>How varied or repetitive the user's recent orders have been</td>
-            <td>High repetition = show more familiar; high variety = increase discovery weight</td>
+            <td data-label="What it captures">How varied or repetitive the user's recent orders have been</td>
+            <td data-label="Why it matters">High repetition = show more familiar; high variety = increase discovery weight</td>
           </tr>
           <tr>
             <td>Restaurant Metadata</td>
-            <td>Cuisine, pricing tier, delivery time, MPF tier, rating</td>
-            <td>Enables budget and preference filtering; feeds the similarity model</td>
+            <td data-label="What it captures">Cuisine, pricing tier, delivery time, MPF tier, rating</td>
+            <td data-label="Why it matters">Enables budget and preference filtering; feeds the similarity model</td>
           </tr>
         </tbody>
       </table>
-      </div>
 
       <h3>The diversification rules</h3>
       <p>Having a ranked list of personalised restaurants is a necessary but not sufficient condition for a good carousel. I wrote four explicit diversity constraints that the algorithm had to respect:</p>
@@ -784,7 +819,6 @@
         <p><strong>North Star:</strong> Uplift in Picks For You collection CTR - the single number that tells you whether personalisation is earning user attention on the homepage. Everything else either explains why CTR moved, or guards against gaming it.</p>
       </div>
 
-      <div class="table-scroll">
       <table class="signal-table reveal">
         <thead>
           <tr>
@@ -796,47 +830,46 @@
         <tbody>
           <tr>
             <td>Engagement</td>
-            <td>CTR on Picks For You collection</td>
-            <td>Primary signal - did the recommendation earn a tap? If a user sees the carousel and scrolls past, the recommendation failed.</td>
+            <td data-label="Metric">CTR on Picks For You collection</td>
+            <td data-label="Why it's on the dashboard">Primary signal - did the recommendation earn a tap? If a user sees the carousel and scrolls past, the recommendation failed.</td>
           </tr>
           <tr>
             <td>Engagement</td>
-            <td>Zero-click homepage sessions on Picks For You</td>
-            <td>Diagnostic metric. A high zero-click rate signals a systematic recommendation quality problem - not variance. Tracking the reduction tells you personalisation is working, not just that CTR improved for an unrelated reason.</td>
+            <td data-label="Metric">Zero-click homepage sessions on Picks For You</td>
+            <td data-label="Why it's on the dashboard">Diagnostic metric. A high zero-click rate signals a systematic recommendation quality problem - not variance. Tracking the reduction tells you personalisation is working, not just that CTR improved for an unrelated reason.</td>
           </tr>
           <tr>
             <td>Conversion</td>
-            <td>Order conversion rate from Picks For You tap</td>
-            <td>Closes the loop from carousel tap to placed order. CTR without conversion means we're surfacing restaurants users find interesting but don't actually want to order from - clicks without revenue.</td>
+            <td data-label="Metric">Order conversion rate from Picks For You tap</td>
+            <td data-label="Why it's on the dashboard">Closes the loop from carousel tap to placed order. CTR without conversion means we're surfacing restaurants users find interesting but don't actually want to order from - clicks without revenue.</td>
           </tr>
           <tr>
             <td>Conversion</td>
-            <td>Repeat order rate on recommended restaurants</td>
-            <td>Measures whether recommendations surface restaurants users come back to independently - a signal that the recommendation matched genuine preference, not just triggered a one-off curiosity click.</td>
+            <td data-label="Metric">Repeat order rate on recommended restaurants</td>
+            <td data-label="Why it's on the dashboard">Measures whether recommendations surface restaurants users come back to independently - a signal that the recommendation matched genuine preference, not just triggered a one-off curiosity click.</td>
           </tr>
           <tr>
             <td>Discovery</td>
-            <td>% of orders from restaurants never previously ordered from</td>
-            <td>Measures whether the 40% "new but aligned" discovery slot is actually working. If this stays flat, the diversity rules aren't generating genuine new discovery - they're just cycling through the same pool.</td>
+            <td data-label="Metric">% of orders from restaurants never previously ordered from</td>
+            <td data-label="Why it's on the dashboard">Measures whether the 40% "new but aligned" discovery slot is actually working. If this stays flat, the diversity rules aren't generating genuine new discovery - they're just cycling through the same pool.</td>
           </tr>
           <tr>
             <td>Discovery</td>
-            <td>Cuisine diversity index per user (V2)</td>
-            <td>Tracks whether users are ordering from a broader range of cuisines over time after personalisation launches. A narrowing index would be an early filter-bubble warning signal.</td>
+            <td data-label="Metric">Cuisine diversity index per user (V2)</td>
+            <td data-label="Why it's on the dashboard">Tracks whether users are ordering from a broader range of cuisines over time after personalisation launches. A narrowing index would be an early filter-bubble warning signal.</td>
           </tr>
           <tr>
             <td>System</td>
-            <td>Recommendation freshness - % of sessions served from updated model</td>
-            <td>Confirms the DS pipeline is refreshing taste profiles and similarity models on schedule. Stale models produce increasingly irrelevant recommendations over time without any visible error.</td>
+            <td data-label="Metric">Recommendation freshness - % of sessions served from updated model</td>
+            <td data-label="Why it's on the dashboard">Confirms the DS pipeline is refreshing taste profiles and similarity models on schedule. Stale models produce increasingly irrelevant recommendations over time without any visible error.</td>
           </tr>
           <tr>
             <td>System</td>
-            <td>Fallback trigger rate</td>
-            <td>The % of sessions where personalisation data wasn't available and the system fell back to popular-in-zone. A rising fallback rate signals a pipeline problem before users report degraded quality.</td>
+            <td data-label="Metric">Fallback trigger rate</td>
+            <td data-label="Why it's on the dashboard">The % of sessions where personalisation data wasn't available and the system fell back to popular-in-zone. A rising fallback rate signals a pipeline problem before users report degraded quality.</td>
           </tr>
         </tbody>
       </table>
-      </div>
 
       <h3>What I deliberately excluded</h3>
       <p><strong>Time spent on homepage.</strong> A feature that improves recommendation relevance should reduce browsing time, not increase it. If Picks For You is working, users find what they want faster and place orders sooner. Optimising for session duration would mean optimising for friction.</p>
@@ -1114,19 +1147,24 @@
   </footer>
 
   <script>
+    // ── Reveal animations (batched via rAF to avoid layout thrash) ──
     const reveals = document.querySelectorAll('.reveal');
+    const isMobile = window.innerWidth < 768;
     const io = new IntersectionObserver((entries) => {
-      let d = 0;
-      entries.filter(e => e.isIntersecting)
-        .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)
-        .forEach(entry => {
-          entry.target.style.transitionDelay = (d++ * 0.06) + 's';
+      const visible = entries.filter(e => e.isIntersecting)
+        .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+      if (!visible.length) return;
+      requestAnimationFrame(() => {
+        visible.forEach((entry, i) => {
+          entry.target.style.transitionDelay = isMobile ? '0s' : (i * 0.05) + 's';
           entry.target.classList.add('visible');
           io.unobserve(entry.target);
         });
-    }, { threshold: 0.08 });
+      });
+    }, { threshold: 0.06, rootMargin: '0px 0px -40px 0px' });
     reveals.forEach(r => io.observe(r));
 
+    // ── TOC active state ──
     const tocItems = document.querySelectorAll('.toc-item');
     const sections = document.querySelectorAll('.cs-section[id]');
     const tocObserver = new IntersectionObserver((entries) => {
