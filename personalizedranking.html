@@ -1,0 +1,1061 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-62DWPTYD6F"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-62DWPTYD6F');
+  </script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27><rect width=%2732%27 height=%2732%27 rx=%274%27 fill=%27%230e0e0e%27/><text x=%2716%27 y=%2722%27 font-family=%27Georgia,serif%27 font-size=%2714%27 font-weight=%27600%27 fill=%27%23f7f5f0%27 text-anchor=%27middle%27>AP</text></svg>" />
+  <title>Pathao Food Personalised Restaurant Ranking | Akash Poddar</title>
+  <meta name="description" content="How I built Pathao Food's personalised restaurant ranking system - dynamically sorting every collection by user taste profiles, meal-time context, and similarity scores to surface the right restaurant first." />
+  <link rel="canonical" href="https://echo-akash.github.io/personalizedranking.html" />
+  <meta property="og:title" content="Pathao Food Personalised Restaurant Ranking - PM Case Study | Akash Poddar" />
+  <meta property="og:description" content="Building a context-aware ranking engine that sorts every restaurant collection by individual user preferences, meal-time signals, and similarity scores." />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://echo-akash.github.io/personalizedranking.html" />
+  <meta property="og:image" content="https://echo-akash.github.io/og-image.png" />
+  <meta name="author" content="Akash Poddar" />
+  <meta name="robots" content="index, follow" />
+  <meta name="theme-color" content="#0e0e0e" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Pathao Food Personalised Restaurant Ranking - PM Case Study",
+    "description": "How Akash Poddar built the personalised ranking engine that dynamically sorts every restaurant collection on Pathao Food by user taste profiles and contextual signals.",
+    "author": { "@type": "Person", "name": "Akash Poddar", "url": "https://echo-akash.github.io/" },
+    "publisher": { "@type": "Person", "name": "Akash Poddar" }
+  }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,300;1,9..144,500&family=DM+Sans:wght@300;400;500&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,300;1,9..144,500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" /></noscript>
+  <style>
+    :root {
+      --ink: #0e0e0e;
+      --ink-mid: #444;
+      --ink-muted: #696969;
+      --ink-faint: #bbb;
+      --surface: #f7f5f0;
+      --white: #ffffff;
+      --accent: #7c3aed;
+      --accent-light: #f0ebff;
+      --accent2: #1c4f8a;
+      --accent2-light: #e8f0fa;
+      --amber-light: #fef3e2;
+      --coral-light: #faeae7;
+      --line: rgba(0,0,0,0.08);
+      --serif: 'Fraunces', Georgia, serif;
+      --sans: 'DM Sans', system-ui, sans-serif;
+      --radius: 10px;
+      --ease: cubic-bezier(0.16, 1, 0.3, 1);
+      --wide-w: 1000px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+    }
+    body { font-family: var(--sans); background: var(--surface); color: var(--ink); font-size: 15px; line-height: 1.6; overflow-x: hidden; }
+
+    /* ── NAV ── */
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 0 40px; height: 56px; background: rgba(247,245,240,0.88); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); }
+    .nav-logo { font-family: var(--serif); font-size: 16px; font-weight: 600; color: var(--ink); text-decoration: none; letter-spacing: -0.02em; }
+    .nav-links { display: flex; gap: 32px; list-style: none; }
+    .nav-links a { font-size: 13px; color: var(--ink-mid); text-decoration: none; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--accent); }
+    .nav-cta { font-size: 13px; padding: 7px 18px; background: var(--ink); color: var(--white); border-radius: 20px; text-decoration: none; transition: background 0.2s; }
+    .nav-cta:hover { background: var(--accent); }
+
+    /* ── HERO ── */
+    .cs-hero { background: var(--ink); padding: 120px 40px 80px; position: relative; overflow: hidden; }
+    .cs-hero-inner { max-width: var(--wide-w); margin: 0 auto; position: relative; z-index: 1; }
+    .cs-hero-grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px); background-size: 60px 60px; }
+    .cs-hero-shimmer { position: absolute; inset: 0; background: radial-gradient(ellipse 60% 60% at 72% 50%, rgba(124,58,237,0.18) 0%, transparent 70%); }
+    .cs-hero-bar { height: 4px; background: linear-gradient(90deg, #7c3aed, #a855f7); border-radius: 2px; width: 64px; margin-bottom: 28px; }
+    .cs-meta-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 24px; }
+    .cs-tag { font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; padding: 5px 14px; border-radius: 20px; }
+    .tag-purple { background: rgba(124,58,237,0.2); color: #c4a8ff; border: 1px solid rgba(124,58,237,0.3); }
+    .tag-blue   { background: rgba(55,138,221,0.15); color: #85b7eb; border: 1px solid rgba(55,138,221,0.2); }
+    .tag-teal   { background: rgba(28,122,90,0.18); color: #5dcaa5; border: 1px solid rgba(28,122,90,0.25); }
+    .tag-gray   { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.45); border: 1px solid rgba(255,255,255,0.1); }
+    .cs-hero-title { font-family: var(--serif); font-size: clamp(34px, 5.5vw, 60px); font-weight: 600; letter-spacing: -0.03em; line-height: 0.95; color: #fff; margin-bottom: 20px; }
+    .cs-hero-title em { font-style: italic; font-weight: 300; color: rgba(255,255,255,0.38); }
+    .cs-hero-sub { font-size: 17px; font-weight: 300; color: rgba(255,255,255,0.5); max-width: 640px; line-height: 1.7; margin-bottom: 48px; }
+    .cs-hero-sub strong { color: rgba(255,255,255,0.8); font-weight: 400; }
+    .cs-kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 40px; }
+    .cs-kpi { padding-right: 32px; border-right: 1px solid rgba(255,255,255,0.08); }
+    .cs-kpi:last-child { border-right: none; }
+    .cs-kpi-num { font-family: var(--serif); font-size: 32px; font-weight: 600; letter-spacing: -0.02em; color: #fff; line-height: 1; margin-bottom: 6px; }
+    .cs-kpi-num span { font-size: 20px; font-style: italic; font-weight: 300; color: rgba(255,255,255,0.35); }
+    .cs-kpi-label { font-size: 11px; color: rgba(255,255,255,0.38); line-height: 1.4; max-width: 130px; }
+
+    /* ── TOC ── */
+    .toc-bar { position: sticky; top: 56px; z-index: 90; background: var(--white); border-bottom: 1px solid var(--line); overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+    .toc-bar::-webkit-scrollbar { display: none; }
+    .toc-inner { max-width: var(--wide-w); margin: 0 auto; display: flex; padding: 0 40px; }
+    .toc-item { font-size: 12px; color: var(--ink-muted); text-decoration: none; padding: 14px 20px; white-space: nowrap; border-bottom: 2px solid transparent; transition: color 0.2s, border-color 0.2s; display: flex; align-items: center; gap: 6px; }
+    .toc-item:hover { color: var(--accent); border-bottom-color: var(--accent); }
+    .toc-item.active { color: var(--accent); border-bottom-color: var(--accent); }
+    .toc-num { font-size: 10px; color: var(--ink-faint); }
+
+    /* ── BODY ── */
+    .cs-body { max-width: var(--wide-w); margin: 0 auto; padding: 0 40px; }
+    .cs-section { padding: 72px 0 0; content-visibility: auto; contain-intrinsic-size: 0 600px; }
+    .cs-section:last-of-type { padding-bottom: 80px; }
+    .section-eyebrow { font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+    .section-eyebrow::after { content: ''; flex: 0 0 32px; height: 1px; background: var(--accent); opacity: 0.4; }
+    .cs-section h2 { font-family: var(--serif); font-size: 32px; font-weight: 600; letter-spacing: -0.02em; color: var(--ink); line-height: 1.15; margin-bottom: 28px; }
+    .cs-section h3 { font-family: var(--serif); font-size: 20px; font-weight: 600; letter-spacing: -0.01em; color: var(--ink); margin: 36px 0 14px; }
+    .cs-section p { font-size: 15px; color: var(--ink-mid); line-height: 1.8; font-weight: 300; margin-bottom: 16px; }
+    .cs-section p strong { color: var(--ink); font-weight: 500; }
+    .cs-divider { border: none; border-top: 1px solid var(--line); margin: 56px 0 0; }
+
+    /* ── CALLOUT ── */
+    .callout { background: var(--accent-light); border-left: 3px solid var(--accent); border-radius: 0 var(--radius) var(--radius) 0; padding: 20px 24px; margin: 28px 0; }
+    .callout p { margin-bottom: 0; color: var(--ink); font-weight: 400; }
+    .callout p strong { color: var(--accent); }
+    .callout-blue { background: var(--accent2-light); border-left-color: var(--accent2); }
+    .callout-blue p strong { color: var(--accent2); }
+    .callout-amber { background: var(--amber-light); border-left-color: #d97706; }
+    .callout-amber p strong { color: #92600a; }
+    .callout-dark { background: rgba(124,58,237,0.07); border-left-color: var(--accent); }
+
+    /* ── TWO / THREE COL ── */
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 28px 0; }
+    .two-col-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 18px; margin: 28px 0; }
+
+    /* ── CARD ── */
+    .card { background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); padding: 24px; }
+    .card-label { font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; }
+    .card h4 { font-family: var(--serif); font-size: 17px; font-weight: 600; color: var(--ink); margin-bottom: 8px; line-height: 1.3; }
+    .card p { font-size: 13.5px; color: var(--ink-mid); line-height: 1.7; margin-bottom: 0; }
+
+    /* ── STEP LIST ── */
+    .step-list { display: flex; flex-direction: column; gap: 0; margin: 28px 0; }
+    .step-item { display: grid; grid-template-columns: 56px 1fr; gap: 0 20px; padding: 28px 0; border-top: 1px solid var(--line); align-items: start; }
+    .step-item:last-child { border-bottom: 1px solid var(--line); }
+    .step-num { font-family: var(--serif); font-size: 28px; font-weight: 600; color: var(--accent); letter-spacing: -0.02em; line-height: 1; padding-top: 4px; }
+    .step-title { font-family: var(--serif); font-size: 18px; font-weight: 600; color: var(--ink); margin-bottom: 8px; line-height: 1.2; }
+    .step-body { font-size: 14px; color: var(--ink-mid); line-height: 1.75; font-weight: 300; }
+    .step-body strong { color: var(--ink); font-weight: 500; }
+
+    /* ── REQ CARDS (functional requirements) ── */
+    .req-list { display: flex; flex-direction: column; gap: 16px; margin: 28px 0; }
+    .req-card { background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); padding: 24px; display: grid; grid-template-columns: 52px 1fr; gap: 0 18px; align-items: start; }
+    .req-num { font-family: var(--serif); font-size: 22px; font-weight: 600; color: var(--accent); opacity: 0.5; line-height: 1; padding-top: 3px; }
+    .req-title { font-family: var(--serif); font-size: 17px; font-weight: 600; color: var(--ink); margin-bottom: 8px; line-height: 1.2; }
+    .req-body { font-size: 13.5px; color: var(--ink-mid); line-height: 1.7; margin-bottom: 10px; }
+    .req-ac-label { font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 6px; }
+    .req-ac-list { list-style: none; display: flex; flex-direction: column; gap: 5px; }
+    .req-ac-list li { font-size: 13px; color: var(--ink-mid); line-height: 1.6; display: flex; gap: 8px; }
+    .req-ac-list li::before { content: '✓'; color: var(--accent); font-size: 11px; flex-shrink: 0; margin-top: 2px; }
+    .req-badge { display: inline-flex; align-items: center; gap: 5px; font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; padding: 3px 10px; border-radius: 20px; background: rgba(124,58,237,0.1); color: var(--accent); border: 1px solid rgba(124,58,237,0.2); margin-bottom: 10px; }
+
+    /* ── PHASE CARDS ── */
+    .phase-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 28px 0; }
+    .phase-card { background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); padding: 28px; position: relative; overflow: hidden; }
+    .phase-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; }
+    .phase-v1::before { background: var(--accent2); }
+    .phase-v2::before { background: var(--accent); }
+    .phase-badge { font-size: 10px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; padding: 4px 10px; border-radius: 20px; display: inline-block; margin-bottom: 14px; }
+    .badge-v1 { background: var(--accent2-light); color: var(--accent2); }
+    .badge-v2 { background: var(--accent-light); color: var(--accent); }
+    .phase-title { font-family: var(--serif); font-size: 19px; font-weight: 600; color: var(--ink); margin-bottom: 12px; line-height: 1.2; }
+    .phase-body { font-size: 13.5px; color: var(--ink-mid); line-height: 1.75; }
+    .phase-feature-list { margin-top: 16px; display: flex; flex-direction: column; gap: 8px; }
+    .phase-feature { display: flex; gap: 10px; font-size: 13px; color: var(--ink-mid); line-height: 1.5; }
+    .phase-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; margin-top: 6px; }
+    .dot-v1 { background: var(--accent2); }
+    .dot-v2 { background: var(--accent); }
+
+    /* ── SIGNAL TABLE ── */
+    .signal-table { width: 100%; border-collapse: collapse; margin: 28px 0; font-size: 13.5px; }
+    .signal-table th { text-align: left; font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-muted); padding: 12px 16px; border-bottom: 2px solid var(--line); }
+    .signal-table td { padding: 14px 16px; border-bottom: 1px solid var(--line); color: var(--ink-mid); vertical-align: top; line-height: 1.6; }
+    .signal-table td:first-child { font-weight: 500; color: var(--ink); }
+    .signal-table tr:last-child td { border-bottom: none; }
+    .signal-table tr:hover td { background: rgba(124,58,237,0.03); }
+
+    /* ── MEAL SLOT GRID ── */
+    .slot-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin: 28px 0; }
+    .slot-card { background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px 14px; text-align: center; }
+    .slot-icon { font-size: 22px; margin-bottom: 6px; }
+    .slot-name { font-size: 12px; font-weight: 500; color: var(--ink); margin-bottom: 4px; }
+    .slot-time { font-size: 10px; color: var(--ink-muted); }
+
+    /* ── EXAMPLE WALKTHROUGH ── */
+    .example-box { background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); padding: 28px; margin: 28px 0; }
+    .example-label { font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 16px; }
+    .example-row { display: flex; gap: 14px; align-items: flex-start; margin-bottom: 14px; }
+    .example-row:last-child { margin-bottom: 0; }
+    .example-arrow { font-size: 16px; color: var(--accent); flex-shrink: 0; line-height: 1.5; }
+    .example-text { font-size: 14px; color: var(--ink-mid); line-height: 1.7; }
+    .example-text strong { color: var(--ink); font-weight: 500; }
+
+    /* ── RULE GRID ── */
+    .rule-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin: 28px 0; }
+    .rule-card { background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px; display: flex; gap: 14px; align-items: flex-start; }
+    .rule-icon { font-size: 22px; flex-shrink: 0; line-height: 1; }
+    .rule-title { font-size: 14px; font-weight: 500; color: var(--ink); margin-bottom: 4px; }
+    .rule-body { font-size: 13px; color: var(--ink-mid); line-height: 1.6; }
+
+    /* ── METRICS STRIP ── */
+    .metric-strip { background: var(--ink); border-radius: var(--radius); padding: 36px; margin: 28px 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; border: 1px solid rgba(255,255,255,0.04); }
+    .ms-cell { padding-right: 32px; border-right: 1px solid rgba(255,255,255,0.08); }
+    .ms-cell:last-child { border-right: none; padding-right: 0; padding-left: 32px; }
+    .ms-cell:first-child { padding-left: 0; }
+    .ms-num { font-family: var(--serif); font-size: 36px; font-weight: 600; letter-spacing: -0.02em; color: #fff; line-height: 1; margin-bottom: 6px; }
+    .ms-num span { font-size: 22px; font-style: italic; font-weight: 300; color: rgba(255,255,255,0.35); }
+    .ms-label { font-size: 12px; color: rgba(255,255,255,0.45); line-height: 1.4; }
+
+    /* ── RISK GRID ── */
+    .risk-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 28px 0; }
+    .risk-card { background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); padding: 22px; }
+    .risk-level { font-size: 10px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; padding: 3px 10px; border-radius: 20px; display: inline-block; margin-bottom: 10px; }
+    .r-high { background: #faeae7; color: #8c3320; }
+    .r-med  { background: var(--amber-light); color: #92600a; }
+    .r-low  { background: var(--accent-light); color: var(--accent); }
+    .risk-title { font-size: 14px; font-weight: 500; color: var(--ink); margin-bottom: 8px; line-height: 1.35; }
+    .risk-body { font-size: 13px; color: var(--ink-mid); line-height: 1.7; }
+
+    /* ── LESSON LIST ── */
+    .lesson-list { display: flex; flex-direction: column; gap: 0; margin: 28px 0; }
+    .lesson-item { display: grid; grid-template-columns: 48px 1fr; gap: 0 20px; padding: 28px 0; border-top: 1px solid var(--line); }
+    .lesson-item:last-child { border-bottom: 1px solid var(--line); }
+    .lesson-num { font-family: var(--serif); font-size: 24px; font-weight: 600; color: var(--accent); opacity: 0.4; line-height: 1; padding-top: 4px; }
+    .lesson-title { font-family: var(--serif); font-size: 18px; font-weight: 600; color: var(--ink); margin-bottom: 8px; line-height: 1.2; }
+    .lesson-body { font-size: 14px; color: var(--ink-mid); line-height: 1.75; font-weight: 300; }
+    .lesson-body strong { color: var(--ink); font-weight: 500; }
+
+    /* ── APPENDIX BAND ── */
+    .appendix-band { background: #111; border-top: 1px solid rgba(255,255,255,0.06); padding: 80px 40px; }
+    .appendix-inner { max-width: var(--wide-w); margin: 0 auto; }
+    .appendix-header { margin-bottom: 56px; }
+    .appendix-eyebrow { font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); margin-bottom: 12px; }
+    .appendix-title { font-family: var(--serif); font-size: 32px; font-weight: 600; letter-spacing: -0.02em; color: #fff; margin-bottom: 12px; }
+    .appendix-sub { font-size: 15px; color: rgba(255,255,255,0.4); font-weight: 300; max-width: 560px; line-height: 1.7; }
+    .appendix-block { margin-bottom: 56px; }
+    .appendix-block:last-child { margin-bottom: 0; }
+    .appendix-block-label { font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.3); margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .appendix-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .appendix-table th { text-align: left; font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,255,255,0.3); padding: 10px 16px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+    .appendix-table td { padding: 14px 16px; border-bottom: 1px solid rgba(255,255,255,0.06); color: rgba(255,255,255,0.55); vertical-align: top; line-height: 1.65; }
+    .appendix-table td:first-child { color: rgba(255,255,255,0.25); font-size: 11px; white-space: nowrap; font-weight: 500; letter-spacing: 0.04em; }
+    .appendix-table tr:last-child td { border-bottom: none; }
+    .appendix-table tr:hover td { background: rgba(255,255,255,0.02); }
+
+    /* ── FLOW STEPS ── */
+    .appendix-flow-intro { font-size: 14px; color: rgba(255,255,255,0.4); margin-bottom: 28px; font-weight: 300; }
+    .flow-steps { display: flex; flex-direction: column; }
+    .flow-arrow { text-align: center; color: rgba(255,255,255,0.15); font-size: 18px; padding: 4px 0 4px 24px; }
+    .flow-step { display: grid; grid-template-columns: 40px 1fr; gap: 0 16px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); border-radius: var(--radius); padding: 18px 20px; align-items: start; }
+    .flow-step-final { background: rgba(124,58,237,0.08); border-color: rgba(124,58,237,0.25); }
+    .flow-step-num { font-family: var(--serif); font-size: 18px; font-weight: 600; color: var(--accent); line-height: 1; padding-top: 2px; }
+    .flow-step-final .flow-step-num { font-size: 20px; }
+    .flow-step-title { font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.7); margin-bottom: 5px; }
+    .flow-step-text { font-size: 12.5px; color: rgba(255,255,255,0.38); line-height: 1.65; }
+    .flow-yes { color: #a8edcc; }
+    .flow-no  { color: rgba(255,100,80,0.7); }
+
+    /* ── REVEAL ── */
+    .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.6s var(--ease), transform 0.6s var(--ease); }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* ── FOOTER ── */
+    footer { background: var(--ink); border-top: 1px solid rgba(255,255,255,0.06); padding: 24px 40px; text-align: center; font-size: 12px; color: rgba(255,255,255,0.55); }
+    footer a { color: rgba(255,255,255,0.55); text-decoration: none; }
+    footer a:hover { color: var(--white); }
+
+    /* ══════════════════════════════════════════
+       RESPONSIVE - 768px
+    ══════════════════════════════════════════ */
+    @media (max-width: 768px) {
+      nav { padding: 0 20px; }
+      .nav-links { display: none; }
+      .cs-hero { padding: 96px 20px 52px; }
+      .cs-hero-title { font-size: clamp(28px, 8vw, 44px); }
+      .cs-hero-sub { font-size: 14px; margin-bottom: 32px; }
+      .cs-kpi-row { grid-template-columns: 1fr 1fr; gap: 24px 16px; padding-top: 28px; }
+      .cs-kpi { border-right: none !important; padding-right: 0 !important; padding-left: 0 !important; }
+      .cs-kpi:nth-child(odd) { border-right: 1px solid rgba(255,255,255,0.1) !important; padding-right: 16px !important; }
+      .cs-kpi-num { font-size: 24px; }
+      .cs-kpi-label { font-size: 11px; }
+      .toc-inner { padding: 0 16px; }
+      .toc-item { padding: 12px 12px; font-size: 11px; }
+      .cs-body { padding: 0 20px; }
+      .cs-section { padding: 48px 0 0; }
+      .cs-section h2 { font-size: 22px; margin-bottom: 20px; }
+      .cs-section h3 { font-size: 17px; margin: 24px 0 10px; }
+      .cs-section p { font-size: 14px; line-height: 1.75; }
+      .cs-divider { margin: 40px 0 0; }
+      .callout { padding: 16px 18px; }
+      .two-col, .two-col-3, .phase-grid, .rule-grid, .risk-grid { grid-template-columns: 1fr; }
+      .slot-grid { grid-template-columns: repeat(3, 1fr); }
+      .metric-strip { grid-template-columns: 1fr 1fr; gap: 20px; padding: 24px 20px; }
+      .ms-cell { border-right: none !important; padding: 0 !important; }
+      .ms-cell:nth-child(odd) { border-right: 1px solid rgba(255,255,255,0.08) !important; padding-right: 16px !important; }
+      .ms-num { font-size: 26px; }
+      .step-item { grid-template-columns: 40px 1fr; gap: 0 14px; padding: 20px 0; }
+      .step-num { font-size: 22px; }
+      .step-title { font-size: 16px; }
+      .step-body { font-size: 13.5px; }
+      .lesson-item { grid-template-columns: 40px 1fr; gap: 0 14px; padding: 20px 0; }
+      .lesson-num { font-size: 20px; }
+      .lesson-title { font-size: 16px; }
+      .lesson-body { font-size: 13.5px; }
+      .req-card { grid-template-columns: 1fr; gap: 0; }
+      .req-num { font-size: 18px; margin-bottom: 8px; }
+      .example-box { padding: 20px 16px; }
+
+      /* Signal table → stacked cards */
+      .signal-table { border-collapse: separate; border-spacing: 0; font-size: 13px; }
+      .signal-table thead { display: none; }
+      .signal-table tbody { display: flex; flex-direction: column; gap: 12px; }
+      .signal-table tr { display: block; background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px; }
+      .signal-table td { display: block; padding: 4px 0; border: none; white-space: normal; font-size: 13.5px; line-height: 1.65; }
+      .signal-table td:first-child { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); padding-bottom: 8px; margin-bottom: 4px; border-bottom: 1px solid var(--line); }
+      .signal-table td[data-label]::before { content: attr(data-label); display: block; font-size: 10px; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase; color: var(--ink-muted); margin-top: 8px; margin-bottom: 2px; }
+
+      /* Appendix table → stacked cards */
+      .appendix-table { border-collapse: separate; border-spacing: 0; }
+      .appendix-table thead { display: none; }
+      .appendix-table tbody { display: flex; flex-direction: column; gap: 12px; }
+      .appendix-table tr { display: block; border: 1px solid rgba(255,255,255,0.09); border-radius: var(--radius); padding: 16px; background: rgba(255,255,255,0.025); }
+      .appendix-table td { display: block; padding: 4px 0; border: none; font-size: 13px; line-height: 1.65; white-space: normal; color: rgba(255,255,255,0.6); }
+      .appendix-table td:first-child { font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent) !important; padding-bottom: 8px; margin-bottom: 4px; border-bottom: 1px solid rgba(255,255,255,0.07); }
+      .appendix-table td[data-label]::before { content: attr(data-label); display: block; font-size: 10px; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase; color: rgba(255,255,255,0.28); margin-top: 8px; margin-bottom: 2px; }
+
+      .appendix-band { padding: 52px 20px 60px; }
+      .appendix-title { font-size: 24px; }
+      .appendix-sub { font-size: 14px; }
+      .flow-step { grid-template-columns: 32px 1fr; gap: 0 12px; padding: 14px 16px; }
+      .flow-step-num { font-size: 15px; }
+      .flow-step-title { font-size: 12px; }
+      .flow-step-text { font-size: 12px; }
+      footer { padding: 20px; }
+    }
+
+    /* ══════════════════════════════════════════
+       RESPONSIVE - 480px
+    ══════════════════════════════════════════ */
+    @media (max-width: 480px) {
+      .cs-hero { padding: 88px 16px 44px; }
+      .cs-body { padding: 0 16px; }
+      .appendix-band { padding: 44px 16px 52px; }
+      .cs-kpi-row { gap: 20px 12px; }
+      .cs-kpi-num { font-size: 22px; }
+      .cs-kpi-label { font-size: 10px; }
+      .metric-strip { padding: 20px 16px; gap: 16px; }
+      .ms-num { font-size: 22px; }
+      .slot-grid { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+      .slot-card { padding: 12px 8px; }
+      .slot-icon { font-size: 18px; }
+      .card { padding: 18px; }
+      .rule-card { padding: 16px; }
+      .phase-card { padding: 20px; }
+      .risk-card { padding: 18px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a class="nav-logo" href="index.html">Akash Poddar</a>
+    <ul class="nav-links">
+      <li><a href="work.html">Case Studies</a></li>
+      <li><a href="index.html#experience">Experience</a></li>
+      <li><a href="index.html#skills">Skills</a></li>
+      <li><a href="index.html#contact">Contact</a></li>
+    </ul>
+    <a class="nav-cta" href="index.html#contact">Get in touch</a>
+  </nav>
+
+  <!-- HERO -->
+  <div class="cs-hero">
+    <div class="cs-hero-grid"></div>
+    <div class="cs-hero-shimmer"></div>
+    <div class="cs-hero-inner">
+      <div class="cs-hero-bar"></div>
+      <div class="cs-meta-row">
+        <span class="cs-tag tag-purple">Ranking · Personalisation</span>
+        <span class="cs-tag tag-blue">ML · Similarity Model</span>
+        <span class="cs-tag tag-teal">Engagement · Conversion</span>
+        <span class="cs-tag tag-gray">Pathao Food · 2025</span>
+      </div>
+      <h1 class="cs-hero-title">Personalised Restaurant<br><em>Ranking Engine</em></h1>
+      <p class="cs-hero-sub">How I transformed Pathao Food's static, one-size-fits-all collection pages into a <strong>context-aware ranking system</strong> - making every collection feel like it was personally curated for the user opening it, right now, at this meal time.</p>
+      <div class="cs-kpi-row">
+        <div class="cs-kpi">
+          <div class="cs-kpi-num">↑<span>CTR</span></div>
+          <div class="cs-kpi-label">Click-through on collection restaurant cards</div>
+        </div>
+        <div class="cs-kpi">
+          <div class="cs-kpi-num">↓<span>Time</span></div>
+          <div class="cs-kpi-label">Collection-to-checkout time - less browsing friction</div>
+        </div>
+        <div class="cs-kpi">
+          <div class="cs-kpi-num">↑<span>CVR</span></div>
+          <div class="cs-kpi-label">Order conversion rate from collection pages</div>
+        </div>
+        <div class="cs-kpi">
+          <div class="cs-kpi-num">5<span>slots</span></div>
+          <div class="cs-kpi-label">Meal-time profiles per user: breakfast through late night</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOC -->
+  <nav class="toc-bar" aria-label="Table of contents">
+    <div class="toc-inner">
+      <a class="toc-item active" href="#background"><span class="toc-num">01</span> Background</a>
+      <a class="toc-item" href="#problem"><span class="toc-num">02</span> Problem</a>
+      <a class="toc-item" href="#approach"><span class="toc-num">03</span> My Approach</a>
+      <a class="toc-item" href="#v1"><span class="toc-num">04</span> V1 Design</a>
+      <a class="toc-item" href="#v2"><span class="toc-num">05</span> V2 Design</a>
+      <a class="toc-item" href="#metrics"><span class="toc-num">06</span> Metrics</a>
+      <a class="toc-item" href="#risks"><span class="toc-num">07</span> Risks</a>
+      <a class="toc-item" href="#lessons"><span class="toc-num">08</span> Lessons</a>
+    </div>
+  </nav>
+
+  <!-- BODY -->
+  <div class="cs-body">
+
+    <!-- 01 BACKGROUND -->
+    <section class="cs-section" id="background">
+      <div class="section-eyebrow">01 &mdash; Background</div>
+      <h2>Every collection showed the same restaurants, in the same order, to everyone.</h2>
+      <p>Pathao Food organises its restaurant catalogue into curated collections - "Lunch Specials," "Budget Meals," "Best Nearby," and dozens more. These collections are prime discovery real estate: a user who taps "Budget Meals" has already told us something valuable about their intent. They're in a budget-conscious mindset right now.</p>
+      <p>The problem was that we weren't using any of that context. <strong>Every user who opened "Budget Meals" at noon saw the exact same ranked list.</strong> The office worker who orders rice-based meals at lunch and the student who prefers wraps saw the same first result. The ranking inside each collection was driven by aggregate restaurant popularity - a global signal that said nothing about the specific person looking at it.</p>
+      <p>We had a growing library of user order history, meal-time behavioural data, and restaurant feature data. None of it was being used to influence what a user saw first when they opened a collection. This was the gap the Personalised Restaurant Ranking project was built to close.</p>
+      <div class="callout reveal">
+        <p><strong>The brief I set:</strong> Make the order of restaurants inside every collection reflect something true about the person opening it - their cuisine preferences, their usual basket size, how they behave at this specific meal time. The best restaurant for Akash at 12:30 PM on a Tuesday should rank higher for Akash than it does for anyone else.</p>
+      </div>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 02 PROBLEM -->
+    <section class="cs-section" id="problem">
+      <div class="section-eyebrow">02 &mdash; Problem</div>
+      <h2>Four compounding failures in the existing ranking model.</h2>
+      <p>When I broke down why the current ranking wasn't working, I found not one problem but four distinct failures. Any solution that addressed only some of them would leave measurable value on the table.</p>
+
+      <div class="step-list reveal">
+        <div class="step-item">
+          <div class="step-num">01</div>
+          <div>
+            <div class="step-title">Popularity bias crowded out relevance</div>
+            <div class="step-body">The existing ranking was dominated by aggregate order counts - the most ordered-from restaurants in the city floated to the top of every collection, regardless of whether they matched the user's actual preferences. <strong>A user who has never ordered pizza would see a popular pizza restaurant ranked above their preferred biryani spot</strong> inside "Best Nearby." The most popular answer was rarely the most personally relevant answer.</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">02</div>
+          <div>
+            <div class="step-title">No meal-time context</div>
+            <div class="step-body">A user's preferences change by meal time in ways that are highly predictable from their history. The person who orders a light sandwich at breakfast is often the same person who wants a full rice meal at lunch. <strong>Showing the same restaurants in the same order at 8 AM and 1 PM treats completely different intent states as identical.</strong> The ranking had no time dimension at all - it was static across the entire day.</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">03</div>
+          <div>
+            <div class="step-title">Repeat-order restaurants weren't rewarded</div>
+            <div class="step-body">If a user has ordered from a restaurant three times in the past month, that's the clearest signal of preference we have - stronger than any similarity score. But the existing ranking treated a frequently-ordered restaurant the same as one the user had never touched. <strong>Demonstrated loyalty had no weight in the ranking.</strong> Users had to scroll past unfamiliar options to reach restaurants they already trusted.</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">04</div>
+          <div>
+            <div class="step-title">New users got the worst experience by default</div>
+            <div class="step-body">For users with no order history, the ranking had no personal signals to work with at all. <strong>The fallback was undefined - which meant the ranking was essentially arbitrary for new users.</strong> A new user's first collection-browsing experience was the least curated experience in the app, at exactly the moment when first impressions matter most. There was no explicit fallback logic, no graceful degradation.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 03 APPROACH -->
+    <section class="cs-section" id="approach">
+      <div class="section-eyebrow">03 &mdash; My Approach</div>
+      <h2>Five decisions that shaped the product before a line was written.</h2>
+      <p>Before writing functional requirements, I made five strategic calls. Each one had trade-offs and I want to be direct about how I reasoned through them.</p>
+
+      <div class="step-list reveal">
+        <div class="step-item">
+          <div class="step-num">01</div>
+          <div>
+            <div class="step-title">Build per-slot taste profiles, not a single user profile</div>
+            <div class="step-body">The naive approach would have been to build one aggregate preference profile per user. I pushed for five separate profiles - one per meal slot (breakfast, lunch, snacks, dinner, late night) - based on the insight that <strong>the same user behaves very differently at different meal times.</strong> A single profile would blur these signals together, making the ranking less accurate than the history alone. The DS engineering cost was real, but the relevance improvement justified it.</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">02</div>
+          <div>
+            <div class="step-title">Use similarity scoring, not just history replay</div>
+            <div class="step-body">Pure history replay - "show them restaurants they've ordered from" - is too narrow. It doesn't handle restaurants the user has never tried but would likely enjoy. I specified a <strong>user-restaurant similarity score</strong> built from four features: cuisine match, basket size range, delivery speed preference, and minimum rating threshold. This is what makes the ranking generalise beyond familiar ground.</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">03</div>
+          <div>
+            <div class="step-title">Give repeat-order restaurants a hard priority boost</div>
+            <div class="step-body">I wrote an explicit rule: if a user has ordered from a restaurant more than once, that restaurant receives elevated priority in the ranking - above its similarity score alone. <strong>Revealed preference through repeat orders is the strongest behavioural signal we have.</strong> No amount of similarity modelling can produce a signal as clean as "this user chose this restaurant again." This was a non-negotiable design decision.</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">04</div>
+          <div>
+            <div class="step-title">Specify the fallback as a first-class requirement</div>
+            <div class="step-body">Rather than treating new users as a corner case, I specified an explicit fallback path: <strong>popularity-sorted by total orders from the last 6 months, with random tie-breaking.</strong> This gave new users a sensible, well-defined experience from day one - not an undefined arbitrary list. Graceful degradation was written into the spec at the same priority level as the personalisation logic itself.</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">05</div>
+          <div>
+            <div class="step-title">Ship V1 without a frontend change - ranking only</div>
+            <div class="step-body">I made a deliberate scoping call: V1 would change only the sort order of restaurants inside collections. <strong>No UI changes, no new surfaces, no additional features.</strong> This let us get real-world ranking quality data before committing to a broader product investment. It also made V1 easier to instrument and attribute - if metrics moved, they moved because of the ranking algorithm, full stop.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 04 V1 DESIGN -->
+    <section class="cs-section" id="v1">
+      <div class="section-eyebrow">04 &mdash; V1 Design</div>
+      <h2>Building the ranking foundation - profiles, similarity scores, and the sort logic.</h2>
+      <p>V1 comprised six functional requirements, all classified P00 (critical to have). None were optional - each was a necessary piece of the ranking pipeline. Here is what I specified and why.</p>
+
+      <h3>The five meal-time slots</h3>
+      <p>The first design decision was how to define meal slots. I specified five, balancing granularity against practical data density:</p>
+
+      <div class="slot-grid reveal">
+        <div class="slot-card">
+          <div class="slot-icon">☀️</div>
+          <div class="slot-name">Breakfast</div>
+          <div class="slot-time">6 AM – 10 AM</div>
+        </div>
+        <div class="slot-card">
+          <div class="slot-icon">🍱</div>
+          <div class="slot-name">Lunch</div>
+          <div class="slot-time">10 AM – 3 PM</div>
+        </div>
+        <div class="slot-card">
+          <div class="slot-icon">🍵</div>
+          <div class="slot-name">Snacks</div>
+          <div class="slot-time">3 PM – 6 PM</div>
+        </div>
+        <div class="slot-card">
+          <div class="slot-icon">🍛</div>
+          <div class="slot-name">Dinner</div>
+          <div class="slot-time">6 PM – 10 PM</div>
+        </div>
+        <div class="slot-card">
+          <div class="slot-icon">🌙</div>
+          <div class="slot-name">Late Night</div>
+          <div class="slot-time">10 PM – 6 AM</div>
+        </div>
+      </div>
+
+      <h3>The six V1 functional requirements</h3>
+      <div class="req-list reveal">
+        <div class="req-card">
+          <div class="req-num">1</div>
+          <div>
+            <div class="req-badge">P00 · Critical</div>
+            <div class="req-title">Generate user food preference profiles per time slot</div>
+            <div class="req-body">Build and store a preference profile for each user × meal slot combination using order history from the last 6 months. Profile captures: preferred cuisine tags, average basket size, average delivery speed preference, and minimum restaurant rating accepted.</div>
+            <div class="req-ac-label">Acceptance criteria</div>
+            <ul class="req-ac-list">
+              <li>Profiles must be generated and stored separately for each of the 5 meal slots</li>
+              <li>If a user has no order data for a specific slot, fall back to combined history from all other slots</li>
+              <li>Profile attributes: cuisine tags, avg. basket size, avg. delivery speed, min. rating threshold</li>
+            </ul>
+          </div>
+        </div>
+        <div class="req-card">
+          <div class="req-num">2</div>
+          <div>
+            <div class="req-badge">P00 · Critical</div>
+            <div class="req-title">Map restaurant features for similarity comparison</div>
+            <div class="req-body">Generate a feature vector for every restaurant from the last 6 months of activity - the same four dimensions used in user profiles - so that user-restaurant similarity can be computed on a like-for-like basis.</div>
+            <div class="req-ac-label">Acceptance criteria</div>
+            <ul class="req-ac-list">
+              <li>Every restaurant must have a scored feature vector covering cuisine types, avg. basket size, avg. delivery time, and rating</li>
+              <li>Feature vectors refreshed on a rolling 6-month window</li>
+            </ul>
+          </div>
+        </div>
+        <div class="req-card">
+          <div class="req-num">3</div>
+          <div>
+            <div class="req-badge">P00 · Critical</div>
+            <div class="req-title">Calculate user–restaurant similarity score per time slot</div>
+            <div class="req-body">For the active meal slot, compute a similarity score between the current user's slot profile and every restaurant's feature vector. This score drives the ranking order inside each collection.</div>
+            <div class="req-ac-label">Acceptance criteria</div>
+            <ul class="req-ac-list">
+              <li>Score must incorporate: cuisine match, delivery proximity, basket size range match, rating threshold, order frequency</li>
+              <li>Score recalculated dynamically based on current time-of-day slot</li>
+              <li>Tie-breaking: if two restaurants have identical scores, one is selected randomly - no deterministic tie-break that could create a persistent bias</li>
+            </ul>
+          </div>
+        </div>
+        <div class="req-card">
+          <div class="req-num">4</div>
+          <div>
+            <div class="req-badge">P00 · Critical</div>
+            <div class="req-title">Prioritise restaurants ordered multiple times by the user</div>
+            <div class="req-body">Apply a hard priority boost to restaurants a user has ordered from more than once - elevating them above their base similarity score. Repeat orders are the strongest behavioural signal available; they must outrank any similarity-only recommendation.</div>
+            <div class="req-ac-label">Why this matters</div>
+            <ul class="req-ac-list">
+              <li>Similarity scores are estimates; repeat orders are confirmed preference</li>
+              <li>Users should not have to scroll past unfamiliar restaurants to reach their regulars</li>
+            </ul>
+          </div>
+        </div>
+        <div class="req-card">
+          <div class="req-num">5</div>
+          <div>
+            <div class="req-badge">P00 · Critical</div>
+            <div class="req-title">Sort restaurants inside each collection by similarity score</div>
+            <div class="req-body">The similarity scores computed above drive the visible ranking inside every collection. High-to-low similarity = top-to-bottom in the list. The sort updates dynamically as the user's meal slot changes through the day.</div>
+            <div class="req-ac-label">Acceptance criteria</div>
+            <ul class="req-ac-list">
+              <li>Visible restaurant order inside any collection must reflect similarity score descending</li>
+              <li>Ranking updates automatically when time crosses a slot boundary</li>
+              <li>No frontend card format changes required - ranking change only</li>
+            </ul>
+          </div>
+        </div>
+        <div class="req-card">
+          <div class="req-num">6</div>
+          <div>
+            <div class="req-badge">P00 · Critical</div>
+            <div class="req-title">Handle users with no or insufficient order history</div>
+            <div class="req-body">For new users or low-activity users where profile generation is not viable, fall back gracefully to a popularity-sorted list - defined as restaurants ranked by total orders in the last 6 months within the relevant collection.</div>
+            <div class="req-ac-label">Acceptance criteria</div>
+            <ul class="req-ac-list">
+              <li>Fallback triggered when user has insufficient history for reliable slot profile generation</li>
+              <li>Fallback ranking = order count from last 6 months (descending)</li>
+              <li>Tie in popularity: random selection - no persistent ordering bias</li>
+              <li>Fallback degrades silently - no user-facing indicator that personalisation is absent</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <h3>A concrete example</h3>
+      <div class="example-box reveal">
+        <div class="example-label">Akash opens "Lunch Specials" at 1:15 PM on a weekday</div>
+        <div class="example-row"><div class="example-arrow">→</div><div class="example-text"><strong>Slot detection:</strong> 1:15 PM falls in the Lunch slot. System retrieves Akash's lunch preference profile: biryani/kebab dominant, mid-basket size, avg. delivery 25 min, min. rating 4.0.</div></div>
+        <div class="example-row"><div class="example-arrow">→</div><div class="example-text"><strong>Similarity scoring:</strong> Every restaurant in "Lunch Specials" is scored against Akash's lunch profile. "Dhaka Biryani House" (cuisine match, rating 4.3, similar basket) scores 0.87. A popular but cuisine-mismatched restaurant scores 0.41.</div></div>
+        <div class="example-row"><div class="example-arrow">→</div><div class="example-text"><strong>Repeat-order boost:</strong> Akash has ordered from "Spice N Rice" 4 times. It receives priority elevation, placing it above its raw similarity score of 0.79.</div></div>
+        <div class="example-row"><div class="example-arrow">→</div><div class="example-text"><strong>Final ranking:</strong> Spice N Rice (repeat-order boost) → Dhaka Biryani House (0.87) → other high-similarity matches → low-similarity restaurants at the bottom.</div></div>
+        <div class="example-row"><div class="example-arrow">→</div><div class="example-text"><strong>Result:</strong> Akash sees his trusted spot first, with relevant discovery options immediately below - not after scrolling past ten popularity-driven but personally irrelevant results.</div></div>
+      </div>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 05 V2 DESIGN -->
+    <section class="cs-section" id="v2">
+      <div class="section-eyebrow">05 &mdash; V2 Design</div>
+      <h2>Extending the algorithm - additional signals for a richer ranking model.</h2>
+      <p>V1 established the core ranking infrastructure: slot profiles, similarity scoring, repeat-order boosting, and the fallback path. V1's post-launch data surfaced a clear gap: the ranking still defaulted heavily toward high-scoring-but-familiar restaurants, with insufficient weight for contextual factors like active promotions and real-time restaurant availability. V2 extended the algorithm with these signals.</p>
+
+      <div class="phase-grid reveal">
+        <div class="phase-card phase-v1">
+          <span class="phase-badge badge-v1">V1 Limitation</span>
+          <div class="phase-title">Algorithm relied solely on preference and history signals</div>
+          <p class="phase-body">V1's ranking combined similarity scores and repeat-order boosts - both of which are backward-looking signals derived from historical behaviour. They said nothing about what was actively happening on the platform right now: which restaurants had live promotions, which had recently improved their delivery performance, which were experiencing a surge in orders. A restaurant that was offering 20% off was ranked identically to one that wasn't.</p>
+        </div>
+        <div class="phase-card phase-v2">
+          <span class="phase-badge badge-v2">V2 Extension</span>
+          <div class="phase-title">Add popularity momentum and discount signals</div>
+          <div class="phase-feature-list">
+            <div class="phase-feature"><div class="phase-dot dot-v2"></div><div><strong>Popularity momentum:</strong> Incorporate a recency-weighted order velocity signal - restaurants trending upward in recent orders receive a ranking boost, capturing real-time demand signals that history alone misses.</div></div>
+            <div class="phase-feature"><div class="phase-dot dot-v2"></div><div><strong>Discount signal:</strong> Restaurants with active promotions receive a contextual boost in the ranking - surfacing deals to users at the moment they're deciding what to order, rather than requiring them to browse separately to a deals section.</div></div>
+            <div class="phase-feature"><div class="phase-dot dot-v2"></div><div><strong>Blended scoring:</strong> V2 combines the V1 similarity-based rank with the new signals into a weighted composite score, preserving the personalisation benefits of V1 while adding real-time context.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout callout-blue reveal">
+        <p><strong>Why I didn't add these in V1:</strong> Both signals required additional data pipelines - real-time order velocity tracking and a live promotions API feed - that weren't available when V1 shipped. Rather than delay V1 to build these dependencies, I scoped them explicitly as V2 requirements with a clear handoff once V1 data confirmed the core ranking model was working. V1 gave us the proof of concept; V2 gave us the full model.</p>
+      </div>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 06 METRICS -->
+    <section class="cs-section" id="metrics">
+      <div class="section-eyebrow">06 &mdash; Metrics</div>
+      <h2>What success looked like - and the full framework I used to measure it.</h2>
+
+      <div class="callout reveal">
+        <p><strong>North Star:</strong> Reduction in time from collection open to checkout initiation - the clearest signal that a user found what they were looking for faster, directly attributable to ranking quality.</p>
+      </div>
+
+      <table class="signal-table reveal">
+        <thead>
+          <tr>
+            <th>Layer</th>
+            <th>Metric</th>
+            <th>Why it's on the dashboard</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Engagement</td>
+            <td data-label="Metric">CTR on top-3 ranked restaurants in collection</td>
+            <td data-label="Why it's on the dashboard">Directly measures whether the ranking is surfacing relevant restaurants at the positions users actually look at. If CTR on position 1–3 increases, personalisation is working at the top of the list where it matters most.</td>
+          </tr>
+          <tr>
+            <td>Engagement</td>
+            <td data-label="Metric">Scroll depth before first tap within collection</td>
+            <td data-label="Why it's on the dashboard">Good personalisation should reduce how far users scroll before finding something they want. Decreasing scroll depth = the right restaurant appeared earlier in the ranked list.</td>
+          </tr>
+          <tr>
+            <td>Speed</td>
+            <td data-label="Metric">Time from collection open to checkout initiation</td>
+            <td data-label="Why it's on the dashboard">North Star metric. Captures the full browsing-to-decision journey. A shorter time means less cognitive load - the user didn't have to work hard to find a relevant option.</td>
+          </tr>
+          <tr>
+            <td>Speed</td>
+            <td data-label="Metric">Time from collection open to order request</td>
+            <td data-label="Why it's on the dashboard">Extends the north star to full conversion. Collection open → order placed is the complete funnel, and ranking quality should compress it.</td>
+          </tr>
+          <tr>
+            <td>Conversion</td>
+            <td data-label="Metric">Order conversion rate from collection pages</td>
+            <td data-label="Why it's on the dashboard">Guardrail metric. Personalisation should increase conversion, not just speed. If CVR stays flat while time decreases, users are finding options faster but still not satisfied with them - a signal to revisit ranking quality.</td>
+          </tr>
+          <tr>
+            <td>Conversion</td>
+            <td data-label="Metric">Repeat-order rate on ranked restaurants</td>
+            <td data-label="Why it's on the dashboard">Measures whether users are returning to restaurants they discovered via the ranked collection - confirmation that the recommendations generated lasting preference, not just one-off clicks.</td>
+          </tr>
+          <tr>
+            <td>System</td>
+            <td data-label="Metric">Profile coverage - % of active users with slot profiles</td>
+            <td data-label="Why it's on the dashboard">Operational health check. If coverage is low, many users are being served the fallback popularity ranking. Tracking this ensures the personalisation pipeline is running and coverage is expanding as order history accumulates.</td>
+          </tr>
+          <tr>
+            <td>System</td>
+            <td data-label="Metric">Fallback trigger rate per slot</td>
+            <td data-label="Why it's on the dashboard">Shows which meal slots have insufficient data density. A persistently high fallback rate for "Breakfast" tells us breakfast ordering behaviour is thin - actionable input for the DS team on data collection priorities.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>What I deliberately excluded</h3>
+      <p><strong>Session length.</strong> A ranking system that works should reduce session length, not increase it. If users are spending more time browsing after personalisation launched, the ranking may be showing them more options without making the right one obvious - optimising for session length would reward the wrong outcome.</p>
+      <p><strong>Total page impressions.</strong> High impressions with no CTR increase means users are looking but not engaging. Tracking impressions as a success metric would obscure whether personalisation was actually creating relevance or just attracting passive attention.</p>
+
+      <div class="callout callout-amber reveal">
+        <p><strong>Guardrail metric:</strong> Conversion rate was tracked as a guardrail, not a primary success metric. The goal was to improve speed-to-decision; conversion was expected to follow. If conversion dropped while time-to-checkout improved, that would be a signal to investigate - it shouldn't happen, and tracking it as a guardrail means we'd catch it immediately if it did.</p>
+      </div>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 07 RISKS -->
+    <section class="cs-section" id="risks">
+      <div class="section-eyebrow">07 &mdash; Risks</div>
+      <h2>What could go wrong - and how I designed against it.</h2>
+      <div class="risk-grid reveal">
+        <div class="risk-card">
+          <div class="risk-level r-high">High</div>
+          <div class="risk-title">Sparse slot profiles for low-frequency meal times produce irrelevant rankings</div>
+          <div class="risk-body">Not every user orders breakfast or late-night meals regularly. A profile built on 2 breakfast orders in 6 months is unreliable. If this profile drives the ranking, users get personalisation that's worse than the fallback. Mitigated by specifying that slots with insufficient order density fall back to the user's combined cross-slot history - a richer signal than an unreliable sparse profile.</div>
+        </div>
+        <div class="risk-card">
+          <div class="risk-level r-high">High</div>
+          <div class="risk-title">Repeat-order boost creates a filter bubble over time</div>
+          <div class="risk-body">If frequently-ordered restaurants are always ranked first, users may never see anything new in a collection they open regularly. The best-match result becomes increasingly identical across sessions. Mitigated by capping the repeat-order boost - it elevates but doesn't monopolise the top positions - so discovery candidates always appear in the visible ranking.</div>
+        </div>
+        <div class="risk-card">
+          <div class="risk-level r-high">High</div>
+          <div class="risk-title">Stale profiles cause ranking quality to degrade silently</div>
+          <div class="risk-body">If the DS pipeline stops refreshing slot profiles, users receive rankings based on months-old behaviour that no longer reflects their preferences. This fails silently - there's no visible error, just increasingly irrelevant results. Mitigated by the "profile coverage" and "fallback trigger rate" metrics, which would show anomalies before users report quality issues.</div>
+        </div>
+        <div class="risk-card">
+          <div class="risk-level r-med">Medium</div>
+          <div class="risk-title">Similarity model penalises restaurants in mismatched but relevant collections</div>
+          <div class="risk-body">A user who rarely orders pizza but opens "Pizza Specials" explicitly is signalling current intent that overrides their historical profile. A strict similarity score might rank their profile's cuisine preferences above the collection's explicit theme. Mitigated by ensuring the similarity model scores within the collection's restaurant set - not globally - so collection context constrains the ranking appropriately.</div>
+        </div>
+        <div class="risk-card">
+          <div class="risk-level r-med">Medium</div>
+          <div class="risk-title">V2 discount signal inflates ranking for promoted restaurants at the expense of relevance</div>
+          <div class="risk-body">If the discount signal is weighted too heavily, collections become effectively a promotions list - ranking restaurants by who's offering deals rather than who's actually relevant. This damages trust in the personalisation. Mitigated by treating the discount signal as a tiebreaker or secondary boost, with similarity score remaining the dominant ranking factor.</div>
+        </div>
+        <div class="risk-card">
+          <div class="risk-level r-low">Low</div>
+          <div class="risk-title">Random tie-breaking creates inconsistent experience across sessions</div>
+          <div class="risk-body">When two restaurants have identical similarity scores, the random tie-break means the same user opening the same collection twice might see different orderings. For most users this is imperceptible, but for power users who notice, it could feel inconsistent. Accepted as a deliberate trade-off over deterministic tie-breaking, which would create a persistent ordering bias that advantages specific restaurants unfairly.</div>
+        </div>
+      </div>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 08 LESSONS -->
+    <section class="cs-section" id="lessons">
+      <div class="section-eyebrow">08 &mdash; Lessons</div>
+      <h2>What building this taught me about ranking systems and PM craft.</h2>
+      <div class="lesson-list reveal">
+        <div class="lesson-item">
+          <div class="lesson-num">01</div>
+          <div>
+            <div class="lesson-title">Context-awareness is not a feature - it's a prerequisite for relevance</div>
+            <div class="lesson-body">The biggest insight from this project was that a single user profile produces mediocre personalisation. <strong>The same person has genuinely different preferences at breakfast and dinner, and treating them as one static entity produces recommendations that are half-wrong all the time.</strong> Building five slot profiles was more complex than one aggregate profile, but the ranking quality gain was not marginal - it was structural. Any personalisation system that ignores context is working with one hand tied.</div>
+          </div>
+        </div>
+        <div class="lesson-item">
+          <div class="lesson-num">02</div>
+          <div>
+            <div class="lesson-title">Demonstrated preference beats modelled preference every time</div>
+            <div class="lesson-body">The repeat-order priority rule was the simplest thing in the spec and arguably the most impactful. <strong>No similarity score is more reliable than "this user chose this restaurant again."</strong> The lesson I took from this: when designing any recommendation or ranking system, identify the clearest revealed-preference signals first. Build the complex model second. The simple rule often does more work than the model.</div>
+          </div>
+        </div>
+        <div class="lesson-item">
+          <div class="lesson-num">03</div>
+          <div>
+            <div class="lesson-title">The fallback IS the product for a material percentage of users</div>
+            <div class="lesson-body">In a two-sided marketplace like Pathao Food, new users are constantly arriving. During launch and for weeks afterward, a significant share of users would hit the fallback path. <strong>I specified the fallback at P00 priority - the same as the core personalisation logic - because a poorly designed fallback affects real users at real scale.</strong> The lesson: never design a fallback as an afterthought. Design it as deliberately as the main path.</div>
+          </div>
+        </div>
+        <div class="lesson-item">
+          <div class="lesson-num">04</div>
+          <div>
+            <div class="lesson-title">Phasing by data dependency, not by feature scope, gave us cleaner attribution</div>
+            <div class="lesson-body">I could have tried to include V2's popularity and discount signals in the initial release. The reason I didn't was pipeline readiness, not feature desirability. But the side effect was valuable: <strong>V1's clean launch gave us unambiguous attribution - any metric movement was caused by the similarity ranking, full stop.</strong> When V2 launched, we could compare against V1's baseline rather than trying to untangle multiple simultaneous changes. Phasing by dependency produced better analytical clarity than scope alone would have.</div>
+          </div>
+        </div>
+        <div class="lesson-item">
+          <div class="lesson-num">05</div>
+          <div>
+            <div class="lesson-title">Speed-to-decision is the right north star for a ranking feature</div>
+            <div class="lesson-body">I chose time-to-checkout as the north star rather than CTR or conversion rate. This was intentional. <strong>A ranking feature that works should make decisions easier and faster - the user shouldn't need to scroll as far or think as hard.</strong> CTR and conversion are downstream of that. If time-to-checkout decreases, CTR and conversion should follow. Choosing the more direct signal over the more familiar one forced cleaner thinking about what the feature was actually trying to do.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div><!-- /cs-body -->
+
+  <!-- APPENDIX BAND -->
+  <div class="appendix-band">
+    <div class="appendix-inner">
+
+      <div class="appendix-header">
+        <div class="appendix-eyebrow">Appendix - The Evidence</div>
+        <h2 class="appendix-title">Functional Spec Excerpts</h2>
+        <p class="appendix-sub">The actual requirement artefacts behind the product - user stories, acceptance criteria, and the algorithm decision flow as specified in the PRD.</p>
+      </div>
+
+      <!-- USER STORIES -->
+      <div class="appendix-block reveal">
+        <div class="appendix-block-label">Appendix A - User Stories</div>
+        <table class="appendix-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>As a…</th>
+              <th>I want…</th>
+              <th>So that…</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>US.1</td>
+              <td data-label="As a…">Returning user with lunch-time order history</td>
+              <td data-label="I want…">to see my preferred cuisine types ranked at the top of any collection I open at lunchtime</td>
+              <td data-label="So that…">I find a relevant restaurant faster and spend less time scrolling through options that don't match my taste</td>
+            </tr>
+            <tr>
+              <td>US.2</td>
+              <td data-label="As a…">User who orders from the same 2–3 restaurants regularly</td>
+              <td data-label="I want…">my trusted regular spots to appear at the top of collections, above restaurants I've never tried</td>
+              <td data-label="So that…">I don't have to search for or scroll to restaurants I already know I like</td>
+            </tr>
+            <tr>
+              <td>US.3</td>
+              <td data-label="As a…">User browsing at dinner time whose breakfast preferences are very different</td>
+              <td data-label="I want…">the collection ranking to reflect my dinner preferences, not my breakfast behaviour</td>
+              <td data-label="So that…">the app feels contextually aware of when I'm ordering, not just what I've ordered in aggregate</td>
+            </tr>
+            <tr>
+              <td>US.4</td>
+              <td data-label="As a…">New user with no order history</td>
+              <td data-label="I want…">to see a sensible, well-ordered collection even before the system knows my preferences</td>
+              <td data-label="So that…">my first browsing experience isn't a random or arbitrary list that makes the app feel unpolished</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- ACCEPTANCE CRITERIA -->
+      <div class="appendix-block reveal">
+        <div class="appendix-block-label">Appendix B - Key Acceptance Criteria</div>
+        <table class="appendix-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Criteria</th>
+              <th>Owner</th>
+              <th>Verified by</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>AC.1</td>
+              <td data-label="Criteria">User preference profiles must be generated separately for each of the 5 meal slots. Cross-slot fallback applies only when a specific slot has insufficient data.</td>
+              <td data-label="Owner">DSE</td>
+              <td data-label="Verified by">QA: users with orders concentrated in one slot must have distinct profiles for that slot vs. others</td>
+            </tr>
+            <tr>
+              <td>AC.2</td>
+              <td data-label="Criteria">Similarity score must incorporate all 5 dimensions: cuisine match, delivery proximity, basket size range, rating threshold, and historical order frequency with the restaurant.</td>
+              <td data-label="Owner">DSE</td>
+              <td data-label="Verified by">QA: confirm scoring model outputs distinct scores for restaurants varying on each dimension independently</td>
+            </tr>
+            <tr>
+              <td>AC.3</td>
+              <td data-label="Criteria">Restaurants ordered more than once by a user must rank above their similarity-score position in the collection. Repeat-order boost is a hard override, not a score modifier.</td>
+              <td data-label="Owner">DSE</td>
+              <td data-label="Verified by">QA: test user with repeat-order history - verify those restaurants appear before higher-scored but never-ordered alternatives</td>
+            </tr>
+            <tr>
+              <td>AC.4</td>
+              <td data-label="Criteria">Restaurant ranking inside each collection must update dynamically when the user's active meal slot changes (i.e., at slot boundary times). No manual refresh required.</td>
+              <td data-label="Owner">BE</td>
+              <td data-label="Verified by">QA: simulate time crossing a slot boundary mid-session, verify ranking updates without page reload</td>
+            </tr>
+            <tr>
+              <td>AC.5</td>
+              <td data-label="Criteria">Fallback for users with insufficient history: rank by total orders in the last 6 months, descending. Random tie-breaking. No user-facing indicator that personalisation is absent.</td>
+              <td data-label="Owner">BE</td>
+              <td data-label="Verified by">QA: new test account sees popularity-ranked collection; no UI difference visible vs. personalised experience</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- ALGORITHM FLOW -->
+      <div class="appendix-block reveal">
+        <div class="appendix-block-label">Appendix C - Ranking Algorithm Decision Flow</div>
+        <p class="appendix-flow-intro">How the system determines the ranking order for a specific user opening a collection at a given time.</p>
+        <div class="flow-steps">
+          <div class="flow-step">
+            <div class="flow-step-num">1</div>
+            <div class="flow-step-body">
+              <div class="flow-step-title">Input</div>
+              <div class="flow-step-text">Receive: User ID · Collection ID · Current timestamp → resolve active meal slot (Breakfast / Lunch / Snacks / Dinner / Late Night)</div>
+            </div>
+          </div>
+          <div class="flow-arrow">↓</div>
+          <div class="flow-step">
+            <div class="flow-step-num">2</div>
+            <div class="flow-step-body">
+              <div class="flow-step-title">Profile check</div>
+              <div class="flow-step-text">Does the user have a valid preference profile for the active slot? <span class="flow-yes">YES → load slot profile.</span> <span class="flow-no">NO → load cross-slot combined profile.</span> Still insufficient? <span class="flow-no">→ trigger popularity fallback. Jump to step 6.</span></div>
+            </div>
+          </div>
+          <div class="flow-arrow">↓</div>
+          <div class="flow-step">
+            <div class="flow-step-num">3</div>
+            <div class="flow-step-body">
+              <div class="flow-step-title">Similarity scoring</div>
+              <div class="flow-step-text">For every restaurant in the collection, compute similarity score against user's active slot profile across 5 dimensions: cuisine match · delivery proximity · basket size range · rating threshold · order frequency.</div>
+            </div>
+          </div>
+          <div class="flow-arrow">↓</div>
+          <div class="flow-step">
+            <div class="flow-step-num">4</div>
+            <div class="flow-step-body">
+              <div class="flow-step-title">Repeat-order elevation</div>
+              <div class="flow-step-text">Identify restaurants the user has ordered from more than once. Apply priority elevation - these restaurants rank above their similarity-score position regardless of competing scores.</div>
+            </div>
+          </div>
+          <div class="flow-arrow">↓</div>
+          <div class="flow-step">
+            <div class="flow-step-num">5</div>
+            <div class="flow-step-body">
+              <div class="flow-step-title">Tie-breaking</div>
+              <div class="flow-step-text">For restaurants with identical scores after steps 3–4, apply random selection to break ties. No deterministic ordering that could permanently advantage specific restaurants.</div>
+            </div>
+          </div>
+          <div class="flow-arrow">↓</div>
+          <div class="flow-step">
+            <div class="flow-step-num">6</div>
+            <div class="flow-step-body">
+              <div class="flow-step-title">Fallback path (new / low-history users)</div>
+              <div class="flow-step-text">Rank by total orders in last 6 months (descending). Random tie-breaking. Serve silently - no UI difference from personalised path.</div>
+            </div>
+          </div>
+          <div class="flow-arrow">↓</div>
+          <div class="flow-step flow-step-final">
+            <div class="flow-step-num">✓</div>
+            <div class="flow-step-body">
+              <div class="flow-step-title">Output</div>
+              <div class="flow-step-text">Final ranked restaurant list served to collection page. Cached per user × slot combination for session. Auto-refreshed at slot boundary times.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div><!-- /appendix-band -->
+
+  <!-- FOOTER -->
+  <footer>
+    <a href="work.html">← Back to all case studies</a>
+    &nbsp;&nbsp;·&nbsp;&nbsp;
+    <a href="index.html">Akash Poddar</a>
+    &nbsp;&nbsp;·&nbsp;&nbsp;
+    <a href="index.html#contact">Get in touch</a>
+  </footer>
+
+  <script>
+    // ── Reveal animations (batched via rAF) ──
+    const reveals = document.querySelectorAll('.reveal');
+    const isMobile = window.innerWidth < 768;
+    const io = new IntersectionObserver((entries) => {
+      const visible = entries.filter(e => e.isIntersecting)
+        .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+      if (!visible.length) return;
+      requestAnimationFrame(() => {
+        visible.forEach((entry, i) => {
+          entry.target.style.transitionDelay = isMobile ? '0s' : (i * 0.05) + 's';
+          entry.target.classList.add('visible');
+          io.unobserve(entry.target);
+        });
+      });
+    }, { threshold: 0.06, rootMargin: '0px 0px -40px 0px' });
+    reveals.forEach(r => io.observe(r));
+
+    // ── TOC active state ──
+    const tocItems = document.querySelectorAll('.toc-item');
+    const sections = document.querySelectorAll('.cs-section[id]');
+    const tocObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          tocItems.forEach(t => t.classList.remove('active'));
+          const active = document.querySelector(`.toc-item[href="#${entry.target.id}"]`);
+          if (active) active.classList.add('active');
+        }
+      });
+    }, { threshold: 0, rootMargin: '-101px 0px -85% 0px' });
+    sections.forEach(s => tocObserver.observe(s));
+  </script>
+
+</body>
+</html>
