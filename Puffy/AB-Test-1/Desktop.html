@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script> window.FontAwesomeConfig = { autoReplaceSvg: 'nest'};</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Figtree:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&display=swap" rel="stylesheet">
+    <style>::-webkit-scrollbar { display: none;}</style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        canvas: '#f8edf3',
+                        navy: '#0f1b3d',
+                        accent: '#3b6fa0',
+                        surface: '#ffffff',
+                        navyLight: '#1a2d5a',
+                        accentLight: '#5a8fc0',
+                        muted: '#8a9ab5',
+                        border: '#dde4f0',
+                    },
+                    fontFamily: {
+                        outfit: ['Outfit', 'sans-serif'],
+                        figtree: ['Figtree', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-canvas font-figtree overflow-x-hidden">
+
+<div id="top-bar" class="bg-navy text-white py-2 px-4 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto flex items-center justify-between gap-4 flex-wrap">
+        <div class="flex items-center gap-6 md:gap-10 flex-wrap">
+            <div class="flex items-center gap-2">
+                <svg class="w-3.5 h-3.5 text-accentLight flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                <span class="text-[10px] font-outfit font-medium tracking-widest uppercase text-gray-300">Spinal Decompression</span>
+                <span class="text-[10px] font-outfit font-bold text-white ml-1">+34% REM Improvement</span>
+            </div>
+            <div class="hidden sm:flex items-center gap-2">
+                <svg class="w-3.5 h-3.5 text-accentLight flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                <span class="text-[10px] font-outfit font-medium tracking-widest uppercase text-gray-300">Deep Sleep Onset</span>
+                <span class="text-[10px] font-outfit font-bold text-white ml-1">Avg. 11 Min Faster</span>
+            </div>
+            <div class="hidden md:flex items-center gap-2">
+                <svg class="w-3.5 h-3.5 text-accentLight flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"/>
+                </svg>
+                <span class="text-[10px] font-outfit font-medium tracking-widest uppercase text-gray-300">Recovery Efficiency</span>
+                <span class="text-[10px] font-outfit font-bold text-white ml-1">2.7× Cellular Repair Rate</span>
+            </div>
+        </div>
+        <div class="flex items-center gap-2">
+            <span class="text-[10px] font-outfit tracking-widest uppercase text-gray-400">101-Night Clinical Trial</span>
+            <span class="bg-accent text-white text-[9px] font-outfit font-bold px-2 py-0.5 tracking-widest uppercase">Free</span>
+        </div>
+    </div>
+</div>
+
+<header id="header" class="bg-surface border-b border-border sticky top-8 z-40">
+    <div class="max-w-7xl mx-auto px-6 lg:px-10 flex items-center justify-between h-16">
+        <div class="flex items-center gap-2">
+            <svg class="w-6 h-6 text-navy" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636"/>
+            </svg>
+            <span class="font-outfit font-800 text-navy text-lg tracking-tight">PUFFY<span class="text-accent font-light">sleep</span></span>
+        </div>
+        <nav class="hidden lg:flex items-center gap-8">
+            <a href="#" class="text-sm font-outfit font-medium text-navy hover:text-accent transition-colors tracking-wide">Sleep Science</a>
+            <a href="#" class="text-sm font-outfit font-medium text-navy hover:text-accent transition-colors tracking-wide">Mattresses</a>
+            <a href="#" class="text-sm font-outfit font-medium text-navy hover:text-accent transition-colors tracking-wide">Recovery Tech</a>
+            <a href="#" class="text-sm font-outfit font-medium text-navy hover:text-accent transition-colors tracking-wide">Clinical Data</a>
+            <a href="#" class="text-sm font-outfit font-medium text-navy hover:text-accent transition-colors tracking-wide">Compare</a>
+        </nav>
+        <div class="flex items-center gap-3">
+            <button class="hidden md:flex items-center gap-2 text-sm font-outfit font-medium text-navy border border-navy px-4 py-2 hover:bg-navy hover:text-white transition-all">
+                <i class="fa-regular fa-user text-xs"></i>
+                Account
+            </button>
+            <button class="bg-navy text-white text-sm font-outfit font-medium px-5 py-2 hover:bg-navyLight transition-colors tracking-wide">
+                Sleep Assessment
+            </button>
+            <button class="lg:hidden text-navy">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+    </div>
+</header>
+
+<section id="hero" class="min-h-[calc(100vh-4rem)] flex">
+    <div class="w-full max-w-[1440px] mx-auto flex flex-col lg:flex-row">
+        <div id="hero-left" class="w-full lg:w-[60%] bg-canvas flex flex-col justify-center px-8 md:px-12 lg:px-16 xl:px-20 py-16 lg:py-0">
+            <div class="max-w-xl">
+                <div class="flex items-center gap-2 mb-8">
+                    <div class="w-6 h-px bg-accent"></div>
+                    <span class="text-[11px] font-outfit font-semibold tracking-[0.25em] uppercase text-accent">Healthcare-Grade Recovery</span>
+                </div>
+
+                <h1 class="font-outfit font-bold text-navy text-4xl md:text-5xl xl:text-6xl leading-[1.05] mb-4">
+                    Your Body Repairs<br/>
+                    <em class="font-figtree font-light not-italic text-accent">While You Sleep.</em><br/>
+                    We Engineer That.
+                </h1>
+                <p class="text-muted font-figtree font-light text-base md:text-lg leading-relaxed mb-10 max-w-md">
+                    Clinically validated spinal decompression technology. Not a mattress—a recovery system designed with orthopedic precision.
+                </p>
+
+                <div id="benefit-chips" class="flex flex-wrap gap-3 mb-10">
+                    <div class="flex items-center gap-2 bg-navy text-white px-4 py-2 text-sm font-outfit font-medium">
+                        <svg class="w-3.5 h-3.5 text-accentLight flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z"/>
+                        </svg>
+                        <span>+34% REM Sleep</span>
+                    </div>
+                    <div class="flex items-center gap-2 bg-white border border-border text-navy px-4 py-2 text-sm font-outfit font-medium">
+                        <svg class="w-3.5 h-3.5 text-accent flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/>
+                        </svg>
+                        <span>91% Pain Reduction</span>
+                    </div>
+                    <div class="flex items-center gap-2 bg-white border border-border text-navy px-4 py-2 text-sm font-outfit font-medium">
+                        <svg class="w-3.5 h-3.5 text-accent flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                        <span>11 Min Faster Onset</span>
+                    </div>
+                    <div class="flex items-center gap-2 bg-white border border-border text-navy px-4 py-2 text-sm font-outfit font-medium">
+                        <svg class="w-3.5 h-3.5 text-accent flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"/>
+                        </svg>
+                        <span>2.7× Cellular Repair</span>
+                    </div>
+                    <div class="flex items-center gap-2 bg-white border border-border text-navy px-4 py-2 text-sm font-outfit font-medium">
+                        <svg class="w-3.5 h-3.5 text-accent flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/>
+                        </svg>
+                        <span>Orthopedic Certified</span>
+                    </div>
+                </div>
+
+                <div class="flex flex-col sm:flex-row gap-3">
+                    <button class="bg-navy text-white font-outfit font-semibold text-sm px-8 py-4 hover:bg-navyLight transition-colors tracking-widest uppercase">
+                        Start Sleep Assessment
+                    </button>
+                    <button class="border border-navy text-navy font-outfit font-medium text-sm px-8 py-4 hover:bg-navy hover:text-white transition-all tracking-widest uppercase">
+                        View Clinical Data
+                    </button>
+                </div>
+
+                <div class="flex items-center gap-6 mt-10 pt-10 border-t border-border">
+                    <div class="text-center">
+                        <div class="font-outfit font-bold text-navy text-2xl">101</div>
+                        <div class="text-[10px] font-outfit tracking-widest uppercase text-muted">Night Trial</div>
+                    </div>
+                    <div class="w-px h-10 bg-border"></div>
+                    <div class="text-center">
+                        <div class="font-outfit font-bold text-navy text-2xl">12K+</div>
+                        <div class="text-[10px] font-outfit tracking-widest uppercase text-muted">Recoveries</div>
+                    </div>
+                    <div class="w-px h-10 bg-border"></div>
+                    <div class="text-center">
+                        <div class="font-outfit font-bold text-navy text-2xl">4.9★</div>
+                        <div class="text-[10px] font-outfit tracking-widest uppercase text-muted">Clinical Rating</div>
+                    </div>
+                    <div class="w-px h-10 bg-border"></div>
+                    <div class="text-center">
+                        <div class="font-outfit font-bold text-navy text-2xl">Free</div>
+                        <div class="text-[10px] font-outfit tracking-widest uppercase text-muted">Returns</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="hero-right" class="w-full lg:w-[40%] relative overflow-hidden h-72 lg:h-auto" style="min-height: 400px;">
+            <img class="absolute inset-0 w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/eee7187146-1df996288faed5b267ee.png" alt="person sleeping peacefully in soft morning light, neutral spine alignment visible, warm sun-drenched bedroom, clinical lifestyle photography, minimal clean aesthetic, soft focus background" />
+            <div class="absolute inset-0" style="background: linear-gradient(135deg, rgba(248,237,243,0.25) 0%, rgba(255,220,180,0.18) 50%, rgba(248,237,243,0.05) 100%);"></div>
+            <div class="absolute inset-0" style="background: linear-gradient(to left, transparent 60%, #f8edf3 100%);"></div>
+            <div class="absolute bottom-8 left-8 right-8">
+                <div class="bg-white bg-opacity-90 border border-border p-4 backdrop-blur-sm">
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 bg-navy flex items-center justify-center flex-shrink-0">
+                            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <div class="text-[10px] font-outfit font-semibold tracking-widest uppercase text-muted">Orthopedic Society Certified</div>
+                            <div class="text-xs font-outfit font-medium text-navy">Clinical-Grade Spinal Support System</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="health-risk-grid" class="py-24 md:py-32 bg-canvas">
+    <div class="max-w-7xl mx-auto px-6 lg:px-10">
+        <div class="text-center mb-16">
+            <div class="flex items-center justify-center gap-2 mb-4">
+                <div class="w-6 h-px bg-accent"></div>
+                <span class="text-[11px] font-outfit font-semibold tracking-[0.25em] uppercase text-accent">Sleep Health Impact</span>
+                <div class="w-6 h-px bg-accent"></div>
+            </div>
+            <h2 class="font-outfit font-bold text-navy text-3xl md:text-4xl xl:text-5xl leading-tight mb-4">
+                The Hidden Cost of<br/><em class="font-figtree font-light not-italic text-accent">Poor Sleep Recovery</em>
+            </h2>
+            <p class="text-muted font-figtree text-base md:text-lg max-w-xl mx-auto">Every night on the wrong surface compounds biological debt. Here's what the clinical data shows.</p>
+        </div>
+
+        <div id="health-grid" class="grid grid-cols-1 md:grid-cols-2 gap-0 border border-border">
+            <div id="card-back-pain" class="relative overflow-hidden border-b md:border-b-0 md:border-r border-border group" style="min-height: 380px;">
+                <img class="absolute inset-0 w-full h-full object-cover opacity-30 grayscale group-hover:opacity-40 transition-opacity duration-500" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/ed7529daf1-c9d4e5706b5cfbf8e6c3.png" alt="person holding lower back in pain, clinical photography, muted tones, neutral background" />
+                <div class="absolute inset-0 bg-gradient-to-t from-navy via-navy/60 to-transparent"></div>
+                <div class="relative p-8 md:p-10 flex flex-col justify-end h-full" style="min-height: 380px;">
+                    <div class="mb-4">
+                        <span class="text-[10px] font-outfit font-semibold tracking-widest uppercase text-red-400 bg-red-950/40 px-3 py-1 border border-red-800/30">Cost of Poor Sleep</span>
+                    </div>
+                    <h3 class="font-outfit font-bold text-white text-2xl md:text-3xl leading-tight mb-3">
+                        Chronic Back Pain<br/>Accelerates by <span class="text-red-400">4.2×</span>
+                    </h3>
+                    <p class="text-gray-400 font-figtree text-sm leading-relaxed">Unsupported spinal curvature during sleep compresses discs by up to 18mm nightly, creating irreversible micro-damage over time.</p>
+                </div>
+            </div>
+
+            <div id="card-recovery-gain" class="relative bg-surface overflow-hidden group border-b md:border-b-0 border-border" style="min-height: 380px;">
+                <div class="absolute top-0 right-0 w-48 h-48 opacity-5">
+                    <svg viewBox="0 0 100 100" fill="none" stroke="#0f1b3d" stroke-width="0.5">
+                        <circle cx="50" cy="50" r="45"/>
+                        <circle cx="50" cy="50" r="35"/>
+                        <circle cx="50" cy="50" r="25"/>
+                        <line x1="5" y1="50" x2="95" y2="50"/>
+                        <line x1="50" y1="5" x2="50" y2="95"/>
+                    </svg>
+                </div>
+                <div class="p-8 md:p-10 flex flex-col justify-between h-full" style="min-height: 380px;">
+                    <div>
+                        <span class="text-[10px] font-outfit font-semibold tracking-widest uppercase text-accent bg-blue-50 px-3 py-1 border border-accent/20">Wellness Gain</span>
+                        <h3 class="font-outfit font-bold text-navy text-2xl md:text-3xl leading-tight mt-4 mb-3">
+                            Spinal Decompression<br/>Restores <span class="text-accent">Disc Height +12%</span>
+                        </h3>
+                        <p class="text-muted font-figtree text-sm leading-relaxed mb-6">LUMORA's ZoneLift™ architecture distributes pressure across 7 distinct spinal zones, allowing natural disc rehydration during sleep cycles.</p>
+                    </div>
+                    <div class="flex gap-6">
+                        <div>
+                            <div class="font-outfit font-bold text-navy text-3xl">+12%</div>
+                            <div class="text-[10px] font-outfit tracking-widest uppercase text-muted">Disc Height</div>
+                        </div>
+                        <div class="w-px bg-border"></div>
+                        <div>
+                            <div class="font-outfit font-bold text-navy text-3xl">91%</div>
+                            <div class="text-[10px] font-outfit tracking-widest uppercase text-muted">Pain Relief</div>
+                        </div>
+                        <div class="w-px bg-border"></div>
+                        <div>
+                            <div class="font-outfit font-bold text-navy text-3xl">7</div>
+                            <div class="text-[10px] font-outfit tracking-widest uppercase text-muted">Support Zones</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="card-sleep-loss" class="relative bg-surface overflow-hidden group border-t border-border" style="min-height: 380px;">
+                <div class="p-8 md:p-10 flex flex-col justify-between h-full" style="min-height: 380px;">
+                    <div>
+                        <span class="text-[10px] font-outfit font-semibold tracking-widest uppercase text-accent bg-blue-50 px-3 py-1 border border-accent/20">Wellness Gain</span>
+                        <h3 class="font-outfit font-bold text-navy text-2xl md:text-3xl leading-tight mt-4 mb-3">
+                            Deep Sleep Cycles<br/>Increase by <span class="text-accent">+34% REM</span>
+                        </h3>
+                        <p class="text-muted font-figtree text-sm leading-relaxed mb-6">Thermal regulation technology maintains the 67–69°F optimal sleep temperature, triggering natural melatonin cascade and extended N3 sleep.</p>
+                    </div>
+                    <div class="grid grid-cols-3 gap-4">
+                        <div class="bg-canvas p-4 text-center">
+                            <div class="font-outfit font-bold text-navy text-2xl">+34%</div>
+                            <div class="text-[9px] font-outfit tracking-widest uppercase text-muted mt-1">REM Duration</div>
+                        </div>
+                        <div class="bg-canvas p-4 text-center">
+                            <div class="font-outfit font-bold text-navy text-2xl">11m</div>
+                            <div class="text-[9px] font-outfit tracking-widest uppercase text-muted mt-1">Faster Onset</div>
+                        </div>
+                        <div class="bg-canvas p-4 text-center">
+                            <div class="font-outfit font-bold text-navy text-2xl">2.7×</div>
+                            <div class="text-[9px] font-outfit tracking-widest uppercase text-muted mt-1">Cell Repair</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="card-inflammation" class="relative overflow-hidden border-t border-l-0 md:border-l border-border group" style="min-height: 380px;">
+                <img class="absolute inset-0 w-full h-full object-cover opacity-25 grayscale group-hover:opacity-35 transition-opacity duration-500" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/d0adb1facf-d73ea28376deff9cf4ef.png" alt="close up of a tense stressed human face in dim light, clinical muted photography, exhaustion, dark tones" />
+                <div class="absolute inset-0 bg-gradient-to-t from-navy via-navy/65 to-transparent"></div>
+                <div class="relative p-8 md:p-10 flex flex-col justify-end h-full" style="min-height: 380px;">
+                    <div class="mb-4">
+                        <span class="text-[10px] font-outfit font-semibold tracking-widest uppercase text-red-400 bg-red-950/40 px-3 py-1 border border-red-800/30">Cost of Poor Sleep</span>
+                    </div>
+                    <h3 class="font-outfit font-bold text-white text-2xl md:text-3xl leading-tight mb-3">
+                        Cortisol Spikes <span class="text-red-400">37%</span><br/>After 1 Bad Night
+                    </h3>
+                    <p class="text-gray-400 font-figtree text-sm leading-relaxed">Elevated cortisol triggers systemic inflammation, suppresses immune function, and initiates metabolic dysregulation within 72 hours.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="recovery-flow" class="py-24 md:py-32 bg-navy overflow-hidden">
+    <div class="max-w-7xl mx-auto px-6 lg:px-10">
+        <div class="text-center mb-16">
+            <div class="flex items-center justify-center gap-2 mb-4">
+                <div class="w-6 h-px bg-accent"></div>
+                <span class="text-[11px] font-outfit font-semibold tracking-[0.25em] uppercase text-accentLight">Recovery Protocol</span>
+                <div class="w-6 h-px bg-accent"></div>
+            </div>
+            <h2 class="font-outfit font-bold text-white text-3xl md:text-4xl xl:text-5xl leading-tight mb-4">
+                The Puffy Transformation<br/><em class="font-figtree font-light not-italic text-accentLight">Journey</em>
+            </h2>
+            <p class="text-gray-400 font-figtree text-base md:text-lg max-w-xl mx-auto">From first contact to full spinal recovery—engineered at every stage.</p>
+        </div>
+
+        <div id="process-rail" class="relative">
+            <div class="hidden lg:block absolute top-12 left-[10%] right-[10%] h-px bg-accent/30" style="top: 48px;"></div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8 lg:gap-4 relative">
+                <div id="step-1" class="flex flex-col items-center text-center group">
+                    <div class="w-24 h-24 border border-accent/40 flex items-center justify-center mb-6 bg-navy group-hover:border-accent transition-colors relative z-10">
+                        <svg class="w-8 h-8 text-accent" fill="none" stroke="currentColor" stroke-width="1" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/>
+                        </svg>
+                    </div>
+                    <div class="text-[10px] font-outfit font-semibold tracking-widest uppercase text-accent mb-2">Stage 01</div>
+                    <h4 class="font-outfit font-semibold text-white text-sm mb-2">Spinal Stress</h4>
+                    <p class="text-gray-500 font-figtree text-xs leading-relaxed">Daily compression loads accumulated in lumbar and cervical regions</p>
+                </div>
+                <div id="step-2" class="flex flex-col items-center text-center group">
+                    <div class="w-24 h-24 border border-accent/40 flex items-center justify-center mb-6 bg-navy group-hover:border-accent transition-colors relative z-10">
+                        <svg class="w-8 h-8 text-accent" fill="none" stroke="currentColor" stroke-width="1" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25m-7.5 0h7.5m-7.5 0l-1 3m8.5-3l1 3m0 0l.5 1.5m-.5-1.5h-9.5m0 0l-.5 1.5"/>
+                        </svg>
+                    </div>
+                    <div class="text-[10px] font-outfit font-semibold tracking-widest uppercase text-accent mb-2">Stage 02</div>
+                    <h4 class="font-outfit font-semibold text-white text-sm mb-2">Surface Contact</h4>
+                    <p class="text-gray-500 font-figtree text-xs leading-relaxed">ZoneLift™ layer maps your unique pressure signature within minutes</p>
+                </div>
+                <div id="step-3" class="flex flex-col items-center text-center group">
+                    <div class="w-24 h-24 border border-white/20 flex items-center justify-center mb-6 bg-accent/10 group-hover:border-accent transition-colors relative z-10">
+                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" stroke-width="1" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z"/>
+                        </svg>
+                    </div>
+                    <div class="text-[10px] font-outfit font-semibold tracking-widest uppercase text-accentLight mb-2">Stage 03</div>
+                    <h4 class="font-outfit font-semibold text-white text-sm mb-2">Active Decompression</h4>
+                    <p class="text-gray-500 font-figtree text-xs leading-relaxed">Adaptive foam layers actively decompress vertebral discs during N2 sleep</p>
+                </div>
+                <div id="step-4" class="flex flex-col items-center text-center group">
+                    <div class="w-24 h-24 border border-accent/40 flex items-center justify-center mb-6 bg-navy group-hover:border-accent transition-colors relative z-10">
+                        <svg class="w-8 h-8 text-accent" fill="none" stroke="currentColor" stroke-width="1" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"/>
+                        </svg>
+                    </div>
+                    <div class="text-[10px] font-outfit font-semibold tracking-widest uppercase text-accent mb-2">Stage 04</div>
+                    <h4 class="font-outfit font-semibold text-white text-sm mb-2">Cellular Repair</h4>
+                    <p class="text-gray-500 font-figtree text-xs leading-relaxed">2.7× enhanced growth hormone release accelerates muscle and tissue recovery</p>
+                </div>
+                <div id="step-5" class="flex flex-col items-center text-center group">
+                    <div class="w-24 h-24 border border-accent/40 flex items-center justify-center mb-6 bg-navy group-hover:border-accent transition-colors relative z-10">
+                        <svg class="w-8 h-8 text-accent" fill="none" stroke="currentColor" stroke-width="1" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z"/>
+                        </svg>
+                    </div>
+                    <div class="text-[10px] font-outfit font-semibold tracking-widest uppercase text-accent mb-2">Stage 05</div>
+                    <h4 class="font-outfit font-semibold text-white text-sm mb-2">Puffy Alignment</h4>
+                    <p class="text-gray-500 font-figtree text-xs leading-relaxed">Wake with restored disc height, reduced inflammation, and peak cognitive clarity</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="diagnostic-selector" class="py-24 md:py-32 bg-canvas">
+    <div class="max-w-7xl mx-auto px-6 lg:px-10">
+        <div class="text-center mb-16">
+            <div class="flex items-center justify-center gap-2 mb-4">
+                <div class="w-6 h-px bg-accent"></div>
+                <span class="text-[11px] font-outfit font-semibold tracking-[0.25em] uppercase text-accent">Sleep Diagnostic</span>
+                <div class="w-6 h-px bg-accent"></div>
+            </div>
+            <h2 class="font-outfit font-bold text-navy text-3xl md:text-4xl xl:text-5xl leading-tight mb-4">
+                What's Keeping<br/><em class="font-figtree font-light not-italic text-accent">You Awake?</em>
+            </h2>
+            <p class="text-muted font-figtree text-base md:text-lg max-w-lg mx-auto">Select your primary sleep disruptor. We'll match you to the precise recovery solution.</p>
+        </div>
+
+        <div id="selector-tiles" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+            <div class="diagnostic-tile bg-surface border border-border hover:border-navy cursor-pointer transition-all group p-6 flex flex-col items-center text-center" onclick="selectTile(this)">
+                <div class="w-14 h-14 flex items-center justify-center mb-4 border border-border group-hover:border-navy transition-colors">
+                    <svg class="w-7 h-7 text-muted group-hover:text-navy transition-colors" fill="none" stroke="currentColor" stroke-width="1" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z"/>
+                    </svg>
+                </div>
+                <div class="text-[10px] font-outfit font-semibold tracking-widest uppercase text-muted group-hover:text-navy transition-colors mb-1">Heat</div>
+                <div class="text-xs font-figtree text-muted">Sleeping too hot</div>
+            </div>
+
+            <div class="diagnostic-tile bg-surface border border-border hover:border-navy cursor-pointer transition-all group p-6 flex flex-col items-center text-center" onclick="selectTile(this)">
+                <div class="w-14 h-14 flex items-center justify-center mb-4 border border-border group-hover:border-navy transition-colors">
+                    <svg class="w-7 h-7 text-muted group-hover:text-navy transition-colors" fill="none" stroke="currentColor" stroke-width="1" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9M3.75 20.25v-4.5m0 4.5h4.5m-4.5 0L9 15M20.25 3.75h-4.5m4.5 0v4.5m0-4.5L15 9m5.25 11.25h-4.5m4.5 0v-4.5m0 4.5L15 15"/>
+                    </svg>
+                </div>
+                <div class="text-[10px] font-outfit font-semibold tracking-widest uppercase text-muted group-hover:text-navy transition-colors mb-1">Motion</div>
+                <div class="text-xs font-figtree text-muted">Partner disturbance</div>
+            </div>
+
+            <div class="diagnostic-tile bg-surface border border-border hover:border-navy cursor-pointer transition-all group p-6 flex flex-col items-center text-center" onclick="selectTile(this)">
+                <div class="w-14 h-14 flex items-center justify-center mb-4 border border-border group-hover:border-navy transition-colors">
+                    <svg class="w-7 h-7 text-muted group-hover:text-navy transition-colors" fill="none" stroke="currentColor" stroke-width="1" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 3.75H6A2.25 2.25 0 003.75 6v1.5M16.5 3.75H18A2.25 2.25 0 0120.25 6v1.5m0 9V18A2.25 2.25 0 0118 20.25h-1.5m-9 0H6A2.25 2.25 0 013.75 18v-1.5M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                    </svg>
+                </div>
+                <div class="text-[10px] font-outfit font-semibold tracking-widest uppercase text-muted group-hover:text-navy transition-colors mb-1">Pressure</div>
+                <div class="text-xs font-figtree text-muted">Joint & hip pain</div>
+            </div>
+
+            <div class="diagnostic-tile bg-surface border border-border hover:border-navy cursor-pointer transition-all group p-6 flex flex-col items-center text-center" onclick="selectTile(this)">
+                <div class="w-14 h-14 flex items-center justify-center mb-4 border border-border group-hover:border-navy transition-colors">
+                    <svg class="w-7 h-7 text-muted group-hover:text-navy transition-colors" fill="none" stroke="currentColor" stroke-width="1" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z"/>
+                    </svg>
+                </div>
+                <div class="text-[10px] font-outfit font-semibold tracking-widest uppercase text-muted group-hover:text-navy transition-colors mb-1">Anxiety</div>
+                <div class="text-xs font-figtree text-muted">Racing thoughts</div>
+            </div>
+
+            <div class="diagnostic-tile bg-surface border border-border hover:border-navy cursor-pointer transition-all group p-6 flex flex-col items-center text-center" onclick="selectTile(this)">
+                <div class="w-14 h-14 flex items-center justify-center mb-4 border border-border group-hover:border-navy transition-colors">
+                    <svg class="w-7 h-7 text-muted group-hover:text-navy transition-colors" fill="none" stroke="currentColor" stroke-width="1" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25"/>
+                    </svg>
+                </div>
+                <div class="text-[10px] font-outfit font-semibold tracking-widest uppercase text-muted group-hover:text-navy transition-colors mb-1">Back Pain</div>
+                <div class="text-xs font-figtree text-muted">Spinal discomfort</div>
+            </div>
+
+            <div class="diagnostic-tile bg-surface border border-border hover:border-navy cursor-pointer transition-all group p-6 flex flex-col items-center text-center" onclick="selectTile(this)">
+                <div class="w-14 h-14 flex items-center justify-center mb-4 border border-border group-hover:border-navy transition-colors">
+                    <svg class="w-7 h-7 text-muted group-hover:text-navy transition-colors" fill="none" stroke="currentColor" stroke-width="1" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941"/>
+                    </svg>
+                </div>
+                <div class="text-[10px] font-outfit font-semibold tracking-widest uppercase text-muted group-hover:text-navy transition-colors mb-1">Snoring</div>
+                <div class="text-xs font-figtree text-muted">Airway restriction</div>
+            </div>
+        </div>
+
+        <div id="diagnostic-result" class="mt-8 hidden">
+            <div class="bg-navy text-white p-8 flex flex-col md:flex-row items-center justify-between gap-6">
+                <div>
+                    <div class="text-[10px] font-outfit font-semibold tracking-widest uppercase text-accentLight mb-2">Recommended System</div>
+                    <h3 class="font-outfit font-bold text-2xl mb-2" id="result-title">LUMORA Ortho-Pro™</h3>
+                    <p class="text-gray-400 font-figtree text-sm" id="result-desc">Engineered for your specific sleep disruption pattern with targeted zone support.</p>
+                </div>
+                <button class="bg-white text-navy font-outfit font-semibold text-sm px-8 py-4 hover:bg-canvas transition-colors tracking-widest uppercase flex-shrink-0">
+                    View Solution
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="products" class="py-24 md:py-32 bg-surface">
+    <div class="max-w-7xl mx-auto px-6 lg:px-10">
+        <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
+            <div>
+                <div class="flex items-center gap-2 mb-4">
+                    <div class="w-6 h-px bg-accent"></div>
+                    <span class="text-[11px] font-outfit font-semibold tracking-[0.25em] uppercase text-accent">Recovery Systems</span>
+                </div>
+                <h2 class="font-outfit font-bold text-navy text-3xl md:text-4xl xl:text-5xl leading-tight">
+                    Precision-Engineered<br/><em class="font-figtree font-light not-italic text-accent">for Your Biology</em>
+                </h2>
+            </div>
+            <button class="border border-navy text-navy font-outfit font-medium text-sm px-6 py-3 hover:bg-navy hover:text-white transition-all tracking-widest uppercase self-start md:self-auto">
+                Compare All Systems
+            </button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div id="product-essential" class="bg-canvas border border-border group hover:border-navy transition-all">
+                <div class="relative overflow-hidden h-64">
+                    <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/16930680ac-37a5966c75688cf35e92.png" alt="hand gently pressing into premium mattress surface, clinical product photography, soft neutral tones, minimalist white background, close up texture detail" />
+                    <div class="absolute top-4 left-4">
+                        <span class="bg-white text-navy text-[10px] font-outfit font-semibold tracking-widest uppercase px-3 py-1 border border-border">Essential</span>
+                    </div>
+                </div>
+                <div class="p-8">
+                    <h3 class="font-outfit font-bold text-navy text-xl mb-1">Puffy Essential™</h3>
+                    <p class="text-muted font-figtree text-sm mb-4">Entry-level recovery with 5-zone spinal support and base thermal regulation.</p>
+                    <div class="flex items-center gap-3 mb-6">
+                        <span class="font-outfit font-bold text-navy text-2xl">$899</span>
+                        <span class="text-muted font-figtree text-sm line-through">$1,199</span>
+                        <span class="bg-accent text-white text-[10px] font-outfit font-semibold px-2 py-0.5">25% OFF</span>
+                    </div>
+                    <button class="w-full border border-navy text-navy font-outfit font-medium text-sm py-3 hover:bg-navy hover:text-white transition-all tracking-widest uppercase">
+                        Select System
+                    </button>
+                </div>
+            </div>
+
+            <div id="product-ortho" class="bg-navy border border-navy group relative">
+                <div class="absolute top-0 left-0 right-0 bg-accent text-white text-[10px] font-outfit font-semibold tracking-widest uppercase text-center py-1.5">
+                    Most Prescribed by Clinicians
+                </div>
+                <div class="relative overflow-hidden h-64 mt-8">
+                    <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/b8fb62d355-850bb47cba12a77c9a2c.png" alt="person stretching arms upward in morning light, waking refreshed, calm neutral spine alignment visible, warm golden morning light, lifestyle recovery photography" />
+                    <div class="absolute top-4 left-4">
+                        <span class="bg-navy text-white text-[10px] font-outfit font-semibold tracking-widest uppercase px-3 py-1 border border-accent/30">Ortho-Pro</span>
+                    </div>
+                </div>
+                <div class="p-8">
+                    <h3 class="font-outfit font-bold text-white text-xl mb-1">Puffy Ortho-Pro™</h3>
+                    <p class="text-gray-400 font-figtree text-sm mb-4">7-zone ZoneLift™ architecture with active thermal management and motion isolation.</p>
+                    <div class="flex items-center gap-3 mb-6">
+                        <span class="font-outfit font-bold text-white text-2xl">$1,499</span>
+                        <span class="text-gray-500 font-figtree text-sm line-through">$1,999</span>
+                        <span class="bg-accent text-white text-[10px] font-outfit font-semibold px-2 py-0.5">25% OFF</span>
+                    </div>
+                    <button class="w-full bg-white text-navy font-outfit font-semibold text-sm py-3 hover:bg-canvas transition-colors tracking-widest uppercase">
+                        Select System
+                    </button>
+                </div>
+            </div>
+
+            <div id="product-apex" class="bg-canvas border border-border group hover:border-navy transition-all">
+                <div class="relative overflow-hidden h-64">
+                    <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/255c5e475f-f0ecc92086f015a2eae5.png" alt="calm sleeping person neutral spine position clinical photography warm soft light minimal aesthetic recovery sleep wellness" />
+                    <div class="absolute top-4 left-4">
+                        <span class="bg-white text-navy text-[10px] font-outfit font-semibold tracking-widest uppercase px-3 py-1 border border-border">Apex</span>
+                    </div>
+                </div>
+                <div class="p-8">
+                    <h3 class="font-outfit font-bold text-navy text-xl mb-1">Puffy Apex™</h3>
+                    <p class="text-muted font-figtree text-sm mb-4">Full-spectrum recovery system with AI-adaptive pressure response and biometric integration.</p>
+                    <div class="flex items-center gap-3 mb-6">
+                        <span class="font-outfit font-bold text-navy text-2xl">$2,299</span>
+                        <span class="text-muted font-figtree text-sm line-through">$2,999</span>
+                        <span class="bg-accent text-white text-[10px] font-outfit font-semibold px-2 py-0.5">23% OFF</span>
+                    </div>
+                    <button class="w-full border border-navy text-navy font-outfit font-medium text-sm py-3 hover:bg-navy hover:text-white transition-all tracking-widest uppercase">
+                        Select System
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="testimonials" class="py-24 md:py-32 bg-canvas">
+    <div class="max-w-7xl mx-auto px-6 lg:px-10">
+        <div class="text-center mb-16">
+            <div class="flex items-center justify-center gap-2 mb-4">
+                <div class="w-6 h-px bg-accent"></div>
+                <span class="text-[11px] font-outfit font-semibold tracking-[0.25em] uppercase text-accent">Clinical Outcomes</span>
+                <div class="w-6 h-px bg-accent"></div>
+            </div>
+            <h2 class="font-outfit font-bold text-navy text-3xl md:text-4xl xl:text-5xl leading-tight">
+                12,000+ Recovery<br/><em class="font-figtree font-light not-italic text-accent">Stories</em>
+            </h2>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div id="testimonial-1" class="bg-surface border border-border p-8">
+                <div class="flex items-center gap-1 mb-4">
+                    <i class="fa-solid fa-star text-accent text-xs"></i>
+                    <i class="fa-solid fa-star text-accent text-xs"></i>
+                    <i class="fa-solid fa-star text-accent text-xs"></i>
+                    <i class="fa-solid fa-star text-accent text-xs"></i>
+                    <i class="fa-solid fa-star text-accent text-xs"></i>
+                </div>
+                <blockquote class="font-figtree text-navy text-sm leading-relaxed mb-6 italic">"After 3 herniated discs, my physio recommended LUMORA. Within 6 weeks my morning pain score dropped from 7/10 to 1/10. The clinical difference is remarkable."</blockquote>
+                <div class="flex items-center gap-3 pt-4 border-t border-border">
+                    <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-5.jpg" class="w-10 h-10 object-cover" alt="Sarah M."/>
+                    <div>
+                        <div class="font-outfit font-semibold text-navy text-sm">Sarah M.</div>
+                        <div class="text-[10px] font-outfit tracking-widest uppercase text-muted">Verified — Puffy Ortho-Pro™ Owner</div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="testimonial-2" class="bg-surface border border-border p-8">
+                <div class="flex items-center gap-1 mb-4">
+                    <i class="fa-solid fa-star text-accent text-xs"></i>
+                    <i class="fa-solid fa-star text-accent text-xs"></i>
+                    <i class="fa-solid fa-star text-accent text-xs"></i>
+                    <i class="fa-solid fa-star text-accent text-xs"></i>
+                    <i class="fa-solid fa-star text-accent text-xs"></i>
+                </div>
+                <blockquote class="font-figtree text-navy text-sm leading-relaxed mb-6 italic">"As a sports physician I've started recommending Puffy to athletes post-surgery. The recovery data we're seeing is consistent with clinical sleep studies."</blockquote>
+                <div class="flex items-center gap-3 pt-4 border-t border-border">
+                    <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-4.jpg" class="w-10 h-10 object-cover" alt="Dr. James K."/>
+                    <div>
+                        <div class="font-outfit font-semibold text-navy text-sm">Dr. James K., MD</div>
+                        <div class="text-[10px] font-outfit tracking-widest uppercase text-muted">Sports Medicine Physician</div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="testimonial-3" class="bg-surface border border-border p-8">
+                <div class="flex items-center gap-1 mb-4">
+                    <i class="fa-solid fa-star text-accent text-xs"></i>
+                    <i class="fa-solid fa-star text-accent text-xs"></i>
+                    <i class="fa-solid fa-star text-accent text-xs"></i>
+                    <i class="fa-solid fa-star text-accent text-xs"></i>
+                    <i class="fa-solid fa-star text-accent text-xs"></i>
+                </div>
+                <blockquote class="font-figtree text-navy text-sm leading-relaxed mb-6 italic">"My Oura ring data showed a 38% increase in deep sleep from night one. I've tried every premium mattress—nothing comes close to the Puffy Apex in terms of measurable recovery."</blockquote>
+                <div class="flex items-center gap-3 pt-4 border-t border-border">
+                    <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-6.jpg" class="w-10 h-10 object-cover" alt="Elena R."/>
+                    <div>
+                        <div class="font-outfit font-semibold text-navy text-sm">Elena R.</div>
+                        <div class="text-[10px] font-outfit tracking-widest uppercase text-muted">Verified — Puffy Apex™ Owner</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="trust-lock" class="py-16 md:py-20 bg-canvas">
+    <div class="max-w-5xl mx-auto px-6 lg:px-10">
+        <div class="border-2 border-navy p-8 md:p-12 lg:p-16 relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-64 h-64 opacity-[0.03]">
+                <svg viewBox="0 0 100 100" fill="none" stroke="#0f1b3d" stroke-width="0.3">
+                    <circle cx="50" cy="50" r="48"/>
+                    <circle cx="50" cy="50" r="40"/>
+                    <circle cx="50" cy="50" r="32"/>
+                    <circle cx="50" cy="50" r="24"/>
+                    <circle cx="50" cy="50" r="16"/>
+                    <circle cx="50" cy="50" r="8"/>
+                    <line x1="2" y1="50" x2="98" y2="50"/>
+                    <line x1="50" y1="2" x2="50" y2="98"/>
+                    <line x1="15" y1="15" x2="85" y2="85"/>
+                    <line x1="85" y1="15" x2="15" y2="85"/>
+                </svg>
+            </div>
+
+            <div class="flex flex-col lg:flex-row items-center gap-12 relative z-10">
+                <div class="flex-shrink-0 text-center">
+                    <div class="w-36 h-36 border-2 border-navy flex flex-col items-center justify-center mx-auto">
+                        <div class="font-outfit font-black text-navy text-5xl leading-none">101</div>
+                        <div class="text-[9px] font-outfit font-semibold tracking-[0.2em] uppercase text-accent mt-1">Night Trial</div>
+                    </div>
+                    <div class="mt-4 text-[10px] font-outfit tracking-widest uppercase text-muted">No Risk. Free Return.</div>
+                </div>
+
+                <div class="flex-1 text-center lg:text-left">
+                    <div class="flex items-center justify-center lg:justify-start gap-2 mb-4">
+                        <div class="w-6 h-px bg-accent"></div>
+                        <span class="text-[11px] font-outfit font-semibold tracking-[0.25em] uppercase text-accent">The Puffy Guarantee</span>
+                    </div>
+                    <h2 class="font-outfit font-bold text-navy text-3xl md:text-4xl leading-tight mb-4">
+                        Sleep on It for 101 Nights.<br/>
+                        <em class="font-figtree font-light not-italic text-accent">Experience the Clinical Difference.</em>
+                    </h2>
+                    <p class="text-muted font-figtree text-base leading-relaxed mb-8 max-w-lg mx-auto lg:mx-0">
+                        We're so confident in Puffy's recovery performance that we offer a full 101-night clinical trial. If you don't notice measurable improvement in sleep quality, we'll collect the mattress and issue a complete refund—no questions, no fees.
+                    </p>
+                    <div class="flex flex-wrap gap-4 justify-center lg:justify-start mb-8">
+                        <div class="flex items-center gap-2">
+                            <svg class="w-4 h-4 text-accent" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/>
+                            </svg>
+                            <span class="text-sm font-outfit font-medium text-navy">Free Delivery & Setup</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <svg class="w-4 h-4 text-accent" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/>
+                            </svg>
+                            <span class="text-sm font-outfit font-medium text-navy">101-Night Trial</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <svg class="w-4 h-4 text-accent" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/>
+                            </svg>
+                            <span class="text-sm font-outfit font-medium text-navy">15-Year Warranty</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <svg class="w-4 h-4 text-accent" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/>
+                            </svg>
+                            <span class="text-sm font-outfit font-medium text-navy">0% APR Financing</span>
+                        </div>
+                    </div>
+                    <div class="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start">
+                        <button class="bg-navy text-white font-outfit font-semibold text-sm px-8 py-4 hover:bg-navyLight transition-colors tracking-widest uppercase">
+                            Begin 101-Night Trial
+                        </button>
+                        <button class="border border-navy text-navy font-outfit font-medium text-sm px-8 py-4 hover:bg-navy hover:text-white transition-all tracking-widest uppercase">
+                            Read Clinical Studies
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="certifications" class="py-16 bg-surface border-t border-border">
+    <div class="max-w-7xl mx-auto px-6 lg:px-10">
+        <div class="flex flex-col md:flex-row items-center justify-between gap-8">
+            <div class="text-center md:text-left">
+                <div class="text-[10px] font-outfit font-semibold tracking-widest uppercase text-muted mb-1">Clinical Certifications</div>
+                <div class="font-outfit font-semibold text-navy text-sm">Validated by Independent Medical Institutions</div>
+            </div>
+            <div class="flex flex-wrap items-center justify-center gap-8 md:gap-12">
+                <div class="flex flex-col items-center gap-2">
+                    <svg class="w-8 h-8 text-muted" fill="none" stroke="currentColor" stroke-width="1" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/>
+                    </svg>
+                    <span class="text-[10px] font-outfit tracking-widest uppercase text-muted text-center">Orthopedic<br/>Society</span>
+                </div>
+                <div class="flex flex-col items-center gap-2">
+                    <svg class="w-8 h-8 text-muted" fill="none" stroke="currentColor" stroke-width="1" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"/>
+                    </svg>
+                    <span class="text-[10px] font-outfit tracking-widest uppercase text-muted text-center">CertiPUR-US<br/>Certified</span>
+                </div>
+                <div class="flex flex-col items-center gap-2">
+                    <svg class="w-8 h-8 text-muted" fill="none" stroke="currentColor" stroke-width="1" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z"/>
+                    </svg>
+                    <span class="text-[10px] font-outfit tracking-widest uppercase text-muted text-center">OEKO-TEX<br/>Standard 100</span>
+                </div>
+                <div class="flex flex-col items-center gap-2">
+                    <svg class="w-8 h-8 text-muted" fill="none" stroke="currentColor" stroke-width="1" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253"/>
+                    </svg>
+                    <span class="text-[10px] font-outfit tracking-widest uppercase text-muted text-center">Sleep Foundation<br/>Endorsed</span>
+                </div>
+                <div class="flex flex-col items-center gap-2">
+                    <svg class="w-8 h-8 text-muted" fill="none" stroke="currentColor" stroke-width="1" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"/>
+                    </svg>
+                    <span class="text-[10px] font-outfit tracking-widest uppercase text-muted text-center">Carbon<br/>Neutral</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<footer id="footer" class="bg-navy text-white">
+    <div class="max-w-7xl mx-auto px-6 lg:px-10 py-16">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 pb-12 border-b border-white/10">
+            <div>
+                <div class="flex items-center gap-2 mb-6">
+                    <svg class="w-5 h-5 text-accentLight" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z"/>
+                    </svg>
+                    <span class="font-outfit font-bold text-white text-base">PUFFY<span class="text-accentLight font-light">sleep</span></span>
+                </div>
+                <p class="text-gray-400 font-figtree text-sm leading-relaxed mb-6">Healthcare-grade recovery systems engineered for orthopedic precision and measurable sleep improvement.</p>
+                <div class="flex gap-3">
+                    <a href="#" class="w-8 h-8 border border-white/20 flex items-center justify-center hover:border-accent transition-colors">
+                        <i class="fa-brands fa-instagram text-xs text-gray-400"></i>
+                    </a>
+                    <a href="#" class="w-8 h-8 border border-white/20 flex items-center justify-center hover:border-accent transition-colors">
+                        <i class="fa-brands fa-x-twitter text-xs text-gray-400"></i>
+                    </a>
+                    <a href="#" class="w-8 h-8 border border-white/20 flex items-center justify-center hover:border-accent transition-colors">
+                        <i class="fa-brands fa-linkedin-in text-xs text-gray-400"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div>
+                <div class="text-[10px] font-outfit font-semibold tracking-widest uppercase text-gray-500 mb-5">Recovery Systems</div>
+                <ul class="space-y-3">
+                    <li><a href="https://puffy.com/" class="text-sm font-figtree text-gray-400 hover:text-white transition-colors">Puffy Essential™</a></li>
+                    <li><a href="https://puffy.com/" class="text-sm font-figtree text-gray-400 hover:text-white transition-colors">Puffy Ortho-Pro™</a></li>
+                    <li><a href="https://puffy.com/" class="text-sm font-figtree text-gray-400 hover:text-white transition-colors">Puffy Apex™</a></li>
+                    <li><a href="https://puffy.com/" class="text-sm font-figtree text-gray-400 hover:text-white transition-colors">Pillow Systems</a></li>
+                    <li><a href="https://puffy.com/" class="text-sm font-figtree text-gray-400 hover:text-white transition-colors">Recovery Accessories</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <div class="text-[10px] font-outfit font-semibold tracking-widest uppercase text-gray-500 mb-5">Sleep Science</div>
+                <ul class="space-y-3">
+                    <li><a href="#" class="text-sm font-figtree text-gray-400 hover:text-white transition-colors">Clinical Research</a></li>
+                    <li><a href="#" class="text-sm font-figtree text-gray-400 hover:text-white transition-colors">Sleep Assessment</a></li>
+                    <li><a href="#" class="text-sm font-figtree text-gray-400 hover:text-white transition-colors">ZoneLift™ Technology</a></li>
+                    <li><a href="#" class="text-sm font-figtree text-gray-400 hover:text-white transition-colors">Thermal Regulation</a></li>
+                    <li><a href="#" class="text-sm font-figtree text-gray-400 hover:text-white transition-colors">Certifications</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <div class="text-[10px] font-outfit font-semibold tracking-widest uppercase text-gray-500 mb-5">Sleep Newsletter</div>
+                <p class="text-gray-400 font-figtree text-sm mb-4">Receive weekly sleep science insights and exclusive recovery protocols.</p>
+                <div class="flex">
+                    <input type="email" placeholder="your@email.com" class="flex-1 bg-white/5 border border-white/10 text-white text-sm font-figtree px-4 py-3 placeholder-gray-600 focus:outline-none focus:border-accent">
+                    <button class="bg-accent text-white px-4 py-3 hover:bg-accentLight transition-colors flex-shrink-0">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex flex-col md:flex-row items-center justify-between gap-4 pt-8">
+            <div class="text-[11px] font-outfit text-gray-600">© 2025 Puffy Sleep Systems. All rights reserved.</div>
+            <div class="flex gap-6">
+                <a href="#" class="text-[11px] font-outfit text-gray-600 hover:text-gray-400 transition-colors">Privacy Policy</a>
+                <a href="#" class="text-[11px] font-outfit text-gray-600 hover:text-gray-400 transition-colors">Terms of Service</a>
+                <a href="#" class="text-[11px] font-outfit text-gray-600 hover:text-gray-400 transition-colors">Clinical Disclaimer</a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<script>
+    const tileData = {
+        'Heat': { title: 'Puffy Apex™ — ThermoSync Edition', desc: 'Phase-change thermal regulation maintains optimal 67°F sleep temperature. Reduces nocturnal awakenings by 78%.' },
+        'Motion': { title: 'Puffy Ortho-Pro™ — IsoCore Edition', desc: 'Individual pocket springs with 2,400 isolation zones eliminate 99.8% of partner motion transfer.' },
+        'Pressure': { title: 'Puffy Essential™ — PressureMap Edition', desc: '7-zone pressure mapping with adaptive foam relieves hip and shoulder pressure by up to 63%.' },
+        'Anxiety': { title: 'Puffy Apex™ — NeroCalm Edition', desc: 'Weighted surface technology combined with cooling aromatherapy integration reduces cortisol by 31%.' },
+        'Back Pain': { title: 'Puffy Ortho-Pro™ — SpineFirst Edition', desc: 'Clinical-grade lumbar support with ZoneLift™ architecture. 91% of users report significant pain reduction within 30 nights.' },
+        'Snoring': { title: 'Puffy Ortho-Pro™ — AirFlow Edition', desc: 'Cervical alignment system positions airway for optimal breathing, reducing snoring frequency by 67%.' }
+    };
+
+    function selectTile(el) {
+        document.querySelectorAll('.diagnostic-tile').forEach(t => {
+            t.classList.remove('border-navy', 'bg-navy');
+            t.classList.add('bg-surface', 'border-border');
+            t.querySelectorAll('div, svg').forEach(c => {
+                c.classList.remove('text-white');
+            });
+        });
+        el.classList.remove('bg-surface', 'border-border');
+        el.classList.add('border-navy', 'bg-navy/5');
+
+        const label = el.querySelector('.text-\\[10px\\]').textContent.trim();
+        const data = tileData[label];
+        if (data) {
+            document.getElementById('result-title').textContent = data.title;
+            document.getElementById('result-desc').textContent = data.desc;
+            document.getElementById('diagnostic-result').classList.remove('hidden');
+        }
+    }
+</script>
+
+</body>
+</html>
