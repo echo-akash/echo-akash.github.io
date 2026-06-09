@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script> window.FontAwesomeConfig = { autoReplaceSvg: 'nest'};</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Work+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        arctic: '#e8f0f8',
+                        frost: '#b8d4e8',
+                        sky: '#6ba3c8',
+                        navy: '#2e6b8a',
+                        navydark: '#1a3f54',
+                    },
+                    fontFamily: {
+                        serif: ['Instrument Serif', 'Georgia', 'serif'],
+                        sans: ['Work Sans', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        ::-webkit-scrollbar { display: none; }
+        * { scrollbar-width: none; }
+
+        .parallax-hero {
+            background-attachment: fixed;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .bundle-card {
+            transition: all 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        .bundle-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 32px 80px rgba(46, 107, 138, 0.18);
+        }
+        .bundle-card.featured {
+            transform: translateY(-12px) scale(1.03);
+            box-shadow: 0 40px 100px rgba(46, 107, 138, 0.22);
+        }
+        .bundle-card.featured:hover {
+            transform: translateY(-18px) scale(1.05);
+        }
+
+        .value-icon {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+        .value-icon.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .benefit-item {
+            opacity: 0;
+            transform: translateX(-30px);
+            transition: opacity 0.7s ease, transform 0.7s ease;
+        }
+        .benefit-item.slide-right {
+            transform: translateX(30px);
+        }
+        .benefit-item.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .testimonial-card {
+            transition: all 0.3s ease;
+        }
+        .testimonial-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 16px 40px rgba(46, 107, 138, 0.12);
+        }
+
+        .gradient-cta {
+            background: linear-gradient(135deg, #2e6b8a 0%, #1a3f54 50%, #0d2535 100%);
+        }
+
+        .nav-link {
+            position: relative;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: #2e6b8a;
+            transition: width 0.3s ease;
+        }
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .product-img-glow {
+            filter: drop-shadow(0 20px 40px rgba(46, 107, 138, 0.25));
+            transition: filter 0.4s ease, transform 0.4s ease;
+        }
+        .bundle-card:hover .product-img-glow {
+            filter: drop-shadow(0 28px 56px rgba(46, 107, 138, 0.35));
+            transform: translateY(-6px);
+        }
+
+        .trust-stat {
+            border-right: 1px solid rgba(184, 212, 232, 0.5);
+        }
+        .trust-stat:last-child {
+            border-right: none;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-8px); }
+        }
+        .float-anim {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -200% center; }
+            100% { background-position: 200% center; }
+        }
+        .shimmer-badge {
+            background: linear-gradient(90deg, #2e6b8a, #6ba3c8, #2e6b8a);
+            background-size: 200% auto;
+            animation: shimmer 3s linear infinite;
+        }
+
+        .scroll-indicator {
+            animation: float 2s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body class="bg-white font-sans overflow-x-hidden">
+
+<header id="header" class="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md border-b border-arctic/60">
+    <div class="max-w-[1440px] mx-auto px-6 lg:px-16 py-4 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-full bg-navy flex items-center justify-center">
+                <span class="text-white text-xs font-serif font-bold">P</span>
+            </div>
+            <span class="font-serif text-2xl text-navydark tracking-tight">Puffy</span>
+        </div>
+        <nav class="hidden lg:flex items-center gap-10">
+            <a href="#" class="nav-link text-sm font-medium text-gray-600 hover:text-navy transition-colors">Mattresses</a>
+            <a href="#bundles" class="nav-link text-sm font-medium text-gray-600 hover:text-navy transition-colors">Home Bundles</a>
+            <a href="#" class="nav-link text-sm font-medium text-gray-600 hover:text-navy transition-colors">Pillows</a>
+            <a href="#" class="nav-link text-sm font-medium text-gray-600 hover:text-navy transition-colors">Bedding</a>
+            <a href="#" class="nav-link text-sm font-medium text-gray-600 hover:text-navy transition-colors">Reviews</a>
+        </nav>
+        <div class="flex items-center gap-4">
+            <a href="#" class="hidden lg:inline-flex text-sm font-medium text-gray-600 hover:text-navy transition-colors">
+                <i class="fa-regular fa-user mr-1.5"></i> Account
+            </a>
+            <a href="#" class="hidden lg:inline-flex text-sm font-medium text-gray-600 hover:text-navy transition-colors">
+                <i class="fa-regular fa-heart mr-1.5"></i>
+            </a>
+            <button class="bg-navy text-white text-sm font-medium px-5 py-2.5 rounded-full hover:bg-navydark transition-colors">
+                Shop Bundles
+            </button>
+            <button class="lg:hidden text-gray-600">
+                <i class="fa-solid fa-bars text-xl"></i>
+            </button>
+        </div>
+    </div>
+</header>
+
+<section id="hero" class="relative h-[900px] lg:h-[960px] overflow-hidden">
+    <div class="parallax-hero absolute inset-0" style="background-image: url('https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=1800&q=90')">
+        <div class="absolute inset-0 bg-gradient-to-r from-navydark/75 via-navy/40 to-transparent"></div>
+        <div class="absolute inset-0 bg-gradient-to-t from-navydark/50 via-transparent to-transparent"></div>
+    </div>
+
+    <div class="relative z-10 max-w-[1440px] mx-auto px-6 lg:px-16 h-full flex flex-col justify-center">
+        <div class="max-w-2xl pt-20">
+            <div class="inline-flex items-center gap-2 bg-white/15 backdrop-blur-sm border border-white/25 rounded-full px-4 py-2 mb-8">
+                <div class="w-2 h-2 rounded-full bg-sky animate-pulse"></div>
+                <span class="text-white/90 text-xs font-medium tracking-widest uppercase">New Home Bundles — 2024</span>
+            </div>
+            <h1 class="font-serif text-5xl lg:text-7xl xl:text-8xl text-white leading-[0.95] mb-6">
+                Your Dream<br/>
+                <em class="not-italic text-frost">Bedroom</em><br/>
+                Starts Here
+            </h1>
+            <p class="text-white/80 text-lg lg:text-xl font-light leading-relaxed mb-10 max-w-lg">
+                Everything you need for the perfect bedroom — curated bundles for new homeowners who deserve to sleep like they've arrived.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4">
+                <button class="bg-white text-navy font-semibold px-8 py-4 rounded-full text-sm tracking-wide hover:bg-arctic transition-all hover:shadow-xl">
+                    Explore Home Bundles
+                </button>
+                <button class="border border-white/50 text-white font-medium px-8 py-4 rounded-full text-sm tracking-wide hover:bg-white/10 transition-all backdrop-blur-sm">
+                    <i class="fa-regular fa-play-circle mr-2"></i> See How It Works
+                </button>
+            </div>
+            <div class="flex items-center gap-6 mt-12">
+                <div class="flex -space-x-2">
+                    <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-1.jpg" class="w-9 h-9 rounded-full border-2 border-white object-cover" />
+                    <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-5.jpg" class="w-9 h-9 rounded-full border-2 border-white object-cover" />
+                    <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-2.jpg" class="w-9 h-9 rounded-full border-2 border-white object-cover" />
+                    <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-6.jpg" class="w-9 h-9 rounded-full border-2 border-white object-cover" />
+                </div>
+                <div>
+                    <div class="flex items-center gap-1 mb-0.5">
+                        <i class="fa-solid fa-star text-amber-400 text-xs"></i>
+                        <i class="fa-solid fa-star text-amber-400 text-xs"></i>
+                        <i class="fa-solid fa-star text-amber-400 text-xs"></i>
+                        <i class="fa-solid fa-star text-amber-400 text-xs"></i>
+                        <i class="fa-solid fa-star text-amber-400 text-xs"></i>
+                        <span class="text-white/90 text-xs ml-1 font-medium">4.8/5</span>
+                    </div>
+                    <p class="text-white/70 text-xs">Loved by 20,000+ new homeowners</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="absolute bottom-10 left-1/2 -translate-x-1/2 z-10 scroll-indicator">
+        <div class="flex flex-col items-center gap-2">
+            <span class="text-white/60 text-xs tracking-widest uppercase">Scroll</span>
+            <div class="w-px h-10 bg-gradient-to-b from-white/60 to-transparent"></div>
+        </div>
+    </div>
+</section>
+
+<section id="value-strip" class="bg-white border-b border-arctic py-6 sticky top-[73px] z-40 shadow-sm">
+    <div class="max-w-[1440px] mx-auto px-6 lg:px-16">
+        <div class="flex flex-wrap lg:flex-nowrap items-center justify-center lg:justify-between gap-6 lg:gap-0">
+            <div class="value-icon flex items-center gap-3 px-6 trust-stat" style="transition-delay: 0.1s">
+                <div class="w-10 h-10 rounded-full bg-arctic flex items-center justify-center flex-shrink-0">
+                    <i class="fa-regular fa-moon text-navy text-sm"></i>
+                </div>
+                <div>
+                    <p class="font-semibold text-navydark text-sm">100-Night Trial</p>
+                    <p class="text-gray-500 text-xs">Sleep on it, risk-free</p>
+                </div>
+            </div>
+            <div class="value-icon flex items-center gap-3 px-6 trust-stat" style="transition-delay: 0.2s">
+                <div class="w-10 h-10 rounded-full bg-arctic flex items-center justify-center flex-shrink-0">
+                    <i class="fa-regular fa-shield text-navy text-sm"></i>
+                </div>
+                <div>
+                    <p class="font-semibold text-navydark text-sm">Lifetime Warranty</p>
+                    <p class="text-gray-500 text-xs">Forever coverage, always</p>
+                </div>
+            </div>
+            <div class="value-icon flex items-center gap-3 px-6 trust-stat" style="transition-delay: 0.3s">
+                <div class="w-10 h-10 rounded-full bg-arctic flex items-center justify-center flex-shrink-0">
+                    <i class="fa-regular fa-truck text-navy text-sm"></i>
+                </div>
+                <div>
+                    <p class="font-semibold text-navydark text-sm">Free White-Glove Delivery</p>
+                    <p class="text-gray-500 text-xs">Setup included, no extra cost</p>
+                </div>
+            </div>
+            <div class="value-icon flex items-center gap-3 px-6 trust-stat" style="transition-delay: 0.4s">
+                <div class="w-10 h-10 rounded-full bg-arctic flex items-center justify-center flex-shrink-0">
+                    <i class="fa-regular fa-credit-card text-navy text-sm"></i>
+                </div>
+                <div>
+                    <p class="font-semibold text-navydark text-sm">0% Financing Available</p>
+                    <p class="text-gray-500 text-xs">Pay over 24 months</p>
+                </div>
+            </div>
+            <div class="value-icon flex items-center gap-3 px-6" style="transition-delay: 0.5s">
+                <div class="w-10 h-10 rounded-full bg-arctic flex items-center justify-center flex-shrink-0">
+                    <i class="fa-regular fa-leaf text-navy text-sm"></i>
+                </div>
+                <div>
+                    <p class="font-semibold text-navydark text-sm">CertiPUR-US Certified</p>
+                    <p class="text-gray-500 text-xs">Safe, non-toxic materials</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="bundles" class="bg-arctic/30 py-24 lg:py-32">
+    <div class="max-w-[1440px] mx-auto px-6 lg:px-16">
+        <div class="text-center mb-16">
+            <div class="inline-flex items-center gap-2 bg-navy/8 rounded-full px-4 py-2 mb-6">
+                <i class="fa-solid fa-home text-navy text-xs"></i>
+                <span class="text-navy text-xs font-semibold tracking-widest uppercase">Home Bundles</span>
+            </div>
+            <h2 class="font-serif text-4xl lg:text-6xl text-navydark mb-5 leading-tight">
+                Everything Your Bedroom<br/>
+                <em class="not-italic text-sky">Deserves</em>
+            </h2>
+            <p class="text-gray-500 text-lg max-w-xl mx-auto leading-relaxed">
+                Curated bundles built for new homeowners — premium sleep, complete setup, one simple decision.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 xl:gap-8">
+
+            <div id="bundle-starter" class="bundle-card bg-white rounded-3xl overflow-hidden border border-arctic cursor-pointer">
+                <div class="bg-gradient-to-br from-arctic to-frost/40 p-8 pb-0 relative">
+                    <div class="shimmer-badge inline-flex items-center gap-1.5 text-white text-xs font-semibold px-3 py-1.5 rounded-full mb-4">
+                        <i class="fa-solid fa-tag text-xs"></i> New Homeowner — Save $320
+                    </div>
+                    <h3 class="font-serif text-2xl text-navydark mb-1">Starter Bundle</h3>
+                    <p class="text-gray-500 text-sm mb-6">The essentials, perfectly paired</p>
+                    <div class="relative h-52 flex items-end justify-center">
+                        <img class="w-full h-full object-contain product-img-glow float-anim" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/e17d0512d5-7acc0375b3c36499d255.png" alt="premium white mattress product shot, clean minimal, professional studio lighting, no background" />
+                    </div>
+                </div>
+                <div class="p-8">
+                    <div class="flex items-baseline gap-2 mb-6">
+                        <span class="font-serif text-4xl text-navydark">$1,199</span>
+                        <span class="text-gray-400 line-through text-lg">$1,519</span>
+                        <span class="bg-sky/15 text-sky text-xs font-semibold px-2 py-1 rounded-full">21% off</span>
+                    </div>
+                    <div class="space-y-3 mb-8">
+                        <div class="flex items-center gap-3">
+                            <div class="w-6 h-6 rounded-full bg-arctic flex items-center justify-center flex-shrink-0">
+                                <i class="fa-solid fa-check text-navy text-xs"></i>
+                            </div>
+                            <span class="text-gray-700 text-sm">Puffy Original Mattress (Queen)</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <div class="w-6 h-6 rounded-full bg-arctic flex items-center justify-center flex-shrink-0">
+                                <i class="fa-solid fa-check text-navy text-xs"></i>
+                            </div>
+                            <span class="text-gray-700 text-sm">2 Cloud Pillows</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <div class="w-6 h-6 rounded-full bg-arctic flex items-center justify-center flex-shrink-0">
+                                <i class="fa-solid fa-check text-navy text-xs"></i>
+                            </div>
+                            <span class="text-gray-700 text-sm">Mattress Protector</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <div class="w-6 h-6 rounded-full bg-arctic flex items-center justify-center flex-shrink-0">
+                                <i class="fa-solid fa-check text-navy text-xs"></i>
+                            </div>
+                            <span class="text-gray-700 text-sm">Free White-Glove Delivery</span>
+                        </div>
+                    </div>
+                    <button class="w-full border-2 border-navy text-navy font-semibold py-4 rounded-2xl text-sm tracking-wide hover:bg-navy hover:text-white transition-all">
+                        Choose Starter Bundle
+                    </button>
+                    <p class="text-center text-gray-400 text-xs mt-3">or $50/mo with 0% financing</p>
+                </div>
+            </div>
+
+            <div id="bundle-bedroom" class="bundle-card featured bg-white rounded-3xl overflow-hidden border-2 border-navy cursor-pointer relative">
+                <div class="absolute top-4 right-4 z-10 bg-navy text-white text-xs font-bold px-3 py-1.5 rounded-full">
+                    ✦ Most Popular
+                </div>
+                <div class="bg-gradient-to-br from-navy/8 to-sky/10 p-8 pb-0 relative">
+                    <div class="shimmer-badge inline-flex items-center gap-1.5 text-white text-xs font-semibold px-3 py-1.5 rounded-full mb-4">
+                        <i class="fa-solid fa-tag text-xs"></i> New Homeowner — Save $580
+                    </div>
+                    <h3 class="font-serif text-2xl text-navydark mb-1">Bedroom Bundle</h3>
+                    <p class="text-gray-500 text-sm mb-6">Complete sleep sanctuary setup</p>
+                    <div class="relative h-52 flex items-end justify-center">
+                        <img class="w-full h-full object-contain product-img-glow float-anim" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/80910b55b6-634b1cfb186e3ccfe0f4.png" alt="premium luxury mattress with pillows product shot, professional studio, clean white, no background" />
+                    </div>
+                </div>
+                <div class="p-8">
+                    <div class="flex items-baseline gap-2 mb-6">
+                        <span class="font-serif text-4xl text-navydark">$2,199</span>
+                        <span class="text-gray-400 line-through text-lg">$2,779</span>
+                        <span class="bg-navy text-white text-xs font-semibold px-2 py-1 rounded-full">Save $580</span>
+                    </div>
+                    <div class="space-y-3 mb-8">
+                        <div class="flex items-center gap-3">
+                            <div class="w-6 h-6 rounded-full bg-navy flex items-center justify-center flex-shrink-0">
+                                <i class="fa-solid fa-check text-white text-xs"></i>
+                            </div>
+                            <span class="text-gray-700 text-sm">Puffy Lux Mattress (Queen)</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <div class="w-6 h-6 rounded-full bg-navy flex items-center justify-center flex-shrink-0">
+                                <i class="fa-solid fa-check text-white text-xs"></i>
+                            </div>
+                            <span class="text-gray-700 text-sm">2 Premium Cloud Pillows</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <div class="w-6 h-6 rounded-full bg-navy flex items-center justify-center flex-shrink-0">
+                                <i class="fa-solid fa-check text-white text-xs"></i>
+                            </div>
+                            <span class="text-gray-700 text-sm">Mattress Protector + Topper</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <div class="w-6 h-6 rounded-full bg-navy flex items-center justify-center flex-shrink-0">
+                                <i class="fa-solid fa-check text-white text-xs"></i>
+                            </div>
+                            <span class="text-gray-700 text-sm">Luxury Sheet Set (500TC)</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <div class="w-6 h-6 rounded-full bg-navy flex items-center justify-center flex-shrink-0">
+                                <i class="fa-solid fa-check text-white text-xs"></i>
+                            </div>
+                            <span class="text-gray-700 text-sm">Priority White-Glove Setup</span>
+                        </div>
+                    </div>
+                    <button class="w-full bg-navy text-white font-semibold py-4 rounded-2xl text-sm tracking-wide hover:bg-navydark transition-all shadow-lg shadow-navy/30">
+                        Build My Bedroom
+                    </button>
+                    <p class="text-center text-gray-400 text-xs mt-3">or $92/mo with 0% financing</p>
+                </div>
+            </div>
+
+            <div id="bundle-fullhome" class="bundle-card bg-white rounded-3xl overflow-hidden border border-arctic cursor-pointer">
+                <div class="bg-gradient-to-br from-navydark/8 to-navy/10 p-8 pb-0 relative">
+                    <div class="shimmer-badge inline-flex items-center gap-1.5 text-white text-xs font-semibold px-3 py-1.5 rounded-full mb-4">
+                        <i class="fa-solid fa-tag text-xs"></i> New Homeowner — Save $920
+                    </div>
+                    <h3 class="font-serif text-2xl text-navydark mb-1">Full Home Bundle</h3>
+                    <p class="text-gray-500 text-sm mb-6">Every room, every night, covered</p>
+                    <div class="relative h-52 flex items-end justify-center">
+                        <img class="w-full h-full object-contain product-img-glow float-anim" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/70afc202c9-09ad51594c0eeea9d222.png" alt="premium king size mattress with complete bedding set product shot, luxury, professional studio, no background" />
+                    </div>
+                </div>
+                <div class="p-8">
+                    <div class="flex items-baseline gap-2 mb-6">
+                        <span class="font-serif text-4xl text-navydark">$3,799</span>
+                        <span class="text-gray-400 line-through text-lg">$4,719</span>
+                        <span class="bg-navydark/10 text-navydark text-xs font-semibold px-2 py-1 rounded-full">Save $920</span>
+                    </div>
+                    <div class="space-y-3 mb-8">
+                        <div class="flex items-center gap-3">
+                            <div class="w-6 h-6 rounded-full bg-arctic flex items-center justify-center flex-shrink-0">
+                                <i class="fa-solid fa-check text-navy text-xs"></i>
+                            </div>
+                            <span class="text-gray-700 text-sm">2× Puffy Royal Mattresses</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <div class="w-6 h-6 rounded-full bg-arctic flex items-center justify-center flex-shrink-0">
+                                <i class="fa-solid fa-check text-navy text-xs"></i>
+                            </div>
+                            <span class="text-gray-700 text-sm">4 Signature Cloud Pillows</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <div class="w-6 h-6 rounded-full bg-arctic flex items-center justify-center flex-shrink-0">
+                                <i class="fa-solid fa-check text-navy text-xs"></i>
+                            </div>
+                            <span class="text-gray-700 text-sm">2× Protectors + Toppers</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <div class="w-6 h-6 rounded-full bg-arctic flex items-center justify-center flex-shrink-0">
+                                <i class="fa-solid fa-check text-navy text-xs"></i>
+                            </div>
+                            <span class="text-gray-700 text-sm">2× Luxury Sheet Sets</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <div class="w-6 h-6 rounded-full bg-arctic flex items-center justify-center flex-shrink-0">
+                                <i class="fa-solid fa-check text-navy text-xs"></i>
+                            </div>
+                            <span class="text-gray-700 text-sm">VIP Concierge Setup</span>
+                        </div>
+                    </div>
+                    <button class="w-full border-2 border-navy text-navy font-semibold py-4 rounded-2xl text-sm tracking-wide hover:bg-navy hover:text-white transition-all">
+                        Choose Full Home
+                    </button>
+                    <p class="text-center text-gray-400 text-xs mt-3">or $158/mo with 0% financing</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center mt-10">
+            <button class="inline-flex items-center gap-2 text-navy font-medium text-sm border-b border-navy/30 pb-1 hover:border-navy transition-colors">
+                <i class="fa-solid fa-table-columns text-xs"></i>
+                Compare Bundle Options in Detail
+            </button>
+        </div>
+    </div>
+</section>
+
+<section id="benefits" class="bg-white py-24 lg:py-32">
+    <div class="max-w-[1440px] mx-auto px-6 lg:px-16">
+        <div class="text-center mb-20">
+            <h2 class="font-serif text-4xl lg:text-5xl xl:text-6xl text-navydark leading-tight">
+                Engineered for the<br/>
+                <em class="not-italic text-sky">Way You Actually Sleep</em>
+            </h2>
+        </div>
+
+        <div class="space-y-24">
+
+            <div id="benefit-1" class="benefit-item grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+                <div class="order-2 lg:order-1">
+                    <div class="inline-flex items-center gap-2 bg-arctic rounded-full px-4 py-2 mb-6">
+                        <i class="fa-solid fa-cloud text-sky text-sm"></i>
+                        <span class="text-navy text-xs font-semibold tracking-wider uppercase">Cloud-Like Comfort</span>
+                    </div>
+                    <h3 class="font-serif text-3xl lg:text-4xl text-navydark mb-6 leading-snug">
+                        Sink into layers that<br/>feel like nothing else
+                    </h3>
+                    <p class="text-gray-500 text-lg leading-relaxed mb-8">
+                        Our proprietary Cloud Foam adapts to your body's unique contours — whether you sleep on your back, side, or stomach. No pressure points. No partner disturbance. Just deep, restorative rest every single night.
+                    </p>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="bg-arctic/50 rounded-2xl p-4">
+                            <p class="font-serif text-2xl text-navy mb-1">7</p>
+                            <p class="text-gray-600 text-sm">Distinct comfort layers</p>
+                        </div>
+                        <div class="bg-arctic/50 rounded-2xl p-4">
+                            <p class="font-serif text-2xl text-navy mb-1">0°</p>
+                            <p class="text-gray-600 text-sm">Motion transfer</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="order-1 lg:order-2 h-80 lg:h-[480px] rounded-3xl overflow-hidden">
+                    <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/9be43c777c-8b997dfa3c3e7b473f24.png" alt="couple sleeping peacefully in modern minimalist bedroom, soft morning light, white bedding, serene atmosphere, lifestyle photography" />
+                </div>
+            </div>
+
+            <div id="benefit-2" class="benefit-item slide-right grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+                <div class="h-80 lg:h-[480px] rounded-3xl overflow-hidden">
+                    <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/fcf7ebc00e-4ebb1a5a9427bca50722.png" alt="modern minimalist bedroom interior design, soft blue and white palette, premium bedding, natural light, Scandinavian style" />
+                </div>
+                <div>
+                    <div class="inline-flex items-center gap-2 bg-arctic rounded-full px-4 py-2 mb-6">
+                        <i class="fa-solid fa-temperature-low text-sky text-sm"></i>
+                        <span class="text-navy text-xs font-semibold tracking-wider uppercase">Sleep Cool</span>
+                    </div>
+                    <h3 class="font-serif text-3xl lg:text-4xl text-navydark mb-6 leading-snug">
+                        Stay cool all night,<br/>every night
+                    </h3>
+                    <p class="text-gray-500 text-lg leading-relaxed mb-8">
+                        Our Climate-Adaptive® cover wicks heat away from your body and regulates temperature throughout the night. No more flipping to the cold side — the whole bed is the cold side.
+                    </p>
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-full bg-arctic flex items-center justify-center">
+                            <i class="fa-solid fa-wind text-navy"></i>
+                        </div>
+                        <div>
+                            <p class="font-semibold text-navydark text-sm">Climate-Adaptive® Technology</p>
+                            <p class="text-gray-500 text-sm">Maintains ideal sleep temperature year-round</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="benefit-3" class="benefit-item grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+                <div class="order-2 lg:order-1">
+                    <div class="inline-flex items-center gap-2 bg-arctic rounded-full px-4 py-2 mb-6">
+                        <i class="fa-solid fa-leaf text-sky text-sm"></i>
+                        <span class="text-navy text-xs font-semibold tracking-wider uppercase">Sustainably Made</span>
+                    </div>
+                    <h3 class="font-serif text-3xl lg:text-4xl text-navydark mb-6 leading-snug">
+                        Better for you.<br/>Better for the planet.
+                    </h3>
+                    <p class="text-gray-500 text-lg leading-relaxed mb-8">
+                        Every Puffy mattress is CertiPUR-US® certified — free from ozone depleters, heavy metals, and formaldehyde. Because where you sleep matters as much as how you sleep.
+                    </p>
+                    <div class="flex flex-wrap gap-3">
+                        <span class="bg-arctic border border-frost text-navy text-xs font-medium px-4 py-2 rounded-full">CertiPUR-US® Certified</span>
+                        <span class="bg-arctic border border-frost text-navy text-xs font-medium px-4 py-2 rounded-full">Made in the USA</span>
+                        <span class="bg-arctic border border-frost text-navy text-xs font-medium px-4 py-2 rounded-full">Oeko-Tex® Safe</span>
+                    </div>
+                </div>
+                <div class="order-1 lg:order-2 h-80 lg:h-[480px] rounded-3xl overflow-hidden">
+                    <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/9d47f863d0-cff21d038fbcd13a85ad.png" alt="close up of premium white cotton bedding texture, soft focus, morning light, luxury hotel aesthetic, clean and fresh" />
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="social-proof" class="bg-arctic/20 py-24 lg:py-32">
+    <div class="max-w-[1440px] mx-auto px-6 lg:px-16">
+
+        <div class="text-center mb-20">
+            <div class="flex items-baseline justify-center gap-3 mb-4">
+                <span class="font-serif text-8xl lg:text-9xl text-navydark leading-none">4.8</span>
+                <span class="font-serif text-4xl text-sky">/5</span>
+            </div>
+            <div class="flex justify-center gap-1.5 mb-4">
+                <i class="fa-solid fa-star text-amber-400 text-2xl"></i>
+                <i class="fa-solid fa-star text-amber-400 text-2xl"></i>
+                <i class="fa-solid fa-star text-amber-400 text-2xl"></i>
+                <i class="fa-solid fa-star text-amber-400 text-2xl"></i>
+                <i class="fa-solid fa-star-half-stroke text-amber-400 text-2xl"></i>
+            </div>
+            <p class="text-gray-500 text-lg">From <span class="font-semibold text-navydark">20,000+</span> verified buyers across the US</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div id="review-1" class="testimonial-card bg-white rounded-3xl p-8 border border-arctic">
+                <div class="flex items-center gap-1 mb-4">
+                    <i class="fa-solid fa-star text-amber-400 text-sm"></i>
+                    <i class="fa-solid fa-star text-amber-400 text-sm"></i>
+                    <i class="fa-solid fa-star text-amber-400 text-sm"></i>
+                    <i class="fa-solid fa-star text-amber-400 text-sm"></i>
+                    <i class="fa-solid fa-star text-amber-400 text-sm"></i>
+                </div>
+                <p class="text-gray-700 text-base leading-relaxed mb-6 font-light italic font-serif">
+                    "We just moved into our first home and the Bedroom Bundle was the best decision we made. Setup was seamless and the mattress is genuinely cloud-like. We've never slept better."
+                </p>
+                <div class="flex items-center gap-3">
+                    <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-1.jpg" class="w-11 h-11 rounded-full object-cover" />
+                    <div>
+                        <p class="font-semibold text-navydark text-sm">Sarah M.</p>
+                        <p class="text-gray-400 text-xs">New Homeowner, Austin TX</p>
+                    </div>
+                    <div class="ml-auto">
+                        <span class="bg-arctic text-navy text-xs font-medium px-3 py-1 rounded-full">Verified</span>
+                    </div>
+                </div>
+            </div>
+
+            <div id="review-2" class="testimonial-card bg-white rounded-3xl p-8 border border-arctic">
+                <div class="flex items-center gap-1 mb-4">
+                    <i class="fa-solid fa-star text-amber-400 text-sm"></i>
+                    <i class="fa-solid fa-star text-amber-400 text-sm"></i>
+                    <i class="fa-solid fa-star text-amber-400 text-sm"></i>
+                    <i class="fa-solid fa-star text-amber-400 text-sm"></i>
+                    <i class="fa-solid fa-star text-amber-400 text-sm"></i>
+                </div>
+                <p class="text-gray-700 text-base leading-relaxed mb-6 font-light italic font-serif">
+                    "The Full Home Bundle for our new place was worth every penny. Having everything coordinated and delivered together made moving in so much less stressful. 10/10 would recommend."
+                </p>
+                <div class="flex items-center gap-3">
+                    <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-2.jpg" class="w-11 h-11 rounded-full object-cover" />
+                    <div>
+                        <p class="font-semibold text-navydark text-sm">James & Priya K.</p>
+                        <p class="text-gray-400 text-xs">Newlyweds, Seattle WA</p>
+                    </div>
+                    <div class="ml-auto">
+                        <span class="bg-arctic text-navy text-xs font-medium px-3 py-1 rounded-full">Verified</span>
+                    </div>
+                </div>
+            </div>
+
+            <div id="review-3" class="testimonial-card bg-white rounded-3xl p-8 border border-arctic">
+                <div class="flex items-center gap-1 mb-4">
+                    <i class="fa-solid fa-star text-amber-400 text-sm"></i>
+                    <i class="fa-solid fa-star text-amber-400 text-sm"></i>
+                    <i class="fa-solid fa-star text-amber-400 text-sm"></i>
+                    <i class="fa-solid fa-star text-amber-400 text-sm"></i>
+                    <i class="fa-solid fa-star text-amber-400 text-sm"></i>
+                </div>
+                <p class="text-gray-700 text-base leading-relaxed mb-6 font-light italic font-serif">
+                    "I was skeptical about buying a mattress online but the 100-night trial made it a no-brainer. Spoiler: I didn't return it. The quality is insane for the price."
+                </p>
+                <div class="flex items-center gap-3">
+                    <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-5.jpg" class="w-11 h-11 rounded-full object-cover" />
+                    <div>
+                        <p class="font-semibold text-navydark text-sm">Melissa T.</p>
+                        <p class="text-gray-400 text-xs">First-time Renter, NYC</p>
+                    </div>
+                    <div class="ml-auto">
+                        <span class="bg-arctic text-navy text-xs font-medium px-3 py-1 rounded-full">Verified</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="trust-badges" class="mt-16 grid grid-cols-2 lg:grid-cols-4 gap-6">
+            <div class="bg-white rounded-2xl p-6 border border-arctic text-center">
+                <i class="fa-solid fa-shield-halved text-navy text-3xl mb-3"></i>
+                <p class="font-serif text-xl text-navydark mb-1">Lifetime</p>
+                <p class="text-gray-500 text-sm">Warranty</p>
+            </div>
+            <div class="bg-white rounded-2xl p-6 border border-arctic text-center">
+                <i class="fa-regular fa-moon text-navy text-3xl mb-3"></i>
+                <p class="font-serif text-xl text-navydark mb-1">100 Nights</p>
+                <p class="text-gray-500 text-sm">Risk-Free Trial</p>
+            </div>
+            <div class="bg-white rounded-2xl p-6 border border-arctic text-center">
+                <i class="fa-solid fa-truck-fast text-navy text-3xl mb-3"></i>
+                <p class="font-serif text-xl text-navydark mb-1">Free Setup</p>
+                <p class="text-gray-500 text-sm">White-Glove Delivery</p>
+            </div>
+            <div class="bg-white rounded-2xl p-6 border border-arctic text-center">
+                <i class="fa-solid fa-leaf text-navy text-3xl mb-3"></i>
+                <p class="font-serif text-xl text-navydark mb-1">CertiPUR-US®</p>
+                <p class="text-gray-500 text-sm">Certified Safe</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="press" class="bg-white py-14 border-t border-arctic">
+    <div class="max-w-[1440px] mx-auto px-6 lg:px-16">
+        <p class="text-center text-gray-400 text-xs font-medium tracking-widest uppercase mb-10">As featured in</p>
+        <div class="flex flex-wrap items-center justify-center gap-10 lg:gap-16">
+            <div class="text-gray-300 font-serif text-2xl font-bold tracking-tight">Forbes</div>
+            <div class="text-gray-300 font-sans text-xl font-semibold tracking-widest uppercase">WSJ</div>
+            <div class="text-gray-300 font-serif text-2xl italic">NYT</div>
+            <div class="text-gray-300 font-sans text-xl font-bold tracking-wide">WIRED</div>
+            <div class="text-gray-300 font-sans text-xl font-semibold">GQ</div>
+            <div class="text-gray-300 font-serif text-2xl">Vogue</div>
+        </div>
+    </div>
+</section>
+
+<section id="cta-banner" class="gradient-cta py-28 lg:py-36 relative overflow-hidden">
+    <div class="absolute inset-0 opacity-10">
+        <div class="absolute top-0 right-0 w-96 h-96 rounded-full bg-sky blur-3xl"></div>
+        <div class="absolute bottom-0 left-0 w-80 h-80 rounded-full bg-frost blur-3xl"></div>
+    </div>
+    <div class="relative z-10 max-w-[1440px] mx-auto px-6 lg:px-16 text-center">
+        <div class="inline-flex items-center gap-2 bg-white/10 border border-white/20 rounded-full px-4 py-2 mb-8">
+            <i class="fa-solid fa-bolt text-frost text-xs"></i>
+            <span class="text-white/80 text-xs font-medium tracking-widest uppercase">Limited Time — New Home Offer</span>
+        </div>
+        <h2 class="font-serif text-4xl lg:text-6xl xl:text-7xl text-white leading-[1.05] mb-6 max-w-4xl mx-auto">
+            Your new home deserves<br/>
+            <em class="not-italic text-frost">the best night's sleep</em>
+        </h2>
+        <p class="text-white/70 text-lg lg:text-xl max-w-2xl mx-auto mb-12 leading-relaxed">
+            Join 20,000+ new homeowners who chose Puffy. Save up to $920 on complete bedroom bundles — delivered and set up for free.
+        </p>
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <button class="bg-white text-navy font-semibold px-10 py-5 rounded-full text-base tracking-wide hover:bg-arctic transition-all shadow-xl hover:shadow-2xl">
+                Shop Home Bundles
+            </button>
+            <button class="border border-white/40 text-white font-medium px-10 py-5 rounded-full text-base tracking-wide hover:bg-white/10 transition-all backdrop-blur-sm">
+                Compare Bundle Options
+            </button>
+        </div>
+        <div class="flex flex-wrap items-center justify-center gap-8 mt-12">
+            <div class="flex items-center gap-2 text-white/60 text-sm">
+                <i class="fa-solid fa-check text-frost"></i>
+                <span>100-Night Risk-Free Trial</span>
+            </div>
+            <div class="flex items-center gap-2 text-white/60 text-sm">
+                <i class="fa-solid fa-check text-frost"></i>
+                <span>Free White-Glove Delivery</span>
+            </div>
+            <div class="flex items-center gap-2 text-white/60 text-sm">
+                <i class="fa-solid fa-check text-frost"></i>
+                <span>Lifetime Warranty</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<footer id="footer" class="bg-navydark text-white py-16">
+    <div class="max-w-[1440px] mx-auto px-6 lg:px-16">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 mb-12">
+            <div class="lg:col-span-2">
+                <div class="flex items-center gap-3 mb-5">
+                    <div class="w-8 h-8 rounded-full bg-sky flex items-center justify-center">
+                        <span class="text-white text-xs font-serif font-bold">P</span>
+                    </div>
+                    <span class="font-serif text-2xl text-white">Puffy</span>
+                </div>
+                <p class="text-white/50 text-sm leading-relaxed mb-6 max-w-xs">
+                    Premium sleep solutions for new homeowners. Cloud-like comfort, delivered to your door.
+                </p>
+                <div class="flex items-center gap-4">
+                    <a href="#" class="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-sky/40 transition-colors">
+                        <i class="fa-brands fa-instagram text-sm"></i>
+                    </a>
+                    <a href="#" class="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-sky/40 transition-colors">
+                        <i class="fa-brands fa-facebook-f text-sm"></i>
+                    </a>
+                    <a href="#" class="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-sky/40 transition-colors">
+                        <i class="fa-brands fa-tiktok text-sm"></i>
+                    </a>
+                    <a href="#" class="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-sky/40 transition-colors">
+                        <i class="fa-brands fa-pinterest text-sm"></i>
+                    </a>
+                </div>
+            </div>
+            <div>
+                <h4 class="font-semibold text-sm tracking-widest uppercase text-white/60 mb-5">Products</h4>
+                <ul class="space-y-3">
+                    <li><a href="#" class="text-white/70 text-sm hover:text-white transition-colors">Mattresses</a></li>
+                    <li><a href="#" class="text-white/70 text-sm hover:text-white transition-colors">Home Bundles</a></li>
+                    <li><a href="#" class="text-white/70 text-sm hover:text-white transition-colors">Pillows</a></li>
+                    <li><a href="#" class="text-white/70 text-sm hover:text-white transition-colors">Bedding</a></li>
+                    <li><a href="#" class="text-white/70 text-sm hover:text-white transition-colors">Protectors</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-semibold text-sm tracking-widest uppercase text-white/60 mb-5">Company</h4>
+                <ul class="space-y-3">
+                    <li><a href="#" class="text-white/70 text-sm hover:text-white transition-colors">About Puffy</a></li>
+                    <li><a href="#" class="text-white/70 text-sm hover:text-white transition-colors">Reviews</a></li>
+                    <li><a href="#" class="text-white/70 text-sm hover:text-white transition-colors">Blog</a></li>
+                    <li><a href="#" class="text-white/70 text-sm hover:text-white transition-colors">Careers</a></li>
+                    <li><a href="#" class="text-white/70 text-sm hover:text-white transition-colors">Press</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-semibold text-sm tracking-widest uppercase text-white/60 mb-5">Support</h4>
+                <ul class="space-y-3">
+                    <li><a href="#" class="text-white/70 text-sm hover:text-white transition-colors">Help Center</a></li>
+                    <li><a href="#" class="text-white/70 text-sm hover:text-white transition-colors">Warranty</a></li>
+                    <li><a href="#" class="text-white/70 text-sm hover:text-white transition-colors">Returns</a></li>
+                    <li><a href="#" class="text-white/70 text-sm hover:text-white transition-colors">Financing</a></li>
+                    <li><a href="#" class="text-white/70 text-sm hover:text-white transition-colors">Contact</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="border-t border-white/10 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
+            <p class="text-white/40 text-xs">© 2024 Puffy Sleep, Inc. All rights reserved.</p>
+            <div class="flex items-center gap-6">
+                <a href="#" class="text-white/40 text-xs hover:text-white/70 transition-colors">Privacy Policy</a>
+                <a href="#" class="text-white/40 text-xs hover:text-white/70 transition-colors">Terms of Service</a>
+                <a href="#" class="text-white/40 text-xs hover:text-white/70 transition-colors">Accessibility</a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<div id="mobile-sticky-cta" class="fixed bottom-0 left-0 right-0 z-50 lg:hidden bg-white border-t border-arctic px-4 py-4 shadow-2xl">
+    <button class="w-full bg-navy text-white font-semibold py-4 rounded-2xl text-sm tracking-wide">
+        <i class="fa-solid fa-home mr-2"></i> Shop Home Bundles — Save up to $920
+    </button>
+</div>
+
+<script>
+    window.addEventListener('load', function() {
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const valueIcons = document.querySelectorAll('.value-icon');
+        const valueObserver = new IntersectionObserver(function(entries) {
+            entries.forEach(function(entry) {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+        valueIcons.forEach(function(icon) { valueObserver.observe(icon); });
+
+        const benefitItems = document.querySelectorAll('.benefit-item');
+        const benefitObserver = new IntersectionObserver(function(entries) {
+            entries.forEach(function(entry) {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.15 });
+        benefitItems.forEach(function(item) { benefitObserver.observe(item); });
+
+        const heroSection = document.getElementById('hero');
+        const heroBg = heroSection.querySelector('.parallax-hero');
+        window.addEventListener('scroll', function() {
+            const scrolled = window.pageYOffset;
+            const heroHeight = heroSection.offsetHeight;
+            if (scrolled < heroHeight) {
+                heroBg.style.transform = 'translateY(' + (scrolled * 0.4) + 'px)';
+            }
+        });
+
+        const header = document.getElementById('header');
+        window.addEventListener('scroll', function() {
+            if (window.pageYOffset > 80) {
+                header.classList.add('shadow-md');
+            } else {
+                header.classList.remove('shadow-md');
+            }
+        });
+    });
+</script>
+</body>
+</html>
