@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-62DWPTYD6F"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-62DWPTYD6F');
+  </script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27><rect width=%2732%27 height=%2732%27 rx=%274%27 fill=%27%230e0e0e%27/><text x=%2716%27 y=%2722%27 font-family=%27Georgia,serif%27 font-size=%2714%27 font-weight=%27600%27 fill=%27%23f7f5f0%27 text-anchor=%27middle%27>AP</text></svg>" />
+  <title>Biniyog Paper Trading - 0→1 Product Case Study | Akash Poddar</title>
+  <meta name="description" content="How I built Biniyog.com.bd's paper trading feature from 0 to 1 - a risk-free simulated trading environment that helped thousands of retail investors learn to trade before committing real money." />
+  <link rel="canonical" href="https://echo-akash.github.io/papertrading.html" />
+  <meta property="og:title" content="Biniyog Paper Trading - 0→1 PM Case Study | Akash Poddar" />
+  <meta property="og:description" content="Building a risk-free simulated stock trading environment for Bangladeshi retail investors - from concept to launch, entirely from scratch." />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://echo-akash.github.io/papertrading.html" />
+  <meta property="og:image" content="https://echo-akash.github.io/og-image.png" />
+  <meta name="author" content="Akash Poddar" />
+  <meta name="robots" content="index, follow" />
+  <meta name="theme-color" content="#0e0e0e" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Biniyog Paper Trading - 0→1 Product Case Study",
+    "description": "How Akash Poddar built Biniyog.com.bd's paper trading feature from zero - a simulated stock trading environment that reduced the barrier to entry for Bangladeshi retail investors.",
+    "author": { "@type": "Person", "name": "Akash Poddar", "url": "https://echo-akash.github.io/" },
+    "publisher": { "@type": "Person", "name": "Akash Poddar" }
+  }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,600;1,9..144,500&family=DM+Sans:wght@300;400;500&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,300;1,9..144,500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" /></noscript>
+  <style>
+    :root {
+      --ink: #0e0e0e;
+      --ink-mid: #444;
+      --ink-muted: #696969;
+      --ink-faint: #bbb;
+      --surface: #f7f5f0;
+      --white: #ffffff;
+      --accent: #b45309;
+      --accent-light: #fef3e2;
+      --accent-dark: #92400e;
+      --accent2: #1c4f8a;
+      --accent2-light: #e8f0fa;
+      --green: #166534;
+      --green-light: #dcfce7;
+      --line: rgba(0,0,0,0.08);
+      --serif: 'Fraunces', Georgia, serif;
+      --sans: 'DM Sans', system-ui, sans-serif;
+      --radius: 10px;
+      --ease: cubic-bezier(0.16, 1, 0.3, 1);
+      --wide-w: 1000px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+    }
+    body { font-family: var(--sans); background: var(--surface); color: var(--ink); font-size: 15px; line-height: 1.6; overflow-x: hidden; }
+
+    /* ── NAV ── */
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 0 40px; height: 56px; background: rgba(247,245,240,0.88); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); }
+    .nav-logo { font-family: var(--serif); font-size: 16px; font-weight: 600; color: var(--ink); text-decoration: none; letter-spacing: -0.02em; }
+    .nav-links { display: flex; gap: 32px; list-style: none; }
+    .nav-links a { font-size: 13px; color: var(--ink-mid); text-decoration: none; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--accent); }
+    .nav-cta { font-size: 13px; padding: 7px 18px; background: var(--ink); color: var(--white); border-radius: 20px; text-decoration: none; transition: background 0.2s; }
+    .nav-cta:hover { background: var(--accent); }
+
+    /* ── HERO ── */
+    .cs-hero { background: var(--ink); padding: 120px 40px 80px; position: relative; overflow: hidden; }
+    .cs-hero-inner { max-width: var(--wide-w); margin: 0 auto; position: relative; z-index: 1; }
+    .cs-hero-grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px); background-size: 60px 60px; }
+    .cs-hero-shimmer { position: absolute; inset: 0; background: radial-gradient(ellipse 60% 60% at 72% 50%, rgba(180,83,9,0.18) 0%, transparent 70%); }
+    .cs-hero-bar { height: 4px; background: linear-gradient(90deg, #b45309, #f59e0b); border-radius: 2px; width: 64px; margin-bottom: 28px; }
+    .cs-meta-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 24px; }
+    .cs-tag { font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; padding: 5px 14px; border-radius: 20px; }
+    .tag-amber  { background: rgba(180,83,9,0.22); color: #fbbf24; border: 1px solid rgba(180,83,9,0.3); }
+    .tag-green  { background: rgba(22,101,52,0.2); color: #6ee7b7; border: 1px solid rgba(22,101,52,0.3); }
+    .tag-blue   { background: rgba(55,138,221,0.15); color: #85b7eb; border: 1px solid rgba(55,138,221,0.2); }
+    .tag-gray   { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.45); border: 1px solid rgba(255,255,255,0.1); }
+    .cs-hero-title { font-family: var(--serif); font-size: clamp(34px, 5.5vw, 60px); font-weight: 600; letter-spacing: -0.03em; line-height: 0.95; color: #fff; margin-bottom: 20px; }
+    .cs-hero-title em { font-style: italic; font-weight: 300; color: rgba(255,255,255,0.38); }
+    .cs-hero-sub { font-size: 17px; font-weight: 300; color: rgba(255,255,255,0.5); max-width: 640px; line-height: 1.7; margin-bottom: 48px; }
+    .cs-hero-sub strong { color: rgba(255,255,255,0.8); font-weight: 400; }
+    .cs-kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 40px; }
+    .cs-kpi { padding-right: 32px; border-right: 1px solid rgba(255,255,255,0.08); }
+    .cs-kpi:last-child { border-right: none; }
+    .cs-kpi-num { font-family: var(--serif); font-size: 32px; font-weight: 600; letter-spacing: -0.02em; color: #fff; line-height: 1; margin-bottom: 6px; }
+    .cs-kpi-num span { font-size: 20px; font-style: italic; font-weight: 300; color: rgba(255,255,255,0.35); }
+    .cs-kpi-label { font-size: 11px; color: rgba(255,255,255,0.38); line-height: 1.4; max-width: 130px; }
+
+    /* ── TOC ── */
+    .toc-bar { position: sticky; top: 56px; z-index: 90; background: var(--white); border-bottom: 1px solid var(--line); overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+    .toc-bar::-webkit-scrollbar { display: none; }
+    .toc-inner { max-width: var(--wide-w); margin: 0 auto; display: flex; padding: 0 40px; }
+    .toc-item { font-size: 12px; color: var(--ink-muted); text-decoration: none; padding: 14px 20px; white-space: nowrap; border-bottom: 2px solid transparent; transition: color 0.2s, border-color 0.2s; display: flex; align-items: center; gap: 6px; }
+    .toc-item:hover { color: var(--accent); border-bottom-color: var(--accent); }
+    .toc-item.active { color: var(--accent); border-bottom-color: var(--accent); }
+    .toc-num { font-size: 10px; color: var(--ink-faint); }
+
+    /* ── BODY ── */
+    .cs-body { max-width: var(--wide-w); margin: 0 auto; padding: 0 40px; }
+    .cs-section { padding: 72px 0 0; content-visibility: auto; contain-intrinsic-size: 0 600px; }
+    .cs-section:last-of-type { padding-bottom: 80px; }
+    .section-eyebrow { font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+    .section-eyebrow::after { content: ''; flex: 0 0 32px; height: 1px; background: var(--accent); opacity: 0.4; }
+    .cs-section h2 { font-family: var(--serif); font-size: 32px; font-weight: 600; letter-spacing: -0.02em; color: var(--ink); line-height: 1.15; margin-bottom: 28px; }
+    .cs-section h3 { font-family: var(--serif); font-size: 20px; font-weight: 600; letter-spacing: -0.01em; color: var(--ink); margin: 36px 0 14px; }
+    .cs-section p { font-size: 15px; color: var(--ink-mid); line-height: 1.8; font-weight: 300; margin-bottom: 16px; }
+    .cs-section p strong { color: var(--ink); font-weight: 500; }
+    .cs-divider { border: none; border-top: 1px solid var(--line); margin: 56px 0 0; }
+
+    /* ── CALLOUT ── */
+    .callout { background: var(--accent-light); border-left: 3px solid var(--accent); border-radius: 0 var(--radius) var(--radius) 0; padding: 20px 24px; margin: 28px 0; }
+    .callout p { margin-bottom: 0; color: var(--ink); font-weight: 400; }
+    .callout p strong { color: var(--accent-dark); }
+    .callout-blue { background: var(--accent2-light); border-left-color: var(--accent2); }
+    .callout-blue p strong { color: var(--accent2); }
+    .callout-green { background: var(--green-light); border-left-color: var(--green); }
+    .callout-green p strong { color: var(--green); }
+
+    /* ── TWO / THREE COL ── */
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 28px 0; }
+    .two-col-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 18px; margin: 28px 0; }
+
+    /* ── CARD ── */
+    .card { background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); padding: 24px; }
+    .card-label { font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; }
+    .card h4 { font-family: var(--serif); font-size: 17px; font-weight: 600; color: var(--ink); margin-bottom: 8px; line-height: 1.3; }
+    .card p { font-size: 13.5px; color: var(--ink-mid); line-height: 1.7; margin-bottom: 0; }
+
+    /* ── STEP LIST ── */
+    .step-list { display: flex; flex-direction: column; margin: 28px 0; }
+    .step-item { display: grid; grid-template-columns: 56px 1fr; gap: 0 20px; padding: 28px 0; border-top: 1px solid var(--line); align-items: start; }
+    .step-item:last-child { border-bottom: 1px solid var(--line); }
+    .step-num { font-family: var(--serif); font-size: 28px; font-weight: 600; color: var(--accent); letter-spacing: -0.02em; line-height: 1; padding-top: 4px; }
+    .step-title { font-family: var(--serif); font-size: 18px; font-weight: 600; color: var(--ink); margin-bottom: 8px; line-height: 1.2; }
+    .step-body { font-size: 14px; color: var(--ink-mid); line-height: 1.75; font-weight: 300; }
+    .step-body strong { color: var(--ink); font-weight: 500; }
+
+    /* ── ACCOUNT TYPE COMPARISON ── */
+    .account-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 28px 0; }
+    .account-card { background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); padding: 28px; position: relative; overflow: hidden; }
+    .account-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; }
+    .ac-sim::before { background: linear-gradient(90deg, #b45309, #f59e0b); }
+    .ac-port::before { background: linear-gradient(90deg, #1c4f8a, #3b82f6); }
+    .account-badge { font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; padding: 4px 12px; border-radius: 20px; display: inline-block; margin-bottom: 14px; }
+    .ab-sim  { background: var(--accent-light); color: var(--accent-dark); }
+    .ab-port { background: var(--accent2-light); color: var(--accent2); }
+    .account-title { font-family: var(--serif); font-size: 20px; font-weight: 600; color: var(--ink); margin-bottom: 6px; }
+    .account-sub { font-size: 12px; color: var(--ink-muted); margin-bottom: 16px; font-style: italic; }
+    .account-features { display: flex; flex-direction: column; gap: 10px; }
+    .account-feature { display: flex; gap: 10px; font-size: 13.5px; color: var(--ink-mid); line-height: 1.6; }
+    .af-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; margin-top: 7px; }
+    .af-amber { background: var(--accent); }
+    .af-blue  { background: var(--accent2); }
+
+    /* ── FEATURE AREA GRID ── */
+    .feature-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin: 28px 0; }
+    .feature-card { background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); padding: 22px; }
+    .feature-icon { font-size: 24px; margin-bottom: 10px; line-height: 1; }
+    .feature-title { font-family: var(--serif); font-size: 15px; font-weight: 600; color: var(--ink); margin-bottom: 8px; line-height: 1.3; }
+    .feature-body { font-size: 13px; color: var(--ink-mid); line-height: 1.65; }
+
+    /* ── PERSONA GRID ── */
+    .persona-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 18px; margin: 28px 0; }
+    .persona-card { background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); padding: 24px; }
+    .persona-icon { width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: var(--serif); font-size: 16px; font-weight: 600; margin-bottom: 14px; }
+    .pi-amber { background: var(--accent-light); color: var(--accent-dark); }
+    .pi-blue  { background: var(--accent2-light); color: var(--accent2); }
+    .pi-green { background: var(--green-light); color: var(--green); }
+    .persona-name { font-family: var(--serif); font-size: 17px; font-weight: 600; color: var(--ink); margin-bottom: 4px; }
+    .persona-role { font-size: 12px; color: var(--ink-muted); margin-bottom: 12px; }
+    .persona-body { font-size: 13.5px; color: var(--ink-mid); line-height: 1.7; }
+
+    /* ── JOURNEY STRIP ── */
+    .journey-strip { background: var(--ink); border-radius: var(--radius); padding: 32px 36px; margin: 28px 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; position: relative; }
+    .journey-step { text-align: center; padding: 0 16px; position: relative; }
+    .journey-step::after { content: '→'; position: absolute; right: -8px; top: 50%; transform: translateY(-50%); color: rgba(255,255,255,0.2); font-size: 18px; }
+    .journey-step:last-child::after { display: none; }
+    .journey-icon { font-size: 28px; margin-bottom: 10px; display: block; }
+    .journey-label { font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,255,255,0.35); margin-bottom: 6px; }
+    .journey-text { font-family: var(--serif); font-size: 14px; font-weight: 600; color: #fff; line-height: 1.3; }
+
+    /* ── SIGNAL TABLE ── */
+    .signal-table { width: 100%; border-collapse: collapse; margin: 28px 0; font-size: 13.5px; }
+    .signal-table th { text-align: left; font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-muted); padding: 12px 16px; border-bottom: 2px solid var(--line); }
+    .signal-table td { padding: 14px 16px; border-bottom: 1px solid var(--line); color: var(--ink-mid); vertical-align: top; line-height: 1.6; }
+    .signal-table td:first-child { font-weight: 500; color: var(--ink); }
+    .signal-table tr:last-child td { border-bottom: none; }
+    .signal-table tr:hover td { background: rgba(180,83,9,0.03); }
+
+    /* ── RISK GRID ── */
+    .risk-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 28px 0; }
+    .risk-card { background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); padding: 22px; }
+    .risk-level { font-size: 10px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; padding: 3px 10px; border-radius: 20px; display: inline-block; margin-bottom: 10px; }
+    .r-high { background: #faeae7; color: #8c3320; }
+    .r-med  { background: var(--accent-light); color: var(--accent-dark); }
+    .r-low  { background: var(--green-light); color: var(--green); }
+    .risk-title { font-size: 14px; font-weight: 500; color: var(--ink); margin-bottom: 8px; line-height: 1.35; }
+    .risk-body { font-size: 13px; color: var(--ink-mid); line-height: 1.7; }
+
+    /* ── LESSON LIST ── */
+    .lesson-list { display: flex; flex-direction: column; margin: 28px 0; }
+    .lesson-item { display: grid; grid-template-columns: 48px 1fr; gap: 0 20px; padding: 28px 0; border-top: 1px solid var(--line); }
+    .lesson-item:last-child { border-bottom: 1px solid var(--line); }
+    .lesson-num { font-family: var(--serif); font-size: 24px; font-weight: 600; color: var(--accent); opacity: 0.4; line-height: 1; padding-top: 4px; }
+    .lesson-title { font-family: var(--serif); font-size: 18px; font-weight: 600; color: var(--ink); margin-bottom: 8px; line-height: 1.2; }
+    .lesson-body { font-size: 14px; color: var(--ink-mid); line-height: 1.75; font-weight: 300; }
+    .lesson-body strong { color: var(--ink); font-weight: 500; }
+
+    /* ── APPENDIX BAND ── */
+    .appendix-band { background: #111; border-top: 1px solid rgba(255,255,255,0.06); padding: 80px 40px; }
+    .appendix-inner { max-width: var(--wide-w); margin: 0 auto; }
+    .appendix-header { margin-bottom: 56px; }
+    .appendix-eyebrow { font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); margin-bottom: 12px; }
+    .appendix-title { font-family: var(--serif); font-size: 32px; font-weight: 600; letter-spacing: -0.02em; color: #fff; margin-bottom: 12px; }
+    .appendix-sub { font-size: 15px; color: rgba(255,255,255,0.4); font-weight: 300; max-width: 560px; line-height: 1.7; }
+    .appendix-block { margin-bottom: 56px; }
+    .appendix-block:last-child { margin-bottom: 0; }
+    .appendix-block-label { font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.3); margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .appendix-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .appendix-table th { text-align: left; font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,255,255,0.3); padding: 10px 16px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+    .appendix-table td { padding: 14px 16px; border-bottom: 1px solid rgba(255,255,255,0.06); color: rgba(255,255,255,0.55); vertical-align: top; line-height: 1.65; }
+    .appendix-table td:first-child { color: rgba(255,255,255,0.25); font-size: 11px; white-space: nowrap; font-weight: 500; letter-spacing: 0.04em; }
+    .appendix-table tr:last-child td { border-bottom: none; }
+    .appendix-table tr:hover td { background: rgba(255,255,255,0.02); }
+    .appendix-flow-intro { font-size: 14px; color: rgba(255,255,255,0.4); margin-bottom: 28px; font-weight: 300; }
+    .flow-steps { display: flex; flex-direction: column; }
+    .flow-arrow { text-align: center; color: rgba(255,255,255,0.15); font-size: 18px; padding: 4px 0 4px 24px; }
+    .flow-step { display: grid; grid-template-columns: 40px 1fr; gap: 0 16px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); border-radius: var(--radius); padding: 18px 20px; align-items: start; }
+    .flow-step-final { background: rgba(180,83,9,0.1); border-color: rgba(180,83,9,0.3); }
+    .flow-step-num { font-family: var(--serif); font-size: 18px; font-weight: 600; color: var(--accent); line-height: 1; padding-top: 2px; }
+    .flow-step-final .flow-step-num { font-size: 20px; }
+    .flow-step-title { font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.7); margin-bottom: 5px; }
+    .flow-step-text { font-size: 12.5px; color: rgba(255,255,255,0.38); line-height: 1.65; }
+    .flow-yes { color: #a8edcc; }
+    .flow-no  { color: rgba(255,120,80,0.8); }
+
+    /* ── VIDEO EMBED ── */
+    .video-wrap { position: relative; width: 100%; padding-bottom: 56.25%; border-radius: var(--radius); overflow: hidden; margin: 28px 0; background: var(--ink); }
+    .video-wrap iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+
+    /* ── REVEAL ── */
+    .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.6s var(--ease), transform 0.6s var(--ease); }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* ── FOOTER ── */
+    footer { background: var(--ink); border-top: 1px solid rgba(255,255,255,0.06); padding: 24px 40px; text-align: center; font-size: 12px; color: rgba(255,255,255,0.55); }
+    footer a { color: rgba(255,255,255,0.55); text-decoration: none; }
+    footer a:hover { color: var(--white); }
+
+    /* ══════════════════════════════════════════
+       RESPONSIVE - 768px
+    ══════════════════════════════════════════ */
+    @media (max-width: 768px) {
+      nav { padding: 0 20px; }
+      .nav-links { display: none; }
+      .cs-hero { padding: 96px 20px 52px; }
+      .cs-hero-title { font-size: clamp(28px, 8vw, 44px); }
+      .cs-hero-sub { font-size: 14px; margin-bottom: 32px; }
+      .cs-kpi-row { grid-template-columns: 1fr 1fr; gap: 24px 16px; padding-top: 28px; }
+      .cs-kpi { border-right: none !important; padding-right: 0 !important; padding-left: 0 !important; }
+      .cs-kpi:nth-child(odd) { border-right: 1px solid rgba(255,255,255,0.1) !important; padding-right: 16px !important; }
+      .cs-kpi-num { font-size: 24px; }
+      .cs-kpi-label { font-size: 11px; }
+      .toc-inner { padding: 0 16px; }
+      .toc-item { padding: 12px 12px; font-size: 11px; }
+      .cs-body { padding: 0 20px; }
+      .cs-section { padding: 48px 0 0; }
+      .cs-section h2 { font-size: 22px; margin-bottom: 20px; }
+      .cs-section h3 { font-size: 17px; margin: 24px 0 10px; }
+      .cs-section p { font-size: 14px; line-height: 1.75; }
+      .cs-divider { margin: 40px 0 0; }
+      .callout { padding: 16px 18px; }
+      .two-col, .two-col-3, .account-grid, .risk-grid { grid-template-columns: 1fr; }
+      .feature-grid { grid-template-columns: 1fr 1fr; }
+      .persona-grid { grid-template-columns: 1fr; }
+      .step-item { grid-template-columns: 40px 1fr; gap: 0 14px; padding: 20px 0; }
+      .step-num { font-size: 22px; }
+      .step-title { font-size: 16px; }
+      .step-body { font-size: 13.5px; }
+      .lesson-item { grid-template-columns: 40px 1fr; gap: 0 14px; padding: 20px 0; }
+      .lesson-num { font-size: 20px; }
+      .lesson-title { font-size: 16px; }
+      .lesson-body { font-size: 13.5px; }
+      .journey-strip { grid-template-columns: 1fr 1fr; gap: 20px; padding: 24px 20px; }
+      .journey-step::after { display: none; }
+
+      /* Signal table → stacked cards */
+      .signal-table { border-collapse: separate; border-spacing: 0; font-size: 13px; }
+      .signal-table thead { display: none; }
+      .signal-table tbody { display: flex; flex-direction: column; gap: 12px; }
+      .signal-table tr { display: block; background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px; }
+      .signal-table td { display: block; padding: 4px 0; border: none; white-space: normal; font-size: 13.5px; line-height: 1.65; }
+      .signal-table td:first-child { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); padding-bottom: 8px; margin-bottom: 4px; border-bottom: 1px solid var(--line); }
+      .signal-table td[data-label]::before { content: attr(data-label); display: block; font-size: 10px; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase; color: var(--ink-muted); margin-top: 8px; margin-bottom: 2px; }
+
+      /* Appendix table → stacked cards */
+      .appendix-table { border-collapse: separate; border-spacing: 0; }
+      .appendix-table thead { display: none; }
+      .appendix-table tbody { display: flex; flex-direction: column; gap: 12px; }
+      .appendix-table tr { display: block; border: 1px solid rgba(255,255,255,0.09); border-radius: var(--radius); padding: 16px; background: rgba(255,255,255,0.025); }
+      .appendix-table td { display: block; padding: 4px 0; border: none; font-size: 13px; line-height: 1.65; white-space: normal; color: rgba(255,255,255,0.6); }
+      .appendix-table td:first-child { font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent) !important; padding-bottom: 8px; margin-bottom: 4px; border-bottom: 1px solid rgba(255,255,255,0.07); }
+      .appendix-table td[data-label]::before { content: attr(data-label); display: block; font-size: 10px; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase; color: rgba(255,255,255,0.28); margin-top: 8px; margin-bottom: 2px; }
+
+      .appendix-band { padding: 52px 20px 60px; }
+      .appendix-title { font-size: 24px; }
+      .appendix-sub { font-size: 14px; }
+      .flow-step { grid-template-columns: 32px 1fr; gap: 0 12px; padding: 14px 16px; }
+      .flow-step-num { font-size: 15px; }
+      .flow-step-title { font-size: 12px; }
+      .flow-step-text { font-size: 12px; }
+      footer { padding: 20px; }
+    }
+
+    /* ══════════════════════════════════════════
+       RESPONSIVE - 480px
+    ══════════════════════════════════════════ */
+    @media (max-width: 480px) {
+      .cs-hero { padding: 88px 16px 44px; }
+      .cs-body { padding: 0 16px; }
+      .appendix-band { padding: 44px 16px 52px; }
+      .cs-kpi-row { gap: 20px 12px; }
+      .cs-kpi-num { font-size: 22px; }
+      .cs-kpi-label { font-size: 10px; }
+      .feature-grid { grid-template-columns: 1fr; }
+      .journey-strip { grid-template-columns: 1fr; gap: 16px; }
+      .card { padding: 18px; }
+      .feature-card { padding: 18px; }
+      .risk-card { padding: 18px; }
+      .account-card { padding: 22px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a class="nav-logo" href="index.html">Akash Poddar</a>
+    <ul class="nav-links">
+      <li><a href="work.html">Case Studies</a></li>
+      <li><a href="index.html#experience">Experience</a></li>
+      <li><a href="index.html#skills">Skills</a></li>
+      <li><a href="index.html#contact">Contact</a></li>
+    </ul>
+    <a class="nav-cta" href="index.html#contact">Get in touch</a>
+  </nav>
+
+  <!-- HERO -->
+  <div class="cs-hero">
+    <div class="cs-hero-grid"></div>
+    <div class="cs-hero-shimmer"></div>
+    <div class="cs-hero-inner">
+      <div class="cs-hero-bar"></div>
+      <div class="cs-meta-row">
+        <span class="cs-tag tag-amber">0→1 Product</span>
+        <span class="cs-tag tag-green">Fintech · Stock Trading</span>
+        <span class="cs-tag tag-blue">Risk-Free Simulation</span>
+        <span class="cs-tag tag-gray">Biniyog.com.bd · 2023</span>
+      </div>
+      <h1 class="cs-hero-title">Paper Trading<br><em>Risk-Free Simulation for Retail Investors</em></h1>
+      <p class="cs-hero-sub">How I built Biniyog's paper trading feature from zero - giving <strong>thousands of retail investors</strong> a consequence-free environment to learn stock trading with real market data, before ever risking a single taka.</p>
+      <div class="cs-kpi-row">
+        <div class="cs-kpi">
+          <div class="cs-kpi-num">↑<span>Users</span></div>
+          <div class="cs-kpi-label">New registered traders via paper trading onboarding</div>
+        </div>
+        <div class="cs-kpi">
+          <div class="cs-kpi-num">↑<span>Activation</span></div>
+          <div class="cs-kpi-label">Free-to-real-account conversion from paper traders</div>
+        </div>
+        <div class="cs-kpi">
+          <div class="cs-kpi-num">2<span>modes</span></div>
+          <div class="cs-kpi-label">Virtual Simulation + Virtual Portfolio - distinct use cases</div>
+        </div>
+        <div class="cs-kpi">
+          <div class="cs-kpi-num">0→1<span></span></div>
+          <div class="cs-kpi-label">Full feature built from scratch - no prior simulation infrastructure</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOC -->
+  <nav class="toc-bar" aria-label="Table of contents">
+    <div class="toc-inner">
+      <a class="toc-item active" href="#background"><span class="toc-num">01</span> Background</a>
+      <a class="toc-item" href="#problem"><span class="toc-num">02</span> Problem</a>
+      <a class="toc-item" href="#users"><span class="toc-num">03</span> Users</a>
+      <a class="toc-item" href="#approach"><span class="toc-num">04</span> My Approach</a>
+      <a class="toc-item" href="#design"><span class="toc-num">05</span> Product Design</a>
+      <a class="toc-item" href="#features"><span class="toc-num">06</span> Key Features</a>
+      <a class="toc-item" href="#metrics"><span class="toc-num">07</span> Metrics</a>
+      <a class="toc-item" href="#risks"><span class="toc-num">08</span> Risks</a>
+      <a class="toc-item" href="#lessons"><span class="toc-num">09</span> Lessons</a>
+    </div>
+  </nav>
+
+  <!-- BODY -->
+  <div class="cs-body">
+
+    <!-- 01 BACKGROUND -->
+    <section class="cs-section" id="background">
+      <div class="section-eyebrow">01 &mdash; Background</div>
+      <h2>Bangladesh's retail investors wanted to trade - but fear of loss kept most of them out.</h2>
+      <p>Biniyog.com.bd is Bangladesh's digital stock brokerage platform - built to democratise access to the Dhaka Stock Exchange for retail investors across the country. By 2023, the platform had a growing user base of registered traders managing real portfolios. But the data told a frustrating story at the top of the funnel: <strong>a significant share of registered users never executed a single trade.</strong></p>
+      <p>Interviews and support conversations kept surfacing the same theme. Users understood the platform. They were interested in trading. But they were afraid to start - afraid of making a costly mistake, afraid of misreading the market, afraid of losing money before they felt ready. <strong>The gap between "registered" and "active trader" was a confidence gap, not a capability gap.</strong></p>
+      <p>Other platforms in mature markets had solved this decades ago with paper trading - a simulated environment where users practice with real market data but no real money on the line. Biniyog had no equivalent. Every new user's first trade was a live trade, with real capital at risk. For a retail investor in Bangladesh with limited disposable savings, that's a high bar. I proposed building paper trading as a first-class product feature, not a secondary tool.</p>
+      <div class="callout reveal">
+        <p><strong>The opportunity framing:</strong> If we can give users a safe environment to build confidence before committing real money, we lower the barrier to activation - and every activated trader is a long-term revenue-generating user for Biniyog. Paper trading wasn't a nice-to-have for learning; it was an activation and retention lever.</p>
+      </div>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 02 PROBLEM -->
+    <section class="cs-section" id="problem">
+      <div class="section-eyebrow">02 &mdash; Problem</div>
+      <h2>Three distinct barriers, each requiring a different product response.</h2>
+      <p>When I dug into why users weren't activating, I found three separate failure modes. Addressing only one would leave the other two intact and conversion would barely move.</p>
+
+      <div class="step-list reveal">
+        <div class="step-item">
+          <div class="step-num">01</div>
+          <div>
+            <div class="step-title">Financial anxiety blocked the first trade</div>
+            <div class="step-body">For many Biniyog users, stock trading represented a significant financial decision - not a casual experiment. The stakes of a first wrong move felt disproportionately high. <strong>What they needed was a consequence-free environment where mistakes cost nothing.</strong> Reading about trading mechanics is not the same as experiencing them. Users needed to feel the rhythm of placing an order, watching it execute, and tracking their portfolio - without the downside of losing real money while they learned.</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">02</div>
+          <div>
+            <div class="step-title">No way to validate a strategy before going live</div>
+            <div class="step-body">More experienced users - those who had done their research and developed a trading thesis - had no way to test their strategy before committing capital. <strong>The only test environment was the real market.</strong> This was particularly acute for users who had specific strategies in mind: "I think I should buy sector X when Y happens" - but had no mechanism to run that hypothesis against real market data without risk. A paper trading environment would serve these users as a strategy validation layer, not just a beginner's tool.</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">03</div>
+          <div>
+            <div class="step-title">Portfolio managers needed a manual import tool, not just a simulation</div>
+            <div class="step-body">A third group had an entirely different problem. Some users were managing existing stock portfolios held through physical BO accounts at other brokerages - but wanted to use Biniyog's portfolio management and analytics tools. They didn't need a simulation; they needed a way to <strong>manually import their existing portfolio positions into Biniyog to track and analyse them without routing actual trades through the platform.</strong> This was an underserved use case that a "virtual portfolio" concept could address alongside the simulation feature.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 03 USERS -->
+    <section class="cs-section" id="users">
+      <div class="section-eyebrow">03 &mdash; Users</div>
+      <h2>Three distinct users - one feature surface, two product modes.</h2>
+      <p>The three barrier types mapped to three user profiles, each with genuinely different needs from a simulation environment. Getting this segmentation right was what led me to build two distinct account modes rather than one.</p>
+
+      <div class="persona-grid reveal">
+        <div class="persona-card">
+          <div class="persona-icon pi-amber">AB</div>
+          <div class="persona-name">The Anxious Beginner</div>
+          <div class="persona-role">Registered but never traded</div>
+          <div class="persona-body">Understands the platform, wants to trade, but is paralysed by fear of making a costly first mistake. Needs a forgiving environment that mimics real trading exactly - real market prices, real order types, real portfolio tracking - so that confidence built in the simulation transfers directly to live trading. For this user, the simulation must feel real without being real.</div>
+        </div>
+        <div class="persona-card">
+          <div class="persona-icon pi-green">ST</div>
+          <div class="persona-name">The Strategy Tester</div>
+          <div class="persona-role">Researched, thesis-driven, but cautious</div>
+          <div class="persona-body">Has done their homework and has a trading strategy they want to validate. May already have some trading experience but wants to test a specific approach - sector rotation, timing signals, a set of entry rules - against actual market data before committing capital. For this user, the simulation is a laboratory: they need accurate price execution, realistic order matching, and performance tracking over time.</div>
+        </div>
+        <div class="persona-card">
+          <div class="persona-icon pi-blue">PM</div>
+          <div class="persona-name">The Portfolio Manager</div>
+          <div class="persona-role">Existing trader using another brokerage</div>
+          <div class="persona-body">Already actively trading through a physical BO account but wants Biniyog's analytics and portfolio management tools. Doesn't need simulation - needs a way to mirror their real portfolio on Biniyog for tracking and analysis. For this user, manual data entry (trading code, quantity, average cost) is the core workflow, not simulated order placement. This user would actively disengage from a simulation-only solution.</div>
+        </div>
+      </div>
+
+      <div class="callout callout-green reveal">
+        <p><strong>The key insight from this segmentation:</strong> Personas 1 and 2 needed a simulation account with virtual funds, real market execution logic, and order lifecycle tracking. Persona 3 needed a manual portfolio import tool with no simulation mechanics at all. <strong>Trying to serve all three with a single account type would have produced a product that served none of them well.</strong> Two modes was the right architectural decision.</p>
+      </div>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 04 APPROACH -->
+    <section class="cs-section" id="approach">
+      <div class="section-eyebrow">04 &mdash; My Approach</div>
+      <h2>Four strategic decisions before writing a single requirement.</h2>
+
+      <div class="step-list reveal">
+        <div class="step-item">
+          <div class="step-num">01</div>
+          <div>
+            <div class="step-title">Build two separate account types, not one flexible account</div>
+            <div class="step-body">The temptation was to build a single "virtual account" with configuration options. I rejected this. <strong>A simulation account and a portfolio import account have fundamentally different data models, different user flows, and different trust contracts with the user.</strong> Simulation needs virtual funds, live order matching, and an automated reset capability. Portfolio import needs manual data entry, custom trade dates, and no fund mechanics at all. Merging them would produce a confusing hybrid. I specified them as two distinct account types with separate creation flows, separate capabilities, and separate UX - even though they share a portfolio interface.</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">02</div>
+          <div>
+            <div class="step-title">Make the simulation maximally realistic, not simplified</div>
+            <div class="step-body">Some simulation products use simplified mechanics - rounded prices, instant execution, no commission - to make the experience more approachable. I went the opposite direction. <strong>The simulation had to mirror real Biniyog trading as closely as possible</strong>: real DSE market prices, commission deducted on each trade, order matching logic tied to actual high/low price ranges, circuit breaker constraints, and settlement timing that mirrors real T+2/T+3 cycles. The reason: confidence built in a simplified simulation doesn't transfer. If a user finds the real platform behaves differently from the simulator they trained on, the confidence benefit is lost.</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">03</div>
+          <div>
+            <div class="step-title">Seed simulation accounts with virtual capital, not zero-balance onboarding</div>
+            <div class="step-body">A new simulation account with a zero balance would force users to immediately navigate the deposit flow - adding friction at exactly the moment they should be experiencing the product's value. <strong>I specified that every new Virtual Simulation account is automatically funded with a meaningful virtual balance on creation.</strong> This meant users could place their first trade within minutes of creating an account, with no administrative steps in between. The seed amount was sized to allow realistic portfolio construction - enough to practice diversification, not just single-stock positions.</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">04</div>
+          <div>
+            <div class="step-title">Design the reset function as a feature, not an admin escape hatch</div>
+            <div class="step-body">A simulation that can't be reset has a limited useful life. Once a user has made a few irreversible mistakes, the account state becomes a barrier to continued learning rather than an asset. <strong>I specified a full account reset capability - returning the account to its initial funded state, clearing all positions and history - as a first-class user-facing feature.</strong> This transforms the simulation from a single-use learning tool into a reusable practice environment. Users can reset after completing a learning goal, before starting a new strategy test, or simply when they want a clean slate. The reset also required a clear disclosure to the user about what it does, which I wrote into the spec.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 05 PRODUCT DESIGN -->
+    <section class="cs-section" id="design">
+      <div class="section-eyebrow">05 &mdash; Product Design</div>
+      <h2>Two account types, one seamless experience inside the existing platform.</h2>
+      <p>The core design constraint was integration, not isolation. Paper trading had to live inside the existing Biniyog platform - same portfolio interface, same buy/sell flow, same fund management screen - not as a separate app or mode. This meant designing virtual accounts as first-class portfolio accounts that happen to have virtual capital, not as a side experience bolted onto the real platform.</p>
+
+      <div class="account-grid reveal">
+        <div class="account-card ac-sim">
+          <span class="account-badge ab-sim">Virtual Simulation BO</span>
+          <div class="account-title">Paper Trading Account</div>
+          <div class="account-sub">For beginners and strategy testers</div>
+          <div class="account-features">
+            <div class="account-feature"><div class="af-dot af-amber"></div><div>Auto-funded with virtual capital on account creation - users can trade immediately without a deposit step</div></div>
+            <div class="account-feature"><div class="af-dot af-amber"></div><div>Live DSE market data for all order placement - prices, volumes, and circuit breaker limits are real</div></div>
+            <div class="account-feature"><div class="af-dot af-amber"></div><div>Order matching logic tied to actual intraday price ranges - orders execute only when realistic price conditions are met</div></div>
+            <div class="account-feature"><div class="af-dot af-amber"></div><div>Commission deducted on every trade - the cost of trading is realistic, not waived</div></div>
+            <div class="account-feature"><div class="af-dot af-amber"></div><div>Settlement timing mirrors real market - matured vs. premature stock balances handled correctly</div></div>
+            <div class="account-feature"><div class="af-dot af-amber"></div><div>Full reset to initial funded state - reusable as a clean practice environment</div></div>
+            <div class="account-feature"><div class="af-dot af-amber"></div><div>Dividend simulation - virtual dividends credited based on actual declared dividends for held positions</div></div>
+          </div>
+        </div>
+        <div class="account-card ac-port">
+          <span class="account-badge ab-port">Virtual Portfolio BO</span>
+          <div class="account-title">Manual Portfolio Account</div>
+          <div class="account-sub">For portfolio managers using other brokerages</div>
+          <div class="account-features">
+            <div class="account-feature"><div class="af-dot af-blue"></div><div>Manual portfolio import - users enter trading code, quantity, and average buy price to mirror an existing real portfolio</div></div>
+            <div class="account-feature"><div class="af-dot af-blue"></div><div>Custom trade date - backdating supported to accurately reflect actual purchase timing and portfolio history</div></div>
+            <div class="account-feature"><div class="af-dot af-blue"></div><div>Circuit breaker validation on order price - price must fall within real upper/lower limits for the given trade date</div></div>
+            <div class="account-feature"><div class="af-dot af-blue"></div><div>Deposit and withdraw via dummy flows - fund balance can be manually managed to reflect real cash positions</div></div>
+            <div class="account-feature"><div class="af-dot af-blue"></div><div>Configurable commission rate - users can set their own broker's commission rate for accurate cost tracking</div></div>
+            <div class="account-feature"><div class="af-dot af-blue"></div><div>Remove trade entry - incorrect manual entries can be removed to correct the portfolio state</div></div>
+            <div class="account-feature"><div class="af-dot af-blue"></div><div>Bulk portfolio upload via manual entry form or image-based OCR scanning</div></div>
+          </div>
+        </div>
+      </div>
+
+      <h3>The user journey from beginner to active trader</h3>
+      <p>Paper trading was designed not just as an isolated feature but as a structured onboarding pathway - a progressive journey that ends with the user ready and confident to open a real BO account.</p>
+      <div class="journey-strip reveal">
+        <div class="journey-step">
+          <span class="journey-icon">📖</span>
+          <div class="journey-label">Stage 1</div>
+          <div class="journey-text">Learn the basics via paper trading</div>
+        </div>
+        <div class="journey-step">
+          <span class="journey-icon">📊</span>
+          <div class="journey-label">Stage 2</div>
+          <div class="journey-text">Analyse with screeners and market tools</div>
+        </div>
+        <div class="journey-step">
+          <span class="journey-icon">💼</span>
+          <div class="journey-label">Stage 3</div>
+          <div class="journey-text">Open a real BO account on Biniyog</div>
+        </div>
+        <div class="journey-step">
+          <span class="journey-icon">📈</span>
+          <div class="journey-label">Stage 4</div>
+          <div class="journey-text">Trade consistently as an expert</div>
+        </div>
+      </div>
+
+      <h3>See it in action</h3>
+      <p>A full walkthrough of the paper trading feature - account creation, order placement, portfolio tracking, and the reset flow - recorded on the live Biniyog platform.</p>
+      <div class="video-wrap reveal">
+        <iframe 
+          src="https://www.youtube.com/embed/lfFyy7_XEWE?si=Lz3T5E7QXToMbL-r" 
+          title="Biniyog Paper Trading - product walkthrough" 
+          frameborder="0" 
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+          referrerpolicy="strict-origin-when-cross-origin" 
+          allowfullscreen
+          loading="lazy"
+        ></iframe>
+      </div>
+
+      <div class="callout callout-blue reveal">
+        <p><strong>Integration over isolation:</strong> Virtual accounts share the same portfolio interface, buy/sell modal, order status tab, and fund management screen as real accounts. The only differences are the guardrails I added - hidden payment gateway for simulation deposits, market price checkbox removed for virtual orders, and a restricted menu bar that surfaces only the relevant sections. Users practice inside the real product, not a toy version of it.</p>
+      </div>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 06 KEY FEATURES -->
+    <section class="cs-section" id="features">
+      <div class="section-eyebrow">06 &mdash; Key Features</div>
+      <h2>Six feature areas - each a deliberate product decision.</h2>
+      <p>The paper trading feature comprised six interconnected areas. Each required its own set of requirements, edge case handling, and acceptance criteria. Here is what I built and the reasoning behind each.</p>
+
+      <div class="feature-grid reveal">
+        <div class="feature-card">
+          <div class="feature-icon">🏦</div>
+          <div class="feature-title">Virtual Account Creation &amp; Management</div>
+          <div class="feature-body">Two separate creation flows - one for each account type - with clear limits on how many accounts a user can create. Account naming, account listing, and account switching all integrated into the existing portfolio dropdown. Limit indicators shown inline in the creation UI so users understand how many accounts they have remaining before they need one.</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">💰</div>
+          <div class="feature-title">Virtual Fund Management</div>
+          <div class="feature-body">Simulation accounts receive an automatic initial fund on creation. Fund balance tracks realistically - purchases deduct balance, sell proceeds are credited with correct settlement timing. For portfolio accounts, deposit and withdraw flows work via dummy inputs with an explicit user notice, and approvals are automatic rather than requiring admin review.</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">📋</div>
+          <div class="feature-title">Realistic Order Lifecycle</div>
+          <div class="feature-body">Buy and sell orders go through a full pending → executed → settlement cycle. Market price ordering is disabled for virtual accounts to enforce realistic order price discipline. Orders are matched against real intraday price ranges - an order placed at an unrealistic price simply stays pending and expires at end of day. This is the mechanic that makes the simulation genuinely educational rather than trivially easy.</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">📁</div>
+          <div class="feature-title">Portfolio Import (Virtual Portfolio)</div>
+          <div class="feature-body">Manual entry form and image-based OCR scan - two paths to import an existing portfolio. Trading code validation against live DSE data ensures no invalid entries. Circuit breaker checks on manually entered prices ensure the portfolio reflects realistic price points for the given trade date. Once imported, the full portfolio analytics suite is available - gain/loss, break-even price, industry exposure.</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">💸</div>
+          <div class="feature-title">Dividend Simulation</div>
+          <div class="feature-body">Virtual dividend credits based on actual DSE-declared dividends for held positions. Dividend amount, tax deduction, and net credit all calculated realistically - the simulation teaches users about dividend income as part of total return, not just capital gains. This was a deliberate education design choice: many retail investors underestimate the role of dividends in long-term portfolio returns.</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">⚙️</div>
+          <div class="feature-title">Commission &amp; Reset Control</div>
+          <div class="feature-body">Portfolio account users can set their own brokerage commission rate - making cost tracking accurate relative to their actual broker fees. Simulation account users can trigger a full reset, returning the account to its initial funded state with a clear confirmation and disclosure. Both features give users meaningful control over the simulation's realism parameters without exposing technical complexity.</div>
+        </div>
+      </div>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 07 METRICS -->
+    <section class="cs-section" id="metrics">
+      <div class="section-eyebrow">07 &mdash; Metrics</div>
+      <h2>What success looked like - and the full framework I used to measure it.</h2>
+
+      <div class="callout reveal">
+        <p><strong>North Star:</strong> Free-to-real-account conversion rate - the percentage of paper trading users who subsequently open a real BO account on Biniyog. This is the metric that connects learning behaviour to business outcome. Everything else either explains the drivers of conversion or guards against false positives.</p>
+      </div>
+
+      <table class="signal-table reveal">
+        <thead>
+          <tr>
+            <th>Layer</th>
+            <th>Metric</th>
+            <th>Why it's on the dashboard</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Acquisition</td>
+            <td data-label="Metric">New virtual account creations per week</td>
+            <td data-label="Why it's on the dashboard">Top-of-funnel health. If paper trading is discoverable and the creation flow works, this number should grow. A plateau here signals a discovery or friction problem, not a product quality problem.</td>
+          </tr>
+          <tr>
+            <td>Activation</td>
+            <td data-label="Metric">% of virtual accounts placing first trade within 7 days</td>
+            <td data-label="Why it's on the dashboard">The hardest step in any new product is getting users to their first meaningful action. A new simulation account that never places a trade has not activated. This metric is the clearest signal that users are engaging with the feature, not just creating accounts.</td>
+          </tr>
+          <tr>
+            <td>Engagement</td>
+            <td data-label="Metric">Average trades placed per active simulation account per week</td>
+            <td data-label="Why it's on the dashboard">Measures depth of engagement. Users who place multiple trades per week are building trading habits - not just curiosity-clicking. High engagement correlates with confidence development, which is the precondition for real account conversion.</td>
+          </tr>
+          <tr>
+            <td>Engagement</td>
+            <td data-label="Metric">Session return rate - % of accounts active in 3 consecutive weeks</td>
+            <td data-label="Why it's on the dashboard">Single-session learners don't convert to real traders. Consistent return behaviour (3+ weeks) signals that users are building a genuine practice routine. This metric distinguishes real learners from curious one-time visitors.</td>
+          </tr>
+          <tr>
+            <td>Conversion</td>
+            <td data-label="Metric">Paper-to-real BO account conversion rate (North Star)</td>
+            <td data-label="Why it's on the dashboard">The core business outcome. Every paper trader who opens a real account is a long-term revenue-generating user. This is the metric that justifies the feature investment and the metric by which the team's success is ultimately measured.</td>
+          </tr>
+          <tr>
+            <td>Conversion</td>
+            <td data-label="Metric">Time from first virtual trade to real BO account opening</td>
+            <td data-label="Why it's on the dashboard">Measures the velocity of the learning-to-confidence journey. If the average conversion time decreases over product iterations, the simulation is becoming more effective at building confidence. If it increases, users may need more guided support or clearer pathways to upgrade.</td>
+          </tr>
+          <tr>
+            <td>Quality</td>
+            <td data-label="Metric">Portfolio account import completion rate</td>
+            <td data-label="Why it's on the dashboard">Manual portfolio import is a multi-step process. If users start but don't complete it, there is friction in the form or a data validation error causing abandonment. Tracking completion rate isolates the import flow as a distinct funnel within the broader paper trading feature.</td>
+          </tr>
+          <tr>
+            <td>System</td>
+            <td data-label="Metric">Order execution rate - % of simulation orders executed vs. expired</td>
+            <td data-label="Why it's on the dashboard">Realistic order matching means some orders will expire if placed at unrealistic prices. A very high expiry rate could mean the order placement UX is confusing users about acceptable price ranges - an educational gap that affects the realism benefit the feature is supposed to deliver.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>What I deliberately excluded</h3>
+      <p><strong>Virtual portfolio P&amp;L as a success metric.</strong> A simulation account with high virtual returns tells you nothing about whether the user is learning useful skills. Users can get lucky in a simulation by concentrating in a single stock that happens to run. Tracking paper P&amp;L as a success metric would reward luck, not learning.</p>
+      <p><strong>Total virtual volume traded.</strong> Volume can be inflated by a small number of hyperactive users placing hundreds of small simulation trades. It says nothing about the breadth of user engagement or the quality of the learning experience for the median user. Session return rate is a more honest measure of genuine engagement.</p>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 08 RISKS -->
+    <section class="cs-section" id="risks">
+      <div class="section-eyebrow">08 &mdash; Risks</div>
+      <h2>What could go wrong - and how I designed against it.</h2>
+      <div class="risk-grid reveal">
+        <div class="risk-card">
+          <div class="risk-level r-high">High</div>
+          <div class="risk-title">Simulation feels too easy, creating overconfident users who lose real money</div>
+          <div class="risk-body">If the simulation is unrealistically forgiving - instant execution, no slippage, no commission - users may develop false confidence that leads to poor decisions with real capital. This would harm users and damage Biniyog's reputation. Mitigated directly in the design: commission is deducted, order execution is tied to real price ranges, and market-price orders are disabled - forcing users to practise price discipline from day one.</div>
+        </div>
+        <div class="risk-card">
+          <div class="risk-level r-high">High</div>
+          <div class="risk-title">Virtual accounts mistaken for real accounts by users</div>
+          <div class="risk-body">If the simulation is too seamlessly integrated into the real platform, users may not clearly understand they are operating in a virtual environment - particularly newer users who are unfamiliar with the interface. A user who thinks they've placed a real order but was in simulation mode could miss a real trading opportunity. Mitigated through the portfolio dropdown label, account type indicators, and contextual guidance visible within virtual account sessions.</div>
+        </div>
+        <div class="risk-card">
+          <div class="risk-level r-high">High</div>
+          <div class="risk-title">Portfolio import errors corrupt the user's virtual portfolio state</div>
+          <div class="risk-body">Manual entry carries inherent error risk - incorrect trading codes, wrong quantities, mistyped averages. An incorrect portfolio import doesn't just produce bad analytics; it actively misleads the user about their portfolio's performance. Mitigated by trading code validation against live DSE data, circuit breaker price validation, numeric-only field constraints, and a remove-entry capability that lets users correct mistakes post-import.</div>
+        </div>
+        <div class="risk-card">
+          <div class="risk-level r-med">Medium</div>
+          <div class="risk-title">Reset feature misused, destroying valid learning history</div>
+          <div class="risk-body">A user who resets their simulation account irreversibly loses all their trade history, performance data, and accumulated learning record. If triggered accidentally or impulsively, this could frustrate users who wanted to keep their history. Mitigated by a mandatory confirmation dialog with explicit disclosure of what reset does - including that it cannot be undone - before the operation executes.</div>
+        </div>
+        <div class="risk-card">
+          <div class="risk-level r-med">Medium</div>
+          <div class="risk-title">Commission rate misconfig in portfolio account skews analytics</div>
+          <div class="risk-body">If a portfolio account user sets an incorrect commission rate - or leaves the default when their actual broker charges a different rate - all cost and break-even calculations will be wrong. Analytics that are systematically misleading are worse than no analytics. Mitigated by pre-filling the commission field with the platform default, adding a clear label identifying it as the user's configurable broker commission, and allowing edits at any time.</div>
+        </div>
+        <div class="risk-card">
+          <div class="risk-level r-low">Low</div>
+          <div class="risk-title">Paper trading cannibilises real account opening by becoming a permanent substitute</div>
+          <div class="risk-body">Some users may find the simulation so comfortable that they never feel the need to open a real account - perpetually "practicing" without graduating to live trading. This is a real but lower-risk concern: the simulation is intentionally realistic enough that users eventually exhaust its novelty value. Mitigated by tracking conversion time and designing in-app prompts that surface the real BO account pathway to users with strong simulation engagement records.</div>
+        </div>
+      </div>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 09 LESSONS -->
+    <section class="cs-section" id="lessons">
+      <div class="section-eyebrow">09 &mdash; Lessons</div>
+      <h2>What building this 0→1 taught me about product design and fintech users.</h2>
+      <div class="lesson-list reveal">
+        <div class="lesson-item">
+          <div class="lesson-num">01</div>
+          <div>
+            <div class="lesson-title">User segmentation at the start changes the architecture entirely</div>
+            <div class="lesson-body">The decision to build two account types instead of one came from taking the time to understand that the three user barriers weren't variations of the same problem - they were genuinely different problems. <strong>If I had started building without that segmentation work, I would have built a simulation tool that served the majority case while leaving the portfolio management use case completely unaddressed.</strong> The upfront segmentation cost two weeks; it saved months of rework and a separate feature request cycle later.</div>
+          </div>
+        </div>
+        <div class="lesson-item">
+          <div class="lesson-num">02</div>
+          <div>
+            <div class="lesson-title">Realism in a simulation is non-negotiable when the outcome is financial confidence</div>
+            <div class="lesson-body">There was a strong internal argument for simplifying the simulation - waiving commission, allowing market-price orders, instant execution - to make it more approachable. I held the line on realism, and it was the right call. <strong>Confidence built in an unrealistic environment doesn't transfer to a realistic one.</strong> Users who practise with commission deducted, with price-range order matching, and with settlement timing learn behaviours that work in the real market. Users who practise in a simplified environment learn behaviours that don't.</div>
+          </div>
+        </div>
+        <div class="lesson-item">
+          <div class="lesson-num">03</div>
+          <div>
+            <div class="lesson-title">The reset function is a product feature, not a support ticket</div>
+            <div class="lesson-body">Before I specified the reset feature, users with irreparably messy simulation accounts would have had to contact support to request a manual data clear - a bad experience for the user and a cost for the business. <strong>By designing reset as a self-service, first-class product feature with an appropriate confirmation flow, I eliminated an entire category of support requests before they existed</strong> and simultaneously made the simulation more valuable as a reusable practice tool rather than a one-time environment.</div>
+          </div>
+        </div>
+        <div class="lesson-item">
+          <div class="lesson-num">04</div>
+          <div>
+            <div class="lesson-title">Integration over isolation makes education stick</div>
+            <div class="lesson-body">The decision to build paper trading inside the real platform interface - same buy/sell modal, same portfolio page, same analytics - rather than as a separate "learning mode" was a deliberate pedagogical choice. <strong>Users who learn on the real interface have zero relearning cost when they transition to a live account.</strong> Every interaction in the simulation is a repetition of the exact interaction they'll perform with real money. Isolation would have built fluency in a tool they'd never use again.</div>
+          </div>
+        </div>
+        <div class="lesson-item">
+          <div class="lesson-num">05</div>
+          <div>
+            <div class="lesson-title">The conversion metric only makes sense if you also track its inputs</div>
+            <div class="lesson-body">Free-to-real conversion rate was the right north star, but watching it in isolation is insufficient. <strong>If conversion drops, you need the activation rate, engagement depth, and conversion time metrics to understand why.</strong> A drop in conversion with stable engagement suggests a friction in the upgrade path. A drop in conversion with declining engagement suggests a quality problem in the simulation. The metric framework I built wasn't just for reporting - it was a diagnostic instrument for understanding where in the funnel the problem was and what kind of intervention would fix it.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div><!-- /cs-body -->
+
+  <!-- APPENDIX BAND -->
+  <div class="appendix-band">
+    <div class="appendix-inner">
+
+      <div class="appendix-header">
+        <div class="appendix-eyebrow">Appendix - The Evidence</div>
+        <h2 class="appendix-title">Functional Spec Excerpts</h2>
+        <p class="appendix-sub">The requirement artefacts behind the product - user stories, acceptance criteria, and the feature activation flow as specified in the PRD.</p>
+      </div>
+
+      <!-- USER STORIES -->
+      <div class="appendix-block reveal">
+        <div class="appendix-block-label">Appendix A - User Stories</div>
+        <table class="appendix-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>As a…</th>
+              <th>I want…</th>
+              <th>So that…</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>US.1</td>
+              <td data-label="As a…">New user who has never traded before</td>
+              <td data-label="I want…">to practise placing buy and sell orders with virtual money in a real market environment</td>
+              <td data-label="So that…">I can build confidence and trading habits before risking any real capital</td>
+            </tr>
+            <tr>
+              <td>US.2</td>
+              <td data-label="As a…">Experienced user who wants to test a trading strategy</td>
+              <td data-label="I want…">a simulation account that executes orders against real market prices with realistic commission and settlement</td>
+              <td data-label="So that…">I can validate whether my strategy works in actual market conditions before committing real funds</td>
+            </tr>
+            <tr>
+              <td>US.3</td>
+              <td data-label="As a…">Active trader using a different brokerage</td>
+              <td data-label="I want…">to manually import my existing portfolio into Biniyog with custom trade dates and my broker's commission rate</td>
+              <td data-label="So that…">I can use Biniyog's analytics tools to track and analyse my real portfolio without switching my actual brokerage</td>
+            </tr>
+            <tr>
+              <td>US.4</td>
+              <td data-label="As a…">Simulation user who has made a series of mistakes</td>
+              <td data-label="I want…">to reset my simulation account to its initial funded state and start fresh</td>
+              <td data-label="So that…">I can begin a new practice cycle without my previous errors distorting my current learning environment</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- ACCEPTANCE CRITERIA -->
+      <div class="appendix-block reveal">
+        <div class="appendix-block-label">Appendix B - Key Acceptance Criteria</div>
+        <table class="appendix-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Criteria</th>
+              <th>Owner</th>
+              <th>Verified by</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>AC.1</td>
+              <td data-label="Criteria">A new Virtual Simulation account must be automatically funded with the defined virtual capital amount on creation - no manual deposit step required from the user.</td>
+              <td data-label="Owner">BE</td>
+              <td data-label="Verified by">QA: create new simulation account, verify balance is present and correct before any user action</td>
+            </tr>
+            <tr>
+              <td>AC.2</td>
+              <td data-label="Criteria">Buy and sell orders in virtual accounts must not allow market-price execution. All orders require a specific price input.</td>
+              <td data-label="Owner">FE</td>
+              <td data-label="Verified by">QA: open buy/sell modal under virtual account - verify market price checkbox is hidden/disabled</td>
+            </tr>
+            <tr>
+              <td>AC.3</td>
+              <td data-label="Criteria">Simulation orders must only execute when the order price falls within the real intraday high/low range for that trading code during the order window.</td>
+              <td data-label="Owner">BE</td>
+              <td data-label="Verified by">QA: place order above day's high - verify order remains pending and expires at end of session</td>
+            </tr>
+            <tr>
+              <td>AC.4</td>
+              <td data-label="Criteria">Account reset must display a confirmation dialog with full disclosure of what is deleted before executing. The operation cannot be undone.</td>
+              <td data-label="Owner">FE / BE</td>
+              <td data-label="Verified by">QA: trigger reset, verify confirmation text matches spec, verify all portfolio and transaction data is cleared post-confirmation</td>
+            </tr>
+            <tr>
+              <td>AC.5</td>
+              <td data-label="Criteria">Portfolio import trading codes must be validated against live DSE instrument data. Invalid codes must be rejected with a clear error message before any data is saved.</td>
+              <td data-label="Owner">BE</td>
+              <td data-label="Verified by">QA: submit import with invalid trading code - verify save is blocked and error message is displayed</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- FEATURE ACTIVATION FLOW -->
+      <div class="appendix-block reveal">
+        <div class="appendix-block-label">Appendix C - Virtual Simulation Account Activation Flow</div>
+        <p class="appendix-flow-intro">How a new user goes from registration to placing their first simulated trade.</p>
+        <div class="flow-steps">
+          <div class="flow-step">
+            <div class="flow-step-num">1</div>
+            <div class="flow-step-body">
+              <div class="flow-step-title">User registers on Biniyog</div>
+              <div class="flow-step-text">Standard registration. No changes to the existing onboarding flow. Paper trading is available immediately after registration - no broker approval or KYC required for virtual accounts.</div>
+            </div>
+          </div>
+          <div class="flow-arrow">↓</div>
+          <div class="flow-step">
+            <div class="flow-step-num">2</div>
+            <div class="flow-step-body">
+              <div class="flow-step-title">Open Add Portfolio modal → Virtual BO tab</div>
+              <div class="flow-step-text">User navigates to the portfolio section and opens the Add Portfolio modal. The second tab "Virtual BO" shows available virtual account types with remaining account slot indicators.</div>
+            </div>
+          </div>
+          <div class="flow-arrow">↓</div>
+          <div class="flow-step">
+            <div class="flow-step-num">3</div>
+            <div class="flow-step-body">
+              <div class="flow-step-title">Generate Virtual Simulation account</div>
+              <div class="flow-step-text">User clicks Generate button. Enters a Display Name (required, &lt;255 chars) to identify the account. Clicks Create.</div>
+            </div>
+          </div>
+          <div class="flow-arrow">↓</div>
+          <div class="flow-step">
+            <div class="flow-step-num">4</div>
+            <div class="flow-step-body">
+              <div class="flow-step-title">Account auto-funded</div>
+              <div class="flow-step-text">System creates the virtual account and automatically credits the initial virtual capital. <span class="flow-yes">User's trade balance is immediately ready.</span> No deposit step required.</div>
+            </div>
+          </div>
+          <div class="flow-arrow">↓</div>
+          <div class="flow-step">
+            <div class="flow-step-num">5</div>
+            <div class="flow-step-body">
+              <div class="flow-step-title">Select virtual account in portfolio dropdown</div>
+              <div class="flow-step-text">The new account appears in the portfolio selector. Selecting it activates the virtual menu context - IPO, Report, and Profile tabs hidden; buy/sell guardrails active.</div>
+            </div>
+          </div>
+          <div class="flow-arrow">↓</div>
+          <div class="flow-step">
+            <div class="flow-step-num">6</div>
+            <div class="flow-step-body">
+              <div class="flow-step-title">Place first simulated order</div>
+              <div class="flow-step-text">User opens buy modal, selects a stock, enters a price within the day's circuit breaker range, and submits. Order enters pending state. Executed when real market price matches the order price within the session.</div>
+            </div>
+          </div>
+          <div class="flow-arrow">↓</div>
+          <div class="flow-step flow-step-final">
+            <div class="flow-step-num">✓</div>
+            <div class="flow-step-body">
+              <div class="flow-step-title">Portfolio populated - learning begins</div>
+              <div class="flow-step-text">Executed order appears in portfolio tab with realistic commission deducted. User can now track performance, place additional orders, review order history, and analyse holdings - all within the real Biniyog interface using virtual capital.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div><!-- /appendix-band -->
+
+  <!-- FOOTER -->
+  <footer>
+    <a href="work.html">← Back to all case studies</a>
+    &nbsp;&nbsp;·&nbsp;&nbsp;
+    <a href="index.html">Akash Poddar</a>
+    &nbsp;&nbsp;·&nbsp;&nbsp;
+    <a href="index.html#contact">Get in touch</a>
+  </footer>
+
+  <script>
+    // ── Reveal animations (batched via rAF) ──
+    const reveals = document.querySelectorAll('.reveal');
+    const isMobile = window.innerWidth < 768;
+    const io = new IntersectionObserver((entries) => {
+      const visible = entries.filter(e => e.isIntersecting)
+        .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+      if (!visible.length) return;
+      requestAnimationFrame(() => {
+        visible.forEach((entry, i) => {
+          entry.target.style.transitionDelay = isMobile ? '0s' : (i * 0.05) + 's';
+          entry.target.classList.add('visible');
+          io.unobserve(entry.target);
+        });
+      });
+    }, { threshold: 0.06, rootMargin: '0px 0px -40px 0px' });
+    reveals.forEach(r => io.observe(r));
+
+    // ── TOC active state ──
+    const tocItems = document.querySelectorAll('.toc-item');
+    const sections = document.querySelectorAll('.cs-section[id]');
+    const tocObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          tocItems.forEach(t => t.classList.remove('active'));
+          const active = document.querySelector(`.toc-item[href="#${entry.target.id}"]`);
+          if (active) active.classList.add('active');
+        }
+      });
+    }, { threshold: 0, rootMargin: '-101px 0px -85% 0px' });
+    sections.forEach(s => tocObserver.observe(s));
+  </script>
+
+</body>
+</html>
