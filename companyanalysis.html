@@ -1,0 +1,1126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-62DWPTYD6F"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-62DWPTYD6F');
+  </script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27><rect width=%2732%27 height=%2732%27 rx=%274%27 fill=%27%230e0e0e%27/><text x=%2716%27 y=%2722%27 font-family=%27Georgia,serif%27 font-size=%2714%27 font-weight=%27600%27 fill=%27%23f7f5f0%27 text-anchor=%27middle%27>AP</text></svg>" />
+  <title>Biniyog Company Analysis - AI-Powered Investment Intelligence | Akash Poddar</title>
+  <meta name="description" content="How I built Biniyog's AI-powered Company Analysis - a three-layer stock intelligence system combining fundamental ranking, technical analysis, and NLP sentiment for 300+ DSE companies." />
+  <link rel="canonical" href="https://echo-akash.github.io/companyanalysis.html" />
+  <meta property="og:title" content="Biniyog Company Analysis - AI-Powered Investment Intelligence | Akash Poddar" />
+  <meta property="og:description" content="Building a three-layer stock intelligence engine - fundamental ranking, technical indicators, and AI sentiment - for Bangladeshi retail investors." />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://echo-akash.github.io/companyanalysis.html" />
+  <meta property="og:image" content="https://echo-akash.github.io/og-image.png" />
+  <meta name="author" content="Akash Poddar" />
+  <meta name="robots" content="index, follow" />
+  <meta name="theme-color" content="#0e0e0e" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Biniyog Company Analysis - AI-Powered Investment Intelligence",
+    "description": "How Akash Poddar built Biniyog's three-layer stock intelligence system using fundamental ranking, technical analysis, and AI-powered NLP sentiment for DSE retail investors.",
+    "author": { "@type": "Person", "name": "Akash Poddar", "url": "https://echo-akash.github.io/" },
+    "publisher": { "@type": "Person", "name": "Akash Poddar" }
+  }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,300;1,9..144,500&family=DM+Sans:wght@300;400;500&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,300;1,9..144,500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" /></noscript>
+  <style>
+    :root {
+      --ink: #0e0e0e;
+      --ink-mid: #444;
+      --ink-muted: #696969;
+      --ink-faint: #bbb;
+      --surface: #f7f5f0;
+      --white: #ffffff;
+      --accent: #1d4ed8;
+      --accent-light: #eff6ff;
+      --accent-dark: #1e3a8a;
+      --accent2: #7c3aed;
+      --accent2-light: #f0ebff;
+      --green: #166534;
+      --green-light: #dcfce7;
+      --amber: #b45309;
+      --amber-light: #fef3e2;
+      --line: rgba(0,0,0,0.08);
+      --serif: 'Fraunces', Georgia, serif;
+      --sans: 'DM Sans', system-ui, sans-serif;
+      --radius: 10px;
+      --ease: cubic-bezier(0.16, 1, 0.3, 1);
+      --wide-w: 1000px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+    }
+    body { font-family: var(--sans); background: var(--surface); color: var(--ink); font-size: 15px; line-height: 1.6; overflow-x: hidden; }
+
+    /* ── NAV ── */
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 0 40px; height: 56px; background: rgba(247,245,240,0.88); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); }
+    .nav-logo { font-family: var(--serif); font-size: 16px; font-weight: 600; color: var(--ink); text-decoration: none; letter-spacing: -0.02em; }
+    .nav-links { display: flex; gap: 32px; list-style: none; }
+    .nav-links a { font-size: 13px; color: var(--ink-mid); text-decoration: none; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--accent); }
+    .nav-cta { font-size: 13px; padding: 7px 18px; background: var(--ink); color: var(--white); border-radius: 20px; text-decoration: none; transition: background 0.2s; }
+    .nav-cta:hover { background: var(--accent); }
+
+    /* ── HERO ── */
+    .cs-hero { background: var(--ink); padding: 120px 40px 80px; position: relative; overflow: hidden; }
+    .cs-hero-inner { max-width: var(--wide-w); margin: 0 auto; position: relative; z-index: 1; }
+    .cs-hero-grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px); background-size: 60px 60px; }
+    .cs-hero-shimmer { position: absolute; inset: 0; background: radial-gradient(ellipse 60% 60% at 70% 50%, rgba(29,78,216,0.2) 0%, transparent 70%); }
+    .cs-hero-bar { height: 4px; background: linear-gradient(90deg, #1d4ed8, #3b82f6); border-radius: 2px; width: 64px; margin-bottom: 28px; }
+    .cs-meta-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 24px; }
+    .cs-tag { font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; padding: 5px 14px; border-radius: 20px; }
+    .tag-blue   { background: rgba(29,78,216,0.22); color: #93c5fd; border: 1px solid rgba(29,78,216,0.35); }
+    .tag-purple { background: rgba(124,58,237,0.18); color: #c4a8ff; border: 1px solid rgba(124,58,237,0.25); }
+    .tag-green  { background: rgba(22,101,52,0.2); color: #6ee7b7; border: 1px solid rgba(22,101,52,0.28); }
+    .tag-gray   { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.45); border: 1px solid rgba(255,255,255,0.1); }
+    .cs-hero-title { font-family: var(--serif); font-size: clamp(34px, 5.5vw, 60px); font-weight: 600; letter-spacing: -0.03em; line-height: 0.95; color: #fff; margin-bottom: 20px; }
+    .cs-hero-title em { font-style: italic; font-weight: 300; color: rgba(255,255,255,0.38); }
+    .cs-hero-sub { font-size: 17px; font-weight: 300; color: rgba(255,255,255,0.5); max-width: 640px; line-height: 1.7; margin-bottom: 48px; }
+    .cs-hero-sub strong { color: rgba(255,255,255,0.8); font-weight: 400; }
+    .cs-kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 40px; }
+    .cs-kpi { padding-right: 32px; border-right: 1px solid rgba(255,255,255,0.08); }
+    .cs-kpi:last-child { border-right: none; }
+    .cs-kpi-num { font-family: var(--serif); font-size: 32px; font-weight: 600; letter-spacing: -0.02em; color: #fff; line-height: 1; margin-bottom: 6px; }
+    .cs-kpi-num span { font-size: 20px; font-style: italic; font-weight: 300; color: rgba(255,255,255,0.35); }
+    .cs-kpi-label { font-size: 11px; color: rgba(255,255,255,0.38); line-height: 1.4; max-width: 130px; }
+
+    /* ── TOC ── */
+    .toc-bar { position: sticky; top: 56px; z-index: 90; background: var(--white); border-bottom: 1px solid var(--line); overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+    .toc-bar::-webkit-scrollbar { display: none; }
+    .toc-inner { max-width: var(--wide-w); margin: 0 auto; display: flex; padding: 0 40px; }
+    .toc-item { font-size: 12px; color: var(--ink-muted); text-decoration: none; padding: 14px 20px; white-space: nowrap; border-bottom: 2px solid transparent; transition: color 0.2s, border-color 0.2s; display: flex; align-items: center; gap: 6px; }
+    .toc-item:hover { color: var(--accent); border-bottom-color: var(--accent); }
+    .toc-item.active { color: var(--accent); border-bottom-color: var(--accent); }
+    .toc-num { font-size: 10px; color: var(--ink-faint); }
+
+    /* ── BODY ── */
+    .cs-body { max-width: var(--wide-w); margin: 0 auto; padding: 0 40px; }
+    .cs-section { padding: 72px 0 0; content-visibility: auto; contain-intrinsic-size: 0 600px; }
+    .cs-section:last-of-type { padding-bottom: 80px; }
+    .section-eyebrow { font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+    .section-eyebrow::after { content: ''; flex: 0 0 32px; height: 1px; background: var(--accent); opacity: 0.4; }
+    .cs-section h2 { font-family: var(--serif); font-size: 32px; font-weight: 600; letter-spacing: -0.02em; color: var(--ink); line-height: 1.15; margin-bottom: 28px; }
+    .cs-section h3 { font-family: var(--serif); font-size: 20px; font-weight: 600; letter-spacing: -0.01em; color: var(--ink); margin: 40px 0 16px; }
+    .cs-section p { font-size: 15px; color: var(--ink-mid); line-height: 1.8; font-weight: 300; margin-bottom: 16px; }
+    .cs-section p:last-child { margin-bottom: 0; }
+    .cs-section p strong { color: var(--ink); font-weight: 500; }
+    .cs-divider { border: none; border-top: 1px solid var(--line); margin: 56px 0 0; }
+
+    /* ── CALLOUT ── */
+    .callout { border-left: 3px solid var(--accent); border-radius: 0 var(--radius) var(--radius) 0; padding: 20px 24px; margin: 28px 0; }
+    .callout-blue   { background: var(--accent-light); }
+    .callout-blue p strong { color: var(--accent-dark); }
+    .callout-purple { background: var(--accent2-light); border-left-color: var(--accent2); }
+    .callout-purple p strong { color: var(--accent2); }
+    .callout-green  { background: var(--green-light); border-left-color: var(--green); }
+    .callout-green p strong { color: var(--green); }
+    .callout-amber  { background: var(--amber-light); border-left-color: var(--amber); }
+    .callout-amber p strong { color: var(--amber); }
+    .callout p { margin-bottom: 0; color: var(--ink); font-weight: 400; font-size: 14px; line-height: 1.75; }
+
+    /* ── AI BADGE ── */
+    .ai-badge { display: inline-flex; align-items: center; gap: 7px; background: linear-gradient(135deg, rgba(29,78,216,0.1), rgba(124,58,237,0.12)); border: 1px solid rgba(124,58,237,0.25); border-radius: 20px; padding: 6px 16px; font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent2); margin-bottom: 14px; }
+    .ai-badge-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent2); flex-shrink: 0; animation: aipulse 2s ease-in-out infinite; }
+    @keyframes aipulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+    @media (prefers-reduced-motion: reduce) { .ai-badge-dot { animation: none; } }
+
+    /* ── STEP LIST ── */
+    .step-list { display: flex; flex-direction: column; margin: 28px 0; }
+    .step-item { display: grid; grid-template-columns: 56px 1fr; gap: 0 20px; padding: 28px 0; border-top: 1px solid var(--line); align-items: start; }
+    .step-item:last-child { border-bottom: 1px solid var(--line); }
+    .step-num { font-family: var(--serif); font-size: 28px; font-weight: 600; color: var(--accent); letter-spacing: -0.02em; line-height: 1; padding-top: 4px; }
+    .step-title { font-family: var(--serif); font-size: 18px; font-weight: 600; color: var(--ink); margin-bottom: 8px; line-height: 1.2; }
+    .step-body { font-size: 14px; color: var(--ink-mid); line-height: 1.75; font-weight: 300; }
+    .step-body strong { color: var(--ink); font-weight: 500; }
+
+    /* ── THREE-LAYER CARDS - fully fluid, no fixed-width cols ── */
+    .layer-stack { display: flex; flex-direction: column; gap: 16px; margin: 28px 0; }
+    .layer-card { background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); padding: 28px; position: relative; overflow: hidden; }
+    .layer-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; }
+    .layer-fundamental::before { background: linear-gradient(90deg, #1d4ed8, #60a5fa); }
+    .layer-technical::before  { background: linear-gradient(90deg, #7c3aed, #a855f7); }
+    .layer-sentiment::before  { background: linear-gradient(90deg, #166534, #22c55e); }
+    .layer-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 16px; }
+    .layer-title-group {}
+    .layer-num { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 4px; }
+    .layer-title { font-family: var(--serif); font-size: 21px; font-weight: 600; color: var(--ink); line-height: 1.1; margin-bottom: 6px; }
+    .layer-freq { font-size: 12px; font-weight: 500; color: var(--ink-muted); }
+    .layer-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+    .layer-tag { font-size: 11px; padding: 3px 10px; border-radius: 20px; font-weight: 500; }
+    .lt-blue   { background: var(--accent-light); color: var(--accent-dark); }
+    .lt-purple { background: var(--accent2-light); color: var(--accent2); }
+    .lt-green  { background: var(--green-light); color: var(--green); }
+    .layer-body { font-size: 14px; color: var(--ink-mid); line-height: 1.8; font-weight: 300; }
+    .layer-body strong { color: var(--ink); font-weight: 500; }
+
+    /* ── WEIGHT BARS - fluid layout, no fixed px ── */
+    .weight-section { margin: 28px 0; }
+    .weight-group-label { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-muted); margin-bottom: 14px; padding-bottom: 8px; border-bottom: 1px solid var(--line); }
+    .weight-list { display: flex; flex-direction: column; gap: 10px; }
+    .weight-row { display: flex; align-items: center; gap: 12px; }
+    .weight-label { font-size: 13px; color: var(--ink-mid); flex: 0 0 auto; width: 180px; min-width: 0; }
+    .weight-bar-bg { flex: 1; min-width: 0; height: 6px; background: var(--line); border-radius: 3px; overflow: hidden; }
+    .weight-bar-fill { height: 100%; border-radius: 3px; background: linear-gradient(90deg, var(--accent), #60a5fa); }
+    .weight-pct { font-size: 12px; font-weight: 500; color: var(--ink-muted); flex: 0 0 32px; text-align: right; }
+
+    /* ── INDICATOR GRID ── */
+    .ind-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin: 28px 0; }
+    .ind-card { background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px 12px; text-align: center; }
+    .ind-icon { font-size: 22px; margin-bottom: 8px; line-height: 1; }
+    .ind-pct { font-family: var(--serif); font-size: 20px; font-weight: 600; color: var(--accent2); line-height: 1; margin-bottom: 4px; }
+    .ind-name { font-size: 11px; font-weight: 500; color: var(--ink); margin-bottom: 4px; }
+    .ind-examples { font-size: 10px; color: var(--ink-muted); line-height: 1.4; }
+
+    /* ── SOURCE GRID ── */
+    .source-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 28px 0; }
+    .source-card { background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); padding: 24px; }
+    .source-icon { font-size: 26px; margin-bottom: 10px; line-height: 1; }
+    .source-title { font-family: var(--serif); font-size: 16px; font-weight: 600; color: var(--ink); margin-bottom: 8px; }
+    .source-body { font-size: 13px; color: var(--ink-mid); line-height: 1.65; }
+    .source-tag { display: inline-block; margin-top: 12px; font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; padding: 4px 10px; border-radius: 20px; background: var(--accent-light); color: var(--accent-dark); }
+
+    /* ── SIGNAL TABLE ── */
+    .signal-table { width: 100%; border-collapse: collapse; margin: 28px 0; font-size: 13.5px; }
+    .signal-table th { text-align: left; font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-muted); padding: 12px 16px; border-bottom: 2px solid var(--line); }
+    .signal-table td { padding: 14px 16px; border-bottom: 1px solid var(--line); color: var(--ink-mid); vertical-align: top; line-height: 1.6; }
+    .signal-table td:first-child { font-weight: 500; color: var(--ink); }
+    .signal-table tr:last-child td { border-bottom: none; }
+    .signal-table tr:hover td { background: rgba(29,78,216,0.03); }
+
+    /* ── TWO / THREE COL ── */
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 28px 0; }
+    .two-col-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 18px; margin: 28px 0; }
+
+    /* ── CARD ── */
+    .card { background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); padding: 24px; }
+    .card-label { font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; }
+    .card h4 { font-family: var(--serif); font-size: 17px; font-weight: 600; color: var(--ink); margin-bottom: 8px; line-height: 1.3; }
+    .card p { font-size: 13.5px; color: var(--ink-mid); line-height: 1.7; margin-bottom: 0; }
+
+    /* ── RISK GRID ── */
+    .risk-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 28px 0; }
+    .risk-card { background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); padding: 22px; }
+    .risk-level { font-size: 10px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; padding: 3px 10px; border-radius: 20px; display: inline-block; margin-bottom: 10px; }
+    .r-high { background: #faeae7; color: #8c3320; }
+    .r-med  { background: var(--amber-light); color: var(--amber); }
+    .r-low  { background: var(--green-light); color: var(--green); }
+    .risk-title { font-size: 14px; font-weight: 500; color: var(--ink); margin-bottom: 8px; line-height: 1.35; }
+    .risk-body { font-size: 13px; color: var(--ink-mid); line-height: 1.7; }
+
+    /* ── LESSON LIST ── */
+    .lesson-list { display: flex; flex-direction: column; margin: 28px 0; }
+    .lesson-item { display: grid; grid-template-columns: 48px 1fr; gap: 0 20px; padding: 28px 0; border-top: 1px solid var(--line); }
+    .lesson-item:last-child { border-bottom: 1px solid var(--line); }
+    .lesson-num { font-family: var(--serif); font-size: 24px; font-weight: 600; color: var(--accent); opacity: 0.4; line-height: 1; padding-top: 4px; }
+    .lesson-title { font-family: var(--serif); font-size: 18px; font-weight: 600; color: var(--ink); margin-bottom: 8px; line-height: 1.2; }
+    .lesson-body { font-size: 14px; color: var(--ink-mid); line-height: 1.75; font-weight: 300; }
+    .lesson-body strong { color: var(--ink); font-weight: 500; }
+
+    /* ── VIDEO CARD ── */
+    .video-card { display: flex; align-items: center; gap: 24px; background: var(--ink); border-radius: var(--radius); padding: 28px 32px; margin: 28px 0; text-decoration: none; position: relative; overflow: hidden; border: 1px solid rgba(255,255,255,0.06); transition: border-color 0.25s, transform 0.25s var(--ease); }
+    .video-card:hover { border-color: rgba(29,78,216,0.55); transform: translateY(-2px); }
+    .video-card-bg { position: absolute; inset: 0; background: radial-gradient(ellipse 50% 80% at 90% 50%, rgba(29,78,216,0.16) 0%, transparent 70%); pointer-events: none; }
+    .video-play-btn { flex-shrink: 0; width: 52px; height: 52px; border-radius: 50%; background: var(--accent); color: #fff; display: flex; align-items: center; justify-content: center; transition: background 0.2s, transform 0.2s; position: relative; z-index: 1; }
+    .video-card:hover .video-play-btn { background: #2563eb; transform: scale(1.08); }
+    .video-card-content { display: flex; align-items: center; gap: 20px; flex: 1; position: relative; z-index: 1; flex-wrap: wrap; }
+    .video-card-text { flex: 1; min-width: 0; }
+    .video-card-label { font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #93c5fd; margin-bottom: 5px; }
+    .video-card-title { font-family: var(--serif); font-size: 18px; font-weight: 600; color: #fff; line-height: 1.2; margin-bottom: 5px; }
+    .video-card-sub { font-size: 12px; color: rgba(255,255,255,0.38); line-height: 1.5; }
+    .video-card-cta { flex-shrink: 0; display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.55); white-space: nowrap; transition: color 0.2s; }
+    .video-card:hover .video-card-cta { color: #fff; }
+
+    /* ── APPENDIX BAND ── */
+    .appendix-band { background: #111; border-top: 1px solid rgba(255,255,255,0.06); padding: 80px 40px; }
+    .appendix-inner { max-width: var(--wide-w); margin: 0 auto; }
+    .appendix-header { margin-bottom: 56px; }
+    .appendix-eyebrow { font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); margin-bottom: 12px; }
+    .appendix-title { font-family: var(--serif); font-size: 32px; font-weight: 600; letter-spacing: -0.02em; color: #fff; margin-bottom: 12px; }
+    .appendix-sub { font-size: 15px; color: rgba(255,255,255,0.4); font-weight: 300; max-width: 560px; line-height: 1.7; }
+    .appendix-block { margin-bottom: 56px; }
+    .appendix-block:last-child { margin-bottom: 0; }
+    .appendix-block-label { font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.3); margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .appendix-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .appendix-table th { text-align: left; font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,255,255,0.3); padding: 10px 16px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+    .appendix-table td { padding: 14px 16px; border-bottom: 1px solid rgba(255,255,255,0.06); color: rgba(255,255,255,0.55); vertical-align: top; line-height: 1.65; }
+    .appendix-table td:first-child { color: rgba(255,255,255,0.25); font-size: 11px; white-space: nowrap; font-weight: 500; letter-spacing: 0.04em; }
+    .appendix-table tr:last-child td { border-bottom: none; }
+    .appendix-table tr:hover td { background: rgba(255,255,255,0.02); }
+    .appendix-flow-intro { font-size: 14px; color: rgba(255,255,255,0.4); margin-bottom: 28px; font-weight: 300; }
+    .flow-steps { display: flex; flex-direction: column; }
+    .flow-arrow { text-align: center; color: rgba(255,255,255,0.15); font-size: 18px; padding: 4px 0 4px 24px; }
+    .flow-step { display: grid; grid-template-columns: 40px 1fr; gap: 0 16px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); border-radius: var(--radius); padding: 18px 20px; align-items: start; }
+    .flow-step-final { background: rgba(29,78,216,0.1); border-color: rgba(29,78,216,0.3); }
+    .flow-step-num { font-family: var(--serif); font-size: 18px; font-weight: 600; color: var(--accent); line-height: 1; padding-top: 2px; }
+    .flow-step-final .flow-step-num { font-size: 20px; }
+    .flow-step-title { font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.7); margin-bottom: 5px; }
+    .flow-step-text { font-size: 12.5px; color: rgba(255,255,255,0.38); line-height: 1.65; }
+
+    /* ── REVEAL ── */
+    .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.6s var(--ease), transform 0.6s var(--ease); }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* ── FOOTER ── */
+    footer { background: var(--ink); border-top: 1px solid rgba(255,255,255,0.06); padding: 24px 40px; text-align: center; font-size: 12px; color: rgba(255,255,255,0.55); }
+    footer a { color: rgba(255,255,255,0.55); text-decoration: none; }
+    footer a:hover { color: var(--white); }
+
+    /* ══════════════════════════════════════════
+       RESPONSIVE - 768px
+    ══════════════════════════════════════════ */
+    @media (max-width: 768px) {
+      nav { padding: 0 20px; }
+      .nav-links { display: none; }
+
+      /* Hero */
+      .cs-hero { padding: 96px 20px 52px; }
+      .cs-hero-title { font-size: clamp(28px, 8vw, 44px); }
+      .cs-hero-sub { font-size: 14px; margin-bottom: 32px; }
+      .cs-kpi-row { grid-template-columns: 1fr 1fr; gap: 24px 16px; padding-top: 28px; }
+      .cs-kpi { border-right: none !important; padding-right: 0 !important; padding-left: 0 !important; }
+      .cs-kpi:nth-child(odd) { border-right: 1px solid rgba(255,255,255,0.1) !important; padding-right: 16px !important; }
+      .cs-kpi-num { font-size: 24px; }
+      .cs-kpi-label { font-size: 11px; }
+
+      /* TOC + body */
+      .toc-inner { padding: 0 16px; }
+      .toc-item { padding: 12px 12px; font-size: 11px; }
+      .cs-body { padding: 0 20px; }
+      .cs-section { padding: 48px 0 0; }
+      .cs-section h2 { font-size: 22px; margin-bottom: 20px; }
+      .cs-section h3 { font-size: 17px; margin: 28px 0 12px; }
+      .cs-section p { font-size: 14px; line-height: 1.75; }
+      .cs-divider { margin: 40px 0 0; }
+      .callout { padding: 16px 18px; }
+
+      /* Grids → single column */
+      .two-col, .two-col-3, .risk-grid, .source-grid { grid-template-columns: 1fr; }
+
+      /* Indicator grid → 3 col */
+      .ind-grid { grid-template-columns: repeat(3, 1fr); gap: 10px; }
+
+      /* Layer cards - stack naturally, no changes needed */
+      .layer-card { padding: 22px; }
+      .layer-head { flex-direction: column; gap: 12px; }
+
+      /* Weight bars - shrink label on mobile */
+      .weight-label { width: 120px; font-size: 12px; }
+
+      /* Steps */
+      .step-item { grid-template-columns: 40px 1fr; gap: 0 14px; padding: 20px 0; }
+      .step-num { font-size: 22px; }
+      .step-title { font-size: 16px; }
+      .step-body { font-size: 13.5px; }
+
+      /* Lessons */
+      .lesson-item { grid-template-columns: 40px 1fr; gap: 0 14px; padding: 20px 0; }
+      .lesson-num { font-size: 20px; }
+      .lesson-title { font-size: 16px; }
+      .lesson-body { font-size: 13.5px; }
+
+      /* Video card */
+      .video-card { padding: 20px; gap: 16px; }
+      .video-play-btn { width: 44px; height: 44px; }
+      .video-card-title { font-size: 16px; }
+      .video-card-cta { display: none; }
+
+      /* Signal table → stacked cards */
+      .signal-table { border-collapse: separate; border-spacing: 0; font-size: 13px; }
+      .signal-table thead { display: none; }
+      .signal-table tbody { display: flex; flex-direction: column; gap: 12px; }
+      .signal-table tr { display: block; background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px; }
+      .signal-table td { display: block; padding: 4px 0; border: none; white-space: normal; font-size: 13.5px; line-height: 1.65; }
+      .signal-table td:first-child { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); padding-bottom: 8px; margin-bottom: 4px; border-bottom: 1px solid var(--line); }
+      .signal-table td[data-label]::before { content: attr(data-label); display: block; font-size: 10px; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase; color: var(--ink-muted); margin-top: 8px; margin-bottom: 2px; }
+
+      /* Appendix tables → stacked cards */
+      .appendix-table { border-collapse: separate; border-spacing: 0; }
+      .appendix-table thead { display: none; }
+      .appendix-table tbody { display: flex; flex-direction: column; gap: 12px; }
+      .appendix-table tr { display: block; border: 1px solid rgba(255,255,255,0.09); border-radius: var(--radius); padding: 16px; background: rgba(255,255,255,0.025); }
+      .appendix-table td { display: block; padding: 4px 0; border: none; font-size: 13px; line-height: 1.65; white-space: normal; color: rgba(255,255,255,0.6); }
+      .appendix-table td:first-child { font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent) !important; padding-bottom: 8px; margin-bottom: 4px; border-bottom: 1px solid rgba(255,255,255,0.07); }
+      .appendix-table td[data-label]::before { content: attr(data-label); display: block; font-size: 10px; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase; color: rgba(255,255,255,0.28); margin-top: 8px; margin-bottom: 2px; }
+
+      /* Appendix */
+      .appendix-band { padding: 52px 20px 60px; }
+      .appendix-title { font-size: 24px; }
+      .appendix-sub { font-size: 14px; }
+      .flow-step { grid-template-columns: 32px 1fr; gap: 0 12px; padding: 14px 16px; }
+      .flow-step-num { font-size: 15px; }
+      .flow-step-title { font-size: 12px; }
+      .flow-step-text { font-size: 12px; }
+
+      footer { padding: 20px; }
+    }
+
+    /* ══════════════════════════════════════════
+       RESPONSIVE - 480px
+    ══════════════════════════════════════════ */
+    @media (max-width: 480px) {
+      .cs-hero { padding: 88px 16px 44px; }
+      .cs-body { padding: 0 16px; }
+      .appendix-band { padding: 44px 16px 52px; }
+      .cs-kpi-row { gap: 20px 12px; }
+      .cs-kpi-num { font-size: 22px; }
+      .cs-kpi-label { font-size: 10px; }
+      .ind-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+      .ind-card { padding: 14px 10px; }
+      .ind-pct { font-size: 18px; }
+      .weight-label { width: 90px; font-size: 11px; }
+      .card { padding: 18px; }
+      .risk-card { padding: 18px; }
+      .layer-card { padding: 18px; }
+      .source-card { padding: 18px; }
+      .video-card { padding: 18px; gap: 14px; }
+      .video-play-btn { width: 40px; height: 40px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a class="nav-logo" href="index.html">Akash Poddar</a>
+    <ul class="nav-links">
+      <li><a href="work.html">Case Studies</a></li>
+      <li><a href="index.html#experience">Experience</a></li>
+      <li><a href="index.html#skills">Skills</a></li>
+      <li><a href="index.html#contact">Contact</a></li>
+    </ul>
+    <a class="nav-cta" href="index.html#contact">Get in touch</a>
+  </nav>
+
+  <!-- HERO -->
+  <div class="cs-hero">
+    <div class="cs-hero-grid"></div>
+    <div class="cs-hero-shimmer"></div>
+    <div class="cs-hero-inner">
+      <div class="cs-hero-bar"></div>
+      <div class="cs-meta-row">
+        <span class="cs-tag tag-blue">Investment Intelligence</span>
+        <span class="cs-tag tag-purple">AI &middot; NLP &middot; Sentiment</span>
+        <span class="cs-tag tag-green">0&rarr;1 Product</span>
+        <span class="cs-tag tag-gray">Biniyog.com.bd &middot; 2024</span>
+      </div>
+      <h1 class="cs-hero-title">Company Analysis<br><em>AI-Powered Investment Intelligence</em></h1>
+      <p class="cs-hero-sub">How I designed and built Biniyog's three-layer stock intelligence engine: <strong>fundamental ranking, technical analysis, and AI-driven sentiment analysis</strong> - giving retail investors professional-grade insights for every company on the Dhaka Stock Exchange.</p>
+      <div class="cs-kpi-row">
+        <div class="cs-kpi">
+          <div class="cs-kpi-num">300<span>+ cos</span></div>
+          <div class="cs-kpi-label">DSE companies covered across all three layers</div>
+        </div>
+        <div class="cs-kpi">
+          <div class="cs-kpi-num">50<span>+ ind</span></div>
+          <div class="cs-kpi-label">Technical indicators across 5 categories</div>
+        </div>
+        <div class="cs-kpi">
+          <div class="cs-kpi-num">3<span>layers</span></div>
+          <div class="cs-kpi-label">Fundamental &middot; Technical &middot; AI Sentiment</div>
+        </div>
+        <div class="cs-kpi">
+          <div class="cs-kpi-num">&uarr;<span>Retention</span></div>
+          <div class="cs-kpi-label">Session depth and weekly active user uplift post-launch</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOC -->
+  <nav class="toc-bar" aria-label="Table of contents">
+    <div class="toc-inner">
+      <a class="toc-item active" href="#background"><span class="toc-num">01</span> Background</a>
+      <a class="toc-item" href="#problem"><span class="toc-num">02</span> Problem</a>
+      <a class="toc-item" href="#approach"><span class="toc-num">03</span> My Approach</a>
+      <a class="toc-item" href="#architecture"><span class="toc-num">04</span> Three Layers</a>
+      <a class="toc-item" href="#fundamental"><span class="toc-num">05</span> Fundamental</a>
+      <a class="toc-item" href="#technical"><span class="toc-num">06</span> Technical</a>
+      <a class="toc-item" href="#sentiment"><span class="toc-num">07</span> AI Sentiment</a>
+      <a class="toc-item" href="#metrics"><span class="toc-num">08</span> Metrics</a>
+      <a class="toc-item" href="#risks"><span class="toc-num">09</span> Risks</a>
+      <a class="toc-item" href="#lessons"><span class="toc-num">10</span> Lessons</a>
+    </div>
+  </nav>
+
+  <!-- BODY -->
+  <div class="cs-body">
+
+    <!-- 01 BACKGROUND -->
+    <section class="cs-section" id="background">
+      <div class="section-eyebrow">01 &mdash; Background</div>
+      <h2>Retail investors making gut-feel decisions in a data-rich market.</h2>
+      <p>Biniyog.com.bd is Bangladesh's digital stock brokerage platform serving retail investors on the Dhaka Stock Exchange. By 2024, the trading product was strong - users could buy, sell, manage portfolios, and practice with paper trading. What it didn't have was an answer to the most important question every investor asks before placing a trade: <strong>is this company actually worth investing in right now?</strong></p>
+      <p>Retail investors in Bangladesh were making decisions based on tips, hearsay, and gut instinct - not because they didn't want data, but because professional-grade analysis was either paywalled, too complex, or simply unavailable for the DSE market. Bloomberg terminals and equity research reports exist for institutional players. Retail investors had almost nothing.</p>
+      <p>Biniyog already had the raw ingredients - live DSE feeds, financial performance data, news from multiple sources. <strong>What was missing was the analytical layer that turned raw data into actionable intelligence.</strong> I proposed building Company Analysis as a comprehensive, three-layer intelligence product covering every dimension a serious retail investor cares about: company fundamentals, price and volume technicals, and real-time market sentiment.</p>
+      <div class="callout callout-blue reveal">
+        <p><strong>The product vision:</strong> Give every Biniyog user the kind of stock analysis that previously required either a Bloomberg subscription or a professional fund manager. Not simplified - genuinely comprehensive, but presented clearly enough that a retail investor can act on it with confidence.</p>
+      </div>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 02 PROBLEM -->
+    <section class="cs-section" id="problem">
+      <div class="section-eyebrow">02 &mdash; Problem</div>
+      <h2>Three analytical gaps, each requiring a distinct product solution.</h2>
+      <p>When I mapped what investors actually needed before committing capital, three distinct gaps emerged. Each pointed to a different type of analysis - and together they formed the blueprint for the three-layer architecture.</p>
+
+      <div class="step-list reveal">
+        <div class="step-item">
+          <div class="step-num">01</div>
+          <div>
+            <div class="step-title">No objective way to evaluate a company's financial health</div>
+            <div class="step-body">Investors had no reliable way to assess whether a company was financially strong, overvalued, or heading toward distress. Financial statements were publicly available but required expertise to interpret. <strong>An investor looking at a P/E of 200 needed context</strong> - is that normal for this sector? Is this company's ROE competitive? Without a comparative scored framework, raw numbers were noise. I needed to build an engine that normalised financial metrics across all DSE companies and surfaced a clear, trustworthy ranking.</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">02</div>
+          <div>
+            <div class="step-title">No technical analysis tools for timing decisions</div>
+            <div class="step-body">Even investors who understood a company's fundamentals struggled with the timing question - <strong>is now the right moment to buy, hold, or sell?</strong> Technical analysis answers precisely this. But running even a basic technical analysis manually requires calculating 50+ indicators across historical price data. No DSE-focused retail platform offered this. The gap wasn't awareness; it was accessibility - the tools existed in professional platforms but were completely out of reach for retail investors.</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">03</div>
+          <div>
+            <div class="step-title">Market news was unprocessed and overwhelming</div>
+            <div class="step-body">The DSE generates hundreds of news items daily - company announcements, regulatory updates, newspaper articles, and sector analysis. <strong>A retail investor can't read, process, and score all of this.</strong> Yet sentiment - the collective mood of the market toward a company or sector - is a real and measurable signal that influences price. I saw an opportunity to apply AI-powered NLP to this news stream and surface a clear, aggregated sentiment score that investors could act on without reading every article themselves.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 03 APPROACH -->
+    <section class="cs-section" id="approach">
+      <div class="section-eyebrow">03 &mdash; My Approach</div>
+      <h2>Five decisions that defined the product before a line was written.</h2>
+
+      <div class="step-list reveal">
+        <div class="step-item">
+          <div class="step-num">01</div>
+          <div>
+            <div class="step-title">Build three distinct analytical layers, not one blended score</div>
+            <div class="step-body">The temptation was to combine everything into a single "overall score." I rejected this. <strong>Fundamental analysis answers "is this company strong?" Technical analysis answers "is now the right time?" Sentiment analysis answers "what does the market think right now?"</strong> These are genuinely different questions that serve different decision contexts. Blending them into one score would destroy the interpretability that makes each layer useful.</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">02</div>
+          <div>
+            <div class="step-title">Design the scoring framework myself - don't outsource analytical logic</div>
+            <div class="step-body">Most PMs would have handed the metric weighting to a data scientist. I defined it myself: which financial metrics matter most for DSE companies, how to weight them, what thresholds distinguish strong from weak performance, and how to handle missing data without distorting rankings. <strong>This was PM work, not engineering work.</strong> The framework - percentile-based scoring with absolute thresholds as fallback, market-group risk adjustments, confidence scoring based on data completeness - reflected deliberate product decisions about what "quality" means for a Bangladeshi retail investor.</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">03</div>
+          <div>
+            <div class="step-title">Use AI to process sentiment at a scale humans can't match</div>
+            <div class="step-body">Processing hundreds of daily news items across multiple publishers manually was never going to work. <strong>I specified an AI-powered NLP pipeline - using VADER sentiment analysis, TextBlob, and custom financial keyword weighting - to automatically score every news article and aggregate it into company, sector, and market-level sentiment signals.</strong> This was a deliberate decision to use AI not as a novelty but as a genuine capability multiplier: it let me cover 300+ companies and thousands of news items daily with consistent, scalable analysis that no human team could match.</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">04</div>
+          <div>
+            <div class="step-title">Set hard performance targets and own them as product requirements</div>
+            <div class="step-body">An analytical feature that takes a minute to load is dead on arrival for mobile users making time-sensitive decisions. I set a hard performance target - fundamental rankings under 5 seconds, API responses under 200ms - and worked with engineering to hit it. <strong>This required a 99%+ reduction in query execution time from the initial implementation.</strong> Performance was a product requirement, not an engineering nice-to-have - and I owned it as one.</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">05</div>
+          <div>
+            <div class="step-title">Present complexity simply - signal labels, not raw numbers</div>
+            <div class="step-body">The target user is a retail investor in Bangladesh, not a CFA charterholder. I specified that every analytical output be presented with clear signal labels (BUY / SELL / NEUTRAL / WEAK_SELL), plain-language descriptions, and contextualised scores. <strong>The underlying analysis is as sophisticated as institutional research; the user experience is as approachable as checking the weather.</strong> These two requirements must be designed together, not sequentially.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 04 ARCHITECTURE -->
+    <section class="cs-section" id="architecture">
+      <div class="section-eyebrow">04 &mdash; Three Layers</div>
+      <h2>One product surface. Three analytical engines underneath.</h2>
+      <p>Company Analysis is presented to users as a single cohesive product - tap a company, see a complete picture. But underneath, three independent analytical engines run in parallel, each with its own data sources, processing logic, scoring methodology, and update schedule.</p>
+
+      <div class="layer-stack reveal">
+        <div class="layer-card layer-fundamental">
+          <div class="layer-head">
+            <div class="layer-title-group">
+              <div class="layer-num">Layer 01</div>
+              <div class="layer-title">Fundamental Ranking</div>
+              <div class="layer-freq">16 metrics &middot; Weekly refresh &middot; 300+ companies</div>
+            </div>
+            <div class="layer-tags">
+              <span class="layer-tag lt-blue">ROE</span>
+              <span class="layer-tag lt-blue">P/E Ratio</span>
+              <span class="layer-tag lt-blue">Debt/Equity</span>
+              <span class="layer-tag lt-blue">Net Margin</span>
+              <span class="layer-tag lt-blue">Current Ratio</span>
+            </div>
+          </div>
+          <div class="layer-body">
+            <strong>Answers: Is this company financially strong?</strong> The fundamental engine scores every DSE equity company against 16 financial metrics - profitability, financial health, efficiency, and market metrics - using a weighted composite scoring model. Rankings are refreshed weekly. Each company receives an overall rank and a sector-specific peer rank, enabling both absolute and relative assessment. A confidence score based on data availability tells users how much to trust the score.<br><br>
+            Critically, I resolved a fundamental scoring collapse during development - a bug where all companies were receiving the same score - by redesigning the scoring methodology to use both percentile-based relative ranking and absolute threshold scoring as a fallback. This was a product decision about scoring philosophy, not just a bug fix.
+          </div>
+        </div>
+
+        <div class="layer-card layer-technical">
+          <div class="layer-head">
+            <div class="layer-title-group">
+              <div class="layer-num">Layer 02</div>
+              <div class="layer-title">Technical Analysis</div>
+              <div class="layer-freq">50+ indicators &middot; Daily refresh &middot; 5 categories</div>
+            </div>
+            <div class="layer-tags">
+              <span class="layer-tag lt-purple">MACD</span>
+              <span class="layer-tag lt-purple">RSI</span>
+              <span class="layer-tag lt-purple">Bollinger Bands</span>
+              <span class="layer-tag lt-purple">ADX</span>
+              <span class="layer-tag lt-purple">OBV</span>
+            </div>
+          </div>
+          <div class="layer-body">
+            <strong>Answers: Is now the right time to act?</strong> The technical engine processes 50+ indicators across five categories - trend, momentum, volume, volatility, and oscillators - against daily price and volume data for every listed company. Each indicator produces a signal (BUY / SELL / NEUTRAL) and a score; the engine aggregates these into a single technical score using category-weighted methodology. Historical tracking enables trend analysis over time, and companies and sectors can be compared on technical strength.<br><br>
+            Processing 360+ companies nightly required a performance-first architecture: worker threads for CPU-intensive calculations, batch processing with configurable timeouts, and comprehensive error handling so a single bad data point never fails an entire company's analysis.
+          </div>
+        </div>
+
+        <div class="layer-card layer-sentiment">
+          <div class="layer-head">
+            <div class="layer-title-group">
+              <div class="layer-num">Layer 03</div>
+              <div class="layer-title">AI Sentiment Analysis</div>
+              <div class="layer-freq">NLP-powered &middot; Daily &middot; 3 news sources</div>
+            </div>
+            <div class="layer-tags">
+              <span class="layer-tag lt-green">VADER NLP</span>
+              <span class="layer-tag lt-green">TextBlob</span>
+              <span class="layer-tag lt-green">Custom Keywords</span>
+              <span class="layer-tag lt-green">Multi-source</span>
+            </div>
+          </div>
+          <div class="layer-body">
+            <div class="ai-badge"><span class="ai-badge-dot"></span>AI-Powered</div>
+            <strong>Answers: What does the market think right now?</strong> The sentiment engine is the most novel of the three layers - and where I made a deliberate choice to apply AI. A Python-based NLP pipeline automatically processes news from three sources daily: DSE official announcements, articles from five major financial newspapers, and professional market newsletters. Every article is scored using VADER sentiment analysis, TextBlob, and custom financial keyword weighting. Scores are aggregated at company, sector, and market level - giving users a real-time pulse on market mood that no manual process could replicate at this scale and freshness.
+          </div>
+        </div>
+      </div>
+
+      <h3>See it in action</h3>
+      <p>A full walkthrough of the Company Analysis feature on the live Biniyog platform - showing fundamental scores, technical signals, and sentiment analysis in use.</p>
+      <a class="video-card reveal" href="https://youtu.be/TSR2c7AvvFU" target="_blank" rel="noopener noreferrer" aria-label="Watch Biniyog Company Analysis product walkthrough on YouTube">
+        <div class="video-card-bg"></div>
+        <div class="video-card-content">
+          <div class="video-play-btn" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7 5.5L15 10L7 14.5V5.5Z" fill="currentColor"/></svg>
+          </div>
+          <div class="video-card-text">
+            <div class="video-card-label">Product Walkthrough</div>
+            <div class="video-card-title">Biniyog Company Analysis - Live Demo</div>
+            <div class="video-card-sub">Fundamental rankings &middot; Technical signals &middot; AI sentiment &middot; Sector views</div>
+          </div>
+          <div class="video-card-cta">
+            Watch on YouTube
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M2.5 7H11.5M11.5 7L8 3.5M11.5 7L8 10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+        </div>
+      </a>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 05 FUNDAMENTAL -->
+    <section class="cs-section" id="fundamental">
+      <div class="section-eyebrow">05 &mdash; Fundamental Ranking</div>
+      <h2>Turning 16 financial metrics into a single trustworthy company score.</h2>
+      <p>The fundamental ranking system evaluates every DSE equity company on a weekly basis. I designed the analytical framework myself - defining which metrics matter, how much weight each should carry, and how to handle the edge cases that break naive scoring systems.</p>
+
+      <h3>Metric weights - what I defined and why</h3>
+      <p>I categorised the 16 metrics into two groups. The weighting reflects what actually drives long-term investment returns for DSE companies - profitability and financial health carry the most weight because they're the most reliable predictors of company resilience.</p>
+
+      <div class="two-col reveal">
+        <div>
+          <div class="weight-group-label">Core Fundamentals - 84%</div>
+          <div class="weight-list">
+            <div class="weight-row"><span class="weight-label">ROE</span><div class="weight-bar-bg"><div class="weight-bar-fill" style="width:75%"></div></div><span class="weight-pct">15%</span></div>
+            <div class="weight-row"><span class="weight-label">Net Profit Margin</span><div class="weight-bar-bg"><div class="weight-bar-fill" style="width:60%"></div></div><span class="weight-pct">12%</span></div>
+            <div class="weight-row"><span class="weight-label">Operating Profit Margin</span><div class="weight-bar-bg"><div class="weight-bar-fill" style="width:50%"></div></div><span class="weight-pct">10%</span></div>
+            <div class="weight-row"><span class="weight-label">ROA</span><div class="weight-bar-bg"><div class="weight-bar-fill" style="width:50%"></div></div><span class="weight-pct">10%</span></div>
+            <div class="weight-row"><span class="weight-label">Debt-to-Equity</span><div class="weight-bar-bg"><div class="weight-bar-fill" style="width:45%"></div></div><span class="weight-pct">9%</span></div>
+            <div class="weight-row"><span class="weight-label">Current Ratio</span><div class="weight-bar-bg"><div class="weight-bar-fill" style="width:40%"></div></div><span class="weight-pct">8%</span></div>
+            <div class="weight-row"><span class="weight-label">Gross Profit Margin</span><div class="weight-bar-bg"><div class="weight-bar-fill" style="width:35%"></div></div><span class="weight-pct">7%</span></div>
+            <div class="weight-row"><span class="weight-label">EBITDA</span><div class="weight-bar-bg"><div class="weight-bar-fill" style="width:30%"></div></div><span class="weight-pct">6%</span></div>
+          </div>
+        </div>
+        <div>
+          <div class="weight-group-label">Market Metrics - 16%</div>
+          <div class="weight-list">
+            <div class="weight-row"><span class="weight-label">P/E Ratio</span><div class="weight-bar-bg"><div class="weight-bar-fill" style="width:40%"></div></div><span class="weight-pct">8%</span></div>
+            <div class="weight-row"><span class="weight-label">Dividend Yield</span><div class="weight-bar-bg"><div class="weight-bar-fill" style="width:20%"></div></div><span class="weight-pct">4%</span></div>
+            <div class="weight-row"><span class="weight-label">Market Cap Size</span><div class="weight-bar-bg"><div class="weight-bar-fill" style="width:20%"></div></div><span class="weight-pct">4%</span></div>
+          </div>
+          <div class="callout callout-amber" style="margin-top:24px;">
+            <p><strong>Risk adjustment:</strong> I specified market-group penalties so the final score is risk-adjusted - not just a financial metric aggregate. Z-group companies carry a scoring penalty reflecting the elevated risk they carry, giving the ranking a more honest picture of investment quality.</p>
+          </div>
+        </div>
+      </div>
+
+      <h3>The scoring collapse I solved</h3>
+      <p>During development, a critical issue emerged: <strong>all companies were receiving an identical fundamental score.</strong> The root cause was a baseline value collision - when too many companies had similar values, the percentile calculation collapsed, producing an undifferentiated flat score for everyone.</p>
+      <p>I resolved this by redesigning the scoring methodology with a dual approach: percentile-based scoring when data is sufficiently varied across companies, and absolute threshold scoring - for example, ROE &ge;20% earns 95 points, 15&ndash;20% earns 80 points - when percentiles collapse. <strong>This produced a realistic score distribution from 20&ndash;95 and made rankings genuinely useful.</strong> The decision about when to use which approach, and where to set the absolute thresholds, was mine to make - and it required judgment about what "good" financial performance actually looks like for DSE companies.</p>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 06 TECHNICAL -->
+    <section class="cs-section" id="technical">
+      <div class="section-eyebrow">06 &mdash; Technical Analysis</div>
+      <h2>50+ indicators, five categories, one clear signal per company.</h2>
+      <p>The technical analysis engine processes daily price and volume data for every DSE equity company, computing over 50 indicators and aggregating them into a single technical score with full category breakdown. I specified the category framework, the weighting structure, and the signal presentation logic.</p>
+
+      <div class="ind-grid reveal">
+        <div class="ind-card">
+          <div class="ind-icon">&#128200;</div>
+          <div class="ind-pct">35%</div>
+          <div class="ind-name">Trend</div>
+          <div class="ind-examples">SMA, EMA, MACD, ADX, Aroon, Parabolic SAR</div>
+        </div>
+        <div class="ind-card">
+          <div class="ind-icon">&#9889;</div>
+          <div class="ind-pct">30%</div>
+          <div class="ind-name">Momentum</div>
+          <div class="ind-examples">RSI, Stochastic, Williams %R, CCI, ROC</div>
+        </div>
+        <div class="ind-card">
+          <div class="ind-icon">&#128202;</div>
+          <div class="ind-pct">20%</div>
+          <div class="ind-name">Volume</div>
+          <div class="ind-examples">OBV, MFI, Volume SMA, Vol Rate of Change</div>
+        </div>
+        <div class="ind-card">
+          <div class="ind-icon">&#127754;</div>
+          <div class="ind-pct">10%</div>
+          <div class="ind-name">Volatility</div>
+          <div class="ind-examples">Bollinger Bands, ATR, Std Deviation</div>
+        </div>
+        <div class="ind-card">
+          <div class="ind-icon">&#128260;</div>
+          <div class="ind-pct">5%</div>
+          <div class="ind-name">Oscillators</div>
+          <div class="ind-examples">Ultimate Oscillator, Awesome Oscillator</div>
+        </div>
+      </div>
+
+      <p>The weighting reflects the relative reliability and relevance of each category for retail investor decisions. Trend indicators carry the most weight because they capture the clearest, most actionable signal - is the price moving up or down over time? Momentum confirms trend strength. Volume validates whether a price move has genuine market participation behind it.</p>
+
+      <div class="callout callout-purple reveal">
+        <p><strong>Signal clarity over data density:</strong> Each indicator produces a labelled signal - BUY, WEAK_BUY, NEUTRAL, WEAK_SELL, SELL - rather than a raw score. I specified this signal vocabulary deliberately. A retail investor looking at an RSI of 35 doesn't know what to do with that number; seeing "WEAK_SELL" with a plain-language explanation gives them the same information in an actionable form. The underlying maths stays intact; the presentation becomes human.</p>
+      </div>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 07 SENTIMENT -->
+    <section class="cs-section" id="sentiment">
+      <div class="section-eyebrow">07 &mdash; AI Sentiment Analysis</div>
+      <h2>Processing hundreds of daily news items with AI - so investors don't have to.</h2>
+      <p>The sentiment layer is where I made the most deliberate choice to apply AI as a core product capability. The volume of daily market news in Bangladesh is far beyond what any manual process can analyse consistently. I designed an automated NLP pipeline to handle it at scale.</p>
+
+      <div class="ai-badge"><span class="ai-badge-dot"></span>AI-Powered Feature</div>
+
+      <h3>Three news sources, one unified sentiment signal</h3>
+      <div class="source-grid reveal">
+        <div class="source-card">
+          <div class="source-icon">&#127963;&#65039;</div>
+          <div class="source-title">DSE Official News</div>
+          <div class="source-body">Company announcements, regulatory updates, and market notices directly from the Dhaka Stock Exchange. The highest-credibility source - official, structured, and directly company-attributable.</div>
+          <span class="source-tag">Primary Source</span>
+        </div>
+        <div class="source-card">
+          <div class="source-icon">&#128240;</div>
+          <div class="source-title">Financial Newspapers</div>
+          <div class="source-body">Articles from five major Bangladeshi financial publications - Financial Express, Business Standard, Daily Star, Share Bazar News, and Arthosuchak. Captures analyst opinion and market narrative beyond official announcements.</div>
+          <span class="source-tag">Secondary Source</span>
+        </div>
+        <div class="source-card">
+          <div class="source-icon">&#9993;&#65039;</div>
+          <div class="source-title">Professional Newsletters</div>
+          <div class="source-body">Daily EDGE newsletter from a professional market analysis firm - processed via automated email extraction and sender validation. Captures institutional-grade market insights that otherwise wouldn't reach retail investors.</div>
+          <span class="source-tag">Premium Signal</span>
+        </div>
+      </div>
+
+      <h3>How the AI scoring works</h3>
+      <p>Each news item passes through three NLP scoring methods, combined into a final sentiment score and aggregated at company, sector, and market level:</p>
+      <div class="two-col-3 reveal">
+        <div class="card">
+          <div class="card-label">Method 1</div>
+          <h4>VADER Sentiment</h4>
+          <p>Optimised for short, news-style financial text. Handles vocabulary like "margin compression," "revised upward," "dividend cut" better than general-purpose models. Produces a score from &minus;1.0 (most negative) to +1.0 (most positive).</p>
+        </div>
+        <div class="card">
+          <div class="card-label">Method 2</div>
+          <h4>TextBlob Analysis</h4>
+          <p>General-purpose sentiment analysis providing a second signal that catches sentiment patterns VADER may miss. Running two models and comparing outputs also provides a confidence signal - high agreement = higher confidence score.</p>
+        </div>
+        <div class="card">
+          <div class="card-label">Method 3</div>
+          <h4>Custom Financial Keywords</h4>
+          <p>DSE-specific vocabulary weighting that I specified to catch industry signals general models miss - terms specific to Bangladeshi market context, regulatory language, and sector-specific financial terminology.</p>
+        </div>
+      </div>
+
+      <div class="callout callout-green reveal">
+        <p><strong>Why AI here and not elsewhere:</strong> I used AI for sentiment because scale was genuinely the bottleneck. The alternative - manual analysis - covers 5&ndash;10 companies per analyst per day. The AI pipeline covers 300+ companies and thousands of news items daily with consistent methodology. <strong>This is not AI as a gimmick; it's AI as the only viable solution to a real scale problem.</strong> The confidence scoring on every output makes uncertainty explicit, so users never mistake a low-confidence signal for a high-conviction recommendation.</p>
+      </div>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 08 METRICS -->
+    <section class="cs-section" id="metrics">
+      <div class="section-eyebrow">08 &mdash; Metrics</div>
+      <h2>What success looked like - and the full framework I used to measure it.</h2>
+      <div class="callout callout-blue reveal">
+        <p><strong>North Star:</strong> Weekly active users engaging with Company Analysis - the metric that confirms the feature is being used for real investment decisions, not just browsed once and forgotten. "Engaged" means looking up a company before placing a trade, not just opening the section.</p>
+      </div>
+
+      <table class="signal-table reveal">
+        <thead>
+          <tr>
+            <th>Layer</th>
+            <th>Metric</th>
+            <th>Why it's on the dashboard</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Adoption</td>
+            <td data-label="Metric">% of active traders using Company Analysis before placing a trade</td>
+            <td data-label="Why it's on the dashboard">The core value hypothesis: does the feature change trading behaviour? If traders consult Company Analysis before deciding, it's doing its job. High trading volume with zero Company Analysis usage means the feature failed to integrate into the actual decision-making flow.</td>
+          </tr>
+          <tr>
+            <td>Adoption</td>
+            <td data-label="Metric">New users acquired via Company Analysis as an entry point</td>
+            <td data-label="Why it's on the dashboard">Investment intelligence features attract users who wouldn't sign up for a basic brokerage. Tracking new registrations where Company Analysis was the first feature engaged tells us whether the feature expands the addressable user base, not just serves existing users.</td>
+          </tr>
+          <tr>
+            <td>Engagement</td>
+            <td data-label="Metric">Companies analysed per session per active user</td>
+            <td data-label="Why it's on the dashboard">Depth signal. A user who analyses 5 companies per session is building an investment thesis, not glancing at a number. This distinguishes serious users from casual visitors and informs where to invest in depth vs. breadth.</td>
+          </tr>
+          <tr>
+            <td>Engagement</td>
+            <td data-label="Metric">Session return rate - % of users engaging weekly for 4+ consecutive weeks</td>
+            <td data-label="Why it's on the dashboard">Investment analysis is only useful if it becomes a habit. Weekly return for 4+ weeks signals the feature has become part of the user's regular investment process - the strongest indicator of long-term retention value.</td>
+          </tr>
+          <tr>
+            <td>Quality</td>
+            <td data-label="Metric">Fundamental coverage - % of active DSE companies with complete rankings</td>
+            <td data-label="Why it's on the dashboard">If a user looks up a company and sees "no data available," the feature has failed that use case. Coverage is a quality floor metric that must stay high or the analytical layer becomes unreliable as a comprehensive market tool.</td>
+          </tr>
+          <tr>
+            <td>Quality</td>
+            <td data-label="Metric">Sentiment pipeline freshness - % of days with same-day analysis</td>
+            <td data-label="Why it's on the dashboard">Sentiment on yesterday's news is significantly less valuable than same-day analysis. This metric ensures the AI pipeline runs reliably and delivers fresh signals. A drop here is an early warning of pipeline failure before users report stale data.</td>
+          </tr>
+          <tr>
+            <td>Business</td>
+            <td data-label="Metric">Trade volume uplift from Company Analysis users vs. non-users</td>
+            <td data-label="Why it's on the dashboard">The business case for the feature. If Company Analysis users show higher trade volume, the feature is demonstrably generating business value - not just product engagement.</td>
+          </tr>
+          <tr>
+            <td>Business</td>
+            <td data-label="Metric">Plan conversion - free to premium for Company Analysis power users</td>
+            <td data-label="Why it's on the dashboard">Advanced analytical features are a natural driver of premium plan upgrades. Users who rely on the analysis for real decisions have the highest willingness to pay for enhanced features and historical depth.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 09 RISKS -->
+    <section class="cs-section" id="risks">
+      <div class="section-eyebrow">09 &mdash; Risks</div>
+      <h2>What could go wrong - and how I designed against it.</h2>
+      <div class="risk-grid reveal">
+        <div class="risk-card">
+          <div class="risk-level r-high">High</div>
+          <div class="risk-title">Users treating analysis scores as investment advice and incurring losses</div>
+          <div class="risk-body">A retail investor who buys a company because it scored 85/100 on fundamentals and later loses money may blame the platform. Scores are analytical signals, not advice. Mitigated by: confidence scores on every output, explicit data-freshness indicators, and plain-language framing of what each layer answers vs. what it doesn't.</div>
+        </div>
+        <div class="risk-card">
+          <div class="risk-level r-high">High</div>
+          <div class="risk-title">Stale data producing misleading signals with no visible warning</div>
+          <div class="risk-body">A fundamental ranking based on two-year-old data, or technical scores built on last week's prices, could lead users to wrong conclusions without them knowing. Mitigated by: explicit data-freshness labelling on all scores, coverage metrics in the monitoring dashboard, and the pipeline freshness KPI as an early warning before users see degraded output.</div>
+        </div>
+        <div class="risk-card">
+          <div class="risk-level r-high">High</div>
+          <div class="risk-title">AI sentiment misclassifying nuanced financial language</div>
+          <div class="risk-body">NLP models can fail on irony, regulatory language, or DSE-specific terminology. A regulatory warning that uses formally positive language could be misclassified as positive sentiment. Mitigated by: VADER + custom financial keyword layer working in combination, confidence scoring that flags low-certainty classifications, and source attributions so users can verify the underlying articles.</div>
+        </div>
+        <div class="risk-card">
+          <div class="risk-level r-med">Medium</div>
+          <div class="risk-title">Scoring methodology bias disadvantaging certain company types</div>
+          <div class="risk-body">A weighting optimised for large-cap profitable companies may systematically underrate high-growth companies with intentionally low current profitability. Mitigated by: confidence scoring reflecting data completeness, and sector-level ranking enabling within-category comparison rather than forcing unfair cross-sector comparisons.</div>
+        </div>
+        <div class="risk-card">
+          <div class="risk-level r-med">Medium</div>
+          <div class="risk-title">Technical analysis overloads users instead of helping them</div>
+          <div class="risk-body">50+ indicators is a lot of information. A user who sees a BUY signal from 20 indicators and SELL from 15 others might end up more confused than before. Mitigated by: the aggregated technical score as the primary surface, with individual indicators accessible on expansion - not dumped on users by default.</div>
+        </div>
+        <div class="risk-card">
+          <div class="risk-level r-low">Low</div>
+          <div class="risk-title">Competitor feature parity reducing differentiation over time</div>
+          <div class="risk-body">If other DSE-focused platforms build similar analytical features, the advantage narrows. Mitigated by: the AI sentiment layer being the hardest to replicate quickly, the quality of the DSE-specific scoring methodology, and the 365-day historical depth that creates a data moat competitors starting from scratch would take years to build.</div>
+        </div>
+      </div>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 10 LESSONS -->
+    <section class="cs-section" id="lessons">
+      <div class="section-eyebrow">10 &mdash; Lessons</div>
+      <h2>What building this taught me about AI products and analytical design.</h2>
+      <div class="lesson-list reveal">
+        <div class="lesson-item">
+          <div class="lesson-num">01</div>
+          <div>
+            <div class="lesson-title">The PM's job in an AI-powered feature is defining the right questions, not the algorithms</div>
+            <div class="lesson-body">The most important decisions in this product had nothing to do with machine learning. Which financial metrics should drive fundamental scores? How should Z-category companies be penalised? What does "good" ROE look like for a DSE company specifically? These were product questions requiring market context and user empathy. <strong>I defined the scoring framework, the weighting logic, the metric thresholds, and the signal vocabulary. Engineering built the pipeline that executed my spec.</strong> This is what PM ownership of an AI feature looks like: not writing the models, but owning the analytical logic that determines what the models optimise for.</div>
+          </div>
+        </div>
+        <div class="lesson-item">
+          <div class="lesson-num">02</div>
+          <div>
+            <div class="lesson-title">Use AI where scale is the genuine bottleneck - not where it sounds impressive</div>
+            <div class="lesson-body">I didn't use AI for the fundamental or technical layers - those are deterministic calculations that don't need it. I used AI for sentiment because that's the layer where scale was genuinely the bottleneck. Processing hundreds of daily news items across five publications, a professional newsletter, and DSE announcements, with consistent documented methodology, every day, is impossible at human scale. <strong>The decision to use AI wasn't driven by trend-following; it was driven by recognising the alternative wasn't viable.</strong> That's the right reason to use AI in a product.</div>
+          </div>
+        </div>
+        <div class="lesson-item">
+          <div class="lesson-num">03</div>
+          <div>
+            <div class="lesson-title">Fixing a bad algorithm is a product decision, not just an engineering fix</div>
+            <div class="lesson-body">The fundamental scoring collapse - all companies receiving the same score - was discovered in testing. The engineering team's first instinct was to patch the percentile calculation. I stepped back and redesigned the entire scoring methodology with a dual approach. <strong>The right fix wasn't a patch; it was a better algorithm.</strong> And defining what "better" means in the context of a scoring system serving retail investors - realistic distribution, defensible thresholds, appropriate risk adjustments - was a PM decision.</div>
+          </div>
+        </div>
+        <div class="lesson-item">
+          <div class="lesson-num">04</div>
+          <div>
+            <div class="lesson-title">Complexity in the engine, simplicity at the surface - design both together</div>
+            <div class="lesson-body">The gap between what the engine computes and what the user sees is a product design problem, not a UI problem. I specified both simultaneously: 50+ indicators computing a technical score, presented as a single number with signal labels and five category breakdowns. <strong>The worst outcome would have been building the complex engine and treating the presentation as an afterthought.</strong> The analytical power of the feature is only as useful as the interface that surfaces it clearly enough for users to act on.</div>
+          </div>
+        </div>
+        <div class="lesson-item">
+          <div class="lesson-num">05</div>
+          <div>
+            <div class="lesson-title">Performance is a product quality requirement, not an engineering stretch goal</div>
+            <div class="lesson-body">The initial implementation took over a minute to execute - unusable for investors making time-sensitive decisions on mobile. I set &lt;5 second execution as a hard product requirement and worked with engineering on the architectural changes needed to hit it. <strong>The 99%+ reduction in execution time wasn't a nice-to-have optimisation; it was the difference between a feature that gets used and one that gets abandoned after the first slow load.</strong> I owned performance as a product requirement, not a post-launch improvement backlog item.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div><!-- /cs-body -->
+
+  <!-- APPENDIX BAND -->
+  <div class="appendix-band">
+    <div class="appendix-inner">
+
+      <div class="appendix-header">
+        <div class="appendix-eyebrow">Appendix &mdash; The Evidence</div>
+        <h2 class="appendix-title">Functional Spec Excerpts</h2>
+        <p class="appendix-sub">User stories, acceptance criteria, and the data-to-insight pipeline as specified in the product requirements.</p>
+      </div>
+
+      <!-- USER STORIES -->
+      <div class="appendix-block reveal">
+        <div class="appendix-block-label">Appendix A - User Stories</div>
+        <table class="appendix-table">
+          <thead>
+            <tr><th>ID</th><th>As a&hellip;</th><th>I want&hellip;</th><th>So that&hellip;</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>US.1</td>
+              <td data-label="As a…">Retail investor evaluating whether to buy a company</td>
+              <td data-label="I want…">a scored view of the company's financial health compared to peers in the same sector</td>
+              <td data-label="So that…">I can make an evidence-based decision rather than relying on tips or gut instinct</td>
+            </tr>
+            <tr>
+              <td>US.2</td>
+              <td data-label="As a…">Trader who has decided to invest in a company</td>
+              <td data-label="I want…">clear technical signals - trend direction, momentum, and volume confirmation - for that company</td>
+              <td data-label="So that…">I know whether this is the right moment to enter a position, not just whether the company is worth owning</td>
+            </tr>
+            <tr>
+              <td>US.3</td>
+              <td data-label="As a…">Investor monitoring a company already in my portfolio</td>
+              <td data-label="I want…">an aggregated sentiment score based on today's news about that company and its sector</td>
+              <td data-label="So that…">I can react to market mood changes quickly without reading through dozens of news sources myself</td>
+            </tr>
+            <tr>
+              <td>US.4</td>
+              <td data-label="As a…">Investor who doesn't know much about technical analysis</td>
+              <td data-label="I want…">indicator results presented as plain-language signals (BUY / SELL / NEUTRAL) rather than raw numbers</td>
+              <td data-label="So that…">I can use the technical analysis without needing to understand what an RSI of 35 or a MACD crossover means</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- ACCEPTANCE CRITERIA -->
+      <div class="appendix-block reveal">
+        <div class="appendix-block-label">Appendix B &mdash; Key Acceptance Criteria</div>
+        <table class="appendix-table">
+          <thead>
+            <tr><th>#</th><th>Criteria</th><th>Owner</th><th>Verified by</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>AC.1</td>
+              <td data-label="Criteria">Fundamental rankings must produce a realistic score distribution. Dual scoring - percentile-based with absolute threshold fallback - must be implemented. No more than 10% of companies within &plusmn;2 points of any single value.</td>
+              <td data-label="Owner">DSE / BE</td>
+              <td data-label="Verified by">QA: verify score range spans at least 20&ndash;90 across all companies</td>
+            </tr>
+            <tr>
+              <td>AC.2</td>
+              <td data-label="Criteria">Fundamental ranking execution must complete in under 5 seconds for 300+ companies. API response time for all ranking endpoints must be under 200ms.</td>
+              <td data-label="Owner">BE</td>
+              <td data-label="Verified by">Load test: trigger weekly run, measure wall-clock time; API latency measured with standard tooling</td>
+            </tr>
+            <tr>
+              <td>AC.3</td>
+              <td data-label="Criteria">Every technical indicator output must include a plain-language signal label. Raw scores must be secondary in the UI - accessible on expansion, not shown by default.</td>
+              <td data-label="Owner">FE</td>
+              <td data-label="Verified by">Design review: signal labels visible without expanding any element; raw scores only on expanded view</td>
+            </tr>
+            <tr>
+              <td>AC.4</td>
+              <td data-label="Criteria">Sentiment analysis must process all three source types daily and produce company, sector, and market-level aggregations available by 8 AM each trading day.</td>
+              <td data-label="Owner">Python / BE</td>
+              <td data-label="Verified by">Monitoring: pipeline run log checked at 8:30 AM; alert if any source type produces zero articles processed</td>
+            </tr>
+            <tr>
+              <td>AC.5</td>
+              <td data-label="Criteria">Every analytical output must display a confidence score or data freshness indicator. No score is shown without context for how reliable it is.</td>
+              <td data-label="Owner">FE</td>
+              <td data-label="Verified by">QA: verify confidence score visible on every company fundamental card; verify "as of date" present on all technical and sentiment outputs</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- DATA TO INSIGHT PIPELINE -->
+      <div class="appendix-block reveal">
+        <div class="appendix-block-label">Appendix C &mdash; Data-to-Insight Pipeline</div>
+        <p class="appendix-flow-intro">How raw market data becomes the analytical signals a user sees when they tap a company in the Biniyog app.</p>
+        <div class="flow-steps">
+          <div class="flow-step">
+            <div class="flow-step-num">1</div>
+            <div>
+              <div class="flow-step-title">Raw data ingestion</div>
+              <div class="flow-step-text">Three data streams feed the system in parallel: financial performance data for fundamentals, daily price and volume data for technical analysis, and news content from DSE announcements, newspapers, and newsletters for sentiment.</div>
+            </div>
+          </div>
+          <div class="flow-arrow">&#8595;</div>
+          <div class="flow-step">
+            <div class="flow-step-num">2</div>
+            <div>
+              <div class="flow-step-title">Fundamental processing (weekly)</div>
+              <div class="flow-step-text">16 financial metrics scored per company using dual scoring methodology. Market-group risk adjustments applied. Confidence score calculated from data completeness. Overall and sector ranks generated for all 300+ companies.</div>
+            </div>
+          </div>
+          <div class="flow-arrow">&#8595;</div>
+          <div class="flow-step">
+            <div class="flow-step-num">3</div>
+            <div>
+              <div class="flow-step-title">Technical processing (daily)</div>
+              <div class="flow-step-text">50+ indicators calculated per company using worker threads for performance. Each indicator scored and labelled. Five category scores computed using defined weightings. Final technical score aggregated and companies ranked overall and by sector.</div>
+            </div>
+          </div>
+          <div class="flow-arrow">&#8595;</div>
+          <div class="flow-step">
+            <div class="flow-step-num">4</div>
+            <div>
+              <div class="flow-step-title">AI sentiment processing (daily, 6 AM)</div>
+              <div class="flow-step-text">Python NLP pipeline processes all three news sources. VADER + TextBlob + custom financial keywords applied to each article. Company and sector mentions extracted. Individual article scores aggregated to company, sector, and market level. Confidence scores assigned per aggregation.</div>
+            </div>
+          </div>
+          <div class="flow-arrow">&#8595;</div>
+          <div class="flow-step">
+            <div class="flow-step-num">5</div>
+            <div>
+              <div class="flow-step-title">API layer serves pre-computed results</div>
+              <div class="flow-step-text">REST API endpoints serve stored results directly - no live computation on request. &lt;200ms response time. Filtered by company, sector, date range. 365-day historical data retained for trend analysis.</div>
+            </div>
+          </div>
+          <div class="flow-arrow">&#8595;</div>
+          <div class="flow-step flow-step-final">
+            <div class="flow-step-num">&#10003;</div>
+            <div>
+              <div class="flow-step-title">User sees a complete company picture</div>
+              <div class="flow-step-text">Fundamental score + sector rank &middot; Technical score with signal labels by category &middot; Sentiment score with source breakdown &middot; Confidence indicators on every output &middot; Plain-language framing throughout. Three analytical layers, one coherent decision-support interface.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div><!-- /appendix-band -->
+
+  <!-- FOOTER -->
+  <footer>
+    <a href="work.html">&larr; Back to all case studies</a>
+    &nbsp;&nbsp;&middot;&nbsp;&nbsp;
+    <a href="index.html">Akash Poddar</a>
+    &nbsp;&nbsp;&middot;&nbsp;&nbsp;
+    <a href="index.html#contact">Get in touch</a>
+  </footer>
+
+  <script>
+    const reveals = document.querySelectorAll('.reveal');
+    const isMobile = window.innerWidth < 768;
+    const io = new IntersectionObserver((entries) => {
+      const visible = entries.filter(e => e.isIntersecting)
+        .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+      if (!visible.length) return;
+      requestAnimationFrame(() => {
+        visible.forEach((entry, i) => {
+          entry.target.style.transitionDelay = isMobile ? '0s' : (i * 0.05) + 's';
+          entry.target.classList.add('visible');
+          io.unobserve(entry.target);
+        });
+      });
+    }, { threshold: 0.06, rootMargin: '0px 0px -40px 0px' });
+    reveals.forEach(r => io.observe(r));
+
+    const tocItems = document.querySelectorAll('.toc-item');
+    const sections = document.querySelectorAll('.cs-section[id]');
+    const tocObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          tocItems.forEach(t => t.classList.remove('active'));
+          const active = document.querySelector(`.toc-item[href="#${entry.target.id}"]`);
+          if (active) active.classList.add('active');
+        }
+      });
+    }, { threshold: 0, rootMargin: '-101px 0px -85% 0px' });
+    sections.forEach(s => tocObserver.observe(s));
+  </script>
+
+</body>
+</html>
