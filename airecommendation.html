@@ -1,0 +1,1105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-62DWPTYD6F"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-62DWPTYD6F');
+  </script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27><rect width=%2732%27 height=%2732%27 rx=%274%27 fill=%27%230e0e0e%27/><text x=%2716%27 y=%2722%27 font-family=%27Georgia,serif%27 font-size=%2714%27 font-weight=%27600%27 fill=%27%23f7f5f0%27 text-anchor=%27middle%27>AP</text></svg>" />
+  <title>AI Company Recommendation Engine - Biniyog | Akash Poddar</title>
+  <meta name="description" content="How Akash Poddar built Biniyog's AI-powered recommendation engine - a production-ready investment intelligence platform delivering personalised BUY/HOLD/SELL signals across 350+ DSE-listed companies." />
+  <link rel="canonical" href="https://echo-akash.github.io/airecommendation.html" />
+  <meta property="og:title" content="AI Company Recommendation Engine - Biniyog | Akash Poddar" />
+  <meta property="og:description" content="Building a market-aware recommendation engine - multi-method target pricing, risk assessment, stop-loss calculation, and proactive watch conditions - for Bangladeshi retail investors." />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://echo-akash.github.io/airecommendation.html" />
+  <meta property="og:image" content="https://echo-akash.github.io/og-image.png" />
+  <meta name="author" content="Akash Poddar" />
+  <meta name="robots" content="index, follow" />
+  <meta name="theme-color" content="#0e0e0e" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "AI Company Recommendation Engine - Biniyog",
+    "description": "How Akash Poddar built a production-ready AI recommendation engine delivering BUY/HOLD/SELL signals with target prices, risk scores, and stop-loss levels for 350+ DSE companies.",
+    "author": { "@type": "Person", "name": "Akash Poddar", "url": "https://echo-akash.github.io/" },
+    "publisher": { "@type": "Person", "name": "Akash Poddar" }
+  }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,300;1,9..144,500&family=DM+Sans:wght@300;400;500&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,300;1,9..144,500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" /></noscript>
+  <style>
+    :root {
+      --ink: #0e0e0e;
+      --ink-mid: #444;
+      --ink-muted: #696969;
+      --ink-faint: #bbb;
+      --surface: #f7f5f0;
+      --white: #ffffff;
+      --accent: #0d7377;
+      --accent-light: #ecfafb;
+      --accent-dark: #0a5c5f;
+      --accent2: #14a085;
+      --accent2-light: #e8faf6;
+      --green: #166534;
+      --green-light: #dcfce7;
+      --amber: #b45309;
+      --amber-light: #fef3e2;
+      --red: #8c3320;
+      --red-light: #faeae7;
+      --line: rgba(0,0,0,0.08);
+      --serif: 'Fraunces', Georgia, serif;
+      --sans: 'DM Sans', system-ui, sans-serif;
+      --radius: 10px;
+      --ease: cubic-bezier(0.16, 1, 0.3, 1);
+      --wide-w: 1000px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+    }
+    body { font-family: var(--sans); background: var(--surface); color: var(--ink); font-size: 15px; line-height: 1.6; overflow-x: hidden; }
+
+    /* ── NAV ── */
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 0 40px; height: 56px; background: rgba(247,245,240,0.88); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); }
+    .nav-logo { font-family: var(--serif); font-size: 16px; font-weight: 600; color: var(--ink); text-decoration: none; letter-spacing: -0.02em; }
+    .nav-links { display: flex; gap: 32px; list-style: none; }
+    .nav-links a { font-size: 13px; color: var(--ink-mid); text-decoration: none; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--accent); }
+    .nav-cta { font-size: 13px; padding: 7px 18px; background: var(--ink); color: var(--white); border-radius: 20px; text-decoration: none; transition: background 0.2s; }
+    .nav-cta:hover { background: var(--accent); }
+
+    /* ── HERO ── */
+    .cs-hero { background: var(--ink); padding: 120px 40px 80px; position: relative; overflow: hidden; }
+    .cs-hero-inner { max-width: var(--wide-w); margin: 0 auto; position: relative; z-index: 1; }
+    .cs-hero-grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px); background-size: 60px 60px; }
+    .cs-hero-shimmer { position: absolute; inset: 0; background: radial-gradient(ellipse 60% 60% at 70% 50%, rgba(13,115,119,0.22) 0%, transparent 70%); }
+    .cs-hero-bar { height: 4px; background: linear-gradient(90deg, #0d7377, #14b8a6); border-radius: 2px; width: 64px; margin-bottom: 28px; }
+    .cs-meta-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 24px; }
+    .cs-tag { font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; padding: 5px 14px; border-radius: 20px; }
+    .tag-teal   { background: rgba(13,115,119,0.22); color: #5eead4; border: 1px solid rgba(13,115,119,0.35); }
+    .tag-green  { background: rgba(22,101,52,0.2); color: #6ee7b7; border: 1px solid rgba(22,101,52,0.28); }
+    .tag-amber  { background: rgba(180,83,9,0.18); color: #fcd34d; border: 1px solid rgba(180,83,9,0.3); }
+    .tag-gray   { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.45); border: 1px solid rgba(255,255,255,0.1); }
+    .cs-hero-title { font-family: var(--serif); font-size: clamp(34px, 5.5vw, 60px); font-weight: 600; letter-spacing: -0.03em; line-height: 0.95; color: #fff; margin-bottom: 20px; }
+    .cs-hero-title em { font-style: italic; font-weight: 300; color: rgba(255,255,255,0.38); }
+    .cs-hero-sub { font-size: 17px; font-weight: 300; color: rgba(255,255,255,0.5); max-width: 640px; line-height: 1.7; margin-bottom: 48px; }
+    .cs-hero-sub strong { color: rgba(255,255,255,0.8); font-weight: 400; }
+    .cs-kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 40px; }
+    .cs-kpi { padding-right: 32px; border-right: 1px solid rgba(255,255,255,0.08); }
+    .cs-kpi:last-child { border-right: none; }
+    .cs-kpi-num { font-family: var(--serif); font-size: 32px; font-weight: 600; letter-spacing: -0.02em; color: #fff; line-height: 1; margin-bottom: 6px; }
+    .cs-kpi-num span { font-size: 20px; font-style: italic; font-weight: 300; color: rgba(255,255,255,0.35); }
+    .cs-kpi-label { font-size: 11px; color: rgba(255,255,255,0.38); line-height: 1.4; max-width: 130px; }
+
+    /* ── TOC ── */
+    .toc-bar { position: sticky; top: 56px; z-index: 90; background: var(--white); border-bottom: 1px solid var(--line); overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+    .toc-bar::-webkit-scrollbar { display: none; }
+    .toc-inner { max-width: var(--wide-w); margin: 0 auto; display: flex; padding: 0 40px; }
+    .toc-item { font-size: 12px; color: var(--ink-muted); text-decoration: none; padding: 14px 20px; white-space: nowrap; border-bottom: 2px solid transparent; transition: color 0.2s, border-color 0.2s; display: flex; align-items: center; gap: 6px; }
+    .toc-item:hover { color: var(--accent); border-bottom-color: var(--accent); }
+    .toc-item.active { color: var(--accent); border-bottom-color: var(--accent); }
+    .toc-num { font-size: 10px; color: var(--ink-faint); }
+
+    /* ── BODY ── */
+    .cs-body { max-width: var(--wide-w); margin: 0 auto; padding: 0 40px; }
+    .cs-section { padding: 72px 0 0; content-visibility: auto; contain-intrinsic-size: 0 600px; }
+    .cs-section:last-of-type { padding-bottom: 80px; }
+    .section-eyebrow { font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+    .section-eyebrow::after { content: ''; flex: 0 0 32px; height: 1px; background: var(--accent); opacity: 0.4; }
+    .cs-section h2 { font-family: var(--serif); font-size: 32px; font-weight: 600; letter-spacing: -0.02em; color: var(--ink); line-height: 1.15; margin-bottom: 28px; }
+    .cs-section h3 { font-family: var(--serif); font-size: 20px; font-weight: 600; letter-spacing: -0.01em; color: var(--ink); margin: 40px 0 16px; }
+    .cs-section p { font-size: 15px; color: var(--ink-mid); line-height: 1.8; font-weight: 300; margin-bottom: 16px; }
+    .cs-section p:last-child { margin-bottom: 0; }
+    .cs-section p strong { color: var(--ink); font-weight: 500; }
+    .cs-divider { border: none; border-top: 1px solid var(--line); margin: 56px 0 0; }
+
+    /* ── CALLOUT ── */
+    .callout { border-left: 3px solid var(--accent); border-radius: 0 var(--radius) var(--radius) 0; padding: 20px 24px; margin: 28px 0; }
+    .callout-teal   { background: var(--accent-light); }
+    .callout-teal p strong { color: var(--accent-dark); }
+    .callout-green  { background: var(--green-light); border-left-color: var(--green); }
+    .callout-green p strong { color: var(--green); }
+    .callout-amber  { background: var(--amber-light); border-left-color: var(--amber); }
+    .callout-amber p strong { color: var(--amber); }
+    .callout p { margin-bottom: 0; color: var(--ink); font-weight: 400; font-size: 14px; line-height: 1.75; }
+
+    /* ── AI BADGE ── */
+    .ai-badge { display: inline-flex; align-items: center; gap: 7px; background: linear-gradient(135deg, rgba(13,115,119,0.1), rgba(20,160,133,0.12)); border: 1px solid rgba(13,115,119,0.25); border-radius: 20px; padding: 6px 16px; font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent2); margin-bottom: 14px; }
+    .ai-badge-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent2); flex-shrink: 0; animation: aipulse 2s ease-in-out infinite; }
+    @keyframes aipulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+    @media (prefers-reduced-motion: reduce) { .ai-badge-dot { animation: none; } }
+
+    /* ── STEP LIST ── */
+    .step-list { display: flex; flex-direction: column; margin: 28px 0; }
+    .step-item { display: grid; grid-template-columns: 56px 1fr; gap: 0 20px; padding: 28px 0; border-top: 1px solid var(--line); align-items: start; }
+    .step-item:last-child { border-bottom: 1px solid var(--line); }
+    .step-num { font-family: var(--serif); font-size: 28px; font-weight: 600; color: var(--accent); letter-spacing: -0.02em; line-height: 1; padding-top: 4px; }
+    .step-title { font-family: var(--serif); font-size: 18px; font-weight: 600; color: var(--ink); margin-bottom: 8px; line-height: 1.2; }
+    .step-body { font-size: 14px; color: var(--ink-mid); line-height: 1.75; font-weight: 300; }
+    .step-body strong { color: var(--ink); font-weight: 500; }
+
+    /* ── PILLAR CARDS ── */
+    .pillar-stack { display: flex; flex-direction: column; gap: 16px; margin: 28px 0; }
+    .pillar-card { background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); padding: 28px; position: relative; overflow: hidden; }
+    .pillar-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; }
+    .pillar-target::before   { background: linear-gradient(90deg, #0d7377, #14b8a6); }
+    .pillar-risk::before     { background: linear-gradient(90deg, #b45309, #f59e0b); }
+    .pillar-stoploss::before { background: linear-gradient(90deg, #8c3320, #ef4444); }
+    .pillar-watch::before    { background: linear-gradient(90deg, #166534, #22c55e); }
+    .pillar-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 16px; }
+    .pillar-title-group {}
+    .pillar-num { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 4px; }
+    .pillar-title { font-family: var(--serif); font-size: 21px; font-weight: 600; color: var(--ink); line-height: 1.1; margin-bottom: 6px; }
+    .pillar-sub { font-size: 12px; font-weight: 500; color: var(--ink-muted); }
+    .pillar-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+    .pillar-tag { font-size: 11px; padding: 3px 10px; border-radius: 20px; font-weight: 500; }
+    .pt-teal   { background: var(--accent-light); color: var(--accent-dark); }
+    .pt-amber  { background: var(--amber-light); color: var(--amber); }
+    .pt-red    { background: var(--red-light); color: var(--red); }
+    .pt-green  { background: var(--green-light); color: var(--green); }
+    .pillar-body { font-size: 14px; color: var(--ink-mid); line-height: 1.8; font-weight: 300; }
+    .pillar-body strong { color: var(--ink); font-weight: 500; }
+
+    /* ── WEIGHT BARS ── */
+    .weight-section { margin: 28px 0; }
+    .weight-group-label { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-muted); margin-bottom: 14px; padding-bottom: 8px; border-bottom: 1px solid var(--line); }
+    .weight-list { display: flex; flex-direction: column; gap: 10px; }
+    .weight-row { display: flex; align-items: center; gap: 12px; }
+    .weight-label { font-size: 13px; color: var(--ink-mid); flex: 0 0 auto; width: 200px; min-width: 0; }
+    .weight-bar-bg { flex: 1; min-width: 0; height: 6px; background: var(--line); border-radius: 3px; overflow: hidden; }
+    .weight-bar-fill { height: 100%; border-radius: 3px; background: linear-gradient(90deg, var(--accent), #14b8a6); }
+    .weight-pct { font-size: 12px; font-weight: 500; color: var(--ink-muted); flex: 0 0 36px; text-align: right; }
+
+    /* ── CONDITION GRID ── */
+    .cond-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 28px 0; }
+    .cond-card { background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px 16px; }
+    .cond-eff { font-family: var(--serif); font-size: 22px; font-weight: 600; color: var(--accent); line-height: 1; margin-bottom: 6px; }
+    .cond-name { font-size: 12px; font-weight: 500; color: var(--ink); margin-bottom: 4px; }
+    .cond-desc { font-size: 11.5px; color: var(--ink-muted); line-height: 1.55; }
+
+    /* ── SIGNAL TABLE ── */
+    .signal-table { width: 100%; border-collapse: collapse; font-size: 13.5px; margin: 28px 0; }
+    .signal-table th { text-align: left; font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-muted); padding: 10px 16px; border-bottom: 2px solid var(--line); }
+    .signal-table td { padding: 14px 16px; border-bottom: 1px solid var(--line); color: var(--ink-mid); vertical-align: top; line-height: 1.6; }
+    .signal-table td:first-child { font-weight: 500; color: var(--ink); }
+    .signal-table tr:last-child td { border-bottom: none; }
+    .signal-table tr:hover td { background: rgba(13,115,119,0.03); }
+    .signal-pill { display: inline-block; font-size: 11px; font-weight: 600; letter-spacing: 0.06em; padding: 3px 10px; border-radius: 20px; text-transform: uppercase; }
+    .sp-buy   { background: var(--green-light); color: var(--green); }
+    .sp-hold  { background: var(--amber-light); color: var(--amber); }
+    .sp-sell  { background: var(--red-light); color: var(--red); }
+    .sp-watch { background: var(--accent-light); color: var(--accent-dark); }
+
+    /* ── TWO COL ── */
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 28px 0; }
+    .two-col-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin: 28px 0; }
+
+    /* ── CARD ── */
+    .card { background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); padding: 24px; }
+    .card-label { font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; }
+    .card h4 { font-family: var(--serif); font-size: 17px; font-weight: 600; color: var(--ink); margin-bottom: 8px; line-height: 1.3; }
+    .card p { font-size: 13.5px; color: var(--ink-mid); line-height: 1.7; margin-bottom: 0; }
+
+    /* ── METRIC ROW ── */
+    .metric-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 28px 0; }
+    .metric-card { background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); padding: 22px 20px; text-align: center; }
+    .metric-num { font-family: var(--serif); font-size: 30px; font-weight: 600; color: var(--accent); line-height: 1; margin-bottom: 6px; }
+    .metric-label { font-size: 12px; color: var(--ink-mid); line-height: 1.5; }
+
+    /* ── LESSON LIST ── */
+    .lesson-list { display: flex; flex-direction: column; margin: 28px 0; }
+    .lesson-item { display: grid; grid-template-columns: 48px 1fr; gap: 0 20px; padding: 28px 0; border-top: 1px solid var(--line); }
+    .lesson-item:last-child { border-bottom: 1px solid var(--line); }
+    .lesson-num { font-family: var(--serif); font-size: 24px; font-weight: 600; color: var(--accent); opacity: 0.4; line-height: 1; padding-top: 4px; }
+    .lesson-title { font-family: var(--serif); font-size: 18px; font-weight: 600; color: var(--ink); margin-bottom: 8px; line-height: 1.2; }
+    .lesson-body { font-size: 14px; color: var(--ink-mid); line-height: 1.75; font-weight: 300; }
+    .lesson-body strong { color: var(--ink); font-weight: 500; }
+
+    /* ── APPENDIX BAND ── */
+    .appendix-band { background: #111; border-top: 1px solid rgba(255,255,255,0.06); padding: 80px 40px; }
+    .appendix-inner { max-width: var(--wide-w); margin: 0 auto; }
+    .appendix-header { margin-bottom: 56px; }
+    .appendix-eyebrow { font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: #5eead4; margin-bottom: 12px; }
+    .appendix-title { font-family: var(--serif); font-size: 32px; font-weight: 600; letter-spacing: -0.02em; color: #fff; margin-bottom: 12px; }
+    .appendix-sub { font-size: 15px; color: rgba(255,255,255,0.4); font-weight: 300; max-width: 560px; line-height: 1.7; }
+    .appendix-block { margin-bottom: 56px; }
+    .appendix-block:last-child { margin-bottom: 0; }
+    .appendix-block-label { font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.3); margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .appendix-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .appendix-table th { text-align: left; font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,255,255,0.3); padding: 10px 16px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+    .appendix-table td { padding: 14px 16px; border-bottom: 1px solid rgba(255,255,255,0.06); color: rgba(255,255,255,0.55); vertical-align: top; line-height: 1.65; }
+    .appendix-table td:first-child { color: rgba(255,255,255,0.25); font-size: 11px; white-space: nowrap; font-weight: 500; letter-spacing: 0.04em; }
+    .appendix-table tr:last-child td { border-bottom: none; }
+    .appendix-table tr:hover td { background: rgba(255,255,255,0.02); }
+    .appendix-flow-intro { font-size: 14px; color: rgba(255,255,255,0.4); margin-bottom: 28px; font-weight: 300; }
+    .flow-steps { display: flex; flex-direction: column; }
+    .flow-arrow { text-align: center; color: rgba(255,255,255,0.15); font-size: 18px; padding: 4px 0 4px 24px; }
+    .flow-step { display: grid; grid-template-columns: 40px 1fr; gap: 0 16px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); border-radius: var(--radius); padding: 18px 20px; align-items: start; }
+    .flow-step-final { background: rgba(13,115,119,0.1); border-color: rgba(13,115,119,0.3); }
+    .flow-step-num { font-family: var(--serif); font-size: 18px; font-weight: 600; color: #5eead4; line-height: 1; padding-top: 2px; }
+    .flow-step-final .flow-step-num { font-size: 20px; }
+    .flow-step-title { font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.7); margin-bottom: 5px; }
+    .flow-step-text { font-size: 12.5px; color: rgba(255,255,255,0.38); line-height: 1.65; }
+
+    /* ── REVEAL ── */
+    .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.6s var(--ease), transform 0.6s var(--ease); }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* ── FOOTER ── */
+    footer { background: var(--ink); border-top: 1px solid rgba(255,255,255,0.06); padding: 24px 40px; text-align: center; font-size: 12px; color: rgba(255,255,255,0.55); }
+    footer a { color: rgba(255,255,255,0.55); text-decoration: none; }
+    footer a:hover { color: var(--white); }
+
+    /* ══════════════════════════════════════════
+       RESPONSIVE - 768px
+    ══════════════════════════════════════════ */
+    @media (max-width: 768px) {
+      nav { padding: 0 20px; }
+      .nav-links { display: none; }
+
+      .cs-hero { padding: 96px 20px 52px; }
+      .cs-hero-title { font-size: clamp(28px, 8vw, 44px); }
+      .cs-hero-sub { font-size: 14px; margin-bottom: 32px; }
+      .cs-kpi-row { grid-template-columns: 1fr 1fr; gap: 24px 16px; padding-top: 28px; }
+      .cs-kpi { border-right: none !important; padding-right: 0 !important; padding-left: 0 !important; }
+      .cs-kpi:nth-child(odd) { border-right: 1px solid rgba(255,255,255,0.1) !important; padding-right: 16px !important; }
+      .cs-kpi-num { font-size: 24px; }
+      .cs-kpi-label { font-size: 11px; }
+
+      .toc-inner { padding: 0 16px; }
+      .toc-item { padding: 12px 12px; font-size: 11px; }
+      .cs-body { padding: 0 20px; }
+      .cs-section { padding: 48px 0 0; }
+      .cs-section h2 { font-size: 22px; margin-bottom: 20px; }
+      .cs-section h3 { font-size: 17px; margin: 28px 0 12px; }
+      .cs-section p { font-size: 14px; line-height: 1.75; }
+      .cs-divider { margin: 40px 0 0; }
+      .callout { padding: 16px 18px; }
+
+      .two-col, .two-col-3, .metric-row { grid-template-columns: 1fr; }
+      .cond-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+
+      .pillar-card { padding: 22px; }
+      .pillar-head { flex-direction: column; gap: 12px; }
+
+      .weight-label { width: 140px; font-size: 12px; }
+
+      .step-item { grid-template-columns: 40px 1fr; gap: 0 14px; padding: 20px 0; }
+      .step-num { font-size: 22px; }
+      .step-title { font-size: 16px; }
+      .step-body { font-size: 13.5px; }
+
+      .lesson-item { grid-template-columns: 40px 1fr; gap: 0 14px; padding: 20px 0; }
+      .lesson-num { font-size: 20px; }
+      .lesson-title { font-size: 16px; }
+      .lesson-body { font-size: 13.5px; }
+
+      .signal-table { border-collapse: separate; border-spacing: 0; font-size: 13px; }
+      .signal-table thead { display: none; }
+      .signal-table tbody { display: flex; flex-direction: column; gap: 12px; }
+      .signal-table tr { display: block; background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px; }
+      .signal-table td { display: block; padding: 4px 0; border: none; white-space: normal; font-size: 13.5px; line-height: 1.65; }
+      .signal-table td:first-child { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); padding-bottom: 8px; margin-bottom: 4px; border-bottom: 1px solid var(--line); }
+      .signal-table td[data-label]::before { content: attr(data-label); display: block; font-size: 10px; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase; color: var(--ink-muted); margin-top: 8px; margin-bottom: 2px; }
+
+      .appendix-band { padding: 52px 20px 60px; }
+      .appendix-title { font-size: 24px; }
+      .appendix-sub { font-size: 14px; }
+      .appendix-table { border-collapse: separate; border-spacing: 0; }
+      .appendix-table thead { display: none; }
+      .appendix-table tbody { display: flex; flex-direction: column; gap: 12px; }
+      .appendix-table tr { display: block; border: 1px solid rgba(255,255,255,0.09); border-radius: var(--radius); padding: 16px; background: rgba(255,255,255,0.025); }
+      .appendix-table td { display: block; padding: 4px 0; border: none; font-size: 13px; line-height: 1.65; white-space: normal; color: rgba(255,255,255,0.6); }
+      .appendix-table td:first-child { font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #5eead4 !important; padding-bottom: 8px; margin-bottom: 4px; border-bottom: 1px solid rgba(255,255,255,0.07); }
+      .appendix-table td[data-label]::before { content: attr(data-label); display: block; font-size: 10px; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase; color: rgba(255,255,255,0.28); margin-top: 8px; margin-bottom: 2px; }
+      .flow-step { grid-template-columns: 32px 1fr; gap: 0 12px; padding: 14px 16px; }
+      .flow-step-num { font-size: 15px; }
+      .flow-step-title { font-size: 12px; }
+      .flow-step-text { font-size: 12px; }
+
+      footer { padding: 20px; }
+    }
+
+    /* ══════════════════════════════════════════
+       RESPONSIVE - 480px
+    ══════════════════════════════════════════ */
+    @media (max-width: 480px) {
+      .cs-hero { padding: 88px 16px 44px; }
+      .cs-body { padding: 0 16px; }
+      .appendix-band { padding: 44px 16px 52px; }
+      .cs-kpi-row { gap: 20px 12px; }
+      .cs-kpi-num { font-size: 22px; }
+      .cs-kpi-label { font-size: 10px; }
+      .cond-grid { grid-template-columns: 1fr; gap: 8px; }
+      .cond-card { padding: 14px; }
+      .card { padding: 18px; }
+      .metric-card { padding: 18px 14px; }
+      .pillar-card { padding: 18px; }
+      .weight-label { width: 100px; font-size: 11px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a class="nav-logo" href="index.html">Akash Poddar</a>
+    <ul class="nav-links">
+      <li><a href="work.html">Case Studies</a></li>
+      <li><a href="index.html#experience">Experience</a></li>
+      <li><a href="index.html#skills">Skills</a></li>
+      <li><a href="index.html#contact">Contact</a></li>
+    </ul>
+    <a class="nav-cta" href="index.html#contact">Get in touch</a>
+  </nav>
+
+  <!-- HERO -->
+  <div class="cs-hero">
+    <div class="cs-hero-grid"></div>
+    <div class="cs-hero-shimmer"></div>
+    <div class="cs-hero-inner">
+      <div class="cs-hero-bar"></div>
+      <div class="cs-meta-row">
+        <span class="cs-tag tag-teal">AI Product</span>
+        <span class="cs-tag tag-green">Fintech</span>
+        <span class="cs-tag tag-amber">Investment Intelligence</span>
+        <span class="cs-tag tag-gray">Biniyog.com.bd</span>
+      </div>
+      <h1 class="cs-hero-title">AI Company<br><em>Recommendation</em><br>Engine</h1>
+      <p class="cs-hero-sub">How I transformed Biniyog's analytical data into a full-stack investment decision engine - delivering <strong>personalised BUY/HOLD/SELL signals</strong>, multi-method target prices, risk scores, and automated watch alerts for every company on the DSE.</p>
+      <div class="cs-kpi-row">
+        <div class="cs-kpi">
+          <div class="cs-kpi-num">350<span>+</span></div>
+          <div class="cs-kpi-label">DSE companies covered with daily recommendations</div>
+        </div>
+        <div class="cs-kpi">
+          <div class="cs-kpi-num">4<span>methods</span></div>
+          <div class="cs-kpi-label">Target price calculation - P/E, Technical, Fair Value, DCF</div>
+        </div>
+        <div class="cs-kpi">
+          <div class="cs-kpi-num">6<span>types</span></div>
+          <div class="cs-kpi-label">Proactive watch conditions monitoring market opportunities</div>
+        </div>
+        <div class="cs-kpi">
+          <div class="cs-kpi-num">&uarr;<span>All metrics</span></div>
+          <div class="cs-kpi-label">Feature drove meaningful gains across engagement and retention</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOC -->
+  <nav class="toc-bar" aria-label="Table of contents">
+    <div class="toc-inner">
+      <a class="toc-item active" href="#background"><span class="toc-num">01</span> Background</a>
+      <a class="toc-item" href="#problem"><span class="toc-num">02</span> Problem</a>
+      <a class="toc-item" href="#approach"><span class="toc-num">03</span> My Approach</a>
+      <a class="toc-item" href="#recommendation"><span class="toc-num">04</span> Recommendation Logic</a>
+      <a class="toc-item" href="#pillars"><span class="toc-num">05</span> Four Pillars</a>
+      <a class="toc-item" href="#watch"><span class="toc-num">06</span> Watch Conditions</a>
+      <a class="toc-item" href="#metrics"><span class="toc-num">07</span> Outcomes</a>
+      <a class="toc-item" href="#risks"><span class="toc-num">08</span> Risks &amp; Tradeoffs</a>
+      <a class="toc-item" href="#lessons"><span class="toc-num">09</span> Lessons</a>
+    </div>
+  </nav>
+
+  <!-- BODY -->
+  <div class="cs-body">
+
+    <!-- 01 BACKGROUND -->
+    <section class="cs-section" id="background">
+      <div class="section-eyebrow">01 &mdash; Background</div>
+      <h2>Company Analysis surfaced insights. Recommendations needed to tell investors what to do with them.</h2>
+      <p>Biniyog.com.bd had already shipped a comprehensive three-layer Company Analysis product - fundamental rankings, technical indicators, and AI sentiment scores for every company on the Dhaka Stock Exchange. Users could see how a company scored on each dimension. What the product couldn't yet answer was the question that sits one step further: <strong>"Given everything I know about this company right now - should I buy, hold, or sell?"</strong></p>
+      <p>That gap mattered enormously. A retail investor staring at a fundamental score of 78, a technical score of 65, and a neutral sentiment reading still faced a decision problem: these signals were pointing in broadly the same direction, but without a synthesised recommendation, the cognitive load of translating scores into action sat entirely on the user. Many investors simply didn't act - not because the data wasn't valuable, but because the final interpretive step was too demanding.</p>
+      <p>I proposed the AI Recommendation Engine as the natural next layer above Company Analysis: an intelligent system that consumed all available analytical signals, applied market-condition-aware weighting, and surfaced a clear, defensible investment recommendation - complete with a target price, a risk assessment, a stop-loss level, and proactive alerts when conditions changed.</p>
+      <div class="callout callout-teal reveal">
+        <p><strong>The product vision:</strong> Close the gap between "I understand this company" and "I know what to do." Build a recommendation engine that functions as a systematic investment analyst running 24 hours a day across every company on the DSE - delivering institutional-quality recommendations to retail investors who previously had nothing comparable.</p>
+      </div>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 02 PROBLEM -->
+    <section class="cs-section" id="problem">
+      <div class="section-eyebrow">02 &mdash; Problem</div>
+      <h2>Four distinct gaps stood between analytical data and confident investment action.</h2>
+      <p>User research and behaviour analysis from the Company Analysis feature pointed clearly to four unsolved problems. Each required a different type of capability to address.</p>
+
+      <div class="step-list reveal">
+        <div class="step-item">
+          <div class="step-num">01</div>
+          <div>
+            <div class="step-title">Scores without a verdict</div>
+            <div class="step-body">Users understood what each layer's score meant individually. What they couldn't do was weigh them against each other. Should a company with excellent fundamentals but weak technicals be bought today? <strong>The synthesis layer - the engine that aggregates signals into a single actionable recommendation - simply didn't exist.</strong> Users were left doing mental arithmetic across three different scoring systems with no guidance on the relative importance of each.</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">02</div>
+          <div>
+            <div class="step-title">No target price or upside calculation</div>
+            <div class="step-body">Even when an investor decided to buy, they had no anchored target price to manage the position against. Professional investors use target prices to define entry logic, position sizing, and exit criteria. <strong>Without a target price, users had no way to assess whether a stock was trading at a discount, fairly, or at a premium to its estimated value</strong> - one of the most fundamental inputs to any investment decision.</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">03</div>
+          <div>
+            <div class="step-title">Risk was invisible until it was too late</div>
+            <div class="step-body">The platform showed no explicit risk assessment at the individual company level. Users had no way to know whether a given recommendation carried low volatility risk with strong liquidity, or whether the upside came attached to a high-beta stock with concentration in a sector under pressure. <strong>Without a risk score, users couldn't make informed decisions about position size or portfolio allocation.</strong> Risk was the missing dimension in every recommendation context.</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">04</div>
+          <div>
+            <div class="step-title">No protection logic for active positions</div>
+            <div class="step-body">Retail investors often enter positions with no pre-defined exit strategy for downside scenarios. Professional traders set stop-losses before they open a trade; most retail investors in Bangladesh didn't have the tools or methodology to do this systematically. <strong>The absence of automated stop-loss recommendations meant users were exposed to unmanaged downside risk</strong> on every position - a gap that eroded trust when market conditions deteriorated sharply.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 03 APPROACH -->
+    <section class="cs-section" id="approach">
+      <div class="section-eyebrow">03 &mdash; My Approach</div>
+      <h2>Six product decisions made before architecture, engineering, or design.</h2>
+
+      <div class="step-list reveal">
+        <div class="step-item">
+          <div class="step-num">01</div>
+          <div>
+            <div class="step-title">Define the market-condition-aware weighting model myself</div>
+            <div class="step-body">The core question in building any composite recommendation system is: how much should each signal type matter? I defined a three-regime weighting model - bull market, bear market, and high-volatility - with fundamentals, technicals, and sentiment each carrying different weights depending on which regime the market was in. <strong>In a bull market, fundamentals dominate. In high volatility, technical signals get heavier weight because they react faster to price reality than financial statements can.</strong> This wasn't a data science decision; it was a product framework decision grounded in how professional analysts actually adjust their models across market cycles.</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">02</div>
+          <div>
+            <div class="step-title">Specify four target price methodologies, not one</div>
+            <div class="step-body">A single target price methodology gives false precision. Every valuation method carries implicit assumptions about what drives a stock's fair value. <strong>I specified four methods - P/E-based, technical resistance levels with Fibonacci projections, book value fair value, and discounted cash flow - each producing an independent target, which are then confidence-weighted into a final number.</strong> This approach surfaces disagreement between methods (a useful signal in itself) and gives the recommendation a confidence score that reflects how aligned the different analytical lenses are.</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">03</div>
+          <div>
+            <div class="step-title">Build risk as a multi-component score, not a binary flag</div>
+            <div class="step-body">A simple "high/low risk" label is too blunt to be useful for investment decisions. I specified five distinct risk components: market risk (beta), sector risk, liquidity risk, volatility risk, and fundamental financial health risk. <strong>Each component is calculated independently and aggregated into an overall risk score from 0&ndash;100, mapped to four categories.</strong> This allowed the recommendation to explain why something is risky, not just that it is - a distinction that meaningfully changes how investors think about position sizing.</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">04</div>
+          <div>
+            <div class="step-title">Build stop-losses into every recommendation by default</div>
+            <div class="step-body">The decision to include stop-loss calculations in every recommendation (not as an optional tool) was deliberate. Making it default changes how investors think about entering positions: <strong>a recommended entry comes pre-packaged with a suggested exit level, forcing risk management to be part of the investment thesis from the outset rather than an afterthought.</strong> Three calculation methods - ATR-based, volatility-based, and support/resistance-based - are weighted and merged into a single recommended level with a stated confidence score.</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">05</div>
+          <div>
+            <div class="step-title">Design watch conditions as proactive alerts, not passive labels</div>
+            <div class="step-body">A WATCH recommendation that just sits on a company card is passive. I specified six watch condition types - technical breakout, sector rotation, fundamental improvement, price consolidation, momentum building, and volume anomaly - each with its own trigger criteria and alert priority. <strong>When conditions are met, users are proactively notified; the system monitors every company every day and surfaces the ones where something meaningful has changed.</strong> This shifted the recommendation engine from a reference tool to an active monitoring system.</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">06</div>
+          <div>
+            <div class="step-title">Own the API contract as a product requirement</div>
+            <div class="step-body">I specified the full API response structure for every endpoint before engineering started. This wasn't a technical exercise; it was a product decision about <strong>what data the frontend needed to render a complete, actionable recommendation card without making additional calls.</strong> Pre-computing everything and serving it via sub-200ms cached responses meant recommendation pages loaded instantly on mobile - critical for investors checking positions before the market opens.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 04 RECOMMENDATION LOGIC -->
+    <section class="cs-section" id="recommendation">
+      <div class="section-eyebrow">04 &mdash; Recommendation Logic</div>
+      <h2>A market-aware composite engine - not a static formula.</h2>
+      <p>The recommendation engine's core innovation was that signal weights weren't fixed - they shifted based on what type of market environment the system detected. Each day, the engine first classified the market condition (bull, bear, or high-volatility) by analysing index behaviour, volatility indices, and volume trends. That classification then determined how the three analytical layers were weighted in the composite score.</p>
+
+      <div class="ai-badge"><span class="ai-badge-dot"></span>Market-Condition Adaptive Scoring</div>
+
+      <div class="weight-section reveal">
+        <div class="weight-group-label">Bull Market Weights</div>
+        <div class="weight-list">
+          <div class="weight-row">
+            <div class="weight-label">Fundamental Analysis</div>
+            <div class="weight-bar-bg"><div class="weight-bar-fill" style="width:40%"></div></div>
+            <div class="weight-pct">40%</div>
+          </div>
+          <div class="weight-row">
+            <div class="weight-label">Technical Analysis</div>
+            <div class="weight-bar-bg"><div class="weight-bar-fill" style="width:35%"></div></div>
+            <div class="weight-pct">35%</div>
+          </div>
+          <div class="weight-row">
+            <div class="weight-label">Market Sentiment</div>
+            <div class="weight-bar-bg"><div class="weight-bar-fill" style="width:25%"></div></div>
+            <div class="weight-pct">25%</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="weight-section reveal">
+        <div class="weight-group-label">High-Volatility Market Weights</div>
+        <div class="weight-list">
+          <div class="weight-row">
+            <div class="weight-label">Technical Analysis</div>
+            <div class="weight-bar-bg"><div class="weight-bar-fill" style="width:60%"></div></div>
+            <div class="weight-pct">60%</div>
+          </div>
+          <div class="weight-row">
+            <div class="weight-label">Fundamental Analysis</div>
+            <div class="weight-bar-bg"><div class="weight-bar-fill" style="width:25%"></div></div>
+            <div class="weight-pct">25%</div>
+          </div>
+          <div class="weight-row">
+            <div class="weight-label">Market Sentiment</div>
+            <div class="weight-bar-bg"><div class="weight-bar-fill" style="width:15%"></div></div>
+            <div class="weight-pct">15%</div>
+          </div>
+        </div>
+      </div>
+
+      <p>The composite score maps to four recommendation categories. I defined the buy/hold/sell thresholds for each market regime independently, recognising that a score of 65 means something different in a bull market than in a bear market.</p>
+
+      <table class="signal-table reveal">
+        <thead>
+          <tr><th>Signal</th><th>Threshold (Bull)</th><th>Meaning for the investor</th><th>Follow-up output</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="signal-pill sp-buy">BUY</span></td>
+            <td data-label="Threshold (Bull)">&ge; 70 composite score</td>
+            <td data-label="Meaning for the investor">Strong alignment across fundamental quality, technical momentum, and sentiment. High-conviction opportunity.</td>
+            <td data-label="Follow-up output">Target price, stop-loss level, risk score, upside %</td>
+          </tr>
+          <tr>
+            <td><span class="signal-pill sp-hold">HOLD</span></td>
+            <td data-label="Threshold (Bull)">50&ndash;69</td>
+            <td data-label="Meaning for the investor">Mixed or moderate signal alignment. Not the right moment to add or exit; maintain existing position.</td>
+            <td data-label="Follow-up output">Updated target price, risk monitoring</td>
+          </tr>
+          <tr>
+            <td><span class="signal-pill sp-sell">SELL</span></td>
+            <td data-label="Threshold (Bull)">&lt; 30</td>
+            <td data-label="Meaning for the investor">Deteriorating fundamentals, negative technical momentum, or poor sentiment converging. Exit or reduce position.</td>
+            <td data-label="Follow-up output">Stop-loss breach alert, risk escalation</td>
+          </tr>
+          <tr>
+            <td><span class="signal-pill sp-watch">WATCH</span></td>
+            <td data-label="Threshold (Bull)">Condition-triggered</td>
+            <td data-label="Meaning for the investor">A specific emerging signal (breakout pattern, sector rotation, consolidation) warrants monitoring before acting.</td>
+            <td data-label="Follow-up output">Condition type, confidence score, alert priority</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="callout callout-teal reveal">
+        <p><strong>Why variable thresholds matter:</strong> A sell threshold of 30 in a bull market becomes 25 in a bear market - because in a down market, more companies will naturally score lower and a blanket sell signal would create panic rather than clarity. The thresholds encode market context, not just mathematical cutoffs.</p>
+      </div>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 05 FOUR PILLARS -->
+    <section class="cs-section" id="pillars">
+      <div class="section-eyebrow">05 &mdash; Four Pillars</div>
+      <h2>Every recommendation is backed by four independently calculated components.</h2>
+      <p>I specified four distinct analytical services, each solving a different investor question. Together they form a complete decision package - not just a signal, but the supporting rationale an investor needs to act with confidence.</p>
+
+      <div class="pillar-stack reveal">
+
+        <div class="pillar-card pillar-target">
+          <div class="pillar-head">
+            <div class="pillar-title-group">
+              <div class="pillar-num">Pillar 01</div>
+              <div class="pillar-title">Target Price</div>
+              <div class="pillar-sub">Answers: "What is this company actually worth?"</div>
+            </div>
+            <div class="pillar-tags">
+              <span class="pillar-tag pt-teal">P/E Method</span>
+              <span class="pillar-tag pt-teal">Technical Levels</span>
+              <span class="pillar-tag pt-teal">Fair Value</span>
+              <span class="pillar-tag pt-teal">DCF</span>
+            </div>
+          </div>
+          <div class="pillar-body">
+            Four independent valuation methodologies each produce a standalone target price. A <strong>P/E-based calculation</strong> uses industry-adjusted earnings multiples against forward EPS. A <strong>technical method</strong> identifies resistance breakout levels using Fibonacci retracement projections. A <strong>fair value method</strong> applies sector-specific asset multipliers to book value per share. A <strong>DCF model</strong> projects discounted cash flows using a calculated growth rate and risk-adjusted discount rate. Each method produces its own confidence score based on data quality and input availability. The final target price is a confidence-weighted average - meaning a high-quality P/E calculation gets more influence than a DCF built on sparse cash flow history.
+          </div>
+        </div>
+
+        <div class="pillar-card pillar-risk">
+          <div class="pillar-head">
+            <div class="pillar-title-group">
+              <div class="pillar-num">Pillar 02</div>
+              <div class="pillar-title">Risk Assessment</div>
+              <div class="pillar-sub">Answers: "How much risk am I taking on?"</div>
+            </div>
+            <div class="pillar-tags">
+              <span class="pillar-tag pt-amber">Market Risk</span>
+              <span class="pillar-tag pt-amber">Sector Risk</span>
+              <span class="pillar-tag pt-amber">Liquidity Risk</span>
+              <span class="pillar-tag pt-amber">Volatility Risk</span>
+              <span class="pillar-tag pt-amber">Fundamental Risk</span>
+            </div>
+          </div>
+          <div class="pillar-body">
+            A five-component risk model, each calculated independently and aggregated into a 0&ndash;100 composite risk score. <strong>Market risk</strong> uses a 252-day beta calculation against the DSE index. <strong>Sector risk</strong> combines sector volatility, concentration, and trend stability over a 90-day window. <strong>Liquidity risk</strong> assesses average daily trading volume, volume variability, and market cap tier. <strong>Volatility risk</strong> measures historical price volatility, stability patterns, and volatility trend direction. <strong>Fundamental risk</strong> evaluates debt-to-equity, current ratio, and interest coverage. The composite score maps to four risk categories: LOW, MEDIUM, HIGH, VERY HIGH - each with specific beta ranges and volatility characteristics defined in the product spec.
+          </div>
+        </div>
+
+        <div class="pillar-card pillar-stoploss">
+          <div class="pillar-head">
+            <div class="pillar-title-group">
+              <div class="pillar-num">Pillar 03</div>
+              <div class="pillar-title">Stop-Loss Level</div>
+              <div class="pillar-sub">Answers: "Where do I get out if I'm wrong?"</div>
+            </div>
+            <div class="pillar-tags">
+              <span class="pillar-tag pt-red">ATR Method</span>
+              <span class="pillar-tag pt-red">Volatility Method</span>
+              <span class="pillar-tag pt-red">Support Method</span>
+            </div>
+          </div>
+          <div class="pillar-body">
+            Three calculation methodologies, each weighted by confidence. The <strong>ATR-based method</strong> uses the 14-day Average True Range multiplied by a market-condition-adjusted multiplier (ranging from 1.5&times; in calm markets to 2.5&times; in high volatility). The <strong>volatility-based method</strong> calculates annualised historical volatility and places the stop 1.5 standard deviations below current price. The <strong>support-based method</strong> identifies structural price support levels over a 50-day window and places the stop 2% below the nearest meaningful level. <strong>The weighted average of the three methods produces the recommended stop-loss price, accompanied by a confidence score</strong> that reflects how consistently the three methods agree.
+          </div>
+        </div>
+
+        <div class="pillar-card pillar-watch">
+          <div class="pillar-head">
+            <div class="pillar-title-group">
+              <div class="pillar-num">Pillar 04</div>
+              <div class="pillar-title">Watch Conditions</div>
+              <div class="pillar-sub">Answers: "What should I be watching for?"</div>
+            </div>
+            <div class="pillar-tags">
+              <span class="pillar-tag pt-green">6 Condition Types</span>
+              <span class="pillar-tag pt-green">Proactive Alerts</span>
+              <span class="pillar-tag pt-green">87% Effectiveness</span>
+            </div>
+          </div>
+          <div class="pillar-body">
+            Six distinct watch condition types, each with independently specified trigger criteria, confidence thresholds, and historical effectiveness targets. This pillar is described in detail in the next section. <strong>The key design decision was making watch conditions proactive alerts rather than passive labels</strong> - when trigger criteria are met, users are notified with context on what changed, why it matters, and what action to consider. This transformed the recommendation engine from a daily report into a real-time monitoring system.
+          </div>
+        </div>
+
+      </div>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 06 WATCH CONDITIONS -->
+    <section class="cs-section" id="watch">
+      <div class="section-eyebrow">06 &mdash; Watch Conditions</div>
+      <h2>Six signal types. Each monitors something different. All running daily across every company.</h2>
+      <p>The watch conditions system was one of the highest-leverage features I specified in this product. Rather than requiring users to manually screen for opportunities, the engine monitors all 350+ companies every day against six distinct patterns - and surfaces the ones where something actionable has developed.</p>
+      <p>I defined each condition type with specific trigger criteria (a minimum number of sub-conditions that must be satisfied), a confidence calculation methodology, and an alert priority rating. The system was designed to be explainable: when a condition triggers, users see exactly which criteria were met, not just a "WATCH" label.</p>
+
+      <div class="cond-grid reveal">
+        <div class="cond-card">
+          <div class="cond-eff">90%</div>
+          <div class="cond-name">Technical Breakout</div>
+          <div class="cond-desc">RSI recovery from oversold, MACD crossover, Bollinger Band bounce, and volume confirmation. Triggers when 3 of 4 criteria are met.</div>
+        </div>
+        <div class="cond-card">
+          <div class="cond-eff">90%</div>
+          <div class="cond-name">Price Consolidation</div>
+          <div class="cond-desc">Price range below 5% over 10 days, stable volume, duration above 7 sessions, and proximity to a resistance level.</div>
+        </div>
+        <div class="cond-card">
+          <div class="cond-eff">88%</div>
+          <div class="cond-name">Momentum Building</div>
+          <div class="cond-desc">RSI trending upward in the 50&ndash;70 band, positive MACD, bullish stochastic, price above 20-day MA, rising volume.</div>
+        </div>
+        <div class="cond-card">
+          <div class="cond-eff">85%</div>
+          <div class="cond-name">Sector Rotation</div>
+          <div class="cond-desc">Sector outperforming the broader market by 10%+, accelerating momentum, confirmed inflow signal, and high relative strength.</div>
+        </div>
+        <div class="cond-card">
+          <div class="cond-eff">85%</div>
+          <div class="cond-name">Fundamental Improvement</div>
+          <div class="cond-desc">Sustained score improvement over 90 days, consistency across three prior periods, above-average absolute score, and positive earnings growth.</div>
+        </div>
+        <div class="cond-card">
+          <div class="cond-eff">75%</div>
+          <div class="cond-name">Volume Anomaly</div>
+          <div class="cond-desc">Volume spike greater than 2&times; the 30-day average, price movement confirmation, and sustained elevated volume over three sessions.</div>
+        </div>
+      </div>
+
+      <div class="callout callout-green reveal">
+        <p><strong>On the 75% effectiveness floor:</strong> The Volume Anomaly condition was the most difficult to specify precisely - unusual volume can indicate institutional accumulation or distribution, and the signal is inherently ambiguous without confirming price action. I set a lower confidence threshold (50% of sub-conditions vs 75% for other types) to ensure it triggered more frequently, with a lower alert priority, to surface the signal without over-weighting it. The PM's job is choosing the right tradeoff, not demanding 90% everywhere.</p>
+      </div>
+
+      <h3>Condition prioritisation framework</h3>
+      <p>Not all triggered conditions are equal. I specified an alert priority matrix that combined condition effectiveness with confidence score and market context. A Technical Breakout with 90% confidence triggering in a bull market gets a HIGH priority alert. The same condition triggering with 60% confidence in a high-volatility market gets a MEDIUM priority alert. <strong>The priority matrix ensures users pay attention to the signals most likely to be actionable - not just the signals that technically crossed a threshold.</strong></p>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 07 OUTCOMES -->
+    <section class="cs-section" id="metrics">
+      <div class="section-eyebrow">07 &mdash; Outcomes</div>
+      <h2>Every metric moved in the right direction. Including the ones hardest to move.</h2>
+      <p>The AI Recommendation Engine was one of the most successful feature launches in Biniyog's history. The product performed strongly across engagement, retention, and trust metrics.</p>
+
+      <div class="metric-row reveal">
+        <div class="metric-card">
+          <div class="metric-num">87%</div>
+          <div class="metric-label">Overall watch condition effectiveness across all six signal types</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-num">&lt;200ms</div>
+          <div class="metric-label">API response time for all recommendation endpoints serving 350+ companies</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-num">4&ndash;6 min</div>
+          <div class="metric-label">Daily processing time to generate fresh recommendations for all companies</div>
+        </div>
+      </div>
+
+      <div class="two-col reveal">
+        <div class="card">
+          <div class="card-label">Engagement</div>
+          <h4>Session depth increased meaningfully</h4>
+          <p>Users who accessed the Recommendation Engine viewed significantly more company pages per session than pre-launch baselines. The recommendation card became the anchor for deeper exploration - target price led to company analysis, which led to portfolio action.</p>
+        </div>
+        <div class="card">
+          <div class="card-label">Retention</div>
+          <h4>Weekly active user uplift sustained</h4>
+          <p>Watch condition alerts drove meaningful return visits. Users who received at least one triggered watch alert in a week showed substantially higher 30-day retention than those who didn't. Proactive notifications created a re-engagement loop that passive features couldn't replicate.</p>
+        </div>
+        <div class="card">
+          <div class="card-label">Trust</div>
+          <h4>Confidence in recommendations rated highly</h4>
+          <p>Post-launch user feedback consistently cited target price transparency and the multi-method breakdown as trust drivers. Users appreciated seeing not just the number, but which methodologies agreed - and which disagreed. Explainability built credibility.</p>
+        </div>
+        <div class="card">
+          <div class="card-label">Adoption</div>
+          <h4>Rapid adoption across user cohorts</h4>
+          <p>The recommendation feature had one of the fastest adoption curves of any Biniyog feature. Both experienced investors (who valued the risk breakdown) and newer users (who relied on the BUY/HOLD/SELL signal) found immediate utility at different levels of depth.</p>
+        </div>
+      </div>
+
+      <div class="callout callout-teal reveal">
+        <p><strong>The compounding effect:</strong> Company Analysis, Technical Rankings, and the Recommendation Engine were designed as a stack. Each feature made the ones below it more valuable. Users who started with Company Analysis and discovered Recommendations became the highest-engagement cohort on the platform. The whole was significantly greater than the sum of the parts.</p>
+      </div>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 08 RISKS & TRADEOFFS -->
+    <section class="cs-section" id="risks">
+      <div class="section-eyebrow">08 &mdash; Risks &amp; Tradeoffs</div>
+      <h2>Every significant decision came with a tradeoff I had to consciously choose.</h2>
+
+      <div class="two-col reveal">
+        <div class="card">
+          <div class="card-label" style="color: var(--amber);">Risk</div>
+          <h4>Recommendations could be misread as guarantees</h4>
+          <p>A BUY signal on an individual stock carries no guarantee of returns. Risk: users might over-allocate based on the signal without reading the risk score or stop-loss. Mitigation: confidence scores, risk category labels, and plain-language caveats designed into every recommendation card.</p>
+        </div>
+        <div class="card">
+          <div class="card-label" style="color: var(--amber);">Risk</div>
+          <h4>Market condition misclassification</h4>
+          <p>If the system classifies a volatile market as a bull market, weights shift incorrectly and signals degrade. Mitigation: market condition detection uses multiple independent signals (volatility index, trend direction, volume patterns) requiring agreement before reclassifying.</p>
+        </div>
+        <div class="card">
+          <div class="card-label" style="color: var(--amber);">Risk</div>
+          <h4>Watch condition alert fatigue</h4>
+          <p>Triggering too many alerts across 350+ companies could desensitise users. Mitigation: a three-tier alert priority system (LOW / MEDIUM / HIGH) with daily caps and a progressive disclosure model that surfaces only the highest-priority conditions first.</p>
+        </div>
+        <div class="card">
+          <div class="card-label" style="color: var(--amber);">Risk</div>
+          <h4>Data quality degrading recommendation accuracy</h4>
+          <p>A recommendation is only as good as its input signals. If fundamental data is stale or sentiment data is sparse, the composite score degrades invisibly. Mitigation: every recommendation card displays a data quality score and a "data freshness" timestamp, making input reliability visible to users.</p>
+        </div>
+      </div>
+
+      <h3>The deliberate tradeoffs</h3>
+      <div class="two-col-3 reveal">
+        <div class="card">
+          <div class="card-label">Tradeoff 01</div>
+          <h4>Complexity vs. explainability</h4>
+          <p>A simpler model (one signal, one weight) would be easier to explain but less accurate. I chose complexity with explicit transparency - every component of the recommendation is surfaced, not hidden behind the final signal.</p>
+        </div>
+        <div class="card">
+          <div class="card-label">Tradeoff 02</div>
+          <h4>Coverage vs. depth</h4>
+          <p>350+ companies means some will have sparser data than others. I chose full coverage with confidence scoring over restricting recommendations to the highest-data-quality companies, ensuring users aren't left without guidance on specific stocks they hold.</p>
+        </div>
+        <div class="card">
+          <div class="card-label">Tradeoff 03</div>
+          <h4>Daily refresh vs. real-time</h4>
+          <p>Real-time recommendations would require significantly more infrastructure and introduce latency risk. I chose daily pre-computation with &lt;200ms serving - fast enough for most investment decisions, with intraday alerts as a future enhancement roadmap item.</p>
+        </div>
+      </div>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 09 LESSONS -->
+    <section class="cs-section" id="lessons">
+      <div class="section-eyebrow">09 &mdash; Lessons</div>
+      <h2>Five things I'd do the same. One I'd do differently.</h2>
+
+      <div class="lesson-list reveal">
+        <div class="lesson-item">
+          <div class="lesson-num">01</div>
+          <div>
+            <div class="lesson-title">AI product management means owning the logic, not just the interface</div>
+            <div class="lesson-body">The most important decisions in this project weren't about what the screen looked like. They were about how signals should be weighted, what thresholds distinguish a BUY from a HOLD, how risk components should aggregate, and what makes a watch condition worth triggering. <strong>These are product decisions that require domain knowledge, user empathy, and analytical judgment - not engineering expertise.</strong> The PM who treats these as "data science tasks" loses ownership of the feature's most critical behaviour.</div>
+          </div>
+        </div>
+        <div class="lesson-item">
+          <div class="lesson-num">02</div>
+          <div>
+            <div class="lesson-title">Adaptive models beat static models for market products</div>
+            <div class="lesson-body">The most meaningful architectural decision was making the weighting model market-condition-aware. A static 40/35/25 weight across all market conditions would have produced nonsensical recommendations during high-volatility periods when fundamental scores lag price reality by weeks. <strong>Designing adaptivity into the core model from day one - rather than as a future refinement - was the right call, even though it added specification complexity upfront.</strong></div>
+          </div>
+        </div>
+        <div class="lesson-item">
+          <div class="lesson-num">03</div>
+          <div>
+            <div class="lesson-title">Explainability is a product feature, not a UX afterthought</div>
+            <div class="lesson-body">The decision to surface multi-method target price breakdowns, five-component risk scores, and per-condition watch trigger criteria wasn't a UX preference - it was a trust-building product strategy. <strong>Users who could see why a recommendation was made engaged with it more deeply and acted on it more confidently than they would have if shown a black-box signal.</strong> Explainability should be designed into the product specification, not added after engineering completes.</div>
+          </div>
+        </div>
+        <div class="lesson-item">
+          <div class="lesson-num">04</div>
+          <div>
+            <div class="lesson-title">Proactive beats reactive at every engagement metric</div>
+            <div class="lesson-body">The watch conditions system, which pushed alerts to users rather than waiting for them to check, drove measurably higher engagement and retention than any passive feature. <strong>When building for investment contexts - where timing matters and users are busy - a product that comes to the user rather than waiting for the user to come to it is structurally more valuable.</strong> The lesson generalises: wherever timing matters to the user's outcome, proactive design outperforms reference design.</div>
+          </div>
+        </div>
+        <div class="lesson-item">
+          <div class="lesson-num">05</div>
+          <div>
+            <div class="lesson-title">Performance is a product quality requirement, not an engineering SLA</div>
+            <div class="lesson-body">I set the sub-200ms API response target as a product requirement in the spec, not a post-launch optimisation target. The discipline of pre-computing recommendations and serving them from cache - rather than computing on request - was a direct result of treating performance as a product requirement. <strong>If the feature had been slow, the signal quality would have been irrelevant: investors checking positions at 9:45 AM don't wait for a page that takes 3 seconds to load.</strong></div>
+          </div>
+        </div>
+        <div class="lesson-item">
+          <div class="lesson-num">06</div>
+          <div>
+            <div class="lesson-title">What I'd do differently: earlier user testing on the recommendation card layout</div>
+            <div class="lesson-body">The recommendation card contained a lot of information - signal, target price (with four sub-prices), risk score (with five components), stop-loss, and watch conditions. I specified the data requirements thoroughly but left the information hierarchy decisions primarily to design. <strong>In retrospect, I should have run lightweight user tests on how investors naturally prioritise these elements when making a decision</strong> - their mental model of "what do I need to see first" may not match my assumption that the signal label was the anchor.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div><!-- /cs-body -->
+
+  <!-- APPENDIX BAND -->
+  <div class="appendix-band">
+    <div class="appendix-inner">
+
+      <div class="appendix-header">
+        <div class="appendix-eyebrow">Appendix &mdash; The Evidence</div>
+        <h2 class="appendix-title">Functional Spec Excerpts</h2>
+        <p class="appendix-sub">User stories, acceptance criteria, and the full data-to-recommendation pipeline as specified in the product requirements.</p>
+      </div>
+
+      <!-- USER STORIES -->
+      <div class="appendix-block reveal">
+        <div class="appendix-block-label">Appendix A &mdash; User Stories</div>
+        <table class="appendix-table">
+          <thead>
+            <tr><th>ID</th><th>As a&hellip;</th><th>I want&hellip;</th><th>So that&hellip;</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>US.1</td>
+              <td data-label="As a…">Retail investor reviewing my watchlist each morning</td>
+              <td data-label="I want…">a clear BUY / HOLD / SELL signal for each company backed by a visible composite score</td>
+              <td data-label="So that…">I can make a decision in under a minute without manually synthesising multiple scores</td>
+            </tr>
+            <tr>
+              <td>US.2</td>
+              <td data-label="As a…">Investor considering entering a new position</td>
+              <td data-label="I want…">a target price with a breakdown of the methods used and how much they agree</td>
+              <td data-label="So that…">I can assess whether the current price represents a meaningful discount to fair value</td>
+            </tr>
+            <tr>
+              <td>US.3</td>
+              <td data-label="As a…">Investor who wants to manage downside risk</td>
+              <td data-label="I want…">a recommended stop-loss level with a stated rationale</td>
+              <td data-label="So that…">I enter every position with a pre-defined exit plan rather than deciding under pressure</td>
+            </tr>
+            <tr>
+              <td>US.4</td>
+              <td data-label="As a…">Investor monitoring companies I don't currently hold</td>
+              <td data-label="I want…">proactive alerts when a specific pattern develops that makes a company worth acting on</td>
+              <td data-label="So that…">I don't miss time-sensitive opportunities because I wasn't actively checking the platform</td>
+            </tr>
+            <tr>
+              <td>US.5</td>
+              <td data-label="As a…">Investor who wants to understand how much risk I'm taking</td>
+              <td data-label="I want…">a risk score that breaks down market, sector, liquidity, volatility, and fundamental risk separately</td>
+              <td data-label="So that…">I can make position-sizing decisions based on the specific type of risk, not just a single number</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- ACCEPTANCE CRITERIA -->
+      <div class="appendix-block reveal">
+        <div class="appendix-block-label">Appendix B &mdash; Key Acceptance Criteria</div>
+        <table class="appendix-table">
+          <thead>
+            <tr><th>#</th><th>Criteria</th><th>Owner</th><th>Verified by</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>AC.1</td>
+              <td data-label="Criteria">Composite recommendation scores must produce a realistic distribution across BUY, HOLD, SELL, and WATCH categories. No single category should contain more than 50% of companies in a given market condition.</td>
+              <td data-label="Owner">BE</td>
+              <td data-label="Verified by">QA: verify distribution report after each daily run; alert if any category exceeds 50% of total</td>
+            </tr>
+            <tr>
+              <td>AC.2</td>
+              <td data-label="Criteria">All recommendation API endpoints must return responses in under 200ms at the 95th percentile. Daily recommendation generation for all companies must complete within 6 minutes.</td>
+              <td data-label="Owner">BE</td>
+              <td data-label="Verified by">Load test: 100 concurrent API requests measured; daily processing time logged with wall-clock measurement</td>
+            </tr>
+            <tr>
+              <td>AC.3</td>
+              <td data-label="Criteria">Every target price must display all four component prices, their individual weights and confidence scores, and a data quality indicator. The final target price must never be shown without this supporting breakdown.</td>
+              <td data-label="Owner">FE</td>
+              <td data-label="Verified by">Design review: all four sub-prices and confidence scores visible without expanding; data quality indicator displayed</td>
+            </tr>
+            <tr>
+              <td>AC.4</td>
+              <td data-label="Criteria">Watch condition alerts must specify the condition type, the specific criteria that triggered, the confidence score, and the alert priority. No alert is sent without all four fields populated.</td>
+              <td data-label="Owner">BE / Notifications</td>
+              <td data-label="Verified by">QA: trigger a known watch condition in staging; verify all four fields present in notification payload</td>
+            </tr>
+            <tr>
+              <td>AC.5</td>
+              <td data-label="Criteria">The risk score breakdown must display all five risk components (market, sector, liquidity, volatility, fundamental) with individual scores and the overall risk category. No overall risk category is shown without component detail accessible.</td>
+              <td data-label="Owner">FE</td>
+              <td data-label="Verified by">QA: verify all five components visible on expanded risk view; overall category present on collapsed view</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- PIPELINE -->
+      <div class="appendix-block reveal">
+        <div class="appendix-block-label">Appendix C &mdash; Data-to-Recommendation Pipeline</div>
+        <p class="appendix-flow-intro">How the system processes raw analytical signals every day and delivers a complete, actionable recommendation to a Biniyog investor.</p>
+        <div class="flow-steps">
+          <div class="flow-step">
+            <div class="flow-step-num">1</div>
+            <div>
+              <div class="flow-step-title">Market condition detection (6:00 PM daily)</div>
+              <div class="flow-step-text">DSE index data, volatility index, and volume trends analysed. Market classified as BULL, BEAR, or HIGH_VOLATILITY. Signal weights for the day's run are set based on detected condition. Market state saved for API reference.</div>
+            </div>
+          </div>
+          <div class="flow-arrow">&#8595;</div>
+          <div class="flow-step">
+            <div class="flow-step-num">2</div>
+            <div>
+              <div class="flow-step-title">Sector performance analysis</div>
+              <div class="flow-step-text">Sector returns calculated and compared against market baseline. Rotation signals (INFLOW / OUTFLOW) determined per sector. Sector risk and momentum scores updated for use in company-level risk assessment and watch condition evaluation.</div>
+            </div>
+          </div>
+          <div class="flow-arrow">&#8595;</div>
+          <div class="flow-step">
+            <div class="flow-step-num">3</div>
+            <div>
+              <div class="flow-step-title">Company data loading (350+ companies)</div>
+              <div class="flow-step-text">Four data streams loaded in parallel per company: fundamental scores and financial metrics, technical indicator values, daily price and volume data, and sentiment scores. Data quality assessed per company; confidence scores assigned based on completeness.</div>
+            </div>
+          </div>
+          <div class="flow-arrow">&#8595;</div>
+          <div class="flow-step">
+            <div class="flow-step-num">4</div>
+            <div>
+              <div class="flow-step-title">Four-pillar calculation engine</div>
+              <div class="flow-step-text">Target price: four methods calculated, confidence-weighted, final price and justification generated. Risk: five components scored, aggregated to overall risk score and category. Stop-loss: three methods calculated, weighted average computed. Watch conditions: six condition types evaluated against trigger criteria for each company.</div>
+            </div>
+          </div>
+          <div class="flow-arrow">&#8595;</div>
+          <div class="flow-step">
+            <div class="flow-step-num">5</div>
+            <div>
+              <div class="flow-step-title">Composite score and recommendation generation</div>
+              <div class="flow-step-text">Market-condition-weighted composite score calculated from fundamental, technical, and sentiment inputs. Composite score mapped to recommendation (BUY / HOLD / SELL / WATCH) using market-specific thresholds. Category rankings generated across all companies and by sector.</div>
+            </div>
+          </div>
+          <div class="flow-arrow">&#8595;</div>
+          <div class="flow-step">
+            <div class="flow-step-num">6</div>
+            <div>
+              <div class="flow-step-title">Storage, cache, and alert dispatch</div>
+              <div class="flow-step-text">Recommendations saved to primary table; historical record archived. Cache populated for all API endpoints. Watch condition alerts evaluated for priority and dispatched to eligible users. Full pipeline completes in 4&ndash;6 minutes for all companies.</div>
+            </div>
+          </div>
+          <div class="flow-arrow">&#8595;</div>
+          <div class="flow-step flow-step-final">
+            <div class="flow-step-num">&#10003;</div>
+            <div>
+              <div class="flow-step-title">Investor sees a complete, actionable recommendation</div>
+              <div class="flow-step-text">BUY / HOLD / SELL / WATCH signal &middot; Composite score with market context &middot; Target price with four-method breakdown and confidence &middot; Risk score across five components with category label &middot; Stop-loss level with rationale &middot; Active watch conditions with trigger criteria and priority &middot; All served in under 200ms.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div><!-- /appendix-band -->
+
+  <!-- FOOTER -->
+  <footer>
+    <a href="work.html">&larr; Back to all case studies</a>
+    &nbsp;&nbsp;&middot;&nbsp;&nbsp;
+    <a href="index.html">Akash Poddar</a>
+    &nbsp;&nbsp;&middot;&nbsp;&nbsp;
+    <a href="index.html#contact">Get in touch</a>
+  </footer>
+
+  <script>
+    const reveals = document.querySelectorAll('.reveal');
+    const isMobile = window.innerWidth < 768;
+    const io = new IntersectionObserver((entries) => {
+      const visible = entries.filter(e => e.isIntersecting)
+        .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+      if (!visible.length) return;
+      requestAnimationFrame(() => {
+        visible.forEach((entry, i) => {
+          entry.target.style.transitionDelay = isMobile ? '0s' : (i * 0.05) + 's';
+          entry.target.classList.add('visible');
+          io.unobserve(entry.target);
+        });
+      });
+    }, { threshold: 0.06, rootMargin: '0px 0px -40px 0px' });
+    reveals.forEach(r => io.observe(r));
+
+    const tocItems = document.querySelectorAll('.toc-item');
+    const sections = document.querySelectorAll('.cs-section[id]');
+    const tocObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          tocItems.forEach(t => t.classList.remove('active'));
+          const active = document.querySelector(`.toc-item[href="#${entry.target.id}"]`);
+          if (active) active.classList.add('active');
+        }
+      });
+    }, { threshold: 0, rootMargin: '-101px 0px -85% 0px' });
+    sections.forEach(s => tocObserver.observe(s));
+  </script>
+
+</body>
+</html>
