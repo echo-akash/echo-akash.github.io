@@ -1,0 +1,1119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-62DWPTYD6F"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-62DWPTYD6F');
+  </script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27><rect width=%2732%27 height=%2732%27 rx=%274%27 fill=%27%230e0e0e%27/><text x=%2716%27 y=%2722%27 font-family=%27Georgia,serif%27 font-size=%2714%27 font-weight=%27600%27 fill=%27%23f7f5f0%27 text-anchor=%27middle%27>AP</text></svg>" />
+  <title>UX Pilot - AI Stakeholder Feedback | Akash Poddar</title>
+  <meta name="description" content="How I built UX Pilot's AI Stakeholder Feedback - a persona-driven simulation engine that lets designers anticipate real stakeholder pushback before a single meeting." />
+  <link rel="canonical" href="https://echo-akash.github.io/ai-stakeholder-feedback.html" />
+  <meta property="og:title" content="UX Pilot - AI Stakeholder Feedback | Akash Poddar" />
+  <meta property="og:description" content="Building a four-persona AI simulation engine - Skeptical CTO, Confused User, Demanding Client, Board Member - that generates structured objections, questions, and actionable fixes directly on the design canvas." />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://echo-akash.github.io/ai-stakeholder-feedback.html" />
+  <meta property="og:image" content="https://echo-akash.github.io/og-image.png" />
+  <meta name="author" content="Akash Poddar" />
+  <meta name="robots" content="index, follow" />
+  <meta name="theme-color" content="#0e0e0e" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "UX Pilot - AI Stakeholder Feedback",
+    "description": "How Akash Poddar built UX Pilot's persona-driven AI Stakeholder Feedback engine, enabling designers to simulate realistic stakeholder reactions before live reviews.",
+    "author": { "@type": "Person", "name": "Akash Poddar", "url": "https://echo-akash.github.io/" },
+    "publisher": { "@type": "Person", "name": "Akash Poddar" }
+  }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,300;1,9..144,500&family=DM+Sans:wght@300;400;500&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,300;1,9..144,500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" /></noscript>
+  <style>
+    :root {
+      --ink: #0e0e0e;
+      --ink-mid: #444;
+      --ink-muted: #696969;
+      --ink-faint: #bbb;
+      --surface: #f7f5f0;
+      --white: #ffffff;
+      --accent: #1d4ed8;
+      --accent-light: #eff6ff;
+      --accent-dark: #1e3a8a;
+      --accent2: #7c3aed;
+      --accent2-light: #f0ebff;
+      --green: #166534;
+      --green-light: #dcfce7;
+      --amber: #b45309;
+      --amber-light: #fef3e2;
+      --red: #991b1b;
+      --red-light: #fef2f2;
+      --line: rgba(0,0,0,0.08);
+      --serif: 'Fraunces', Georgia, serif;
+      --sans: 'DM Sans', system-ui, sans-serif;
+      --radius: 10px;
+      --ease: cubic-bezier(0.16, 1, 0.3, 1);
+      --wide-w: 1000px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+    }
+    body { font-family: var(--sans); background: var(--surface); color: var(--ink); font-size: 15px; line-height: 1.6; overflow-x: hidden; }
+
+    /* ── NAV ── */
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 0 40px; height: 56px; background: rgba(247,245,240,0.88); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); }
+    .nav-logo { font-family: var(--serif); font-size: 16px; font-weight: 600; color: var(--ink); text-decoration: none; letter-spacing: -0.02em; }
+    .nav-links { display: flex; gap: 32px; list-style: none; }
+    .nav-links a { font-size: 13px; color: var(--ink-mid); text-decoration: none; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--accent); }
+    .nav-cta { font-size: 13px; padding: 7px 18px; background: var(--ink); color: var(--white); border-radius: 20px; text-decoration: none; transition: background 0.2s; }
+    .nav-cta:hover { background: var(--accent); }
+
+    /* ── HERO ── */
+    .cs-hero { background: var(--ink); padding: 120px 40px 80px; position: relative; overflow: hidden; }
+    .cs-hero-inner { max-width: var(--wide-w); margin: 0 auto; position: relative; z-index: 1; }
+    .cs-hero-grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px); background-size: 60px 60px; }
+    .cs-hero-shimmer { position: absolute; inset: 0; background: radial-gradient(ellipse 60% 60% at 70% 50%, rgba(124,58,237,0.22) 0%, transparent 70%); }
+    .cs-hero-bar { height: 4px; background: linear-gradient(90deg, #7c3aed, #a855f7); border-radius: 2px; width: 64px; margin-bottom: 28px; }
+    .cs-meta-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 24px; }
+    .cs-tag { font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; padding: 5px 14px; border-radius: 20px; }
+    .tag-blue   { background: rgba(29,78,216,0.22); color: #93c5fd; border: 1px solid rgba(29,78,216,0.35); }
+    .tag-purple { background: rgba(124,58,237,0.18); color: #c4a8ff; border: 1px solid rgba(124,58,237,0.25); }
+    .tag-green  { background: rgba(22,101,52,0.2); color: #6ee7b7; border: 1px solid rgba(22,101,52,0.28); }
+    .tag-gray   { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.45); border: 1px solid rgba(255,255,255,0.1); }
+    .tag-amber  { background: rgba(180,83,9,0.18); color: #fcd34d; border: 1px solid rgba(180,83,9,0.28); }
+    .cs-hero-title { font-family: var(--serif); font-size: clamp(34px, 5.5vw, 60px); font-weight: 600; letter-spacing: -0.03em; line-height: 0.95; color: #fff; margin-bottom: 20px; }
+    .cs-hero-title em { font-style: italic; font-weight: 300; color: rgba(255,255,255,0.38); }
+    .cs-hero-sub { font-size: 17px; font-weight: 300; color: rgba(255,255,255,0.5); max-width: 640px; line-height: 1.7; margin-bottom: 48px; }
+    .cs-hero-sub strong { color: rgba(255,255,255,0.8); font-weight: 400; }
+    .cs-kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 40px; }
+    .cs-kpi { padding-right: 32px; border-right: 1px solid rgba(255,255,255,0.08); }
+    .cs-kpi:last-child { border-right: none; }
+    .cs-kpi-num { font-family: var(--serif); font-size: 32px; font-weight: 600; letter-spacing: -0.02em; color: #fff; line-height: 1; margin-bottom: 6px; }
+    .cs-kpi-num span { font-size: 20px; font-style: italic; font-weight: 300; color: rgba(255,255,255,0.35); }
+    .cs-kpi-label { font-size: 11px; color: rgba(255,255,255,0.38); line-height: 1.4; max-width: 130px; }
+
+    /* ── TOC ── */
+    .toc-bar { position: sticky; top: 56px; z-index: 90; background: var(--white); border-bottom: 1px solid var(--line); overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+    .toc-bar::-webkit-scrollbar { display: none; }
+    .toc-inner { max-width: var(--wide-w); margin: 0 auto; display: flex; padding: 0 40px; }
+    .toc-item { font-size: 12px; color: var(--ink-muted); text-decoration: none; padding: 14px 20px; white-space: nowrap; border-bottom: 2px solid transparent; transition: color 0.2s, border-color 0.2s; display: flex; align-items: center; gap: 6px; }
+    .toc-item:hover { color: var(--accent); border-bottom-color: var(--accent); }
+    .toc-item.active { color: var(--accent); border-bottom-color: var(--accent); }
+    .toc-num { font-size: 10px; color: var(--ink-faint); }
+
+    /* ── BODY ── */
+    .cs-body { max-width: var(--wide-w); margin: 0 auto; padding: 0 40px; }
+    .cs-section { padding: 72px 0 0; content-visibility: auto; contain-intrinsic-size: 0 600px; }
+    .cs-section:last-of-type { padding-bottom: 80px; }
+    .section-eyebrow { font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+    .section-eyebrow::after { content: ''; flex: 0 0 32px; height: 1px; background: var(--accent); opacity: 0.4; }
+    .cs-section h2 { font-family: var(--serif); font-size: 32px; font-weight: 600; letter-spacing: -0.02em; color: var(--ink); line-height: 1.15; margin-bottom: 28px; }
+    .cs-section h3 { font-family: var(--serif); font-size: 20px; font-weight: 600; letter-spacing: -0.01em; color: var(--ink); margin: 40px 0 16px; }
+    .cs-section p { font-size: 15px; color: var(--ink-mid); line-height: 1.8; font-weight: 300; margin-bottom: 16px; }
+    .cs-section p:last-child { margin-bottom: 0; }
+    .cs-section p strong { color: var(--ink); font-weight: 500; }
+    .cs-divider { border: none; border-top: 1px solid var(--line); margin: 56px 0 0; }
+
+    /* ── CALLOUT ── */
+    .callout { border-left: 3px solid var(--accent); border-radius: 0 var(--radius) var(--radius) 0; padding: 20px 24px; margin: 28px 0; }
+    .callout-blue   { background: var(--accent-light); border-left-color: var(--accent); }
+    .callout-blue p strong { color: var(--accent-dark); }
+    .callout-purple { background: var(--accent2-light); border-left-color: var(--accent2); }
+    .callout-purple p strong { color: var(--accent2); }
+    .callout-green  { background: var(--green-light); border-left-color: var(--green); }
+    .callout-green p strong { color: var(--green); }
+    .callout-amber  { background: var(--amber-light); border-left-color: var(--amber); }
+    .callout-amber p strong { color: var(--amber); }
+    .callout p { margin-bottom: 0; color: var(--ink); font-weight: 400; font-size: 14px; line-height: 1.75; }
+
+    /* ── AI BADGE ── */
+    .ai-badge { display: inline-flex; align-items: center; gap: 7px; background: linear-gradient(135deg, rgba(29,78,216,0.1), rgba(124,58,237,0.12)); border: 1px solid rgba(124,58,237,0.25); border-radius: 20px; padding: 6px 16px; font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent2); margin-bottom: 14px; }
+    .ai-badge-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent2); flex-shrink: 0; animation: aipulse 2s ease-in-out infinite; }
+    @keyframes aipulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+    @media (prefers-reduced-motion: reduce) { .ai-badge-dot { animation: none; } }
+
+    /* ── STEP LIST ── */
+    .step-list { display: flex; flex-direction: column; margin: 28px 0; }
+    .step-item { display: grid; grid-template-columns: 56px 1fr; gap: 0 20px; padding: 28px 0; border-top: 1px solid var(--line); align-items: start; }
+    .step-item:last-child { border-bottom: 1px solid var(--line); }
+    .step-num { font-family: var(--serif); font-size: 28px; font-weight: 600; color: var(--accent); letter-spacing: -0.02em; line-height: 1; padding-top: 4px; }
+    .step-title { font-family: var(--serif); font-size: 18px; font-weight: 600; color: var(--ink); margin-bottom: 8px; line-height: 1.2; }
+    .step-body { font-size: 14px; color: var(--ink-mid); line-height: 1.75; font-weight: 300; }
+    .step-body strong { color: var(--ink); font-weight: 500; }
+
+    /* ── PERSONA CARDS ── */
+    .persona-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin: 28px 0; }
+    .persona-card { background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); padding: 24px; position: relative; overflow: hidden; }
+    .persona-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; }
+    .pc-cto::before   { background: linear-gradient(90deg, #1d4ed8, #60a5fa); }
+    .pc-user::before  { background: linear-gradient(90deg, #166534, #22c55e); }
+    .pc-client::before { background: linear-gradient(90deg, #b45309, #f59e0b); }
+    .pc-board::before  { background: linear-gradient(90deg, #7c3aed, #a855f7); }
+    .pc-custom::before { background: linear-gradient(90deg, #0e0e0e, #696969); }
+    .persona-icon { font-size: 28px; margin-bottom: 10px; line-height: 1; }
+    .persona-name { font-family: var(--serif); font-size: 18px; font-weight: 600; color: var(--ink); margin-bottom: 6px; }
+    .persona-focus { font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-muted); margin-bottom: 12px; }
+    .persona-concerns { display: flex; flex-direction: column; gap: 6px; }
+    .persona-concern { font-size: 13px; color: var(--ink-mid); line-height: 1.5; padding-left: 14px; position: relative; }
+    .persona-concern::before { content: '"'; position: absolute; left: 0; color: var(--ink-faint); font-family: var(--serif); font-size: 16px; line-height: 1; }
+
+    /* ── OUTPUT ANATOMY ── */
+    .output-anatomy { background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; margin: 28px 0; }
+    .oa-header { background: var(--ink); padding: 16px 24px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+    .oa-title { font-family: var(--serif); font-size: 16px; font-weight: 600; color: #fff; }
+    .oa-pills { display: flex; gap: 8px; flex-wrap: wrap; }
+    .oa-pill { font-size: 10px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; padding: 4px 10px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.15); color: rgba(255,255,255,0.5); }
+    .oa-body { padding: 0; }
+    .oa-row { display: grid; grid-template-columns: 180px 1fr; gap: 0; border-bottom: 1px solid var(--line); }
+    .oa-row:last-child { border-bottom: none; }
+    .oa-label { padding: 20px 24px; background: rgba(29,78,216,0.03); border-right: 1px solid var(--line); }
+    .oa-label-name { font-family: var(--serif); font-size: 14px; font-weight: 600; color: var(--ink); margin-bottom: 4px; }
+    .oa-label-count { font-size: 11px; color: var(--ink-faint); }
+    .oa-content { padding: 20px 24px; }
+    .oa-content p { font-size: 13.5px; color: var(--ink-mid); line-height: 1.7; margin-bottom: 0; font-weight: 300; }
+    .oa-content p strong { color: var(--ink); font-weight: 500; }
+
+    /* ── SEVERITY TAGS ── */
+    .sev-critical { display: inline-block; font-size: 10px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; padding: 2px 8px; border-radius: 4px; background: #faeae7; color: #8c3320; margin-right: 6px; }
+    .sev-moderate { display: inline-block; font-size: 10px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; padding: 2px 8px; border-radius: 4px; background: var(--amber-light); color: var(--amber); margin-right: 6px; }
+    .sev-low { display: inline-block; font-size: 10px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; padding: 2px 8px; border-radius: 4px; background: var(--green-light); color: var(--green); margin-right: 6px; }
+
+    /* ── SCREENSHOT ── */
+    .screenshot-block { margin: 32px 0; }
+    .screenshot-label { font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-muted); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+    .screenshot-label::after { content: ''; flex: 1; height: 1px; background: var(--line); }
+    .screenshot-wrap { border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; background: var(--white); box-shadow: 0 4px 24px rgba(0,0,0,0.07); }
+    .screenshot-wrap img { width: 100%; height: auto; display: block; }
+    .screenshot-caption { font-size: 12px; color: var(--ink-muted); margin-top: 10px; line-height: 1.6; text-align: center; font-style: italic; }
+
+    /* ── COMPARISON TABLE ── */
+    .compare-table { width: 100%; border-collapse: collapse; margin: 28px 0; font-size: 13.5px; }
+    .compare-table th { text-align: left; font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-muted); padding: 12px 16px; border-bottom: 2px solid var(--line); background: rgba(29,78,216,0.03); }
+    .compare-table td { padding: 14px 16px; border-bottom: 1px solid var(--line); color: var(--ink-mid); vertical-align: top; line-height: 1.6; }
+    .compare-table td:first-child { font-weight: 500; color: var(--ink); }
+    .compare-table tr:last-child td { border-bottom: none; }
+    .compare-table tr:hover td { background: rgba(29,78,216,0.02); }
+
+    /* ── TWO COL ── */
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 28px 0; }
+    .two-col-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 18px; margin: 28px 0; }
+
+    /* ── CARD ── */
+    .card { background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); padding: 24px; }
+    .card-label { font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; }
+    .card h4 { font-family: var(--serif); font-size: 17px; font-weight: 600; color: var(--ink); margin-bottom: 8px; line-height: 1.3; }
+    .card p { font-size: 13.5px; color: var(--ink-mid); line-height: 1.7; margin-bottom: 0; }
+
+    /* ── RISK GRID ── */
+    .risk-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 28px 0; }
+    .risk-card { background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); padding: 22px; }
+    .risk-level { font-size: 10px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; padding: 3px 10px; border-radius: 20px; display: inline-block; margin-bottom: 10px; }
+    .r-high { background: #faeae7; color: #8c3320; }
+    .r-med  { background: var(--amber-light); color: var(--amber); }
+    .r-low  { background: var(--green-light); color: var(--green); }
+    .risk-title { font-size: 14px; font-weight: 500; color: var(--ink); margin-bottom: 8px; line-height: 1.35; }
+    .risk-body { font-size: 13px; color: var(--ink-mid); line-height: 1.7; }
+
+    /* ── LESSON LIST ── */
+    .lesson-list { display: flex; flex-direction: column; margin: 28px 0; }
+    .lesson-item { display: grid; grid-template-columns: 48px 1fr; gap: 0 20px; padding: 28px 0; border-top: 1px solid var(--line); }
+    .lesson-item:last-child { border-bottom: 1px solid var(--line); }
+    .lesson-num { font-family: var(--serif); font-size: 24px; font-weight: 600; color: var(--accent); opacity: 0.4; line-height: 1; padding-top: 4px; }
+    .lesson-title { font-family: var(--serif); font-size: 18px; font-weight: 600; color: var(--ink); margin-bottom: 8px; line-height: 1.2; }
+    .lesson-body { font-size: 14px; color: var(--ink-mid); line-height: 1.75; font-weight: 300; }
+    .lesson-body strong { color: var(--ink); font-weight: 500; }
+
+    /* ── METRIC BAND ── */
+    .metric-band { background: var(--ink); border-radius: var(--radius); padding: 36px; margin: 28px 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; position: relative; overflow: hidden; }
+    .metric-band::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 60% 80% at 80% 50%, rgba(124,58,237,0.18) 0%, transparent 65%); pointer-events: none; }
+    .metric-item { padding-right: 32px; border-right: 1px solid rgba(255,255,255,0.08); position: relative; z-index: 1; }
+    .metric-item:last-child { border-right: none; padding-right: 0; padding-left: 32px; }
+    .metric-item:nth-child(2) { padding-left: 32px; }
+    .metric-num { font-family: var(--serif); font-size: 36px; font-weight: 600; letter-spacing: -0.02em; color: #fff; line-height: 1; margin-bottom: 6px; }
+    .metric-label { font-size: 12px; color: rgba(255,255,255,0.4); line-height: 1.5; }
+
+    /* ── REVEAL ── */
+    .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.6s var(--ease), transform 0.6s var(--ease); }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* ── APPENDIX BAND ── */
+    .appendix-band { background: #111; border-top: 1px solid rgba(255,255,255,0.06); padding: 80px 40px; }
+    .appendix-inner { max-width: var(--wide-w); margin: 0 auto; }
+    .appendix-header { margin-bottom: 56px; }
+    .appendix-eyebrow { font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); margin-bottom: 12px; }
+    .appendix-title { font-family: var(--serif); font-size: 32px; font-weight: 600; letter-spacing: -0.02em; color: #fff; margin-bottom: 12px; }
+    .appendix-sub { font-size: 15px; color: rgba(255,255,255,0.4); font-weight: 300; max-width: 560px; line-height: 1.7; }
+    .appendix-block { margin-bottom: 56px; }
+    .appendix-block:last-child { margin-bottom: 0; }
+    .appendix-block-label { font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.3); margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .appendix-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .appendix-table th { text-align: left; font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,255,255,0.3); padding: 10px 16px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+    .appendix-table td { padding: 14px 16px; border-bottom: 1px solid rgba(255,255,255,0.06); color: rgba(255,255,255,0.55); vertical-align: top; line-height: 1.65; }
+    .appendix-table td:first-child { color: rgba(255,255,255,0.25); font-size: 11px; white-space: nowrap; font-weight: 500; letter-spacing: 0.04em; }
+    .appendix-table tr:last-child td { border-bottom: none; }
+    .appendix-table tr:hover td { background: rgba(255,255,255,0.02); }
+    .flow-steps { display: flex; flex-direction: column; }
+    .flow-arrow { text-align: center; color: rgba(255,255,255,0.15); font-size: 18px; padding: 4px 0 4px 24px; }
+    .flow-step { display: grid; grid-template-columns: 40px 1fr; gap: 0 16px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); border-radius: var(--radius); padding: 18px 20px; align-items: start; }
+    .flow-step-final { background: rgba(124,58,237,0.1); border-color: rgba(124,58,237,0.3); }
+    .flow-step-num { font-family: var(--serif); font-size: 18px; font-weight: 600; color: var(--accent2); line-height: 1; padding-top: 2px; }
+    .flow-step-final .flow-step-num { font-size: 20px; }
+    .flow-step-title { font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.7); margin-bottom: 5px; }
+    .flow-step-text { font-size: 12.5px; color: rgba(255,255,255,0.38); line-height: 1.65; }
+    .appendix-flow-intro { font-size: 14px; color: rgba(255,255,255,0.4); margin-bottom: 28px; font-weight: 300; }
+
+    /* ── FOOTER ── */
+    footer { background: var(--ink); border-top: 1px solid rgba(255,255,255,0.06); padding: 24px 40px; text-align: center; font-size: 12px; color: rgba(255,255,255,0.55); }
+    footer a { color: rgba(255,255,255,0.55); text-decoration: none; }
+    footer a:hover { color: var(--white); }
+
+    /* ══════════════════════════════════════════
+       RESPONSIVE - 768px
+    ══════════════════════════════════════════ */
+    @media (max-width: 768px) {
+      nav { padding: 0 20px; }
+      .nav-links { display: none; }
+
+      .cs-hero { padding: 96px 20px 52px; }
+      .cs-hero-title { font-size: clamp(28px, 8vw, 44px); }
+      .cs-hero-sub { font-size: 14px; margin-bottom: 32px; }
+      .cs-kpi-row { grid-template-columns: 1fr 1fr; gap: 24px 16px; padding-top: 28px; }
+      .cs-kpi { border-right: none !important; padding-right: 0 !important; padding-left: 0 !important; }
+      .cs-kpi:nth-child(odd) { border-right: 1px solid rgba(255,255,255,0.1) !important; padding-right: 16px !important; }
+      .cs-kpi-num { font-size: 24px; }
+
+      .toc-inner { padding: 0 16px; }
+      .toc-item { padding: 14px 12px; font-size: 11px; }
+
+      .cs-body { padding: 0 20px; }
+      .cs-section { padding: 52px 0 0; }
+      .cs-section h2 { font-size: 24px; }
+      .cs-section h3 { font-size: 17px; margin: 28px 0 12px; }
+
+      .persona-grid { grid-template-columns: 1fr; }
+      .two-col { grid-template-columns: 1fr; }
+      .two-col-3 { grid-template-columns: 1fr; }
+      .risk-grid { grid-template-columns: 1fr; }
+      .metric-band { grid-template-columns: 1fr; gap: 20px; }
+      .metric-item { border-right: none !important; padding-right: 0 !important; padding-left: 0 !important; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 20px; }
+      .metric-item:last-child { border-bottom: none; padding-bottom: 0; }
+
+      .oa-row { grid-template-columns: 1fr; }
+      .oa-label { border-right: none; border-bottom: 1px solid var(--line); padding: 14px 20px; }
+      .oa-content { padding: 14px 20px; }
+
+      .compare-table th:nth-child(3),
+      .compare-table td:nth-child(3) { display: none; }
+
+      .step-item { grid-template-columns: 40px 1fr; gap: 0 14px; }
+      .step-num { font-size: 22px; }
+      .lesson-item { grid-template-columns: 40px 1fr; gap: 0 14px; }
+      .lesson-num { font-size: 20px; }
+
+      .appendix-band { padding: 52px 20px; }
+      .appendix-title { font-size: 24px; }
+      .appendix-table th:nth-child(3),
+      .appendix-table td:nth-child(3) { display: none; }
+      .appendix-table td:first-child { white-space: normal; }
+      .flow-step { grid-template-columns: 32px 1fr; }
+
+      footer { padding: 20px; font-size: 11px; }
+    }
+
+    @media (max-width: 480px) {
+      .cs-meta-row { gap: 6px; }
+      .cs-tag { font-size: 10px; padding: 4px 10px; }
+      .cs-hero-sub { font-size: 13px; }
+      .persona-concern { font-size: 12px; }
+      .metric-num { font-size: 28px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a class="nav-logo" href="index.html">Akash Poddar</a>
+    <ul class="nav-links">
+      <li><a href="work.html">Work</a></li>
+      <li><a href="index.html#about">About</a></li>
+      <li><a href="index.html#contact">Contact</a></li>
+    </ul>
+    <a class="nav-cta" href="index.html#contact">Get in touch</a>
+  </nav>
+
+  <!-- HERO -->
+  <section class="cs-hero">
+    <div class="cs-hero-grid" aria-hidden="true"></div>
+    <div class="cs-hero-shimmer" aria-hidden="true"></div>
+    <div class="cs-hero-inner">
+      <div class="cs-hero-bar"></div>
+      <div class="cs-meta-row">
+        <span class="cs-tag tag-purple">AI Feature</span>
+        <span class="cs-tag tag-blue">UX Pilot</span>
+        <span class="cs-tag tag-green">LLM Product</span>
+        <span class="cs-tag tag-gray">2026</span>
+      </div>
+      <h1 class="cs-hero-title">AI Stakeholder<br /><em>Feedback</em></h1>
+      <p class="cs-hero-sub">
+        Designers spend hours preparing for stakeholder reviews - rehearsing objections, anticipating questions, guessing what a demanding client might say.
+        <strong>I built a feature that does that thinking for them.</strong>
+        Four AI personas that simulate real stakeholder pushback directly on the design canvas, before a single meeting.
+      </p>
+      <div class="cs-kpi-row">
+        <div class="cs-kpi">
+          <div class="cs-kpi-num">#1<span>feature</span></div>
+          <div class="cs-kpi-label">Most-used AI feature on the platform post-launch</div>
+        </div>
+        <div class="cs-kpi">
+          <div class="cs-kpi-num">4<span>personas</span></div>
+          <div class="cs-kpi-label">Skeptical CTO · Confused User · Demanding Client · Board Member</div>
+        </div>
+        <div class="cs-kpi">
+          <div class="cs-kpi-num">3<span>outputs</span></div>
+          <div class="cs-kpi-label">Objections, questions, and severity-ranked improvement items per run</div>
+        </div>
+        <div class="cs-kpi">
+          <div class="cs-kpi-num">2<span>modes</span></div>
+          <div class="cs-kpi-label">Studio canvas panel and Chat - full feature parity across both surfaces</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TOC -->
+  <nav class="toc-bar" aria-label="Case study sections">
+    <div class="toc-inner">
+      <a class="toc-item" href="#context"><span class="toc-num">01</span> Context</a>
+      <a class="toc-item" href="#problem"><span class="toc-num">02</span> Problem</a>
+      <a class="toc-item" href="#personas"><span class="toc-num">03</span> Personas</a>
+      <a class="toc-item" href="#design"><span class="toc-num">04</span> Feature Design</a>
+      <a class="toc-item" href="#output"><span class="toc-num">05</span> Output Structure</a>
+      <a class="toc-item" href="#chat"><span class="toc-num">06</span> Chat Mode</a>
+      <a class="toc-item" href="#ai"><span class="toc-num">07</span> AI Engineering</a>
+      <a class="toc-item" href="#metrics"><span class="toc-num">08</span> Metrics</a>
+      <a class="toc-item" href="#risks"><span class="toc-num">09</span> Risks</a>
+      <a class="toc-item" href="#lessons"><span class="toc-num">10</span> Lessons</a>
+    </div>
+  </nav>
+
+  <main class="cs-body">
+
+    <!-- 01 CONTEXT -->
+    <section class="cs-section" id="context">
+      <div class="section-eyebrow">01 &mdash; Context</div>
+      <h2>UX Pilot is an AI-powered design platform. Feedback was the missing piece.</h2>
+      <p>UX Pilot lets designers generate high-fidelity screens, wireframes, and prototypes from natural language prompts. By 2026, the generation capabilities were strong. Users could go from idea to polished UI in minutes.</p>
+      <p>But generation was only half the loop. Designers kept asking the same question: <strong>Is this actually good enough to show stakeholders?</strong> The platform had no answer. Users would generate a design, export it to Figma, share it in a Slack message, and wait for async feedback - often arriving hours before a presentation, too late to act on.</p>
+
+      <div class="callout callout-purple reveal">
+        <p><strong>The insight:</strong> UX Pilot's users weren't just trying to design faster. They were trying to ship with confidence. The bottleneck wasn't speed of creation - it was certainty that the design would survive contact with real stakeholders.</p>
+      </div>
+
+      <p>I was the product manager responsible for AI features on the Studio and Chat surfaces. When user research surfaced this pattern - designers running informal "sanity checks" with colleagues before presenting - I recognised it as a product gap, not a workflow quirk. <strong>The platform should close that loop itself.</strong></p>
+
+      <div class="two-col reveal">
+        <div class="card">
+          <div class="card-label">My Role</div>
+          <h4>AI Product Manager - UX Pilot</h4>
+          <p>End-to-end ownership: user research, persona definition, prompt engineering specification, output structure design, acceptance criteria, and cross-surface rollout (Studio + Chat).</p>
+        </div>
+        <div class="card">
+          <div class="card-label">Platform Context</div>
+          <h4>AI-native B2B SaaS design tool</h4>
+          <p>Built for designers, product teams, and agencies. Core differentiator: AI that doesn't just generate - it understands design intent and provides intelligent feedback on outputs.</p>
+        </div>
+      </div>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 02 PROBLEM -->
+    <section class="cs-section" id="problem">
+      <div class="section-eyebrow">02 &mdash; Problem</div>
+      <h2>Designers were flying blind into stakeholder reviews.</h2>
+      <p>User interviews surfaced a consistent pattern. Designers using UX Pilot would create strong visual output, then spend significant time doing mental simulation: <em>What will the CTO say? Will the client think this looks like their brand? Will the board ask about ROI?</em></p>
+      <p>This mental simulation was unstructured, inconsistent, and exhausting. Senior designers were better at it - they had years of stakeholder pattern-matching. Junior designers had almost no reference points. Both groups were doing it manually, every time.</p>
+
+      <div class="step-list reveal">
+        <div class="step-item">
+          <div class="step-num">01</div>
+          <div>
+            <div class="step-title">The feedback gap in AI design tools</div>
+            <div class="step-body">AI design tools had closed the generation gap: anyone could make something that looked good. But they hadn't touched the evaluation gap. <strong>No AI tool was simulating the human reactions that determine whether a design succeeds in the real world.</strong></div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">02</div>
+          <div>
+            <div class="step-title">Generic UX critique was already solved - and wasn't the problem</div>
+            <div class="step-body">Heuristic-based design review tools existed. "Your contrast ratio is 3.2:1" or "Consider adding alt text" - useful, but not the problem. Stakeholders don't critique heuristics. They say things like "This doesn't look like our brand" and "Where's the business case?" <strong>The gap was stakeholder simulation, not UX auditing.</strong></div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">03</div>
+          <div>
+            <div class="step-title">The insight that shaped the brief</div>
+            <div class="step-body">Every designer has encountered four archetypes in stakeholder reviews: the skeptical technical decision-maker, the confused first-time viewer, the opinionated client who compares everything to competitors, and the risk-averse executive. <strong>These personas are predictable. Their concerns are mappable. An LLM trained to embody them could generate feedback that felt real - because it was modelling real human perspectives.</strong></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout callout-amber reveal">
+        <p><strong>Design constraint:</strong> The feedback had to feel like actual stakeholder pushback - opinionated, sometimes uncomfortable, reflecting real tension - not polished product critique. Generic or "helpful" output would miss the point entirely.</p>
+      </div>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 03 PERSONAS -->
+    <section class="cs-section" id="personas">
+      <div class="section-eyebrow">03 &mdash; Persona Architecture</div>
+      <div class="ai-badge"><span class="ai-badge-dot"></span>LLM Persona Design</div>
+      <h2>Four personas. Each with a distinct voice, focus, and type of tension.</h2>
+      <p>The personas aren't aesthetic choices - they're prompt engineering primitives. Each one maps to a real stakeholder archetype designers encounter, with a defined focus area, tone, and set of typical concerns that shape how the LLM generates output. I defined all five of these as part of the product spec.</p>
+
+      <div class="persona-grid reveal">
+        <div class="persona-card pc-cto">
+          <div class="persona-icon">🔵</div>
+          <div class="persona-name">Skeptical CTO</div>
+          <div class="persona-focus">Focus: Scalability · Complexity · Build Cost</div>
+          <div class="persona-concerns">
+            <div class="persona-concern">Is this over-engineered for what we need?</div>
+            <div class="persona-concern">What's the system impact of this component?</div>
+            <div class="persona-concern">Why is this necessary at all?</div>
+          </div>
+        </div>
+        <div class="persona-card pc-user">
+          <div class="persona-icon">🟠</div>
+          <div class="persona-name">Confused First-Time User</div>
+          <div class="persona-focus">Focus: Clarity · Usability · Cognitive Load</div>
+          <div class="persona-concerns">
+            <div class="persona-concern">What am I supposed to do here?</div>
+            <div class="persona-concern">Why is this showing up on this screen?</div>
+            <div class="persona-concern">I don't understand this step at all</div>
+          </div>
+        </div>
+        <div class="persona-card pc-client">
+          <div class="persona-icon">🔴</div>
+          <div class="persona-name">Demanding Client</div>
+          <div class="persona-focus">Focus: Brand · Polish · Competitor Parity</div>
+          <div class="persona-concerns">
+            <div class="persona-concern">This doesn't match the brand guidelines we signed off on</div>
+            <div class="persona-concern">Their competitor does it cleaner</div>
+            <div class="persona-concern">Where's the data point? Everything reads the same weight</div>
+          </div>
+        </div>
+        <div class="persona-card pc-board">
+          <div class="persona-icon">🟣</div>
+          <div class="persona-name">Conservative Board Member</div>
+          <div class="persona-focus">Focus: Risk · ROI · Predictability</div>
+          <div class="persona-concerns">
+            <div class="persona-concern">What's the business value being created here?</div>
+            <div class="persona-concern">Is this safe to ship to enterprise customers?</div>
+            <div class="persona-concern">How does this affect our KPIs?</div>
+          </div>
+        </div>
+      </div>
+
+      <h3>The fifth persona: user-defined</h3>
+      <p>I included a custom persona option from the start. Users can define their own stakeholder - specifying focus, tone, and concerns - and the system generates feedback accordingly. This covered the long tail of stakeholder types that don't fit neatly into four archetypes: a niche industry regulator, a specific CEO's known preferences, an accessibility auditor. <strong>The four built-in personas handle 80% of cases. The custom option handles everyone else.</strong></p>
+
+      <div class="callout callout-blue reveal">
+        <p><strong>Prompt engineering principle:</strong> Each persona was specified not just as a description but as a behavioural constraint on the LLM - telling it what to optimise for, what language register to use, and critically, what <em>not</em> to generate. Persona outputs had to reflect real stakeholder tension, not polite product feedback.</p>
+      </div>
+
+      <!-- SCREENSHOT 1 -->
+      <div class="screenshot-block reveal">
+        <div class="screenshot-label">Product Screenshot - Persona Selection UI</div>
+        <div class="screenshot-wrap">
+          <img src="https://lh3.googleusercontent.com/pw/AP1GczNzWBJTGOkAo0icNTPSigLK2l898Ch2awQmD_AWgs_oMlr0yCzrkg3rsQnBLpUkaNM0GzS7lfR8tomqHRxiVyF1BDkXxLc376vU0VqsP8QvVBLoMtvVe55tfW-1P8Oxfy4Qmk9HnP9G7b9YRgwXRnsB=w1264-h913-s-no-gm?authuser=0" alt="UX Pilot Stakeholder Feedback - persona selection panel showing Skeptical CTO, Confused User, Demanding Client, and Board Member options with Run Review CTA" loading="lazy" width="2048" height="1479" />
+        </div>
+        <p class="screenshot-caption">The Accessibility Review panel (renamed from the original "Red Team" spec label) - users select one or more personas and trigger the AI simulation with a single click. Demanding Client is checked; Board Member and Skeptical CTO are available.</p>
+      </div>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 04 DESIGN -->
+    <section class="cs-section" id="design">
+      <div class="section-eyebrow">04 &mdash; Feature Design</div>
+      <h2>Surfaced where the design lives - on the canvas, in context.</h2>
+      <p>The placement decision was important. I didn't want the feature to exist as a separate tab or modal that pulled users away from their work. <strong>Stakeholder feedback should appear where the design lives.</strong></p>
+
+      <div class="step-list reveal">
+        <div class="step-item">
+          <div class="step-num">01</div>
+          <div>
+            <div class="step-title">Entry point: Generate → Review & Audit → Red Team</div>
+            <div class="step-body">I placed the feature inside the Generate menu, under "Review &amp; Audit," to position it alongside other intelligent analysis tools. The keyboard shortcut (⌥Y) was specified to enable power users to invoke it mid-flow without breaking their momentum. <strong>The name "Red Team" in the spec was deliberately adversarial - to signal this wasn't a gentle review.</strong></div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">02</div>
+          <div>
+            <div class="step-title">Right-panel output - contextual, dismissable, re-runnable</div>
+            <div class="step-body">The output panel opens on the right, keeping the design canvas fully visible. This was a deliberate UX choice: <strong>the designer should be able to look at the design and the feedback simultaneously.</strong> The panel supports re-run (fresh simulation with same persona), export, and "Highlight All" - which attaches the feedback directly to canvas layers as a review overlay.</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">03</div>
+          <div>
+            <div class="step-title">Multi-persona selection - parallel generation</div>
+            <div class="step-body">Users can select multiple personas in a single run. I specified parallel generation so running three personas doesn't triple the wait time. Each persona's output appears as a separate panel state, switchable with a back/forward control. <strong>This was a key differentiator from Chat mode, which defaults to one persona at a time.</strong></div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">04</div>
+          <div>
+            <div class="step-title">Canvas review layer - output attached to the design</div>
+            <div class="step-body">Feedback attaches as a review layer on the canvas - not just a panel that disappears. Users can highlight specific issues, dismiss individual items, or re-run with updated designs. <strong>The goal was to make feedback a persistent part of the design artifact, not a transient notification.</strong></div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 05 OUTPUT -->
+    <section class="cs-section" id="output">
+      <div class="section-eyebrow">05 &mdash; Output Structure</div>
+      <h2>Four structured sections per persona. Designed for immediate action.</h2>
+      <p>I specified the output format in detail - not as a UX guideline, but as a prompt engineering constraint. The LLM needed to know exactly what to generate for each section, and the UI needed to render it consistently across all personas.</p>
+
+      <div class="output-anatomy reveal">
+        <div class="oa-header">
+          <div class="oa-title">Demanding Client - Feedback Output</div>
+          <div class="oa-pills">
+            <span class="oa-pill">5 Objections</span>
+            <span class="oa-pill">8 Questions</span>
+            <span class="oa-pill">3 Issues</span>
+          </div>
+        </div>
+        <div class="oa-body">
+          <div class="oa-row">
+            <div class="oa-label">
+              <div class="oa-label-name">Top Objections</div>
+              <div class="oa-label-count">3–5 items</div>
+            </div>
+            <div class="oa-content">
+              <p><strong>Strong critique statements in persona voice.</strong> These are opinionated, sometimes uncomfortable - the things a demanding client says when they're not filtering. "This doesn't match the brand guidelines we signed off last month." "The navigation is different - their competitor does it cleaner." Not suggestions: objections. The LLM was instructed to surface tension, not offer advice at this stage.</p>
+            </div>
+          </div>
+          <div class="oa-row">
+            <div class="oa-label">
+              <div class="oa-label-name">Questions They'll Ask</div>
+              <div class="oa-label-count">3–8 items</div>
+            </div>
+            <div class="oa-content">
+              <p><strong>Realistic questions the persona would ask in a live review.</strong> "Can we see a version with our brand colours?" "How does this look on mobile?" "Did you see what [Competitor] shipped last week?" These arm the designer with the questions <em>before</em> they're asked in the room - so they can prepare answers or preemptively fix the design.</p>
+            </div>
+          </div>
+          <div class="oa-row">
+            <div class="oa-label">
+              <div class="oa-label-name">To Improve</div>
+              <div class="oa-label-count">Severity-ranked</div>
+            </div>
+            <div class="oa-content">
+              <p>Each issue is tagged <span class="sev-critical">Critical</span> <span class="sev-moderate">Moderate</span> or <span class="sev-low">Low</span>, with a specific issue, short explanation, and a clear actionable fix. The element count (e.g. "2 elements") links the issue to the actual canvas components. <strong>This is the only section that drives direct action - the "Fix X Issues" CTA at the bottom triggers design iteration.</strong> Critical issues are checked by default; lower severity items are opt-in.</p>
+            </div>
+          </div>
+          <div class="oa-row">
+            <div class="oa-label">
+              <div class="oa-label-name">Fix CTA</div>
+              <div class="oa-label-count">1 action</div>
+            </div>
+            <div class="oa-content">
+              <p>"<strong>Fix 3 Issues</strong>" - a single CTA that triggers AI-driven design iteration for the checked items. The issue count in the label reflects selected items, updating dynamically as users check/uncheck. <strong>This closes the loop: from feedback to improved design without leaving the feature.</strong></p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SCREENSHOT 2 -->
+      <div class="screenshot-block reveal">
+        <div class="screenshot-label">Product Screenshot - Feedback Output Panel</div>
+        <div class="screenshot-wrap">
+          <img src="https://lh3.googleusercontent.com/pw/AP1GczMt4EZwtYIpfpgwGdMxQDsjrBAdOiKiFVYYGfSltav7tut6vsdKIIuO9khLlhJIPJln33V6Os4g4cfrjZLD7LRV5fWfBkLkASC8vA71cmObjkDftNCSUo9nrpnPXLtUV6ygGzvJWTn_O4K-ipo21tWs=w1264-h913-s-no-gm?authuser=0" alt="UX Pilot Stakeholder Feedback - Demanding Client output panel showing Top Objections, Questions They'll Ask, and To Improve sections with Critical, Moderate, and Low severity items" loading="lazy" width="2048" height="1479" />
+        </div>
+        <p class="screenshot-caption">The Demanding Client output - Top Objections, Questions They'll Ask, and the severity-ranked To Improve section. The "Fix 3 Issues" CTA at the bottom triggers AI design iteration for the selected items. Re-run, Export, and Highlight All controls appear at the top.</p>
+      </div>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 06 CHAT MODE -->
+    <section class="cs-section" id="chat">
+      <div class="section-eyebrow">06 &mdash; Chat Mode</div>
+      <h2>The same simulation engine - lighter, faster, conversational.</h2>
+      <p>I built Chat mode as a distinct surface of the same capability, not an afterthought. The core logic is identical - same personas, same LLM behaviour - but the interaction model is different. Chat is faster, single-persona by default, and conversational in output format.</p>
+
+      <div class="callout callout-purple reveal">
+        <p><strong>Design decision:</strong> Chat mode doesn't require screen selection. It auto-attaches to the most recently generated design and responds to natural language intent - "Review this as a demanding client" triggers the full simulation without any UI navigation. <strong>Speed and frictionlessness were the primary design goals for Chat mode.</strong></p>
+      </div>
+
+      <h3>Three trigger patterns - all intentional</h3>
+      <div class="two-col-3 reveal">
+        <div class="card">
+          <div class="card-label">Explicit Prompt</div>
+          <h4>"Act as a CTO and critique this"</h4>
+          <p>Intent detection: persona keyword + review intent. Runs immediately. No additional input needed. Most common trigger in production.</p>
+        </div>
+        <div class="card">
+          <div class="card-label">System Suggestion</div>
+          <h4>Quick actions after generation</h4>
+          <p>"Run Stakeholder Review" / "Test with Client" appears contextually after design generation. Reduces friction for users who want feedback but didn't think to ask.</p>
+        </div>
+        <div class="card">
+          <div class="card-label">Follow-up Trigger</div>
+          <h4>"Will this pass client review?"</h4>
+          <p>Softer signals that imply review intent. System suggests persona options before running - quick reply buttons, not a form.</p>
+        </div>
+      </div>
+
+      <h3>Chat vs Studio - designed as complements, not duplicates</h3>
+      <table class="compare-table reveal">
+        <thead>
+          <tr>
+            <th>Dimension</th>
+            <th>Chat Mode</th>
+            <th>Studio Mode</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Speed</td>
+            <td>Fast, lightweight, conversational</td>
+            <td>Structured, detailed, panel-based</td>
+          </tr>
+          <tr>
+            <td>Personas</td>
+            <td>1 persona at a time (default)</td>
+            <td>Multi-persona parallel generation</td>
+          </tr>
+          <tr>
+            <td>Canvas integration</td>
+            <td>No canvas layer</td>
+            <td>Attached review layer on canvas</td>
+          </tr>
+          <tr>
+            <td>Output format</td>
+            <td>Conversational, prose + bullets</td>
+            <td>Structured UI sections with severity tags</td>
+          </tr>
+          <tr>
+            <td>Primary goal</td>
+            <td>Insight and awareness</td>
+            <td>Action and issue tracking</td>
+          </tr>
+          <tr>
+            <td>Follow-up</td>
+            <td>"Try another persona" / "Generate improved version"</td>
+            <td>"Fix X Issues" → AI iteration</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 07 AI ENGINEERING -->
+    <section class="cs-section" id="ai">
+      <div class="section-eyebrow">07 &mdash; AI &amp; Prompt Engineering</div>
+      <div class="ai-badge"><span class="ai-badge-dot"></span>LLM Product Design</div>
+      <h2>The hardest part wasn't the AI. It was defining what "real" feedback meant.</h2>
+      <p>The LLM capability to generate text in different voices exists. The PM challenge was specifying the output precisely enough that "Demanding Client feedback" consistently felt like a demanding client - not a polite UX audit in different clothes.</p>
+
+      <h3>What I specified in the prompt engineering brief</h3>
+      <div class="step-list reveal">
+        <div class="step-item">
+          <div class="step-num">01</div>
+          <div>
+            <div class="step-title">Persona mindset, not generic critique</div>
+            <div class="step-body">The system prompt for each persona had to encode the <em>worldview</em> of the stakeholder, not just their topic focus. A skeptical CTO doesn't just ask about scalability - they actively look for over-engineering, implicit cost assumptions, and unnecessary complexity. <strong>I wrote the persona behaviours as PM specs: what they optimise for, what language patterns they use, what makes them uncomfortable.</strong> Engineering translated these into prompt constraints.</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">02</div>
+          <div>
+            <div class="step-title">Structured JSON output → mapped to UI sections</div>
+            <div class="step-body">The LLM output was specified as structured JSON, not free text. Objections array, questions array, issues array (with severity, element references, explanation, and fix fields). <strong>This was critical for UI consistency and for the "Fix X Issues" CTA to work correctly.</strong> I defined the schema; engineering built the parser and UI renderer.</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">03</div>
+          <div>
+            <div class="step-title">Tension and conflict - not polite feedback</div>
+            <div class="step-body">Early test outputs were too constructive - the LLM defaulted to helpfulness. I added explicit instructions to surface realistic conflict: a demanding client who <em>doesn't like the design</em>, a CTO who <em>questions the entire approach</em>. <strong>The output needed to create the emotional experience of a difficult review - so the designer felt prepared, not coddled.</strong></div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">04</div>
+          <div>
+            <div class="step-title">Input: screen image + prompt context</div>
+            <div class="step-body">The system takes the selected screen image as the primary input, with the user's prompt context (if available) as supplementary signal. Multi-screen selection was supported from launch. For multi-persona runs, parallel generation ran each persona simultaneously - not sequentially - to keep total wait time acceptable.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout callout-green reveal">
+        <p><strong>PM ownership of AI output quality:</strong> I owned the qualitative bar for what "good" feedback looked like. This meant reviewing test outputs across all four personas, writing correction notes when outputs felt generic or too polite, and iterating the prompt spec until the output consistently passed the "does this feel like a real stakeholder?" test. <strong>Prompt quality is a product decision - not just an engineering task.</strong></p>
+      </div>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 08 METRICS -->
+    <section class="cs-section" id="metrics">
+      <div class="section-eyebrow">08 &mdash; Success Metrics</div>
+      <h2>What success looked like - and how the feature exceeded it.</h2>
+      <p>I defined the success criteria in the spec before a line of code was written. The feature launched, outperformed on every dimension, and became the most-used AI feature on the platform.</p>
+
+      <div class="metric-band reveal">
+        <div class="metric-item">
+          <div class="metric-num">#1</div>
+          <div class="metric-label">Most-used AI feature post-launch, by session frequency and unique users</div>
+        </div>
+        <div class="metric-item">
+          <div class="metric-num">↑ Ret.</div>
+          <div class="metric-label">Users who ran Stakeholder Feedback showed measurably higher weekly return rates</div>
+        </div>
+        <div class="metric-item">
+          <div class="metric-num">3 types</div>
+          <div class="metric-label">Feedback types designed for immediate action - users acted on at least 1 issue per run as primary target</div>
+        </div>
+      </div>
+
+      <h3>The three success criteria I wrote in the spec</h3>
+      <div class="two-col-3 reveal">
+        <div class="card">
+          <div class="card-label">Criterion 1 - Clarity</div>
+          <h4>Users understand feedback instantly</h4>
+          <p>No interpretation required. Feedback is structured, specific, and written in plain language. A designer shouldn't need to decode what a persona means - the output is immediately actionable.</p>
+        </div>
+        <div class="card">
+          <div class="card-label">Criterion 2 - Authenticity</div>
+          <h4>Feedback feels "real"</h4>
+          <p>The qualitative bar: feedback should feel like actual stakeholder pushback, not polished UX advice. Tested by having designers read outputs and rate whether they'd heard something similar in a real review.</p>
+        </div>
+        <div class="card">
+          <div class="card-label">Criterion 3 - Actionability</div>
+          <h4>At least 1 issue acted on per run</h4>
+          <p>Every run should produce at least one improvement the designer can act on immediately. This was the behavioral definition of "useful" - not engagement metrics, but design iteration triggered by the feature.</p>
+        </div>
+      </div>
+
+      <h3>Metrics I tracked</h3>
+      <table class="compare-table reveal">
+        <thead>
+          <tr><th>Type</th><th>Metric</th><th>Why it matters</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Adoption</td>
+            <td>Feature activation rate - % of active users running at least one simulation per week</td>
+            <td>Breadth of adoption across the user base. If only power users use it, the feature has a discoverability problem, not a value problem.</td>
+          </tr>
+          <tr>
+            <td>Quality</td>
+            <td>Persona realism score - user-rated "felt like real feedback" on a 5-point scale</td>
+            <td>The core quality bar. If users don't believe the feedback is realistic, the preparation value disappears.</td>
+          </tr>
+          <tr>
+            <td>Action</td>
+            <td>Fix trigger rate - % of runs where "Fix X Issues" CTA is used</td>
+            <td>Closes the loop between feedback and iteration. High fix rate means the output was specific enough to act on.</td>
+          </tr>
+          <tr>
+            <td>Retention</td>
+            <td>Return rate - weekly active rate for users who used the feature vs. those who didn't</td>
+            <td>If Stakeholder Feedback improves design outcomes, users should return more. This connects feature engagement to platform stickiness.</td>
+          </tr>
+          <tr>
+            <td>Business</td>
+            <td>Conversion uplift - free-to-paid rate for users who use Stakeholder Feedback in trial period</td>
+            <td>High-value features that solve a real problem should accelerate upgrade decisions. Stakeholder Feedback was positioned as a premium capability.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 09 RISKS -->
+    <section class="cs-section" id="risks">
+      <div class="section-eyebrow">09 &mdash; Risks</div>
+      <h2>What could go wrong - and how I designed against it.</h2>
+      <div class="risk-grid reveal">
+        <div class="risk-card">
+          <div class="risk-level r-high">High</div>
+          <div class="risk-title">Feedback too generic - LLM defaults to polite UX advice instead of stakeholder tension</div>
+          <div class="risk-body">The most likely failure mode. LLMs are trained to be helpful and constructive - the opposite of a skeptical CTO or demanding client. Mitigated by: explicit prompt constraints against heuristic-based language, persona behavioural specs that encode conflict, and iterative prompt refinement against a "does this feel real?" test before launch.</div>
+        </div>
+        <div class="risk-card">
+          <div class="risk-level r-high">High</div>
+          <div class="risk-title">Output inconsistency across runs - same design getting different quality feedback</div>
+          <div class="risk-body">Non-deterministic LLM output means two runs on the same design could produce meaningfully different feedback. Mitigated by: structured JSON output schema constraining response format, temperature tuning to reduce variance on tone and structure while preserving variation in specific content.</div>
+        </div>
+        <div class="risk-card">
+          <div class="risk-level r-high">High</div>
+          <div class="risk-title">Designers over-relying on AI feedback instead of real stakeholder validation</div>
+          <div class="risk-body">If designers treat AI simulation as a replacement for actual stakeholder feedback, the feature creates false confidence. Mitigated by: framing copy positioning the feature as "prepare for your review" not "replace your review," and output language that references the persona perspective rather than stating facts.</div>
+        </div>
+        <div class="risk-card">
+          <div class="risk-level r-med">Medium</div>
+          <div class="risk-title">Persona feedback missing domain-specific context</div>
+          <div class="risk-body">A Skeptical CTO reviewing a fintech dashboard has very different concerns from one reviewing a consumer mobile app. Without domain context, feedback may be generically technical rather than specifically relevant. Mitigated by: prompt context input allowing users to provide industry and product type, and the custom persona option for highly specific stakeholder types.</div>
+        </div>
+        <div class="risk-card">
+          <div class="risk-level r-med">Medium</div>
+          <div class="risk-title">Latency on multi-persona parallel runs degrading experience</div>
+          <div class="risk-body">Running four personas simultaneously against a high-resolution screen image creates real latency risk. Mitigated by: parallel generation architecture specification, progressive panel loading (show first persona output while others generate), and loading state design that manages perceived wait time.</div>
+        </div>
+        <div class="risk-card">
+          <div class="risk-level r-low">Low</div>
+          <div class="risk-title">Canvas review layer creating visual clutter that obscures the design</div>
+          <div class="risk-body">If the review overlay makes the design difficult to see and evaluate, users will dismiss it immediately. Mitigated by: toggleable layer visibility, issue highlights as subtle indicators rather than large overlays, and the default panel-only view keeping the canvas clean unless the user explicitly activates canvas highlights.</div>
+        </div>
+      </div>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 10 LESSONS -->
+    <section class="cs-section" id="lessons">
+      <div class="section-eyebrow">10 &mdash; Lessons</div>
+      <h2>What building this taught me about AI product design.</h2>
+      <div class="lesson-list reveal">
+        <div class="lesson-item">
+          <div class="lesson-num">01</div>
+          <div>
+            <div class="lesson-title">The hardest AI product problem is defining "good" - not building the capability</div>
+            <div class="lesson-body">The LLM could simulate any persona from day one. What it couldn't do without precise specification was simulate them <em>well</em>. Defining what "Demanding Client feedback" should feel like - opinionated, branded, competitive - required deep thought about real stakeholder psychology. <strong>The most important PM contribution to this feature wasn't a roadmap or a PRD. It was a clear qualitative bar for what output quality meant, and the discipline to keep testing against it.</strong></div>
+          </div>
+        </div>
+        <div class="lesson-item">
+          <div class="lesson-num">02</div>
+          <div>
+            <div class="lesson-title">Structured output schema is a product decision, not just an engineering one</div>
+            <div class="lesson-body">I could have left the output format as "natural language feedback in the persona voice." Instead I specified a JSON schema: objections array, questions array, issues with severity and element references. This decision determined what the UI could render, what the "Fix X Issues" CTA could trigger, and how consistently users could act on feedback. <strong>The output structure is where PM and prompt engineering meet - and it's entirely a product call.</strong></div>
+          </div>
+        </div>
+        <div class="lesson-item">
+          <div class="lesson-num">03</div>
+          <div>
+            <div class="lesson-title">Surface-specific design matters more than feature parity</div>
+            <div class="lesson-body">The instinct was to build Studio mode and then port it to Chat. Instead, I designed Chat mode as its own surface from the start - same underlying capability, fundamentally different interaction model. Studio mode is about structured tracking. Chat mode is about fast insight. <strong>Treating them as the same feature on different surfaces would have made both worse. Treating them as distinct surfaces that share an engine made both better.</strong></div>
+          </div>
+        </div>
+        <div class="lesson-item">
+          <div class="lesson-num">04</div>
+          <div>
+            <div class="lesson-title">When AI is the product, framing determines trust</div>
+            <div class="lesson-body">Identical output framed as "AI suggests you improve this" vs. "A demanding client would say this" produces different user behaviour. The second framing created more engagement - not because the content was different, but because it was relatable. Designers had mental models for demanding clients. <strong>The persona frame made abstract AI output feel grounded and real. Framing is a product decision with measurable impact on feature adoption.</strong></div>
+          </div>
+        </div>
+        <div class="lesson-item">
+          <div class="lesson-num">05</div>
+          <div>
+            <div class="lesson-title">Close the loop in the feature itself - don't hand off to another tool</div>
+            <div class="lesson-body">The "Fix X Issues" CTA was the product decision I'm most proud of. It would have been easy to stop at feedback - show the issues, let users go figure out the fixes. Instead, I specified that the feature should trigger AI design iteration directly, keeping the entire feedback-to-improvement loop inside UX Pilot. <strong>Features that close their own loops retain users. Features that hand off to other tools create friction that compounds over time.</strong></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main><!-- /cs-body -->
+
+  <!-- APPENDIX BAND -->
+  <div class="appendix-band">
+    <div class="appendix-inner">
+
+      <div class="appendix-header">
+        <div class="appendix-eyebrow">Appendix &mdash; The Evidence</div>
+        <h2 class="appendix-title">Functional Spec Excerpts</h2>
+        <p class="appendix-sub">User stories, acceptance criteria, and the AI generation pipeline as specified in the product requirements document.</p>
+      </div>
+
+      <!-- USER STORIES -->
+      <div class="appendix-block reveal">
+        <div class="appendix-block-label">Appendix A - User Stories</div>
+        <table class="appendix-table">
+          <thead>
+            <tr><th>ID</th><th>As a&hellip;</th><th>I want&hellip;</th><th>So that&hellip;</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>US.1</td>
+              <td data-label="As a…">Designer preparing for a client presentation</td>
+              <td data-label="I want…">to simulate how a demanding client will react to my design before the meeting</td>
+              <td data-label="So that…">I can anticipate objections and either fix the design or prepare a response in advance</td>
+            </tr>
+            <tr>
+              <td>US.2</td>
+              <td data-label="As a…">Product designer working on a B2B SaaS dashboard</td>
+              <td data-label="I want…">CTO-perspective feedback on my design's complexity and build implications</td>
+              <td data-label="So that…">I can identify over-engineered elements before the technical review reveals them in front of stakeholders</td>
+            </tr>
+            <tr>
+              <td>US.3</td>
+              <td data-label="As a…">Junior designer without much stakeholder experience</td>
+              <td data-label="I want…">realistic examples of the questions a board member would ask about my design</td>
+              <td data-label="So that…">I can prepare answers and feel confident walking into a review I haven't done many times before</td>
+            </tr>
+            <tr>
+              <td>US.4</td>
+              <td data-label="As a…">Designer iterating quickly in Chat</td>
+              <td data-label="I want…">to get stakeholder feedback by just typing "review this as a client" after generating a design</td>
+              <td data-label="So that…">I can get simulation feedback without switching to Studio and manually selecting screens</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- ACCEPTANCE CRITERIA -->
+      <div class="appendix-block reveal">
+        <div class="appendix-block-label">Appendix B - Key Acceptance Criteria</div>
+        <table class="appendix-table">
+          <thead>
+            <tr><th>#</th><th>Criteria</th><th>Owner</th><th>Verified by</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>AC.1</td>
+              <td data-label="Criteria">Each persona must generate output that reflects its defined mindset - not generic UX critique. Reviewers should be unable to swap persona labels without the content becoming inconsistent.</td>
+              <td data-label="Owner">PM / AI</td>
+              <td data-label="Verified by">Qualitative review: PM and one designer each label outputs blind; persona identification accuracy target &gt;90%</td>
+            </tr>
+            <tr>
+              <td>AC.2</td>
+              <td data-label="Criteria">Output must be structured JSON with defined schema: objections[], questions[], issues[] (severity, elementRef, explanation, fix). No free-text-only response accepted.</td>
+              <td data-label="Owner">AI / BE</td>
+              <td data-label="Verified by">Automated schema validation on all outputs; parser error rate &lt;1% in QA</td>
+            </tr>
+            <tr>
+              <td>AC.3</td>
+              <td data-label="Criteria">Multi-persona runs must use parallel generation. Total wait time for 3 personas must not exceed 1.5× single persona time.</td>
+              <td data-label="Owner">BE / AI</td>
+              <td data-label="Verified by">Performance test: 3-persona run measured against single-persona baseline; ratio verified</td>
+            </tr>
+            <tr>
+              <td>AC.4</td>
+              <td data-label="Criteria">Every issue in the "To Improve" section must include severity tag, element reference, specific explanation, and actionable fix. Issues without all four fields are rejected.</td>
+              <td data-label="Owner">AI / FE</td>
+              <td data-label="Verified by">QA: sample 20 runs across all 4 personas; verify 100% of issues have all required fields rendered</td>
+            </tr>
+            <tr>
+              <td>AC.5</td>
+              <td data-label="Criteria">Chat mode must detect review intent from natural language without requiring explicit commands. "Review this as a CTO", "Act as a board member", "Give stakeholder feedback" must all trigger the feature.</td>
+              <td data-label="Owner">AI / FE</td>
+              <td data-label="Verified by">Intent detection test suite: 20 natural language variations per persona; target &gt;95% correct trigger rate</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- AI GENERATION PIPELINE -->
+      <div class="appendix-block reveal">
+        <div class="appendix-block-label">Appendix C - AI Generation Pipeline (Studio Mode)</div>
+        <p class="appendix-flow-intro">How a designer selecting a screen and clicking "Run Review" produces structured stakeholder feedback attached to the canvas.</p>
+        <div class="flow-steps">
+          <div class="flow-step">
+            <div class="flow-step-num">1</div>
+            <div>
+              <div class="flow-step-title">Screen capture + context ingestion</div>
+              <div class="flow-step-text">Selected canvas screen(s) captured as image. User prompt context (if available from the design session) passed as supplementary input. Persona selection recorded.</div>
+            </div>
+          </div>
+          <div class="flow-arrow">&#8595;</div>
+          <div class="flow-step">
+            <div class="flow-step-num">2</div>
+            <div>
+              <div class="flow-step-title">Persona prompt construction</div>
+              <div class="flow-step-text">System prompt assembled per persona: behavioural constraints, tone spec, topic focus, conflict instructions, and output schema. Multi-persona runs construct N independent prompts for parallel execution.</div>
+            </div>
+          </div>
+          <div class="flow-arrow">&#8595;</div>
+          <div class="flow-step">
+            <div class="flow-step-num">3</div>
+            <div>
+              <div class="flow-step-title">Parallel LLM generation</div>
+              <div class="flow-step-text">Each persona prompt sent to LLM simultaneously. Screen image passed as vision input. Structured JSON output requested. Temperature tuned for authentic tone variation while maintaining schema consistency.</div>
+            </div>
+          </div>
+          <div class="flow-arrow">&#8595;</div>
+          <div class="flow-step">
+            <div class="flow-step-num">4</div>
+            <div>
+              <div class="flow-step-title">JSON parsing + UI section mapping</div>
+              <div class="flow-step-text">LLM output parsed against schema. Objections → Top Objections section. Questions → Questions They'll Ask section. Issues array → To Improve section with severity rendering and element reference linking. Validation rejects malformed outputs and triggers re-generation.</div>
+            </div>
+          </div>
+          <div class="flow-arrow">&#8595;</div>
+          <div class="flow-step">
+            <div class="flow-step-num">5</div>
+            <div>
+              <div class="flow-step-title">Canvas layer attachment</div>
+              <div class="flow-step-text">Review output attached as named canvas layer. Element references from issues linked to specific canvas components where identifiable. Highlight All activates visual indicators on referenced elements.</div>
+            </div>
+          </div>
+          <div class="flow-arrow">&#8595;</div>
+          <div class="flow-step flow-step-final">
+            <div class="flow-step-num">&#10003;</div>
+            <div>
+              <div class="flow-step-title">Designer sees structured stakeholder feedback in context</div>
+              <div class="flow-step-text">Right panel: Top Objections · Questions They'll Ask · To Improve (severity-ranked) · Fix X Issues CTA. Canvas: review layer attached, highlights available. Controls: Re-run · Export · Highlight All · persona switcher for multi-persona runs.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div><!-- /appendix-band -->
+
+  <!-- FOOTER -->
+  <footer>
+    <a href="work.html">&larr; Back to all case studies</a>
+    &nbsp;&nbsp;&middot;&nbsp;&nbsp;
+    <a href="index.html">Akash Poddar</a>
+    &nbsp;&nbsp;&middot;&nbsp;&nbsp;
+    <a href="index.html#contact">Get in touch</a>
+  </footer>
+
+  <script>
+    const reveals = document.querySelectorAll('.reveal');
+    const isMobile = window.innerWidth < 768;
+    const io = new IntersectionObserver((entries) => {
+      const visible = entries.filter(e => e.isIntersecting)
+        .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+      if (!visible.length) return;
+      requestAnimationFrame(() => {
+        visible.forEach((entry, i) => {
+          entry.target.style.transitionDelay = isMobile ? '0s' : (i * 0.05) + 's';
+          entry.target.classList.add('visible');
+          io.unobserve(entry.target);
+        });
+      });
+    }, { threshold: 0.06, rootMargin: '0px 0px -40px 0px' });
+    reveals.forEach(r => io.observe(r));
+
+    const tocItems = document.querySelectorAll('.toc-item');
+    const sections = document.querySelectorAll('.cs-section[id]');
+    const tocObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          tocItems.forEach(t => t.classList.remove('active'));
+          const active = document.querySelector(`.toc-item[href="#${entry.target.id}"]`);
+          if (active) active.classList.add('active');
+        }
+      });
+    }, { threshold: 0, rootMargin: '-101px 0px -85% 0px' });
+    sections.forEach(s => tocObserver.observe(s));
+  </script>
+
+</body>
+</html>
