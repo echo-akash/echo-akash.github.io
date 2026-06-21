@@ -1,0 +1,1261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-62DWPTYD6F"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-62DWPTYD6F');
+  </script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27><rect width=%2732%27 height=%2732%27 rx=%274%27 fill=%27%230e0e0e%27/><text x=%2716%27 y=%2722%27 font-family=%27Georgia,serif%27 font-size=%2714%27 font-weight=%27600%27 fill=%27%23f7f5f0%27 text-anchor=%27middle%27>AP</text></svg>" />
+  <title>Pathao Psychographic Clustering - Research-Driven Personalization | Akash Poddar</title>
+  <meta name="description" content="How I led Pathao's psychographic clustering initiative - designing VALS-based segmentation from scratch using employee pilots, custom surveys, and clustering algorithms to unlock personality-driven personalization for food delivery." />
+  <link rel="canonical" href="https://echo-akash.github.io/psychographic-clustering.html" />
+  <meta property="og:title" content="Pathao Psychographic Clustering - Research-Driven Personalization | Akash Poddar" />
+  <meta property="og:description" content="Building psychographic intelligence on top of behavioral data - VALS clustering, gamified surveys, and personality-driven personalization for Pathao Food." />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://echo-akash.github.io/psychographic-clustering.html" />
+  <meta property="og:image" content="https://echo-akash.github.io/og-image.png" />
+  <meta name="author" content="Akash Poddar" />
+  <meta name="robots" content="index, follow" />
+  <meta name="theme-color" content="#0e0e0e" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Pathao Psychographic Clustering - Research-Driven Personalization",
+    "description": "How Akash Poddar led Pathao's psychographic clustering initiative - VALS-based segmentation, gamified surveys, and personality-driven personalization for food delivery.",
+    "author": { "@type": "Person", "name": "Akash Poddar", "url": "https://echo-akash.github.io/" },
+    "publisher": { "@type": "Person", "name": "Akash Poddar" }
+  }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,300;1,9..144,500&family=DM+Sans:wght@300;400;500&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,300;1,9..144,500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" /></noscript>
+  <style>
+    :root {
+      --ink: #0e0e0e;
+      --ink-mid: #444;
+      --ink-muted: #696969;
+      --ink-faint: #bbb;
+      --surface: #f7f5f0;
+      --white: #ffffff;
+      --accent: #7c3aed;
+      --accent-light: #f0ebff;
+      --accent-dark: #5b21b6;
+      --accent2: #1d4ed8;
+      --accent2-light: #eff6ff;
+      --green: #166534;
+      --green-light: #dcfce7;
+      --amber: #b45309;
+      --amber-light: #fef3e2;
+      --rose: #9f1239;
+      --rose-light: #fff1f2;
+      --line: rgba(0,0,0,0.08);
+      --serif: 'Fraunces', Georgia, serif;
+      --sans: 'DM Sans', system-ui, sans-serif;
+      --radius: 10px;
+      --ease: cubic-bezier(0.16, 1, 0.3, 1);
+      --wide-w: 1000px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+    }
+    body { font-family: var(--sans); background: var(--surface); color: var(--ink); font-size: 15px; line-height: 1.6; overflow-x: hidden; }
+
+    /* ── NAV ── */
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 0 40px; height: 56px; background: rgba(247,245,240,0.88); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); }
+    .nav-logo { font-family: var(--serif); font-size: 16px; font-weight: 600; color: var(--ink); text-decoration: none; letter-spacing: -0.02em; }
+    .nav-links { display: flex; gap: 32px; list-style: none; }
+    .nav-links a { font-size: 13px; color: var(--ink-mid); text-decoration: none; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--accent); }
+    .nav-cta { font-size: 13px; padding: 7px 18px; background: var(--ink); color: var(--white); border-radius: 20px; text-decoration: none; transition: background 0.2s; }
+    .nav-cta:hover { background: var(--accent); }
+
+    /* ── HERO ── */
+    .cs-hero { background: var(--ink); padding: 120px 40px 80px; position: relative; overflow: hidden; }
+    .cs-hero-inner { max-width: var(--wide-w); margin: 0 auto; position: relative; z-index: 1; }
+    .cs-hero-grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px); background-size: 60px 60px; }
+    .cs-hero-shimmer { position: absolute; inset: 0; background: radial-gradient(ellipse 60% 60% at 70% 50%, rgba(124,58,237,0.22) 0%, transparent 70%); }
+    .cs-hero-bar { height: 4px; background: linear-gradient(90deg, #7c3aed, #a78bfa); border-radius: 2px; width: 64px; margin-bottom: 28px; }
+    .cs-meta-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 24px; }
+    .cs-tag { font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; padding: 5px 14px; border-radius: 20px; }
+    .tag-purple { background: rgba(124,58,237,0.22); color: #c4a8ff; border: 1px solid rgba(124,58,237,0.35); }
+    .tag-blue   { background: rgba(29,78,216,0.18); color: #93c5fd; border: 1px solid rgba(29,78,216,0.25); }
+    .tag-green  { background: rgba(22,101,52,0.2); color: #6ee7b7; border: 1px solid rgba(22,101,52,0.28); }
+    .tag-rose   { background: rgba(159,18,57,0.18); color: #fca5a5; border: 1px solid rgba(159,18,57,0.28); }
+    .tag-gray   { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.45); border: 1px solid rgba(255,255,255,0.1); }
+    .cs-hero-title { font-family: var(--serif); font-size: clamp(34px, 5.5vw, 60px); font-weight: 600; letter-spacing: -0.03em; line-height: 0.95; color: #fff; margin-bottom: 20px; }
+    .cs-hero-title em { font-style: italic; font-weight: 300; color: rgba(255,255,255,0.38); }
+    .cs-hero-sub { font-size: 17px; font-weight: 300; color: rgba(255,255,255,0.5); max-width: 640px; line-height: 1.7; margin-bottom: 48px; }
+    .cs-hero-sub strong { color: rgba(255,255,255,0.8); font-weight: 400; }
+    .cs-kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 40px; }
+    .cs-kpi { padding-right: 32px; border-right: 1px solid rgba(255,255,255,0.08); }
+    .cs-kpi:last-child { border-right: none; }
+    .cs-kpi-num { font-family: var(--serif); font-size: 32px; font-weight: 600; letter-spacing: -0.02em; color: #fff; line-height: 1; margin-bottom: 6px; }
+    .cs-kpi-num span { font-size: 20px; font-style: italic; font-weight: 300; color: rgba(255,255,255,0.35); }
+    .cs-kpi-label { font-size: 11px; color: rgba(255,255,255,0.38); line-height: 1.4; max-width: 130px; }
+
+    /* ── RESEARCH BADGE ── */
+    .research-badge { display: inline-flex; align-items: center; gap: 7px; background: linear-gradient(135deg, rgba(124,58,237,0.12), rgba(29,78,216,0.1)); border: 1px solid rgba(124,58,237,0.3); border-radius: 20px; padding: 6px 16px; font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: #a78bfa; margin-bottom: 14px; }
+    .research-badge-dot { width: 6px; height: 6px; border-radius: 50%; background: #a78bfa; flex-shrink: 0; animation: rpulse 2s ease-in-out infinite; }
+    @keyframes rpulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+    @media (prefers-reduced-motion: reduce) { .research-badge-dot { animation: none; } }
+
+    /* ── TOC ── */
+    .toc-bar { position: sticky; top: 56px; z-index: 90; background: var(--white); border-bottom: 1px solid var(--line); overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+    .toc-bar::-webkit-scrollbar { display: none; }
+    .toc-inner { max-width: var(--wide-w); margin: 0 auto; display: flex; padding: 0 40px; }
+    .toc-item { font-size: 12px; color: var(--ink-muted); text-decoration: none; padding: 14px 20px; white-space: nowrap; border-bottom: 2px solid transparent; transition: color 0.2s, border-color 0.2s; display: flex; align-items: center; gap: 6px; }
+    .toc-item:hover { color: var(--accent); border-bottom-color: var(--accent); }
+    .toc-item.active { color: var(--accent); border-bottom-color: var(--accent); }
+    .toc-num { font-size: 10px; color: var(--ink-faint); }
+
+    /* ── BODY ── */
+    .cs-body { max-width: var(--wide-w); margin: 0 auto; padding: 0 40px; }
+    .cs-section { padding: 72px 0 0; content-visibility: auto; contain-intrinsic-size: 0 600px; }
+    .cs-section:last-of-type { padding-bottom: 80px; }
+    .section-eyebrow { font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+    .section-eyebrow::after { content: ''; flex: 0 0 32px; height: 1px; background: var(--accent); opacity: 0.4; }
+    .cs-section h2 { font-family: var(--serif); font-size: 32px; font-weight: 600; letter-spacing: -0.02em; color: var(--ink); line-height: 1.15; margin-bottom: 28px; }
+    .cs-section h3 { font-family: var(--serif); font-size: 20px; font-weight: 600; letter-spacing: -0.01em; color: var(--ink); margin: 40px 0 16px; }
+    .cs-section p { font-size: 15px; color: var(--ink-mid); line-height: 1.8; font-weight: 300; margin-bottom: 16px; }
+    .cs-section p:last-child { margin-bottom: 0; }
+    .cs-section p strong { color: var(--ink); font-weight: 500; }
+    .cs-divider { border: none; border-top: 1px solid var(--line); margin: 56px 0 0; }
+
+    /* ── CALLOUT ── */
+    .callout { border-left: 3px solid var(--accent); border-radius: 0 var(--radius) var(--radius) 0; padding: 20px 24px; margin: 28px 0; }
+    .callout-purple { background: var(--accent-light); }
+    .callout-purple p strong { color: var(--accent-dark); }
+    .callout-blue { background: var(--accent2-light); border-left-color: var(--accent2); }
+    .callout-blue p strong { color: var(--accent2); }
+    .callout-green { background: var(--green-light); border-left-color: var(--green); }
+    .callout-green p strong { color: var(--green); }
+    .callout-amber { background: var(--amber-light); border-left-color: var(--amber); }
+    .callout-amber p strong { color: var(--amber); }
+    .callout p { margin-bottom: 0; color: var(--ink); font-weight: 400; font-size: 14px; line-height: 1.75; }
+
+    /* ── STEP LIST ── */
+    .step-list { display: flex; flex-direction: column; margin: 28px 0; }
+    .step-item { display: grid; grid-template-columns: 56px 1fr; gap: 0 20px; padding: 28px 0; border-top: 1px solid var(--line); align-items: start; }
+    .step-item:last-child { border-bottom: 1px solid var(--line); }
+    .step-num { font-family: var(--serif); font-size: 28px; font-weight: 600; color: var(--accent); letter-spacing: -0.02em; line-height: 1; padding-top: 4px; }
+    .step-title { font-family: var(--serif); font-size: 18px; font-weight: 600; color: var(--ink); margin-bottom: 8px; line-height: 1.2; }
+    .step-body { font-size: 14px; color: var(--ink-mid); line-height: 1.75; font-weight: 300; }
+    .step-body strong { color: var(--ink); font-weight: 500; }
+
+    /* ── SEGMENT CARDS ── */
+    .segment-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 28px 0; }
+    .segment-card { background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); padding: 22px; position: relative; overflow: hidden; }
+    .segment-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; }
+    .seg-achiever::before  { background: linear-gradient(90deg, #1d4ed8, #60a5fa); }
+    .seg-experiencer::before { background: linear-gradient(90deg, #7c3aed, #a855f7); }
+    .seg-thinker::before   { background: linear-gradient(90deg, #166534, #22c55e); }
+    .seg-striver::before   { background: linear-gradient(90deg, #b45309, #fbbf24); }
+    .seg-believer::before  { background: linear-gradient(90deg, #9f1239, #f87171); }
+    .seg-survivor::before  { background: linear-gradient(90deg, #374151, #9ca3af); }
+    .segment-emoji { font-size: 28px; margin-bottom: 10px; line-height: 1; }
+    .segment-name { font-family: var(--serif); font-size: 16px; font-weight: 600; color: var(--ink); margin-bottom: 6px; }
+    .segment-tagline { font-size: 11px; font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase; color: var(--ink-muted); margin-bottom: 10px; }
+    .segment-desc { font-size: 13px; color: var(--ink-mid); line-height: 1.65; }
+    .segment-promo { margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--line); font-size: 12px; color: var(--ink-muted); line-height: 1.6; }
+    .segment-promo strong { color: var(--ink); font-weight: 500; }
+
+    /* ── QUIZ CARD ── */
+    .quiz-stack { display: flex; flex-direction: column; gap: 16px; margin: 28px 0; }
+    .quiz-card { background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); padding: 24px; }
+    .quiz-q { font-family: var(--serif); font-size: 16px; font-weight: 600; color: var(--ink); margin-bottom: 14px; line-height: 1.4; }
+    .quiz-options { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
+    .quiz-option { display: flex; align-items: flex-start; gap: 10px; font-size: 13.5px; color: var(--ink-mid); line-height: 1.5; }
+    .quiz-bullet { flex-shrink: 0; width: 22px; height: 22px; border-radius: 50%; border: 1.5px solid var(--line); display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 600; color: var(--ink-faint); margin-top: 1px; }
+    .quiz-maps { font-size: 11px; color: var(--ink-faint); border-top: 1px dashed var(--line); padding-top: 10px; margin-top: 4px; }
+    .quiz-maps span { display: inline-block; margin-right: 6px; padding: 2px 8px; border-radius: 20px; font-weight: 500; }
+    .qm-achiever  { background: #eff6ff; color: #1d4ed8; }
+    .qm-experiencer { background: #f0ebff; color: #7c3aed; }
+    .qm-thinker   { background: #dcfce7; color: #166534; }
+    .qm-striver   { background: #fef3e2; color: #b45309; }
+    .qm-believer  { background: #fff1f2; color: #9f1239; }
+    .qm-survivor  { background: #f3f4f6; color: #374151; }
+
+    /* ── METHODOLOGY TABLE ── */
+    .method-table { width: 100%; border-collapse: collapse; margin: 28px 0; font-size: 13.5px; }
+    .method-table th { text-align: left; font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-muted); padding: 12px 16px; border-bottom: 2px solid var(--line); }
+    .method-table td { padding: 13px 16px; border-bottom: 1px solid var(--line); color: var(--ink-mid); vertical-align: top; line-height: 1.6; }
+    .method-table td:first-child { font-weight: 500; color: var(--ink); white-space: nowrap; }
+    .method-table tr:last-child td { border-bottom: none; }
+    .method-table tr:hover td { background: rgba(124,58,237,0.02); }
+    .cluster-tag { display: inline-block; font-size: 10px; font-weight: 600; letter-spacing: 0.07em; text-transform: uppercase; padding: 2px 8px; border-radius: 20px; }
+
+    /* ── SIMULATION TABLE ── */
+    .sim-table { width: 100%; border-collapse: collapse; margin: 28px 0; font-size: 13.5px; }
+    .sim-table th { text-align: center; font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-muted); padding: 12px 14px; border-bottom: 2px solid var(--line); }
+    .sim-table th:first-child { text-align: left; }
+    .sim-table td { padding: 13px 14px; border-bottom: 1px solid var(--line); color: var(--ink-mid); vertical-align: middle; line-height: 1.5; text-align: center; }
+    .sim-table td:first-child { text-align: left; font-weight: 500; color: var(--ink); }
+    .sim-table tr:last-child td { border-bottom: none; }
+    .sim-table tr:hover td { background: rgba(124,58,237,0.02); }
+    .sim-winner { font-weight: 600; color: var(--ink); }
+    .sim-score { font-family: var(--serif); font-size: 15px; font-weight: 600; }
+    .sim-score-high { color: var(--accent); }
+    .sim-score-mid { color: var(--ink-mid); }
+    .sim-score-zero { color: var(--ink-faint); }
+
+    /* ── PERSONALIZATION TABLE ── */
+    .pers-table { width: 100%; border-collapse: collapse; margin: 28px 0; font-size: 13.5px; }
+    .pers-table th { text-align: left; font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-muted); padding: 12px 16px; border-bottom: 2px solid var(--line); }
+    .pers-table td { padding: 13px 16px; border-bottom: 1px solid var(--line); color: var(--ink-mid); vertical-align: top; line-height: 1.6; }
+    .pers-table td:first-child { font-weight: 500; color: var(--ink); white-space: nowrap; }
+    .pers-table tr:last-child td { border-bottom: none; }
+    .pers-table tr:hover td { background: rgba(124,58,237,0.02); }
+    .notif-example { font-style: italic; font-size: 12.5px; color: var(--ink-muted); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 8px 12px; margin-top: 6px; display: block; }
+
+    /* ── PHASE TIMELINE ── */
+    .phase-list { display: flex; flex-direction: column; gap: 0; margin: 28px 0; }
+    .phase-item { display: grid; grid-template-columns: 120px 1fr; gap: 0 24px; padding: 24px 0; border-top: 1px solid var(--line); }
+    .phase-item:last-child { border-bottom: 1px solid var(--line); }
+    .phase-label { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); padding-top: 3px; line-height: 1.4; }
+    .phase-badge { display: inline-block; font-size: 10px; padding: 2px 8px; border-radius: 20px; background: var(--accent-light); color: var(--accent-dark); margin-top: 6px; font-weight: 500; }
+    .phase-title { font-family: var(--serif); font-size: 17px; font-weight: 600; color: var(--ink); margin-bottom: 8px; line-height: 1.2; }
+    .phase-body { font-size: 14px; color: var(--ink-mid); line-height: 1.75; font-weight: 300; }
+    .phase-body strong { color: var(--ink); font-weight: 500; }
+
+    /* ── TWO / THREE COL ── */
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 28px 0; }
+    .two-col-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 18px; margin: 28px 0; }
+
+    /* ── CARD ── */
+    .card { background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); padding: 24px; }
+    .card-label { font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; }
+    .card h4 { font-family: var(--serif); font-size: 17px; font-weight: 600; color: var(--ink); margin-bottom: 8px; line-height: 1.3; }
+    .card p { font-size: 13.5px; color: var(--ink-mid); line-height: 1.7; margin-bottom: 0; }
+
+    /* ── RISK GRID ── */
+    .risk-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 28px 0; }
+    .risk-card { background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); padding: 22px; }
+    .risk-level { font-size: 10px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; padding: 3px 10px; border-radius: 20px; display: inline-block; margin-bottom: 10px; }
+    .r-high { background: #faeae7; color: #8c3320; }
+    .r-med  { background: var(--amber-light); color: var(--amber); }
+    .r-low  { background: var(--green-light); color: var(--green); }
+    .risk-title { font-size: 14px; font-weight: 500; color: var(--ink); margin-bottom: 8px; line-height: 1.35; }
+    .risk-body { font-size: 13px; color: var(--ink-mid); line-height: 1.7; }
+
+    /* ── LESSON LIST ── */
+    .lesson-list { display: flex; flex-direction: column; margin: 28px 0; }
+    .lesson-item { display: grid; grid-template-columns: 48px 1fr; gap: 0 20px; padding: 28px 0; border-top: 1px solid var(--line); }
+    .lesson-item:last-child { border-bottom: 1px solid var(--line); }
+    .lesson-num { font-family: var(--serif); font-size: 24px; font-weight: 600; color: var(--accent); opacity: 0.4; line-height: 1; padding-top: 4px; }
+    .lesson-title { font-family: var(--serif); font-size: 18px; font-weight: 600; color: var(--ink); margin-bottom: 8px; line-height: 1.2; }
+    .lesson-body { font-size: 14px; color: var(--ink-mid); line-height: 1.75; font-weight: 300; }
+    .lesson-body strong { color: var(--ink); font-weight: 500; }
+
+    /* ── METRICS TABLE ── */
+    .metrics-table { width: 100%; border-collapse: collapse; margin: 28px 0; font-size: 13.5px; }
+    .metrics-table th { text-align: left; font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-muted); padding: 12px 16px; border-bottom: 2px solid var(--line); }
+    .metrics-table td { padding: 14px 16px; border-bottom: 1px solid var(--line); color: var(--ink-mid); vertical-align: top; line-height: 1.6; }
+    .metrics-table td:first-child { font-weight: 500; color: var(--ink); white-space: nowrap; }
+    .metrics-table tr:last-child td { border-bottom: none; }
+    .metrics-table tr:hover td { background: rgba(124,58,237,0.02); }
+
+    /* ── APPENDIX BAND ── */
+    .appendix-band { background: #111; border-top: 1px solid rgba(255,255,255,0.06); padding: 80px 40px; }
+    .appendix-inner { max-width: var(--wide-w); margin: 0 auto; }
+    .appendix-header { margin-bottom: 56px; }
+    .appendix-eyebrow { font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); margin-bottom: 12px; }
+    .appendix-title { font-family: var(--serif); font-size: 32px; font-weight: 600; letter-spacing: -0.02em; color: #fff; margin-bottom: 12px; }
+    .appendix-sub { font-size: 15px; color: rgba(255,255,255,0.4); font-weight: 300; max-width: 560px; line-height: 1.7; }
+    .appendix-block { margin-bottom: 56px; }
+    .appendix-block:last-child { margin-bottom: 0; }
+    .appendix-block-label { font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.3); margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .appendix-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .appendix-table th { text-align: left; font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,255,255,0.3); padding: 10px 16px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+    .appendix-table td { padding: 14px 16px; border-bottom: 1px solid rgba(255,255,255,0.06); color: rgba(255,255,255,0.55); vertical-align: top; line-height: 1.65; }
+    .appendix-table td:first-child { color: rgba(255,255,255,0.25); font-size: 11px; white-space: nowrap; font-weight: 500; letter-spacing: 0.04em; }
+    .appendix-table tr:last-child td { border-bottom: none; }
+    .appendix-table tr:hover td { background: rgba(255,255,255,0.02); }
+    .appendix-flow-intro { font-size: 14px; color: rgba(255,255,255,0.4); margin-bottom: 28px; font-weight: 300; }
+    .flow-steps { display: flex; flex-direction: column; }
+    .flow-arrow { text-align: center; color: rgba(255,255,255,0.15); font-size: 18px; padding: 4px 0 4px 24px; }
+    .flow-step { display: grid; grid-template-columns: 40px 1fr; gap: 0 16px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); border-radius: var(--radius); padding: 18px 20px; align-items: start; }
+    .flow-step-final { background: rgba(124,58,237,0.1); border-color: rgba(124,58,237,0.3); }
+    .flow-step-num { font-family: var(--serif); font-size: 18px; font-weight: 600; color: var(--accent); line-height: 1; padding-top: 2px; }
+    .flow-step-final .flow-step-num { font-size: 20px; }
+    .flow-step-title { font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.7); margin-bottom: 5px; }
+    .flow-step-text { font-size: 12.5px; color: rgba(255,255,255,0.38); line-height: 1.65; }
+
+    /* ── REVEAL ── */
+    .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.6s var(--ease), transform 0.6s var(--ease); }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* ── FOOTER ── */
+    footer { background: var(--ink); border-top: 1px solid rgba(255,255,255,0.06); padding: 24px 40px; text-align: center; font-size: 12px; color: rgba(255,255,255,0.55); }
+    footer a { color: rgba(255,255,255,0.55); text-decoration: none; }
+    footer a:hover { color: var(--white); }
+
+    /* ══════════════════════════════════════════
+       RESPONSIVE - 768px
+    ══════════════════════════════════════════ */
+    @media (max-width: 768px) {
+      nav { padding: 0 20px; }
+      .nav-links { display: none; }
+
+      .cs-hero { padding: 96px 20px 52px; }
+      .cs-hero-title { font-size: clamp(28px, 8vw, 44px); }
+      .cs-hero-sub { font-size: 14px; margin-bottom: 32px; }
+      .cs-kpi-row { grid-template-columns: 1fr 1fr; gap: 24px 16px; padding-top: 28px; }
+      .cs-kpi { border-right: none !important; padding-right: 0 !important; padding-left: 0 !important; }
+      .cs-kpi:nth-child(odd) { border-right: 1px solid rgba(255,255,255,0.1) !important; padding-right: 16px !important; }
+      .cs-kpi-num { font-size: 24px; }
+      .cs-kpi-label { font-size: 11px; }
+
+      .toc-inner { padding: 0 16px; }
+      .toc-item { padding: 12px 12px; font-size: 11px; }
+      .cs-body { padding: 0 20px; }
+      .cs-section { padding: 48px 0 0; }
+      .cs-section h2 { font-size: 22px; margin-bottom: 20px; }
+      .cs-section h3 { font-size: 17px; margin: 28px 0 12px; }
+      .cs-section p { font-size: 14px; line-height: 1.75; }
+      .cs-divider { margin: 40px 0 0; }
+      .callout { padding: 16px 18px; }
+
+      .two-col, .two-col-3, .risk-grid { grid-template-columns: 1fr; }
+      .segment-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+
+      .step-item { grid-template-columns: 40px 1fr; gap: 0 14px; padding: 20px 0; }
+      .step-num { font-size: 22px; }
+      .step-title { font-size: 16px; }
+      .step-body { font-size: 13.5px; }
+
+      .phase-item { grid-template-columns: 1fr; gap: 4px; }
+      .phase-label { font-size: 10px; }
+
+      .lesson-item { grid-template-columns: 40px 1fr; gap: 0 14px; padding: 20px 0; }
+      .lesson-num { font-size: 20px; }
+      .lesson-title { font-size: 16px; }
+      .lesson-body { font-size: 13.5px; }
+
+      /* Tables → stacked cards */
+      .method-table, .sim-table, .pers-table, .metrics-table { border-collapse: separate; border-spacing: 0; font-size: 13px; }
+      .method-table thead, .sim-table thead, .pers-table thead, .metrics-table thead { display: none; }
+      .method-table tbody, .sim-table tbody, .pers-table tbody, .metrics-table tbody { display: flex; flex-direction: column; gap: 12px; }
+      .method-table tr, .sim-table tr, .pers-table tr, .metrics-table tr { display: block; background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px; }
+      .method-table td, .sim-table td, .pers-table td, .metrics-table td { display: block; padding: 4px 0; border: none; white-space: normal; font-size: 13.5px; line-height: 1.65; text-align: left; }
+      .method-table td:first-child, .sim-table td:first-child, .pers-table td:first-child, .metrics-table td:first-child { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); padding-bottom: 8px; margin-bottom: 4px; border-bottom: 1px solid var(--line); white-space: normal; }
+      .method-table td[data-label]::before, .sim-table td[data-label]::before, .pers-table td[data-label]::before, .metrics-table td[data-label]::before { content: attr(data-label); display: block; font-size: 10px; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase; color: var(--ink-muted); margin-top: 8px; margin-bottom: 2px; }
+
+      .appendix-table { border-collapse: separate; border-spacing: 0; }
+      .appendix-table thead { display: none; }
+      .appendix-table tbody { display: flex; flex-direction: column; gap: 12px; }
+      .appendix-table tr { display: block; border: 1px solid rgba(255,255,255,0.09); border-radius: var(--radius); padding: 16px; background: rgba(255,255,255,0.025); }
+      .appendix-table td { display: block; padding: 4px 0; border: none; font-size: 13px; line-height: 1.65; white-space: normal; color: rgba(255,255,255,0.6); }
+      .appendix-table td:first-child { font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent) !important; padding-bottom: 8px; margin-bottom: 4px; border-bottom: 1px solid rgba(255,255,255,0.07); }
+      .appendix-table td[data-label]::before { content: attr(data-label); display: block; font-size: 10px; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase; color: rgba(255,255,255,0.28); margin-top: 8px; margin-bottom: 2px; }
+
+      .appendix-band { padding: 52px 20px 60px; }
+      .appendix-title { font-size: 24px; }
+      .appendix-sub { font-size: 14px; }
+      .flow-step { grid-template-columns: 32px 1fr; gap: 0 12px; padding: 14px 16px; }
+      .flow-step-num { font-size: 15px; }
+      .flow-step-title { font-size: 12px; }
+      .flow-step-text { font-size: 12px; }
+
+      footer { padding: 20px; }
+    }
+
+    /* ══════════════════════════════════════════
+       RESPONSIVE - 480px
+    ══════════════════════════════════════════ */
+    @media (max-width: 480px) {
+      .cs-hero { padding: 88px 16px 44px; }
+      .cs-body { padding: 0 16px; }
+      .appendix-band { padding: 44px 16px 52px; }
+      .cs-kpi-row { gap: 20px 12px; }
+      .cs-kpi-num { font-size: 22px; }
+      .cs-kpi-label { font-size: 10px; }
+      .segment-grid { grid-template-columns: 1fr; }
+      .card { padding: 18px; }
+      .risk-card { padding: 18px; }
+      .segment-card { padding: 18px; }
+      .quiz-card { padding: 18px; }
+      .phase-item { padding: 18px 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a class="nav-logo" href="index.html">Akash Poddar</a>
+    <ul class="nav-links">
+      <li><a href="work.html">Case Studies</a></li>
+      <li><a href="index.html#experience">Experience</a></li>
+      <li><a href="index.html#skills">Skills</a></li>
+      <li><a href="index.html#contact">Contact</a></li>
+    </ul>
+    <a class="nav-cta" href="index.html#contact">Get in touch</a>
+  </nav>
+
+  <!-- HERO -->
+  <div class="cs-hero">
+    <div class="cs-hero-grid"></div>
+    <div class="cs-hero-shimmer"></div>
+    <div class="cs-hero-inner">
+      <div class="cs-hero-bar"></div>
+      <div class="cs-meta-row">
+        <span class="cs-tag tag-purple">Psychographic Research</span>
+        <span class="cs-tag tag-blue">VALS &middot; Clustering &middot; ML</span>
+        <span class="cs-tag tag-green">0&rarr;1 Intelligence Layer</span>
+        <span class="cs-tag tag-gray">Pathao &middot; 2025</span>
+      </div>
+      <h1 class="cs-hero-title">Psychographic<br>Clustering<br><em>Beyond Behavioral Data</em></h1>
+      <p class="cs-hero-sub">How I led Pathao's research initiative to build a <strong>personality-driven intelligence layer</strong> - designing VALS-based psychographic segmentation from scratch using employee pilots, gamified surveys, and clustering algorithms to unlock what behavioral data alone never could.</p>
+      <div class="cs-kpi-row">
+        <div class="cs-kpi">
+          <div class="cs-kpi-num">6<span> clusters</span></div>
+          <div class="cs-kpi-label">VALS-derived psychographic segments scoped for Bangladesh</div>
+        </div>
+        <div class="cs-kpi">
+          <div class="cs-kpi-num">15<span>-Q</span></div>
+          <div class="cs-kpi-label">Validated survey instrument with cluster-mapped answer options</div>
+        </div>
+        <div class="cs-kpi">
+          <div class="cs-kpi-num">3<span> phases</span></div>
+          <div class="cs-kpi-label">Employee pilot → Internal validation → App-scale rollout</div>
+        </div>
+        <div class="cs-kpi">
+          <div class="cs-kpi-num">&uarr;<span>CTR</span></div>
+          <div class="cs-kpi-label">Target: Personalized promo CTR lift via psychographic targeting</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOC -->
+  <nav class="toc-bar" aria-label="Table of contents">
+    <div class="toc-inner">
+      <a class="toc-item active" href="#context"><span class="toc-num">01</span> Context</a>
+      <a class="toc-item" href="#problem"><span class="toc-num">02</span> The Gap</a>
+      <a class="toc-item" href="#approach"><span class="toc-num">03</span> My Approach</a>
+      <a class="toc-item" href="#framework"><span class="toc-num">04</span> VALS Framework</a>
+      <a class="toc-item" href="#survey"><span class="toc-num">05</span> Survey Design</a>
+      <a class="toc-item" href="#clustering"><span class="toc-num">06</span> Clustering Method</a>
+      <a class="toc-item" href="#application"><span class="toc-num">07</span> Personalization</a>
+      <a class="toc-item" href="#metrics"><span class="toc-num">08</span> Metrics</a>
+      <a class="toc-item" href="#risks"><span class="toc-num">09</span> Risks</a>
+      <a class="toc-item" href="#lessons"><span class="toc-num">10</span> Lessons</a>
+    </div>
+  </nav>
+
+  <!-- BODY -->
+  <div class="cs-body">
+
+    <!-- 01 CONTEXT -->
+    <section class="cs-section" id="context">
+      <div class="section-eyebrow">01 &mdash; Context</div>
+      <h2>Pathao knew what users did. But not who they were.</h2>
+      <p>Pathao is Bangladesh's dominant super-app - rides, food delivery, and logistics serving millions of daily users across Dhaka and beyond. By 2025, the behavioral data was rich: spend patterns, ride frequency, food preferences, cross-service usage. The personalization engine was good at serving users based on what they had done before.</p>
+      <p>But a recurring gap kept surfacing in strategy discussions. <strong>Two users with identical spending patterns might order for completely different reasons.</strong> One buys from North End every day because they're time-poor professionals who need reliable food fast. Another orders from the same restaurant because it's the aspirational brand they associate with their lifestyle. Same behavior, radically different psychology - and therefore different ideal messages, promotions, and product experiences.</p>
+      <p>This is the psychographic gap: behavioral data tells you <em>what</em> people do, but not <em>why</em> they do it. And the "why" is what determines how to speak to someone, what product experience feels right for them, and which promotions will actually convert vs. get ignored.</p>
+      <div class="callout callout-purple reveal">
+        <p><strong>The core insight driving this initiative:</strong> Behavioral clustering groups users by past actions. Psychographic clustering groups them by underlying personality, values, and lifestyle orientation - the drivers that explain why those behaviors exist and predict how they'll evolve. Layering both gives Pathao a significantly stronger intelligence foundation for personalization, cross-sell, and even credit decisions for BNPL users with thin financial histories.</p>
+      </div>
+      <p>This was not a standard feature build. There was no existing dataset to analyze, no validated instrument to adopt off the shelf, and no precedent within Pathao for this kind of research-to-product work. <strong>I owned it end to end: from framing the business case, to designing the research methodology, to building the application framework that connects psychographic segments to real product decisions.</strong></p>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 02 PROBLEM -->
+    <section class="cs-section" id="problem">
+      <div class="section-eyebrow">02 &mdash; The Gap</div>
+      <h2>Three specific places where behavioral data hit its ceiling.</h2>
+      <p>I didn't start with a solution looking for a problem. I started by mapping where current personalization was visibly failing - where knowing what users had done was insufficient to know what to do next for them.</p>
+
+      <div class="step-list reveal">
+        <div class="step-item">
+          <div class="step-num">01</div>
+          <div>
+            <div class="step-title">Promo targeting felt like mass marketing dressed up as personalization</div>
+            <div class="step-body">Behavioral segmentation grouped users by spend bracket and frequency. But sending the same "20% off your next order" to a budget-maximizing Survivor and a trend-chasing Experiencer is wasteful even if they have identical order frequency. <strong>The Survivor converts because the discount is real savings. The Experiencer ignores it because the restaurant isn't trending.</strong> Psychographic segmentation unlocks the ability to match not just offer type but copy tone, brand choice, and timing to user personality - significantly improving promo ROI without increasing budget.</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">02</div>
+          <div>
+            <div class="step-title">Thin-file BNPL users couldn't be scored using financial history alone</div>
+            <div class="step-body">Pathao's BNPL product faced a fundamental problem: a meaningful portion of its user base were new-to-credit or had minimal financial history. <strong>Standard credit scoring fails on these users not because they're risky, but because the signals don't exist.</strong> Psychographic data - specifically, dimensions like financial discipline, planning orientation, and attitude toward debt - offer a validated alternative signal set. An Achiever who tracks every taka like a "spreadsheet wizard" is a meaningfully different credit risk than a Striver who "spends first, stresses later," even with identical transaction histories.</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">03</div>
+          <div>
+            <div class="step-title">There was no low-cost, scalable way to generate first-party psychographic data</div>
+            <div class="step-body">Third-party psychographic data vendors don't exist for Bangladesh at scale. And traditional market research - focus groups, paid surveys - is expensive, slow, and doesn't integrate into a live product. <strong>The opportunity I identified was building an in-app collection mechanism that generates psychographic data as a byproduct of an experience users actually enjoy.</strong> A gamified personality quiz with shareable results is sticky, viral, and produces the exact data the personalization engine needs - all without users perceiving it as data collection.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 03 APPROACH -->
+    <section class="cs-section" id="approach">
+      <div class="section-eyebrow">03 &mdash; My Approach</div>
+      <h2>Research-to-product in three phases, starting internally.</h2>
+      <p>Most product research fails at the implementation stage because the gap between "interesting findings" and "product decisions" is never properly bridged. I designed this initiative so that every research output fed directly into a product decision - no insights sitting in decks without owners.</p>
+
+      <div class="callout callout-blue reveal">
+        <p><strong>A key early decision:</strong> Start with Pathao employees, not users. Internal pilots let me test the survey instrument, validate clustering logic, and identify question weaknesses without the consequences of a broken experience reaching paying customers. It also created a natural "friend matching" use case that built internal buy-in and generated genuine engagement data before a single line of production code was written.</p>
+      </div>
+
+      <div class="phase-list reveal">
+        <div class="phase-item">
+          <div>
+            <div class="phase-label">Phase 1<div class="phase-badge">Internal Pilot</div></div>
+          </div>
+          <div>
+            <div class="phase-title">Employee edition - test the instrument and prove the concept</div>
+            <div class="phase-body">Deploy the survey to Pathao employees with a "who's most like you at work?" matching mechanic. <strong>Target: 400+ complete responses to generate a statistically robust dataset for clustering validation.</strong> This phase tests question comprehension, completion rate, answer distribution, and whether the predefined clusters emerge naturally from the data or require redesign. Gamified output: "Your team is mostly Experiencers" type insights create organic virality and make data collection feel like entertainment.</div>
+          </div>
+        </div>
+        <div class="phase-item">
+          <div>
+            <div class="phase-label">Phase 2<div class="phase-badge">Methodology</div></div>
+          </div>
+          <div>
+            <div class="phase-title">Validate and refine - use pilot data to stress-test the clustering logic</div>
+            <div class="phase-body">Run the pilot responses through two approaches in parallel: predefined group assignment (rules-based, fast) and data-based clustering using K-Modes or hierarchical clustering algorithms. <strong>Compare the two outputs - where they agree, the predefined groups are validated; where they diverge, that's a signal that the predefined rules need refinement.</strong> Preserve the 6D response vector for every respondent so that no data is lost if we later choose to recluster with different algorithm parameters.</div>
+          </div>
+        </div>
+        <div class="phase-item">
+          <div>
+            <div class="phase-label">Phase 3<div class="phase-badge">Production</div></div>
+          </div>
+          <div>
+            <div class="phase-title">In-app rollout - gamified quiz with real personalization output</div>
+            <div class="phase-body">Deploy the validated instrument as a gamified in-app quiz for Pathao users. Shareable personality results ("You're an Experiencer - you live for the next trending restaurant!") drive peer-to-peer discovery. <strong>Psychographic tags are written to user profiles and consumed by the Loop personalization engine, the CRM targeting workflow, and the BNPL scoring model.</strong> The data pipeline transforms quiz answers into actionable segment labels within minutes of completion.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 04 VALS FRAMEWORK -->
+    <section class="cs-section" id="framework">
+      <div class="section-eyebrow">04 &mdash; VALS Framework</div>
+      <h2>Why VALS - and how I adapted it for Bangladesh.</h2>
+      <p>VALS (Values, Attitudes, and Lifestyles) is a psychographic segmentation framework with decades of academic validation and commercial application. It segments people across two primary dimensions: <strong>primary motivation</strong> (ideals, achievement, or self-expression) and <strong>resource levels</strong> (income, education, confidence, health). The intersection produces eight segments.</p>
+      <p>I chose VALS over other frameworks (Big Five personality traits, Maslow's hierarchy, OCEAN) for three reasons: it directly maps to consumption behavior rather than abstract personality; it has demonstrated commercial validity in marketing contexts; and its segment definitions translate meaningfully to Bangladeshi consumer culture with moderate adaptation.</p>
+
+      <div class="callout callout-amber reveal">
+        <p><strong>A deliberate scoping decision:</strong> The standard VALS model has 8 segments. I scoped the Pathao implementation to 6, excluding "Makers" (DIY-oriented, minimal relevance in food delivery) and merging "Innovators" into the Experiencer profile for this context (the two segments overlap significantly in Pathao Food usage patterns). Fewer, cleaner segments produce better ML clustering performance and more actionable personalization rules.</p>
+      </div>
+
+      <h3>The 6 Pathao Psychographic Segments</h3>
+
+      <div class="segment-grid reveal">
+        <div class="segment-card seg-achiever">
+          <div class="segment-emoji">⚡</div>
+          <div class="segment-name">Achiever</div>
+          <div class="segment-tagline">Busy professional, brand-loyal</div>
+          <div class="segment-desc">Time-starved, reliability-driven, brand-conscious. Orders from the same trusted chains repeatedly. Values speed and consistency over novelty.</div>
+          <div class="segment-promo"><strong>Food strategy:</strong> Fast reliable chains, loyalty perks, "your regular order is one tap away" notifications.</div>
+        </div>
+        <div class="segment-card seg-experiencer">
+          <div class="segment-emoji">🌟</div>
+          <div class="segment-name">Experiencer</div>
+          <div class="segment-tagline">Young, trend-driven, impulsive</div>
+          <div class="segment-desc">Trend-obsessed, fun-loving, highly social. First to try viral menu items. Influenced by friends and FOMO. Engages with shareable food content.</div>
+          <div class="segment-promo"><strong>Food strategy:</strong> Trending/viral menus, time-bound flash deals, meme-based or emoji-heavy notification copy.</div>
+        </div>
+        <div class="segment-card seg-thinker">
+          <div class="segment-emoji">🧠</div>
+          <div class="segment-name">Thinker</div>
+          <div class="segment-tagline">Analytical, health-conscious</div>
+          <div class="segment-desc">Educated, rational, health-aware. Researches before ordering. Values nutritional information, reviews, and logical value propositions.</div>
+          <div class="segment-promo"><strong>Food strategy:</strong> Healthy sections, nutrition filters, meal plan framing with logical discount breakdown.</div>
+        </div>
+        <div class="segment-card seg-striver">
+          <div class="segment-emoji">💼</div>
+          <div class="segment-name">Striver</div>
+          <div class="segment-tagline">Aspirational, offer-sensitive</div>
+          <div class="segment-desc">Aspirational but budget-constrained. Wants premium brands at accessible prices. Highly responsive to discounts at aspirational restaurants.</div>
+          <div class="segment-promo"><strong>Food strategy:</strong> Discounts at premium brands, BNPL options highlighted, "Sultan's Dine at 30% off" framing.</div>
+        </div>
+        <div class="segment-card seg-believer">
+          <div class="segment-emoji">🏠</div>
+          <div class="segment-name">Believer</div>
+          <div class="segment-tagline">Traditional, loyalty-first</div>
+          <div class="segment-desc">Traditional values, deeply loyal to known restaurants and local favorites. Influenced by familiarity, religion, and community recommendations over trends.</div>
+          <div class="segment-promo"><strong>Food strategy:</strong> Local Bengali restaurants, neighborhood top picks, iftar deals and prayer-time meal alerts.</div>
+        </div>
+        <div class="segment-card seg-survivor">
+          <div class="segment-emoji">💰</div>
+          <div class="segment-name">Survivor</div>
+          <div class="segment-tagline">Price-first, risk-averse</div>
+          <div class="segment-desc">Economic survival is the primary lens. Price is the only decision driver. Minimal experimentation, maximum value extraction from every taka spent.</div>
+          <div class="segment-promo"><strong>Food strategy:</strong> Cheapest local vendors, micro-promo discounts (Tk 10–30 off), free delivery offers front and center.</div>
+        </div>
+      </div>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 05 SURVEY DESIGN -->
+    <section class="cs-section" id="survey">
+      <div class="section-eyebrow">05 &mdash; Survey Design</div>
+      <h2>15 questions. Every option mapped to a cluster. Nothing wasted.</h2>
+      <p>Survey design for psychographic clustering is not the same as a standard UX research survey. Every question must do double duty: feel natural and engaging to the respondent, while precisely mapping each answer option to a specific psychographic dimension. I owned the question design, the answer mapping logic, and the scoring framework.</p>
+
+      <div class="callout callout-purple reveal">
+        <p><strong>Design principles I set:</strong> Maximum 15 questions (completion rate drops sharply beyond this). All mandatory - partial responses corrupt the clustering vectors. Mixed question tones - some fun/cultural (superhero alter ego, rainy day food), some direct behavioral (payment method, restaurant exploration style). Answer options must cover all 6 target clusters without any cluster being un-selectable in any given question.</p>
+      </div>
+
+      <h3>Sample Questions - With Cluster Mapping</h3>
+
+      <div class="quiz-stack reveal">
+        <div class="quiz-card">
+          <div class="quiz-q">Q1. Primary motivation for ordering food online?</div>
+          <div class="quiz-options">
+            <div class="quiz-option"><div class="quiz-bullet">A</div>Convenience for a busy schedule</div>
+            <div class="quiz-option"><div class="quiz-bullet">B</div>Healthy meal options</div>
+            <div class="quiz-option"><div class="quiz-bullet">C</div>Exciting social experiences</div>
+            <div class="quiz-option"><div class="quiz-bullet">D</div>Best available price</div>
+          </div>
+          <div class="quiz-maps">Maps to: <span class="qm-achiever">A → Achiever</span><span class="qm-thinker">B → Thinker</span><span class="qm-experiencer">C → Experiencer</span><span class="qm-survivor">D → Survivor</span></div>
+        </div>
+        <div class="quiz-card">
+          <div class="quiz-q">Q2. Willingness to try unfamiliar restaurants?</div>
+          <div class="quiz-options">
+            <div class="quiz-option"><div class="quiz-bullet">A</div>Love exploring new options</div>
+            <div class="quiz-option"><div class="quiz-bullet">B</div>Only with good reviews first</div>
+            <div class="quiz-option"><div class="quiz-bullet">C</div>Stick to trusted, familiar places</div>
+            <div class="quiz-option"><div class="quiz-bullet">D</div>Only if very affordable</div>
+          </div>
+          <div class="quiz-maps">Maps to: <span class="qm-experiencer">A → Experiencer</span><span class="qm-achiever">B → Achiever</span><span class="qm-believer">C → Believer</span><span class="qm-survivor">D → Survivor</span></div>
+        </div>
+        <div class="quiz-card">
+          <div class="quiz-q">Q5. Key loyalty factor for a food delivery app?</div>
+          <div class="quiz-options">
+            <div class="quiz-option"><div class="quiz-bullet">A</div>Service reliability above all</div>
+            <div class="quiz-option"><div class="quiz-bullet">B</div>Regular discounts and promos</div>
+            <div class="quiz-option"><div class="quiz-bullet">C</div>Menu variety and new options</div>
+            <div class="quiz-option"><div class="quiz-bullet">D</div>Traditional and local food options</div>
+          </div>
+          <div class="quiz-maps">Maps to: <span class="qm-achiever">A → Achiever</span><span class="qm-striver">B → Striver</span><span class="qm-experiencer">C → Experiencer</span><span class="qm-believer">D → Believer</span></div>
+        </div>
+        <div class="quiz-card">
+          <div class="quiz-q">Q10. Preferred payment method?</div>
+          <div class="quiz-options">
+            <div class="quiz-option"><div class="quiz-bullet">A</div>Mobile wallet (bKash/Nagad)</div>
+            <div class="quiz-option"><div class="quiz-bullet">B</div>Debit or credit card</div>
+            <div class="quiz-option"><div class="quiz-bullet">C</div>Cash on delivery</div>
+            <div class="quiz-option"><div class="quiz-bullet">D</div>Whatever payment has an incentive today</div>
+          </div>
+          <div class="quiz-maps">Maps to: <span class="qm-achiever">A → Achiever</span><span class="qm-striver">B → Striver</span><span class="qm-believer">C → Believer</span><span class="qm-survivor">D → Survivor</span></div>
+        </div>
+        <div class="quiz-card">
+          <div class="quiz-q">Q15. Attitude toward sharing food experiences?</div>
+          <div class="quiz-options">
+            <div class="quiz-option"><div class="quiz-bullet">A</div>Always love documenting and sharing</div>
+            <div class="quiz-option"><div class="quiz-bullet">B</div>Share special moments only</div>
+            <div class="quiz-option"><div class="quiz-bullet">C</div>Keep meals private, not a social thing</div>
+            <div class="quiz-option"><div class="quiz-bullet">D</div>Food is just fuel</div>
+          </div>
+          <div class="quiz-maps">Maps to: <span class="qm-experiencer">A → Experiencer</span><span class="qm-achiever">B → Achiever</span><span class="qm-believer">C → Believer</span><span class="qm-survivor">D → Survivor</span></div>
+        </div>
+      </div>
+
+      <p>The full 15-question instrument covers five psychographic dimensions: <strong>service usage and lifestyle preferences</strong> (4 questions), <strong>social and communication style</strong> (3 questions), <strong>decision-making and values</strong> (4 questions), <strong>lifestyle and personal preferences</strong> (2 questions), and <strong>urban living and convenience orientation</strong> (2 questions). Each dimension contributes meaningfully to the cluster assignment without overloading any single behavioral dimension.</p>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 06 CLUSTERING METHOD -->
+    <section class="cs-section" id="clustering">
+      <div class="section-eyebrow">06 &mdash; Clustering Methodology</div>
+      <h2>A two-stage approach: predefined rules first, then ML refinement.</h2>
+      <p>The core clustering challenge is that you can't wait for 400+ responses to assign a cluster to the first respondent - but you also can't lock in rigid rules without data validation. I designed a two-stage methodology that handles both constraints.</p>
+
+      <h3>Stage 1: Predefined Cluster Assignment (Bootstrapping)</h3>
+      <p>Every answer option maps to a cluster. When a respondent completes the 15 questions, each answer increments a counter for its mapped cluster. The cluster with the highest score is the primary assignment. The 6D vector is preserved for all respondents.</p>
+
+      <h3>Simulation - Five Respondents</h3>
+      <p>This simulation illustrates how the predefined rules work before any ML clustering is applied. Each number represents the count of answers mapping to that cluster across 15 questions.</p>
+
+      <div class="reveal" style="overflow-x:auto;">
+        <table class="sim-table">
+          <thead>
+            <tr>
+              <th>Respondent</th>
+              <th>Striver</th>
+              <th>Achiever</th>
+              <th>Thinker</th>
+              <th>Experiencer</th>
+              <th>Believer</th>
+              <th>Survivor</th>
+              <th>Assigned</th>
+              <th>Ratio</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>A</td>
+              <td data-label="Striver"><span class="sim-score sim-score-mid">4</span></td>
+              <td data-label="Achiever"><span class="sim-score sim-score-mid">4</span></td>
+              <td data-label="Thinker"><span class="sim-score sim-score-high">6</span></td>
+              <td data-label="Experiencer"><span class="sim-score sim-score-zero">1</span></td>
+              <td data-label="Believer"><span class="sim-score sim-score-zero">0</span></td>
+              <td data-label="Survivor"><span class="sim-score sim-score-zero">0</span></td>
+              <td data-label="Assigned" class="sim-winner"><span class="cluster-tag qm-thinker">Thinker</span></td>
+              <td data-label="Ratio">6:4:4</td>
+            </tr>
+            <tr>
+              <td>B</td>
+              <td data-label="Striver"><span class="sim-score sim-score-zero">0</span></td>
+              <td data-label="Achiever"><span class="sim-score sim-score-zero">1</span></td>
+              <td data-label="Thinker"><span class="sim-score sim-score-zero">0</span></td>
+              <td data-label="Experiencer"><span class="sim-score sim-score-high">9</span></td>
+              <td data-label="Believer"><span class="sim-score sim-score-zero">0</span></td>
+              <td data-label="Survivor"><span class="sim-score sim-score-mid">5</span></td>
+              <td data-label="Assigned" class="sim-winner"><span class="cluster-tag qm-experiencer">Experiencer</span></td>
+              <td data-label="Ratio">9:5:1</td>
+            </tr>
+            <tr>
+              <td>C</td>
+              <td data-label="Striver"><span class="sim-score sim-score-zero">1</span></td>
+              <td data-label="Achiever"><span class="sim-score sim-score-high">6</span></td>
+              <td data-label="Thinker"><span class="sim-score sim-score-zero">1</span></td>
+              <td data-label="Experiencer"><span class="sim-score sim-score-mid">2</span></td>
+              <td data-label="Believer"><span class="sim-score sim-score-mid">3</span></td>
+              <td data-label="Survivor"><span class="sim-score sim-score-zero">1</span></td>
+              <td data-label="Assigned" class="sim-winner"><span class="cluster-tag qm-achiever">Achiever</span></td>
+              <td data-label="Ratio">6:3:2</td>
+            </tr>
+            <tr>
+              <td>D</td>
+              <td data-label="Striver"><span class="sim-score sim-score-zero">0</span></td>
+              <td data-label="Achiever"><span class="sim-score sim-score-zero">0</span></td>
+              <td data-label="Thinker"><span class="sim-score sim-score-zero">0</span></td>
+              <td data-label="Experiencer"><span class="sim-score sim-score-zero">0</span></td>
+              <td data-label="Believer"><span class="sim-score sim-score-mid">4</span></td>
+              <td data-label="Survivor"><span class="sim-score sim-score-high">11</span></td>
+              <td data-label="Assigned" class="sim-winner"><span class="cluster-tag qm-survivor">Survivor</span></td>
+              <td data-label="Ratio">11:4:0</td>
+            </tr>
+            <tr>
+              <td>E</td>
+              <td data-label="Striver"><span class="sim-score sim-score-high">6</span></td>
+              <td data-label="Achiever"><span class="sim-score sim-score-mid">2</span></td>
+              <td data-label="Thinker"><span class="sim-score sim-score-mid">3</span></td>
+              <td data-label="Experiencer"><span class="sim-score sim-score-mid">2</span></td>
+              <td data-label="Believer"><span class="sim-score sim-score-zero">0</span></td>
+              <td data-label="Survivor"><span class="sim-score sim-score-zero">0</span></td>
+              <td data-label="Assigned" class="sim-winner"><span class="cluster-tag qm-striver">Striver</span></td>
+              <td data-label="Ratio">6:3:2</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Stage 2: ML-Based Cluster Refinement</h3>
+      <p>Once 400+ responses are collected from the employee pilot, the predefined rules are stress-tested against data-driven clustering. The 6D response vectors are run through <strong>K-Modes clustering</strong> (the correct algorithm for categorical data - unlike K-Means, which assumes numerical distance) and <strong>hierarchical clustering</strong> to see whether natural clusters emerge that match the predefined segments.</p>
+
+      <div class="two-col reveal">
+        <div class="card">
+          <div class="card-label">Where the two approaches agree</div>
+          <h4>Predefined rules validated</h4>
+          <p>When the algorithmic clusters match the predefined segments, this confirms that the question-to-cluster mapping is correct and that the predefined groups are meaningful real-world categories rather than arbitrary constructs.</p>
+        </div>
+        <div class="card">
+          <div class="card-label">Where the two approaches diverge</div>
+          <h4>Predefined rules need revision</h4>
+          <p>Divergence signals either that a question's answer options don't cleanly map to the intended cluster, or that two of our predefined segments are actually the same cluster in the data. These divergences inform the survey instrument refinement before production rollout.</p>
+        </div>
+      </div>
+
+      <div class="callout callout-green reveal">
+        <p><strong>The KNN fallback:</strong> For respondents who fall at the boundary between two clusters (e.g., Respondent E above: Striver 6 vs Thinker 3 is a meaningful gap, but Respondent C's Achiever 6 vs Believer 3 might warrant review), a KNN (K-Nearest Neighbors) pass on the full response vector provides a distance-based assignment that's more nuanced than the simple maximum-score rule. The 6D vector preserved for every respondent makes this possible without re-running the survey.</p>
+      </div>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 07 APPLICATION -->
+    <section class="cs-section" id="application">
+      <div class="section-eyebrow">07 &mdash; Personalization Application</div>
+      <h2>Psychographic clusters translated into concrete product decisions.</h2>
+      <p>Research that doesn't change product behavior is not product research - it's academic. I built the application framework to ensure every segment definition has a corresponding action across the three primary Pathao Food surfaces where personalization matters.</p>
+
+      <div class="research-badge"><div class="research-badge-dot"></div>AI Product Work</div>
+
+      <h3>Homepage Feed Personalization</h3>
+      <p>The food tile sort order on the Pathao homepage is the highest-leverage personalization surface - it's the first thing every user sees. Psychographic segment determines which restaurant types appear first, not just behavioral recency or rating score.</p>
+
+      <div class="reveal" style="overflow-x:auto;">
+        <table class="pers-table">
+          <thead>
+            <tr><th>Segment</th><th>Homepage Feed Strategy</th><th>Rationale</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Achiever</td>
+              <td data-label="Feed Strategy">Fast, reliable chains first. KFC, North End, established brands with strong delivery SLA. "Your regular order" shortcut prominent.</td>
+              <td data-label="Rationale">Achievers optimize for time and reliability. Novelty is noise. Surfacing their established patterns first removes friction from the repeat-order flow.</td>
+            </tr>
+            <tr>
+              <td>Experiencer</td>
+              <td data-label="Feed Strategy">Trending and viral menus at the top. "New this week" and "Everyone's ordering" labels. Flash deal countdown timers visible immediately.</td>
+              <td data-label="Rationale">FOMO is the primary driver. Social proof and time pressure convert Experiencers more than discount depth. The feed should feel like a live trend feed, not a menu.</td>
+            </tr>
+            <tr>
+              <td>Thinker</td>
+              <td data-label="Feed Strategy">Healthy restaurant section elevated. Nutrition tags visible on food tiles. Curated "Editor's selection" with rationale (not just rating).</td>
+              <td data-label="Rationale">Thinkers research before deciding. They need information architecture that supports rational evaluation - not emotional triggers. Nutrition data is a feature, not a filter.</td>
+            </tr>
+            <tr>
+              <td>Believer</td>
+              <td data-label="Feed Strategy">Local neighborhood restaurants first. Bengali cuisine prioritized. Prayer-time meal alerts (iftar, sehri). "Your neighborhood's favorites" section.</td>
+              <td data-label="Rationale">Believers value familiarity, community, and tradition. The feed should feel like a trusted local guide, not a discovery engine pushing unfamiliar brands.</td>
+            </tr>
+            <tr>
+              <td>Striver</td>
+              <td data-label="Feed Strategy">Premium brands at discount. "Normally X, today Y" price framing. BNPL eligibility surfaced on aspirational restaurant tiles.</td>
+              <td data-label="Rationale">Strivers want access to aspirational brands without the full price. Making the gap feel closeable (discount + BNPL) is the conversion trigger, not the food itself.</td>
+            </tr>
+            <tr>
+              <td>Survivor</td>
+              <td data-label="Feed Strategy">Lowest-cost nearby vendors first. Free delivery options prominently labeled. No-minimum-order restaurants surfaced. Micro-promo (Tk 10–30) visible immediately.</td>
+              <td data-label="Rationale">Price is the only decision variable. The feed needs to surface the maximum value options without any browsing friction - every scroll is a potential dropout.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Push Notification Personalization</h3>
+      <p>Beyond what to show, psychographic segments determine <em>how</em> to say it. The same offer lands differently depending on the copy tone, urgency framing, and social context used.</p>
+
+      <div class="quiz-stack reveal">
+        <div class="quiz-card">
+          <div class="quiz-q" style="font-size:14px;font-family:var(--sans);font-weight:500;">Experiencer</div>
+          <span class="notif-example">🔥 The new tea is breaking the internet - Try before it sells out!</span>
+        </div>
+        <div class="quiz-card">
+          <div class="quiz-q" style="font-size:14px;font-family:var(--sans);font-weight:500;">Achiever</div>
+          <span class="notif-example">⚡ Busy day? Your regular lunch is just one tap away.</span>
+        </div>
+        <div class="quiz-card">
+          <div class="quiz-q" style="font-size:14px;font-family:var(--sans);font-weight:500;">Believer</div>
+          <span class="notif-example">🍛 Your trusted biryani place is back - with a special discount for you.</span>
+        </div>
+        <div class="quiz-card">
+          <div class="quiz-q" style="font-size:14px;font-family:var(--sans);font-weight:500;">Striver</div>
+          <span class="notif-example">✨ Sultan's Dine - now 30% off. Upgrade your lunch without upgrading your budget.</span>
+        </div>
+        <div class="quiz-card">
+          <div class="quiz-q" style="font-size:14px;font-family:var(--sans);font-weight:500;">Survivor</div>
+          <span class="notif-example">💚 Save 20 taka today + free delivery. Order now before the offer expires.</span>
+        </div>
+        <div class="quiz-card">
+          <div class="quiz-q" style="font-size:14px;font-family:var(--sans);font-weight:500;">Thinker</div>
+          <span class="notif-example">🥗 Meal plans that make sense - healthy options with a logical price breakdown.</span>
+        </div>
+      </div>
+
+      <h3>BNPL Credit Scoring Integration</h3>
+      <p>Psychographic clustering also feeds into Pathao's BNPL underwriting model for thin-file users. Specific question answers correlate with financial behavior dimensions that traditional credit scoring uses financial history to capture - allowing psychographic data to serve as a proxy signal when transaction history is insufficient.</p>
+
+      <div class="two-col reveal">
+        <div class="card">
+          <div class="card-label">Financial Discipline Signal</div>
+          <h4>"I track every BDT like a spreadsheet wizard"</h4>
+          <p>This answer maps to Achiever or Thinker - both associated with higher financial conscientiousness and lower default risk. In thin-file users, this single response meaningfully shifts the prior for creditworthiness.</p>
+        </div>
+        <div class="card">
+          <div class="card-label">Risk Appetite Signal</div>
+          <h4>"I spend first, stress later"</h4>
+          <p>This maps to Experiencer or Striver - clusters with higher risk appetite and impulse-driven spending. For BNPL underwriting, this is a negative signal that increases the default risk prior, enabling tighter credit limits for this cohort.</p>
+        </div>
+      </div>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 08 METRICS -->
+    <section class="cs-section" id="metrics">
+      <div class="section-eyebrow">08 &mdash; Metrics</div>
+      <h2>What success looks like - and how to measure a research initiative.</h2>
+      <p>Measuring a psychographic clustering initiative is more complex than measuring a feature launch. The primary output - a richer user intelligence layer - only creates value when downstream systems consume and act on it. I defined metrics across three horizons: data quality, engagement, and business impact.</p>
+
+      <div class="reveal" style="overflow-x:auto;">
+        <table class="metrics-table">
+          <thead>
+            <tr><th>Horizon</th><th>Metric</th><th>Why it's on the dashboard</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Data Quality</td>
+              <td data-label="Metric">Psychographic coverage - % of active users with a cluster assignment</td>
+              <td data-label="Why">Personalization only works where data exists. Coverage is the precondition for every downstream application. Low coverage means the system is personalized for a minority of users.</td>
+            </tr>
+            <tr>
+              <td>Data Quality</td>
+              <td data-label="Metric">Survey completion rate - % of quiz starters who complete all 15 questions</td>
+              <td data-label="Why">Partial responses corrupt the clustering vectors. A completion rate below ~70% signals that the survey is too long, too confusing, or not engaging enough to see through - all solvable product problems.</td>
+            </tr>
+            <tr>
+              <td>Engagement</td>
+              <td data-label="Metric">Quiz viral coefficient - shares per quiz completion</td>
+              <td data-label="Why">The gamified result-sharing mechanic is both the growth engine and a signal that users found the output meaningful enough to broadcast. A high viral coefficient means low CAC for psychographic data collection.</td>
+            </tr>
+            <tr>
+              <td>Engagement</td>
+              <td data-label="Metric">CTR lift on psychographically-targeted promos vs. behavioral-only baseline</td>
+              <td data-label="Why">The most direct test of whether psychographic clusters are producing better-matched messaging. If targeted promos don't outperform the behavioral baseline on CTR, the segmentation is either wrong or not being applied correctly.</td>
+            </tr>
+            <tr>
+              <td>Business</td>
+              <td data-label="Metric">BNPL approval rate uplift for thin-file users with psychographic scores</td>
+              <td data-label="Why">Psychographic data's most commercially significant application. If approval rates increase without a corresponding increase in default rates, the clustering is genuinely adding predictive signal to the credit model.</td>
+            </tr>
+            <tr>
+              <td>Business</td>
+              <td data-label="Metric">Retention - return order rate within 7 days for psychographically-personalized users vs. control</td>
+              <td data-label="Why">The feed personalization application has a compounding retention effect. Users who consistently see food options aligned with their personality are more likely to order again, more quickly. This metric captures the long-term business case.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 09 RISKS -->
+    <section class="cs-section" id="risks">
+      <div class="section-eyebrow">09 &mdash; Risks</div>
+      <h2>What could go wrong - and how I designed against it.</h2>
+      <div class="risk-grid reveal">
+        <div class="risk-card">
+          <div class="risk-level r-high">High</div>
+          <div class="risk-title">Survey answer bias - respondents gaming toward socially desirable segments</div>
+          <div class="risk-body">Users who understand the quiz is about personality may answer how they want to be seen (Achiever, Thinker) rather than how they actually behave (Survivor, Striver). Mitigated by: disguising the cluster mapping intent - questions about rainy day food and superhero alter egos feel like entertainment, not self-assessment. Behavioral data cross-referencing during validation catches systematic mismatches between stated and revealed preferences.</div>
+        </div>
+        <div class="risk-card">
+          <div class="risk-level r-high">High</div>
+          <div class="risk-title">Low survey completion rate making coverage insufficient for production use</div>
+          <div class="risk-body">A quiz that 10% of users complete produces psychographic data for a non-representative minority. Mitigated by: gamified mechanics (shareable results, "who's most like you" matching) that make completion intrinsically valuable; limiting questions to 15 with an engaging tone; piloting with employees to identify and fix friction points before public launch.</div>
+        </div>
+        <div class="risk-card">
+          <div class="risk-level r-high">High</div>
+          <div class="risk-title">Clustering model producing segments that don't align with actual behavioral differences</div>
+          <div class="risk-body">If the psychographic segments don't correlate with meaningfully different product behaviors (order frequency, promo sensitivity, restaurant choice), the intelligence layer adds no value regardless of how well the survey works. Mitigated by: systematic cross-referencing of cluster assignments with existing behavioral data during the employee pilot phase - if Achievers aren't actually more likely to repeat-order, the segment definition needs revision before it enters any production system.</div>
+        </div>
+        <div class="risk-card">
+          <div class="risk-level r-med">Medium</div>
+          <div class="risk-title">Segment drift - users assigned once but whose personality actually changes over time</div>
+          <div class="risk-body">A university student classified as Experiencer today may be an Achiever two years into their career. Static clusters assigned at survey completion will become stale. Mitigated by: designing the system to allow re-survey after 6–12 months, monitoring for behavioral divergence from cluster prediction as an early signal of drift, and weighting behavioral signals more heavily as they accumulate to override stale psychographic tags.</div>
+        </div>
+        <div class="risk-card">
+          <div class="risk-level r-med">Medium</div>
+          <div class="risk-title">Personalization backfiring by feeling intrusive or stereotyping to users</div>
+          <div class="risk-body">If a user receives "budget-first" messaging and identifies as aspirational, the experience can feel insulting rather than relevant. Mitigated by: applying psychographic targeting primarily to structural elements (feed order, restaurant type) rather than explicit copy ("because you're a budget user"), and A/B testing personalization depth to find the level of differentiation that improves engagement without creating negative reactions.</div>
+        </div>
+        <div class="risk-card">
+          <div class="risk-level r-low">Low</div>
+          <div class="risk-title">VALS framework not translating accurately to Bangladesh consumer culture</div>
+          <div class="risk-body">VALS was developed and validated in Western consumer markets. Some dimensions (e.g., Maker/DIY orientation) may not map cleanly to Bangladeshi consumer behavior patterns. Mitigated by: the scoping decision to exclude Makers from the implementation and adapt segment definitions to local cultural context (e.g., Believers explicitly incorporates religious practice orientation as a dimension, which VALS standard doesn't emphasize).</div>
+        </div>
+      </div>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 10 LESSONS -->
+    <section class="cs-section" id="lessons">
+      <div class="section-eyebrow">10 &mdash; Lessons</div>
+      <h2>What this initiative taught me about research-to-product work.</h2>
+      <div class="lesson-list reveal">
+        <div class="lesson-item">
+          <div class="lesson-num">01</div>
+          <div>
+            <div class="lesson-title">Framing the "why" before touching the "what" is the most important PM contribution</div>
+            <div class="lesson-body">Psychographic clustering is a well-established research technique. The harder and more important question was: <em>why does Pathao need this now, and where specifically will it change product decisions?</em> I spent significant time building the business case - mapping it to specific gaps in promo targeting, BNPL underwriting, and personalization feed logic - before any survey design happened. <strong>Without a clear application framework, research generates interesting findings that nobody acts on.</strong> I built the application plan and the research instrument in parallel to ensure the two stayed aligned throughout.</div>
+          </div>
+        </div>
+        <div class="lesson-item">
+          <div class="lesson-num">02</div>
+          <div>
+            <div class="lesson-title">The internal pilot is a genuine product ship, not a prototype throwaway</div>
+            <div class="lesson-body">I could have treated the employee survey as a throwaway test and designed it loosely. Instead, I scoped it as a real product deliverable - designing the full 15-question instrument, the matching mechanics, and the cluster logic from the start. <strong>This meant the employee pilot generated production-quality learning, not just directional signals.</strong> The data from 400 employees is actually useful for validating the ML clustering methodology, not just for checking whether the survey is "too long."</div>
+          </div>
+        </div>
+        <div class="lesson-item">
+          <div class="lesson-num">03</div>
+          <div>
+            <div class="lesson-title">Adapting a global framework for local context is product work, not just localization</div>
+            <div class="lesson-body">Taking VALS and applying it to Bangladeshi users required substantive decisions: which segments to include, how to redefine segment boundaries for local consumer behavior, and which behavioral correlates to test for. <strong>The decision to scope to 6 segments, exclude Makers, and merge Innovators into Experiencer wasn't a minor adjustment - it was a fundamental product architecture decision</strong> that affected the survey design, the clustering algorithm parameters, and the downstream personalization logic. Frameworks are starting points, not specifications.</div>
+          </div>
+        </div>
+        <div class="lesson-item">
+          <div class="lesson-num">04</div>
+          <div>
+            <div class="lesson-title">Data collection UX and data quality are the same problem</div>
+            <div class="lesson-body">The decision to make the survey gamified wasn't a UX preference - it was a data quality decision. High completion rates (all 15 questions, mandatory) produce valid clustering vectors. Drop-off at question 8 produces corrupted data that can't be clustered. <strong>Every design decision that improves engagement directly improves data quality, and vice versa.</strong> The shareable personality result isn't a marketing add-on; it's the mechanism that makes 15 mandatory questions feel worth completing rather than abandoning.</div>
+          </div>
+        </div>
+        <div class="lesson-item">
+          <div class="lesson-num">05</div>
+          <div>
+            <div class="lesson-title">The two-stage clustering methodology is a governance decision as much as a technical one</div>
+            <div class="lesson-body">The choice to start with predefined rules and transition to ML-based clustering after data accumulation looks like a technical architecture decision. It's actually a governance decision about who owns segment definitions. <strong>Predefined rules are PM-owned and transparent; ML clusters can drift in ways that are hard to audit or explain to stakeholders.</strong> Starting with transparent rules, validating them against ML outputs, and only transitioning to ML where the data supports it means segment definitions remain explainable and defensible to business stakeholders throughout the process.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div><!-- /cs-body -->
+
+  <!-- APPENDIX BAND -->
+  <div class="appendix-band">
+    <div class="appendix-inner">
+
+      <div class="appendix-header">
+        <div class="appendix-eyebrow">Appendix &mdash; The Evidence</div>
+        <h2 class="appendix-title">BCD &amp; Research Artifacts</h2>
+        <p class="appendix-sub">The Business Concept Document, questionnaire framework, and cluster mapping logic - as produced during the research initiative.</p>
+      </div>
+
+      <!-- BCD SUMMARY -->
+      <div class="appendix-block reveal">
+        <div class="appendix-block-label">Appendix A &mdash; Business Concept Document (BCD) Summary</div>
+        <table class="appendix-table">
+          <thead>
+            <tr><th>Section</th><th>Content</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>BCD.1</td>
+              <td data-label="Content">Problem: Behavioral data (spend, frequency) reveals what users do but not why - limiting personalization beyond transactional history. Psychographic gap prevents delivery of true lifestyle-aligned experiences.</td>
+            </tr>
+            <tr>
+              <td>BCD.2</td>
+              <td data-label="Content">Primary objective: Develop psychographic segments and map users into clusters at scale. Metrics: CTR on personalized promos, BNPL approval rate for thin-file users, psychographic data coverage %, quiz engagement rate, behavioral prediction accuracy lift when psychographic traits are layered.</td>
+            </tr>
+            <tr>
+              <td>BCD.3</td>
+              <td data-label="Content">Evidence for prioritization: Behavioral limits (spend/usage don't explain "why"), BNPL credit context (thin-file users need alternative signals), engagement potential (gamified quizzes are sticky and drive peer comparison virality).</td>
+            </tr>
+            <tr>
+              <td>BCD.4</td>
+              <td data-label="Content">Solution: Lightweight psychographic segmentation powered by surveys. Questions map to Big Five/VALS models. Hierarchical clustering or factor analysis defines segments. Clusters cross-referenced with behavioral data and tagged to user profiles for use in recommendation systems and credit engines.</td>
+            </tr>
+            <tr>
+              <td>BCD.5</td>
+              <td data-label="Content">Business impact: Higher marketing ROI from accurate personalization, greater conversion on cross-vertical campaigns from better understanding of user values, BNPL product expansion without compromising default risk, enhanced brand stickiness from gamified interactions.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- FULL Q MAPPING -->
+      <div class="appendix-block reveal">
+        <div class="appendix-block-label">Appendix B &mdash; Full 15-Question Cluster Mapping</div>
+        <table class="appendix-table">
+          <thead>
+            <tr><th>#</th><th>Question</th><th>Psychographic Intent</th><th>Cluster Mapping</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Q1</td>
+              <td data-label="Question">Primary motivation for ordering food online</td>
+              <td data-label="Intent">Core value driver identification</td>
+              <td data-label="Cluster Mapping">A→Achiever · B→Thinker · C→Experiencer · D→Survivor</td>
+            </tr>
+            <tr>
+              <td>Q2</td>
+              <td data-label="Question">Willingness to try unfamiliar restaurants</td>
+              <td data-label="Intent">Risk tolerance and novelty appetite</td>
+              <td data-label="Cluster Mapping">A→Experiencer · B→Achiever · C→Believer · D→Survivor</td>
+            </tr>
+            <tr>
+              <td>Q3</td>
+              <td data-label="Question">Most important meal consideration</td>
+              <td data-label="Intent">Benefit prioritization</td>
+              <td data-label="Cluster Mapping">A→Thinker · B→Striver · C→Experiencer · D→Survivor</td>
+            </tr>
+            <tr>
+              <td>Q4</td>
+              <td data-label="Question">Group ordering frequency</td>
+              <td data-label="Intent">Social orientation</td>
+              <td data-label="Cluster Mapping">A→Experiencer · B→Achiever · C→Believer · D→Survivor</td>
+            </tr>
+            <tr>
+              <td>Q5</td>
+              <td data-label="Question">Key app loyalty factor</td>
+              <td data-label="Intent">Brand relationship depth</td>
+              <td data-label="Cluster Mapping">A→Achiever · B→Striver · C→Experiencer · D→Believer</td>
+            </tr>
+            <tr>
+              <td>Q6</td>
+              <td data-label="Question">Cuisine selection approach</td>
+              <td data-label="Intent">Cultural openness</td>
+              <td data-label="Cluster Mapping">A→Striver · B→Believer · C→Believer · D→Survivor</td>
+            </tr>
+            <tr>
+              <td>Q7</td>
+              <td data-label="Question">Health consciousness level</td>
+              <td data-label="Intent">Ideals strength</td>
+              <td data-label="Cluster Mapping">A→Thinker · B→Achiever · C→Experiencer · D→Survivor</td>
+            </tr>
+            <tr>
+              <td>Q8</td>
+              <td data-label="Question">Decision-making process</td>
+              <td data-label="Intent">Information processing style</td>
+              <td data-label="Cluster Mapping">A→Thinker · B→Achiever · C→Believer · D→Survivor</td>
+            </tr>
+            <tr>
+              <td>Q9</td>
+              <td data-label="Question">Food trend adoption</td>
+              <td data-label="Intent">Innovation readiness</td>
+              <td data-label="Cluster Mapping">A→Achiever · B→Striver · C→Believer · D→Survivor</td>
+            </tr>
+            <tr>
+              <td>Q10</td>
+              <td data-label="Question">Preferred payment method</td>
+              <td data-label="Intent">Digital adoption and resources</td>
+              <td data-label="Cluster Mapping">A→Achiever · B→Striver · C→Believer · D→Survivor</td>
+            </tr>
+            <tr>
+              <td>Q11</td>
+              <td data-label="Question">Festival/holiday ordering behavior</td>
+              <td data-label="Intent">Tradition vs. convenience</td>
+              <td data-label="Cluster Mapping">A→Achiever · B→Believer · C→Striver · D→Survivor</td>
+            </tr>
+            <tr>
+              <td>Q12</td>
+              <td data-label="Question">Environmental consideration in orders</td>
+              <td data-label="Intent">Values consistency</td>
+              <td data-label="Cluster Mapping">A→Thinker · B→Achiever · C→Striver · D→Survivor</td>
+            </tr>
+            <tr>
+              <td>Q13</td>
+              <td data-label="Question">Premium restaurant frequency</td>
+              <td data-label="Intent">Resource level indicator</td>
+              <td data-label="Cluster Mapping">A→Experiencer · B→Achiever · C→Striver · D→Survivor</td>
+            </tr>
+            <tr>
+              <td>Q14</td>
+              <td data-label="Question">Meal planning style</td>
+              <td data-label="Intent">Structure vs. spontaneity</td>
+              <td data-label="Cluster Mapping">A→Thinker · B→Experiencer · C→Believer · D→Survivor</td>
+            </tr>
+            <tr>
+              <td>Q15</td>
+              <td data-label="Question">Attitude toward sharing food experiences</td>
+              <td data-label="Intent">Social expression</td>
+              <td data-label="Cluster Mapping">A→Experiencer · B→Achiever · C→Believer · D→Survivor</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- DATA PIPELINE -->
+      <div class="appendix-block reveal">
+        <div class="appendix-block-label">Appendix C &mdash; Data-to-Segment Pipeline</div>
+        <p class="appendix-flow-intro">How a completed quiz response becomes a psychographic segment tag on a user profile and drives personalization decisions across Pathao's product surfaces.</p>
+        <div class="flow-steps">
+          <div class="flow-step">
+            <div class="flow-step-num">1</div>
+            <div>
+              <div class="flow-step-title">Survey completion - 15 mandatory responses collected</div>
+              <div class="flow-step-text">User completes the in-app gamified quiz. All 15 questions are mandatory. Partial responses are rejected. The raw answer vector (Q1=C, Q2=A, etc.) is stored against the user ID.</div>
+            </div>
+          </div>
+          <div class="flow-arrow">&#8595;</div>
+          <div class="flow-step">
+            <div class="flow-step-num">2</div>
+            <div>
+              <div class="flow-step-title">Answer-to-cluster translation - 6D vector computed</div>
+              <div class="flow-step-text">Each answer is mapped to its cluster weight. The 6D response vector [Achiever, Experiencer, Thinker, Striver, Believer, Survivor] is computed by counting how many answers mapped to each cluster across the 15 questions.</div>
+            </div>
+          </div>
+          <div class="flow-arrow">&#8595;</div>
+          <div class="flow-step">
+            <div class="flow-step-num">3</div>
+            <div>
+              <div class="flow-step-title">Primary cluster assignment - max-score rule with KNN boundary resolution</div>
+              <div class="flow-step-text">The cluster with the highest count in the 6D vector is assigned as the primary segment. For boundary cases (top two clusters within 2 points of each other), KNN on the full 6D vector determines final assignment using nearest-neighbor distance across the existing respondent population.</div>
+            </div>
+          </div>
+          <div class="flow-arrow">&#8595;</div>
+          <div class="flow-step">
+            <div class="flow-step-num">4</div>
+            <div>
+              <div class="flow-step-title">Segment tag written to user profile</div>
+              <div class="flow-step-text">The primary cluster label (e.g., "Achiever") and the full 6D vector are written to the user's profile. The 6D vector is preserved for future reclassification as the ML model matures. A timestamp is stored for drift monitoring and re-survey scheduling.</div>
+            </div>
+          </div>
+          <div class="flow-arrow">&#8595;</div>
+          <div class="flow-step">
+            <div class="flow-step-num">5</div>
+            <div>
+              <div class="flow-step-title">Downstream consumption - Loop, CRM, BNPL</div>
+              <div class="flow-step-text">The Loop personalization engine reads the segment tag to reorder the food feed. The CRM targeting workflow selects promo type, tone, and brand based on segment rules. The BNPL underwriting model reads specific 6D vector dimensions as credit behavior proxy signals for thin-file users.</div>
+            </div>
+          </div>
+          <div class="flow-arrow">&#8595;</div>
+          <div class="flow-step flow-step-final">
+            <div class="flow-step-num">&#10003;</div>
+            <div>
+              <div class="flow-step-title">User experiences a Pathao that knows who they are</div>
+              <div class="flow-step-text">Homepage feed sorted by personality-aligned restaurants · Promo copy in the right tone for their motivation style · BNPL access decisions informed by psychographic signals · Shareable personality result driving organic peer acquisition. One quiz, permanent intelligence layer.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div><!-- /appendix-band -->
+
+  <!-- FOOTER -->
+  <footer>
+    <a href="work.html">&larr; Back to all case studies</a>
+    &nbsp;&nbsp;&middot;&nbsp;&nbsp;
+    <a href="index.html">Akash Poddar</a>
+    &nbsp;&nbsp;&middot;&nbsp;&nbsp;
+    <a href="index.html#contact">Get in touch</a>
+  </footer>
+
+  <script>
+    const reveals = document.querySelectorAll('.reveal');
+    const isMobile = window.innerWidth < 768;
+    const io = new IntersectionObserver((entries) => {
+      const visible = entries.filter(e => e.isIntersecting)
+        .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+      if (!visible.length) return;
+      requestAnimationFrame(() => {
+        visible.forEach((entry, i) => {
+          entry.target.style.transitionDelay = isMobile ? '0s' : (i * 0.05) + 's';
+          entry.target.classList.add('visible');
+          io.unobserve(entry.target);
+        });
+      });
+    }, { threshold: 0.06, rootMargin: '0px 0px -40px 0px' });
+    reveals.forEach(r => io.observe(r));
+
+    const tocItems = document.querySelectorAll('.toc-item');
+    const sections = document.querySelectorAll('.cs-section[id]');
+    const tocObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          tocItems.forEach(t => t.classList.remove('active'));
+          const active = document.querySelector(`.toc-item[href="#${entry.target.id}"]`);
+          if (active) active.classList.add('active');
+        }
+      });
+    }, { threshold: 0, rootMargin: '-101px 0px -85% 0px' });
+    sections.forEach(s => tocObserver.observe(s));
+  </script>
+
+</body>
+</html>
