@@ -1,0 +1,1045 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-62DWPTYD6F"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-62DWPTYD6F');
+  </script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27><rect width=%2732%27 height=%2732%27 rx=%274%27 fill=%27%230e0e0e%27/><text x=%2716%27 y=%2722%27 font-family=%27Georgia,serif%27 font-size=%2714%27 font-weight=%27600%27 fill=%27%23f7f5f0%27 text-anchor=%27middle%27>AP</text></svg>" />
+  <title>Pathao Food Search Experiments — Improving Search-to-Order Conversion | Akash Poddar</title>
+  <meta name="description" content="How I designed and spec'd a set of food search experiments at Pathao to improve search relevance, personalisation, and conversion — from Banglish typo correction to deal-weighted ranking." />
+  <link rel="canonical" href="https://echo-akash.github.io/pathao-search-experiments.html" />
+  <meta property="og:title" content="Pathao Food Search Experiments — Improving Search-to-Order Conversion | Akash Poddar" />
+  <meta property="og:description" content="Designing evidence-based search improvements at Bangladesh's largest super-app — personalisation signals, smart ranking, and Banglish typo handling." />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://echo-akash.github.io/pathao-search-experiments.html" />
+  <meta property="og:image" content="https://echo-akash.github.io/og-image.png" />
+  <meta name="author" content="Akash Poddar" />
+  <meta name="robots" content="index, follow" />
+  <meta name="theme-color" content="#0e0e0e" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Pathao Food Search Experiments — Improving Search-to-Order Conversion",
+    "description": "How Akash Poddar designed a structured programme of search experiments at Pathao Food to improve relevance, personalisation, and order completion rate.",
+    "author": { "@type": "Person", "name": "Akash Poddar", "url": "https://echo-akash.github.io/" },
+    "publisher": { "@type": "Person", "name": "Akash Poddar" }
+  }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,300;1,9..144,500&family=DM+Sans:wght@300;400;500&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,300;1,9..144,500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" /></noscript>
+  <style>
+    :root {
+      --ink: #0e0e0e;
+      --ink-mid: #444;
+      --ink-muted: #696969;
+      --ink-faint: #bbb;
+      --surface: #f7f5f0;
+      --white: #ffffff;
+      --accent: #ea580c;
+      --accent-light: #fff7ed;
+      --accent-dark: #9a3412;
+      --accent2: #7c3aed;
+      --accent2-light: #f0ebff;
+      --green: #166534;
+      --green-light: #dcfce7;
+      --amber: #b45309;
+      --amber-light: #fef3e2;
+      --line: rgba(0,0,0,0.08);
+      --serif: 'Fraunces', Georgia, serif;
+      --sans: 'DM Sans', system-ui, sans-serif;
+      --radius: 10px;
+      --ease: cubic-bezier(0.16, 1, 0.3, 1);
+      --wide-w: 1000px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+    }
+    body { font-family: var(--sans); background: var(--surface); color: var(--ink); font-size: 15px; line-height: 1.6; overflow-x: hidden; }
+
+    /* ── NAV ── */
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 0 40px; height: 56px; background: rgba(247,245,240,0.88); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); }
+    .nav-logo { font-family: var(--serif); font-size: 16px; font-weight: 600; color: var(--ink); text-decoration: none; letter-spacing: -0.02em; }
+    .nav-links { display: flex; gap: 32px; list-style: none; }
+    .nav-links a { font-size: 13px; color: var(--ink-mid); text-decoration: none; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--accent); }
+    .nav-cta { font-size: 13px; padding: 7px 18px; background: var(--ink); color: var(--white); border-radius: 20px; text-decoration: none; transition: background 0.2s; }
+    .nav-cta:hover { background: var(--accent); }
+
+    /* ── HERO ── */
+    .cs-hero { background: var(--ink); padding: 120px 40px 80px; position: relative; overflow: hidden; }
+    .cs-hero-inner { max-width: var(--wide-w); margin: 0 auto; position: relative; z-index: 1; }
+    .cs-hero-grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px); background-size: 60px 60px; }
+    .cs-hero-shimmer { position: absolute; inset: 0; background: radial-gradient(ellipse 60% 60% at 70% 50%, rgba(234,88,12,0.22) 0%, transparent 70%); }
+    .cs-hero-bar { height: 4px; background: linear-gradient(90deg, #ea580c, #fb923c); border-radius: 2px; width: 64px; margin-bottom: 28px; }
+    .cs-meta-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 24px; }
+    .cs-tag { font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; padding: 5px 14px; border-radius: 20px; }
+    .tag-orange { background: rgba(234,88,12,0.22); color: #fb923c; border: 1px solid rgba(234,88,12,0.35); }
+    .tag-purple { background: rgba(124,58,237,0.18); color: #c4a8ff; border: 1px solid rgba(124,58,237,0.25); }
+    .tag-green  { background: rgba(22,101,52,0.2); color: #6ee7b7; border: 1px solid rgba(22,101,52,0.28); }
+    .tag-gray   { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.45); border: 1px solid rgba(255,255,255,0.1); }
+    .cs-hero-title { font-family: var(--serif); font-size: clamp(34px, 5.5vw, 60px); font-weight: 600; letter-spacing: -0.03em; line-height: 0.95; color: #fff; margin-bottom: 20px; }
+    .cs-hero-title em { font-style: italic; font-weight: 300; color: rgba(255,255,255,0.38); }
+    .cs-hero-sub { font-size: 17px; font-weight: 300; color: rgba(255,255,255,0.5); max-width: 640px; line-height: 1.7; margin-bottom: 48px; }
+    .cs-hero-sub strong { color: rgba(255,255,255,0.8); font-weight: 400; }
+    .cs-kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 40px; }
+    .cs-kpi { padding-right: 32px; border-right: 1px solid rgba(255,255,255,0.08); }
+    .cs-kpi:last-child { border-right: none; }
+    .cs-kpi-num { font-family: var(--serif); font-size: 32px; font-weight: 600; letter-spacing: -0.02em; color: #fff; line-height: 1; margin-bottom: 6px; }
+    .cs-kpi-num span { font-size: 20px; font-style: italic; font-weight: 300; color: rgba(255,255,255,0.35); }
+    .cs-kpi-label { font-size: 11px; color: rgba(255,255,255,0.38); line-height: 1.4; max-width: 130px; }
+
+    /* ── TOC ── */
+    .toc-bar { position: sticky; top: 56px; z-index: 90; background: var(--white); border-bottom: 1px solid var(--line); overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+    .toc-bar::-webkit-scrollbar { display: none; }
+    .toc-inner { max-width: var(--wide-w); margin: 0 auto; display: flex; padding: 0 40px; }
+    .toc-item { font-size: 12px; color: var(--ink-muted); text-decoration: none; padding: 14px 20px; white-space: nowrap; border-bottom: 2px solid transparent; transition: color 0.2s, border-color 0.2s; display: flex; align-items: center; gap: 6px; }
+    .toc-item:hover { color: var(--accent); border-bottom-color: var(--accent); }
+    .toc-item.active { color: var(--accent); border-bottom-color: var(--accent); }
+    .toc-num { font-size: 10px; color: var(--ink-faint); }
+
+    /* ── BODY ── */
+    .cs-body { max-width: var(--wide-w); margin: 0 auto; padding: 0 40px; }
+    .cs-section { padding: 72px 0 0; content-visibility: auto; contain-intrinsic-size: 0 600px; }
+    .cs-section:last-of-type { padding-bottom: 80px; }
+    .section-eyebrow { font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+    .section-eyebrow::after { content: ''; flex: 0 0 32px; height: 1px; background: var(--accent); opacity: 0.4; }
+    .cs-section h2 { font-family: var(--serif); font-size: 32px; font-weight: 600; letter-spacing: -0.02em; color: var(--ink); line-height: 1.15; margin-bottom: 28px; }
+    .cs-section h3 { font-family: var(--serif); font-size: 20px; font-weight: 600; letter-spacing: -0.01em; color: var(--ink); margin: 40px 0 16px; }
+    .cs-section p { font-size: 15px; color: var(--ink-mid); line-height: 1.8; font-weight: 300; margin-bottom: 16px; }
+    .cs-section p:last-child { margin-bottom: 0; }
+    .cs-section p strong { color: var(--ink); font-weight: 500; }
+    .cs-divider { border: none; border-top: 1px solid var(--line); margin: 56px 0 0; }
+
+    /* ── CALLOUT ── */
+    .callout { border-left: 3px solid var(--accent); border-radius: 0 var(--radius) var(--radius) 0; padding: 20px 24px; margin: 28px 0; }
+    .callout-orange { background: var(--accent-light); }
+    .callout-orange p strong { color: var(--accent-dark); }
+    .callout-purple { background: var(--accent2-light); border-left-color: var(--accent2); }
+    .callout-purple p strong { color: var(--accent2); }
+    .callout-green  { background: var(--green-light); border-left-color: var(--green); }
+    .callout-green p strong { color: var(--green); }
+    .callout-amber  { background: var(--amber-light); border-left-color: var(--amber); }
+    .callout-amber p strong { color: var(--amber); }
+    .callout p { margin-bottom: 0; color: var(--ink); font-weight: 400; font-size: 14px; line-height: 1.75; }
+
+    /* ── STEP LIST ── */
+    .step-list { display: flex; flex-direction: column; margin: 28px 0; }
+    .step-item { display: grid; grid-template-columns: 56px 1fr; gap: 0 20px; padding: 28px 0; border-top: 1px solid var(--line); align-items: start; }
+    .step-item:last-child { border-bottom: 1px solid var(--line); }
+    .step-num { font-family: var(--serif); font-size: 28px; font-weight: 600; color: var(--accent); letter-spacing: -0.02em; line-height: 1; padding-top: 4px; }
+    .step-title { font-family: var(--serif); font-size: 18px; font-weight: 600; color: var(--ink); margin-bottom: 8px; line-height: 1.2; }
+    .step-body { font-size: 14px; color: var(--ink-mid); line-height: 1.75; font-weight: 300; }
+    .step-body strong { color: var(--ink); font-weight: 500; }
+
+    /* ── EXPERIMENT CARDS ── */
+    .exp-stack { display: flex; flex-direction: column; gap: 16px; margin: 28px 0; }
+    .exp-card { background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); padding: 28px; position: relative; overflow: hidden; }
+    .exp-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; }
+    .exp-must::before  { background: linear-gradient(90deg, #ea580c, #fb923c); }
+    .exp-should::before { background: linear-gradient(90deg, #7c3aed, #a855f7); }
+    .exp-could::before { background: linear-gradient(90deg, #166534, #22c55e); }
+    .exp-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 14px; }
+    .exp-id { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 4px; }
+    .exp-title { font-family: var(--serif); font-size: 20px; font-weight: 600; color: var(--ink); line-height: 1.1; margin-bottom: 6px; }
+    .exp-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+    .exp-tag { font-size: 11px; padding: 3px 10px; border-radius: 20px; font-weight: 500; }
+    .et-must   { background: var(--accent-light); color: var(--accent-dark); }
+    .et-should { background: var(--accent2-light); color: var(--accent2); }
+    .et-could  { background: var(--green-light); color: var(--green); }
+    .et-ux     { background: #f1f5f9; color: #334155; }
+    .et-rank   { background: #fef3e2; color: #92400e; }
+    .et-nlp    { background: #f0fdf4; color: #14532d; }
+    .exp-body { font-size: 14px; color: var(--ink-mid); line-height: 1.8; font-weight: 300; }
+    .exp-body strong { color: var(--ink); font-weight: 500; }
+    .exp-roi { margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--line); display: flex; gap: 12px; flex-wrap: wrap; }
+    .roi-item { display: flex; flex-direction: column; gap: 3px; }
+    .roi-label { font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-muted); }
+    .roi-val { font-size: 13px; font-weight: 500; color: var(--ink); }
+
+    /* ── SIGNAL TABLE ── */
+    .signal-table { width: 100%; border-collapse: collapse; margin: 28px 0; font-size: 13.5px; }
+    .signal-table th { text-align: left; font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-muted); padding: 12px 16px; border-bottom: 2px solid var(--line); }
+    .signal-table td { padding: 14px 16px; border-bottom: 1px solid var(--line); color: var(--ink-mid); vertical-align: top; line-height: 1.6; }
+    .signal-table td:first-child { font-weight: 500; color: var(--ink); }
+    .signal-table tr:last-child td { border-bottom: none; }
+    .signal-table tr:hover td { background: rgba(234,88,12,0.03); }
+
+    /* ── TWO / THREE COL ── */
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 28px 0; }
+    .two-col-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 18px; margin: 28px 0; }
+
+    /* ── CARD ── */
+    .card { background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); padding: 24px; }
+    .card-label { font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; }
+    .card h4 { font-family: var(--serif); font-size: 17px; font-weight: 600; color: var(--ink); margin-bottom: 8px; line-height: 1.3; }
+    .card p { font-size: 13.5px; color: var(--ink-mid); line-height: 1.7; margin-bottom: 0; }
+
+    /* ── RISK GRID ── */
+    .risk-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 28px 0; }
+    .risk-card { background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); padding: 22px; }
+    .risk-level { font-size: 10px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; padding: 3px 10px; border-radius: 20px; display: inline-block; margin-bottom: 10px; }
+    .r-high { background: #faeae7; color: #8c3320; }
+    .r-med  { background: var(--amber-light); color: var(--amber); }
+    .r-low  { background: var(--green-light); color: var(--green); }
+    .risk-title { font-size: 14px; font-weight: 500; color: var(--ink); margin-bottom: 8px; line-height: 1.35; }
+    .risk-body { font-size: 13px; color: var(--ink-mid); line-height: 1.7; }
+
+    /* ── LESSON LIST ── */
+    .lesson-list { display: flex; flex-direction: column; margin: 28px 0; }
+    .lesson-item { display: grid; grid-template-columns: 48px 1fr; gap: 0 20px; padding: 28px 0; border-top: 1px solid var(--line); }
+    .lesson-item:last-child { border-bottom: 1px solid var(--line); }
+    .lesson-num { font-family: var(--serif); font-size: 24px; font-weight: 600; color: var(--accent); opacity: 0.4; line-height: 1; padding-top: 4px; }
+    .lesson-title { font-family: var(--serif); font-size: 18px; font-weight: 600; color: var(--ink); margin-bottom: 8px; line-height: 1.2; }
+    .lesson-body { font-size: 14px; color: var(--ink-mid); line-height: 1.75; font-weight: 300; }
+    .lesson-body strong { color: var(--ink); font-weight: 500; }
+
+    /* ── PRIORITY MATRIX ── */
+    .matrix-wrap { margin: 28px 0; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .priority-matrix { width: 100%; border-collapse: collapse; min-width: 540px; }
+    .priority-matrix th { text-align: left; font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-muted); padding: 12px 16px; border-bottom: 2px solid var(--line); white-space: nowrap; }
+    .priority-matrix td { padding: 14px 16px; border-bottom: 1px solid var(--line); color: var(--ink-mid); vertical-align: top; line-height: 1.6; font-size: 13.5px; }
+    .priority-matrix td:first-child { font-weight: 500; color: var(--ink); white-space: nowrap; }
+    .priority-matrix tr:last-child td { border-bottom: none; }
+    .priority-matrix tr:hover td { background: rgba(234,88,12,0.03); }
+    .p-must  { display: inline-block; font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; padding: 3px 10px; border-radius: 20px; background: var(--accent-light); color: var(--accent-dark); white-space: nowrap; }
+    .p-should { display: inline-block; font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; padding: 3px 10px; border-radius: 20px; background: var(--accent2-light); color: var(--accent2); white-space: nowrap; }
+
+    /* ── SIGNAL PILL ── */
+    .signal-pill { display: inline-block; font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; padding: 3px 10px; border-radius: 20px; }
+    .sp-orange { background: var(--accent-light); color: var(--accent-dark); }
+    .sp-purple { background: var(--accent2-light); color: var(--accent2); }
+    .sp-green  { background: var(--green-light); color: var(--green); }
+
+    /* ── ROI FRAMEWORK GRID ── */
+    .roi-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 28px 0; }
+    .roi-card { background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); padding: 22px; }
+    .roi-card-label { font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; }
+    .roi-card-title { font-family: var(--serif); font-size: 16px; font-weight: 600; color: var(--ink); margin-bottom: 8px; line-height: 1.25; }
+    .roi-card-body { font-size: 13px; color: var(--ink-mid); line-height: 1.7; }
+    .roi-card-body strong { color: var(--ink); font-weight: 500; }
+    .roi-outcome { display: flex; gap: 10px; margin-top: 12px; flex-wrap: wrap; }
+    .roi-outcome-item { font-size: 11px; padding: 4px 10px; border-radius: 20px; font-weight: 500; }
+    .roi-good { background: var(--green-light); color: var(--green); }
+    .roi-skip { background: #fee2e2; color: #991b1b; }
+    .roi-maybe { background: var(--amber-light); color: var(--amber); }
+
+    /* ── APPENDIX BAND ── */
+    .appendix-band { background: #111; border-top: 1px solid rgba(255,255,255,0.06); padding: 80px 40px; }
+    .appendix-inner { max-width: var(--wide-w); margin: 0 auto; }
+    .appendix-header { margin-bottom: 56px; }
+    .appendix-eyebrow { font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); margin-bottom: 12px; }
+    .appendix-title { font-family: var(--serif); font-size: 32px; font-weight: 600; letter-spacing: -0.02em; color: #fff; margin-bottom: 12px; }
+    .appendix-sub { font-size: 15px; color: rgba(255,255,255,0.4); font-weight: 300; max-width: 560px; line-height: 1.7; }
+    .appendix-block { margin-bottom: 56px; }
+    .appendix-block:last-child { margin-bottom: 0; }
+    .appendix-block-label { font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.3); margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .appendix-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .appendix-table th { text-align: left; font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,255,255,0.3); padding: 10px 16px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+    .appendix-table td { padding: 14px 16px; border-bottom: 1px solid rgba(255,255,255,0.06); color: rgba(255,255,255,0.55); vertical-align: top; line-height: 1.65; }
+    .appendix-table td:first-child { color: rgba(255,255,255,0.25); font-size: 11px; white-space: nowrap; font-weight: 500; letter-spacing: 0.04em; }
+    .appendix-table tr:last-child td { border-bottom: none; }
+    .appendix-table tr:hover td { background: rgba(255,255,255,0.02); }
+
+    /* ── REVEAL ── */
+    .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.6s var(--ease), transform 0.6s var(--ease); }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* ── FOOTER ── */
+    footer { background: var(--ink); border-top: 1px solid rgba(255,255,255,0.06); padding: 24px 40px; text-align: center; font-size: 12px; color: rgba(255,255,255,0.55); }
+    footer a { color: rgba(255,255,255,0.55); text-decoration: none; }
+    footer a:hover { color: var(--white); }
+
+    /* ══════════════════════════════════════════
+       RESPONSIVE — 768px
+    ══════════════════════════════════════════ */
+    @media (max-width: 768px) {
+      nav { padding: 0 20px; }
+      .nav-links { display: none; }
+
+      .cs-hero { padding: 96px 20px 52px; }
+      .cs-hero-title { font-size: clamp(28px, 8vw, 44px); }
+      .cs-hero-sub { font-size: 14px; margin-bottom: 32px; }
+      .cs-kpi-row { grid-template-columns: 1fr 1fr; gap: 24px 16px; padding-top: 28px; }
+      .cs-kpi { border-right: none !important; padding-right: 0 !important; padding-left: 0 !important; }
+      .cs-kpi:nth-child(odd) { border-right: 1px solid rgba(255,255,255,0.1) !important; padding-right: 16px !important; }
+      .cs-kpi-num { font-size: 24px; }
+      .cs-kpi-label { font-size: 11px; }
+
+      .toc-inner { padding: 0 16px; }
+      .toc-item { padding: 12px 12px; font-size: 11px; }
+      .cs-body { padding: 0 20px; }
+      .cs-section { padding: 48px 0 0; }
+      .cs-section h2 { font-size: 22px; margin-bottom: 20px; }
+      .cs-section h3 { font-size: 17px; margin: 28px 0 12px; }
+      .cs-section p { font-size: 14px; line-height: 1.75; }
+      .cs-divider { margin: 40px 0 0; }
+      .callout { padding: 16px 18px; }
+
+      .two-col, .two-col-3, .risk-grid, .roi-grid { grid-template-columns: 1fr; }
+
+      .exp-card { padding: 22px; }
+      .exp-head { flex-direction: column; gap: 10px; }
+      .exp-roi { gap: 10px; }
+
+      .step-item { grid-template-columns: 40px 1fr; gap: 0 14px; padding: 20px 0; }
+      .step-num { font-size: 22px; }
+      .step-title { font-size: 16px; }
+      .step-body { font-size: 13.5px; }
+
+      .lesson-item { grid-template-columns: 40px 1fr; gap: 0 14px; padding: 20px 0; }
+      .lesson-num { font-size: 20px; }
+      .lesson-title { font-size: 16px; }
+      .lesson-body { font-size: 13.5px; }
+
+      .signal-table { border-collapse: separate; border-spacing: 0; font-size: 13px; }
+      .signal-table thead { display: none; }
+      .signal-table tbody { display: flex; flex-direction: column; gap: 12px; }
+      .signal-table tr { display: block; background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px; }
+      .signal-table td { display: block; padding: 4px 0; border: none; white-space: normal; font-size: 13.5px; line-height: 1.65; }
+      .signal-table td:first-child { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); padding-bottom: 8px; margin-bottom: 4px; border-bottom: 1px solid var(--line); }
+      .signal-table td[data-label]::before { content: attr(data-label); display: block; font-size: 10px; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase; color: var(--ink-muted); margin-top: 8px; margin-bottom: 2px; }
+
+      .appendix-band { padding: 52px 20px 60px; }
+      .appendix-title { font-size: 24px; }
+      .appendix-sub { font-size: 14px; }
+      .appendix-table { border-collapse: separate; border-spacing: 0; }
+      .appendix-table thead { display: none; }
+      .appendix-table tbody { display: flex; flex-direction: column; gap: 12px; }
+      .appendix-table tr { display: block; border: 1px solid rgba(255,255,255,0.09); border-radius: var(--radius); padding: 16px; background: rgba(255,255,255,0.025); }
+      .appendix-table td { display: block; padding: 4px 0; border: none; font-size: 13px; line-height: 1.65; white-space: normal; color: rgba(255,255,255,0.6); }
+      .appendix-table td:first-child { font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent) !important; padding-bottom: 8px; margin-bottom: 4px; border-bottom: 1px solid rgba(255,255,255,0.07); }
+      .appendix-table td[data-label]::before { content: attr(data-label); display: block; font-size: 10px; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase; color: rgba(255,255,255,0.28); margin-top: 8px; margin-bottom: 2px; }
+
+      footer { padding: 20px; }
+    }
+
+    /* ══════════════════════════════════════════
+       RESPONSIVE — 480px
+    ══════════════════════════════════════════ */
+    @media (max-width: 480px) {
+      .cs-hero { padding: 88px 16px 44px; }
+      .cs-body { padding: 0 16px; }
+      .appendix-band { padding: 44px 16px 52px; }
+      .cs-kpi-row { gap: 20px 12px; }
+      .cs-kpi-num { font-size: 22px; }
+      .cs-kpi-label { font-size: 10px; }
+      .card { padding: 18px; }
+      .risk-card { padding: 18px; }
+      .exp-card { padding: 18px; }
+      .roi-card { padding: 18px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a class="nav-logo" href="index.html">Akash Poddar</a>
+    <ul class="nav-links">
+      <li><a href="work.html">Case Studies</a></li>
+      <li><a href="index.html#experience">Experience</a></li>
+      <li><a href="index.html#skills">Skills</a></li>
+      <li><a href="index.html#contact">Contact</a></li>
+    </ul>
+    <a class="nav-cta" href="index.html#contact">Get in touch</a>
+  </nav>
+
+  <!-- HERO -->
+  <div class="cs-hero">
+    <div class="cs-hero-grid"></div>
+    <div class="cs-hero-shimmer"></div>
+    <div class="cs-hero-inner">
+      <div class="cs-hero-bar"></div>
+      <div class="cs-meta-row">
+        <span class="cs-tag tag-orange">Pathao Food</span>
+        <span class="cs-tag tag-purple">Search &middot; Personalisation</span>
+        <span class="cs-tag tag-green">Ranking &middot; NLP</span>
+        <span class="cs-tag tag-gray">2023&ndash;2024</span>
+      </div>
+      <h1 class="cs-hero-title">Experiments to <em>improve</em><br>food search</h1>
+      <p class="cs-hero-sub">A structured programme of search improvements at <strong>Pathao Food</strong> - Bangladesh&rsquo;s largest food delivery platform. Six experiments designed to close the gap between what users type and what makes them order: typo correction, personalisation signals, smart ranking, and deal visibility.</p>
+      <div class="cs-kpi-row">
+        <div class="cs-kpi">
+          <div class="cs-kpi-num">6 <span>experiments</span></div>
+          <div class="cs-kpi-label">Scoped and spec&rsquo;d end-to-end</div>
+        </div>
+        <div class="cs-kpi">
+          <div class="cs-kpi-num">5 <span>Must-have</span></div>
+          <div class="cs-kpi-label">Features prioritised for first release</div>
+        </div>
+        <div class="cs-kpi">
+          <div class="cs-kpi-num">3 <span>signals</span></div>
+          <div class="cs-kpi-label">Personalisation layers built into ranking</div>
+        </div>
+        <div class="cs-kpi">
+          <div class="cs-kpi-num">0→1 <span>build</span></div>
+          <div class="cs-kpi-label">Search intelligence built from scratch</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOC -->
+  <nav class="toc-bar" aria-label="Case study sections">
+    <div class="toc-inner">
+      <a class="toc-item" href="#context"><span class="toc-num">01</span> Context</a>
+      <a class="toc-item" href="#problem"><span class="toc-num">02</span> Problem</a>
+      <a class="toc-item" href="#approach"><span class="toc-num">03</span> My Approach</a>
+      <a class="toc-item" href="#roi"><span class="toc-num">04</span> ROI Framework</a>
+      <a class="toc-item" href="#experiments"><span class="toc-num">05</span> Experiments</a>
+      <a class="toc-item" href="#metrics"><span class="toc-num">06</span> Metrics</a>
+      <a class="toc-item" href="#risks"><span class="toc-num">07</span> Risks</a>
+      <a class="toc-item" href="#lessons"><span class="toc-num">08</span> Lessons</a>
+    </div>
+  </nav>
+
+  <!-- BODY -->
+  <main class="cs-body">
+
+    <!-- 01 CONTEXT -->
+    <section class="cs-section" id="context">
+      <div class="section-eyebrow">01 &mdash; Context</div>
+      <h2>Pathao Food is Bangladesh&rsquo;s largest food delivery platform. Search is where intent converts  or dies.</h2>
+      <p>Pathao operates as a super-app across ride-hailing, parcel delivery, and food delivery in Bangladesh. The food vertical competes directly with the local arms of regional players and several domestic challengers. At this scale, even marginal improvements in search quality compound into significant order volume.</p>
+      <p>I owned the food product experience as PM and identified search as an under-invested surface relative to its conversion importance. A user who types a query and gets irrelevant results doesn&rsquo;t complain - they leave. The search-to-order funnel was leaking in ways that were invisible without deliberate instrumentation.</p>
+
+      <div class="two-col reveal">
+        <div class="card">
+          <div class="card-label">Platform</div>
+          <h4>Pathao Super-App</h4>
+          <p>Operating across ride-hailing, parcel, and food in Bangladesh. Food delivery is one of the highest-frequency verticals, with returning users placing multiple orders per week. Search is a primary entry point for discovery - not just reordering.</p>
+        </div>
+        <div class="card">
+          <div class="card-label">My Role</div>
+          <h4>Product Manager, Food</h4>
+          <p>I was the PM responsible for the food delivery product experience. This initiative was self-initiated - I identified search quality as a high-leverage opportunity, built the case, wrote the CRD, and drove the experiment programme from problem framing to spec.</p>
+        </div>
+      </div>
+
+      <div class="callout callout-orange reveal">
+        <p><strong>Why search specifically:</strong> Conversion funnels in food delivery have a well-understood structure - open app, discover or search, select restaurant, add items, checkout. Most optimisation attention goes to checkout and restaurant pages. Search sits upstream of all of it: a failed search means no restaurant page visit, no menu browse, no order. I treated search quality as a funnel multiplier, not a secondary feature.</p>
+      </div>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 02 PROBLEM -->
+    <section class="cs-section" id="problem">
+      <div class="section-eyebrow">02 &mdash; The Problem</div>
+      <h2>Users searching in Banglish, with typos, or without context weren&rsquo;t getting results that matched their intent.</h2>
+      <p>Food search in Bangladesh has characteristics that make it harder than search in most other markets. Bangladeshi users routinely write in <strong>Banglish</strong> - Bengali words rendered in English script. &ldquo;Biriyani&rdquo; might be typed as &ldquo;biryani&rdquo;, &ldquo;biriani&rdquo;, &ldquo;biriany&rdquo; or &ldquo;biryanee&rdquo;. A search engine that requires exact matches fails a significant share of real user intent.</p>
+      <p>Beyond language, search results at the time were broadly ranked without personalisation. A new user and a returning user with fifty orders see the same list. A restaurant a user orders from weekly appears in the same position as one they&rsquo;ve never visited. There were no signals for favourites, no indicators of deal availability, no acknowledgment of order history in the results layer.</p>
+
+      <h3>The four problem areas I scoped</h3>
+      <div class="step-list reveal">
+        <div class="step-item">
+          <div class="step-num">01</div>
+          <div>
+            <div class="step-title">Language and typo mismatch</div>
+            <div class="step-body">Banglish spellings and common phonetic variations fail to match restaurant or item names in the database. A user who types &ldquo;kacchi&rdquo; instead of &ldquo;kachchi&rdquo; may get zero results or degraded results for one of Bangladesh&rsquo;s most-searched dishes. <strong>Every failed or degraded search query is a conversion loss.</strong></div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">02</div>
+          <div>
+            <div class="step-title">No personalisation in results</div>
+            <div class="step-body">Search returned the same ranked list to all users regardless of order history, saved restaurants, or past ratings. Returning users - who represent the highest-value cohort - got no signal that a restaurant they&rsquo;ve ordered from before was in the results. The most loyal users received the most generic experience.</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">03</div>
+          <div>
+            <div class="step-title">Rating signals not weighted in ranking</div>
+            <div class="step-body">Restaurant quality signals - both rating value and rating volume - were not adequately factored into search ranking. A restaurant with 4.8 stars across 2,000 orders could appear below one with 3.9 stars and 20 orders. Quality ranking matters both for user trust and for downstream order satisfaction metrics.</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">04</div>
+          <div>
+            <div class="step-title">Deal visibility buried in results</div>
+            <div class="step-body">Restaurants running active discounts or offers had no differentiated visibility in search results. Deals are one of the strongest conversion accelerants in food delivery - a user browsing the same search query converts at materially higher rates when they can easily identify which restaurants have offers. This signal was invisible at the search layer.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 03 APPROACH -->
+    <section class="cs-section" id="approach">
+      <div class="section-eyebrow">03 &mdash; My Approach</div>
+      <h2>Before writing a single spec, I built the evidence case that each experiment was worth building.</h2>
+      <p>The biggest mistake a PM can make with a list of &ldquo;improvements&rdquo; is to start building without validating that the improvements will move the right metrics. I structured this programme around a deliberate sequencing: <strong>prove the ROI case first, then write the spec.</strong></p>
+      <p>For each experiment, I defined the statistics needed to confirm the intervention would produce a return before engineering invested any time. This framework borrowed from classic hypothesis testing: identify what you need to measure, define what outcomes would justify the build, and only proceed when the data supports it.</p>
+
+      <div class="callout callout-purple reveal">
+        <p><strong>The discipline I imposed on myself:</strong> For every experiment, I asked &ldquo;what data would tell me this is not worth building?&rdquo; before I asked &ldquo;how do we build it?&rdquo; A search fix that affects 1% of queries and improves conversion by 0.1% is not worth an engineering sprint. A fix that affects 30% of queries and improves conversion by 5% absolutely is. I didn&rsquo;t want to build a backlog of features - I wanted to build the right features.</p>
+      </div>
+
+      <h3>How I worked cross-functionally</h3>
+      <div class="two-col-3 reveal">
+        <div class="card">
+          <div class="card-label">Data &amp; Analytics</div>
+          <h4>Quantifying the problem</h4>
+          <p>I worked with the analytics team to pull the baseline metrics: what % of search queries contain typos or Banglish spellings, and what the conversion rate gap looks like between users who search normally vs. those who make typo errors. These numbers determined which experiments to prioritise.</p>
+        </div>
+        <div class="card">
+          <div class="card-label">Engineering</div>
+          <h4>Feasibility and spec review</h4>
+          <p>Each experiment spec went through a feasibility review with engineering before being locked. I wrote the functional requirements; the eng team validated implementation complexity and flagged any dependencies on backend data availability (e.g. whether order history and favourites were already accessible to the search ranking layer).</p>
+        </div>
+        <div class="card">
+          <div class="card-label">Design</div>
+          <h4>UI patterns for new signals</h4>
+          <p>Several experiments required new UI elements - icons for previously-ordered items, favourite badges, deal indicators, currency tier symbols. I worked with design on the iconography, ensuring each new signal was visually distinct and legible without cluttering the results card.</p>
+        </div>
+      </div>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 04 ROI FRAMEWORK -->
+    <section class="cs-section" id="roi">
+      <div class="section-eyebrow">04 &mdash; ROI Framework</div>
+      <h2>I defined a data-first decision matrix before any experiment entered the spec stage.</h2>
+      <p>The most rigorous element of this initiative was the statistical framework I built to gate which experiments we built. Rather than relying on intuition or stakeholder enthusiasm, I defined a two-variable test for each experiment: the <strong>prevalence</strong> of the problem, and the <strong>conversion cost</strong> of the problem.</p>
+
+      <div class="callout callout-orange reveal">
+        <p><strong>The Banglish/Typo Case - the clearest example:</strong> Metric A: what % of search queries are typos or Banglish variations? Metric B: do users who make typo searches convert at a meaningfully lower rate? The outcome matrix below is exactly how I framed it to stakeholders. This wasn&rsquo;t a gut call - it was a decision tree that any stakeholder could understand and challenge.</p>
+      </div>
+
+      <h3>Decision matrix for the typo experiment</h3>
+      <div class="roi-grid reveal">
+        <div class="roi-card">
+          <div class="roi-card-label">Scenario 1</div>
+          <div class="roi-card-title">High prevalence, Low conversion loss (A high, B low)</div>
+          <div class="roi-card-body">Many searches have typos, but users still convert at the same rate. This tells us the search engine is already handling typos adequately, or users are self-correcting. <strong>Not worth building</strong> - fixing it won&rsquo;t move conversion.</div>
+          <div class="roi-outcome"><span class="roi-outcome-item roi-skip">Do not build</span></div>
+        </div>
+        <div class="roi-card">
+          <div class="roi-card-label">Scenario 2</div>
+          <div class="roi-card-title">Low prevalence, High conversion loss (A low, B high)</div>
+          <div class="roi-card-body">Typo searches hurt conversion badly, but they&rsquo;re rare. The absolute volume of lost orders is small. <strong>Potentially worth building</strong> depending on A value - even a 2% prevalence rate on a high-volume platform still represents thousands of lost orders per week.</div>
+          <div class="roi-outcome"><span class="roi-outcome-item roi-maybe">Depends on A value</span></div>
+        </div>
+        <div class="roi-card">
+          <div class="roi-card-label">Scenario 3</div>
+          <div class="roi-card-title">High prevalence, High conversion loss (A high, B high)</div>
+          <div class="roi-card-body">Many searches have typos, and those searches convert at substantially lower rates. This is the unambiguous &ldquo;build it&rdquo; case. The product is failing a large share of user intent, and fixing it has a direct, measurable conversion uplift. <strong>Absolutely worth building.</strong></div>
+          <div class="roi-outcome"><span class="roi-outcome-item roi-good">Build immediately</span></div>
+        </div>
+        <div class="roi-card">
+          <div class="roi-card-label">Scenario 4</div>
+          <div class="roi-card-title">Low prevalence, Low conversion loss (A low, B low)</div>
+          <div class="roi-card-body">The problem is both rare and low-impact. Engineering effort here has near-zero ROI. There are almost certainly higher-value improvements available. <strong>Do not build</strong> - revisit if either metric changes over time as the platform scales.</div>
+          <div class="roi-outcome"><span class="roi-outcome-item roi-skip">Do not build</span></div>
+        </div>
+      </div>
+
+      <p>I applied the same logical framework across all six experiments - defining the measurable conditions that would justify each build before writing any functional requirements. This is the habit that separates roadmaps grounded in evidence from backlogs driven by enthusiasm.</p>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 05 EXPERIMENTS -->
+    <section class="cs-section" id="experiments">
+      <div class="section-eyebrow">05 &mdash; The Experiments</div>
+      <h2>Six experiments. Each specced with a clear hypothesis, measurable success condition, and defined UI behaviour.</h2>
+      <p>Below are all six search experiments from the Change Requirement Document I authored. Each was assigned a spec ID (SE-1 through SE-7, excluding SE-2 which was merged), a priority, and a full behavioural description. The priority was set collaboratively with stakeholders using the ROI framework above.</p>
+
+      <div class="exp-stack">
+
+        <!-- SE-1 -->
+        <div class="exp-card exp-must reveal">
+          <div class="exp-head">
+            <div>
+              <div class="exp-id">SE-1</div>
+              <div class="exp-title">Indicators for previously ordered items</div>
+            </div>
+            <div class="exp-tags">
+              <span class="exp-tag et-must">Must Have</span>
+              <span class="exp-tag et-ux">UX Signal</span>
+            </div>
+          </div>
+          <div class="exp-body">
+            <p>If a user has ordered from a restaurant previously, the search result for that restaurant displays an icon on the right side of the card indicating prior purchase history. The icon differentiates between a single prior order and multiple prior orders - giving the user an at-a-glance signal of their relationship with that restaurant.</p>
+            <p><strong>Why this matters:</strong> Returning users are the highest-conversion segment in food delivery. They already trust the restaurant. A small icon that reminds them &ldquo;you&rsquo;ve ordered here before&rdquo; reduces decision friction at precisely the moment a user is scanning results. It&rsquo;s a nudge, not a feature - but nudges at high-intent moments compound into measurable conversion lift.</p>
+          </div>
+          <div class="exp-roi">
+            <div class="roi-item"><div class="roi-label">Target user</div><div class="roi-val">Returning users</div></div>
+            <div class="roi-item"><div class="roi-label">Conversion lever</div><div class="roi-val">Reduce scan friction</div></div>
+            <div class="roi-item"><div class="roi-label">UI element</div><div class="roi-val">Single or multiple order icon</div></div>
+          </div>
+        </div>
+
+        <!-- SE-Banglish -->
+        <div class="exp-card exp-must reveal">
+          <div class="exp-head">
+            <div>
+              <div class="exp-id">SE-Banglish</div>
+              <div class="exp-title">Banglish &amp; typo correction mapping</div>
+            </div>
+            <div class="exp-tags">
+              <span class="exp-tag et-must">Must Have</span>
+              <span class="exp-tag et-nlp">NLP / Matching</span>
+            </div>
+          </div>
+          <div class="exp-body">
+            <p>Map Banglish words (Bengali rendered in English script) and common phonetic variations to canonical search targets. A user typing &ldquo;biriyani,&rdquo; &ldquo;biriany,&rdquo; or &ldquo;bryani&rdquo; should resolve to the same target as &ldquo;biryani.&rdquo; Similarly, &ldquo;kacchi,&rdquo; &ldquo;khichuri,&rdquo; and other culturally-specific dish names need robust variant coverage.</p>
+            <p><strong>The evidence gate I set:</strong> I required two data points before greenlighting this build. First: what % of search queries are Banglish or contain typos? Second: do these queries convert at a lower rate than &ldquo;clean&rdquo; queries? High prevalence + low conversion = unambiguous build case. The decision matrix in Section 04 was built specifically for this experiment.</p>
+            <p><strong>Why this is a Bangladesh-specific problem:</strong> Most search algorithms are trained on English-language corpora. Banglish is not phonetically consistent - the same Bengali word is romanised differently by different users. A standard fuzzy-match approach underperforms because the variants aren&rsquo;t just typos; they&rsquo;re culturally-specific linguistic patterns. I specified that the mapping layer needed explicit curation for the most common dish and cuisine categories in the Pathao Food catalogue.</p>
+          </div>
+          <div class="exp-roi">
+            <div class="roi-item"><div class="roi-label">Target user</div><div class="roi-val">All users (especially vernacular)</div></div>
+            <div class="roi-item"><div class="roi-label">Conversion lever</div><div class="roi-val">Zero-result and low-result recovery</div></div>
+            <div class="roi-item"><div class="roi-label">Data gate</div><div class="roi-val">Typo % + conversion delta</div></div>
+          </div>
+        </div>
+
+        <!-- SE-3 -->
+        <div class="exp-card exp-should reveal">
+          <div class="exp-head">
+            <div>
+              <div class="exp-id">SE-3</div>
+              <div class="exp-title">Rank restaurants with higher ratings higher</div>
+            </div>
+            <div class="exp-tags">
+              <span class="exp-tag et-should">Should Have</span>
+              <span class="exp-tag et-rank">Ranking Signal</span>
+            </div>
+          </div>
+          <div class="exp-body">
+            <p>Add a quality-weighted scoring component to search ranking. Restaurants above a threshold rating value <strong>and</strong> above a threshold rating count receive additional ranking score points. This is a combined signal - a restaurant needs both a high rating and a meaningful volume of ratings to receive the boost.</p>
+            <p><strong>Why the dual threshold matters:</strong> A restaurant with 5 stars from 3 orders is statistically meaningless. A restaurant with 4.6 stars from 800 orders is a genuine quality signal. Using count alone disadvantages newer-but-excellent restaurants; using rating alone amplifies noise from low-volume outliers. The dual threshold creates a quality signal that is both reliable and fair to the catalogue.</p>
+            <p>I defined this as &ldquo;Should have&rdquo; rather than &ldquo;Must have&rdquo; because the ROI depends on how correlated current ranking quality is with ratings. If the default ranking already surfaces high-rated restaurants, the marginal lift is lower. The data review was required to confirm the gap before committing engineering resources.</p>
+          </div>
+          <div class="exp-roi">
+            <div class="roi-item"><div class="roi-label">Signal type</div><div class="roi-val">Rating value + count dual threshold</div></div>
+            <div class="roi-item"><div class="roi-label">Expected outcome</div><div class="roi-val">Higher post-order satisfaction</div></div>
+            <div class="roi-item"><div class="roi-label">Priority gate</div><div class="roi-val">Current ranking quality baseline</div></div>
+          </div>
+        </div>
+
+        <!-- SE-4 -->
+        <div class="exp-card exp-must reveal">
+          <div class="exp-head">
+            <div>
+              <div class="exp-id">SE-4</div>
+              <div class="exp-title">Badge for restaurants ordered earlier and rated highly</div>
+            </div>
+            <div class="exp-tags">
+              <span class="exp-tag et-must">Must Have</span>
+              <span class="exp-tag et-ux">Personalisation</span>
+            </div>
+          </div>
+          <div class="exp-body">
+            <p>Identify restaurants in search results where the user has a prior order <strong>and</strong> where the restaurant&rsquo;s rating exceeds a defined threshold. Mark those restaurants with a distinct icon in the search result card. This combines the personalisation signal from SE-1 with a quality filter - surfacing restaurants the user already trusts and that have objectively high satisfaction scores.</p>
+            <p><strong>The compounding effect:</strong> SE-1 tells a user &ldquo;you&rsquo;ve ordered here before.&rdquo; SE-4 tells them &ldquo;you&rsquo;ve ordered here before, and this restaurant is highly rated.&rdquo; The combined signal reduces the research burden for a returning user making a familiar decision. It&rsquo;s the difference between recognising a restaurant and being confidently directed back to one you already know is good.</p>
+          </div>
+          <div class="exp-roi">
+            <div class="roi-item"><div class="roi-label">Signal type</div><div class="roi-val">Prior order + quality threshold</div></div>
+            <div class="roi-item"><div class="roi-label">Target user</div><div class="roi-val">High-frequency returning users</div></div>
+            <div class="roi-item"><div class="roi-label">UI element</div><div class="roi-val">Combined badge icon on card</div></div>
+          </div>
+        </div>
+
+        <!-- SE-5 -->
+        <div class="exp-card exp-must reveal">
+          <div class="exp-head">
+            <div>
+              <div class="exp-id">SE-5</div>
+              <div class="exp-title">Badge for favourite restaurants</div>
+            </div>
+            <div class="exp-tags">
+              <span class="exp-tag et-must">Must Have</span>
+              <span class="exp-tag et-ux">Personalisation</span>
+            </div>
+          </div>
+          <div class="exp-body">
+            <p>If a search result contains a restaurant the user has saved to their favourites list, display a &ldquo;favourite&rdquo; icon on that restaurant&rsquo;s search result card. This makes the favourites feature visible at the discovery layer rather than buried in a separate profile tab.</p>
+            <p><strong>Why this closes a loop:</strong> Users save restaurants to favourites because they intend to return. But if they don&rsquo;t navigate directly to the favourites tab, that signal is invisible at the point of discovery. Surfacing the favourite badge in search results means the act of saving a restaurant actually changes the future search experience. <strong>This makes favourites a more valuable behaviour to encourage</strong>, which has upstream effects on engagement and app stickiness.</p>
+          </div>
+          <div class="exp-roi">
+            <div class="roi-item"><div class="roi-label">Data dependency</div><div class="roi-val">Favourites list accessible to search layer</div></div>
+            <div class="roi-item"><div class="roi-label">UX impact</div><div class="roi-val">Makes favourites visible in discovery flow</div></div>
+            <div class="roi-item"><div class="roi-label">Flywheel effect</div><div class="roi-val">Increases value of saving favourites</div></div>
+          </div>
+        </div>
+
+        <!-- SE-6 -->
+        <div class="exp-card exp-must reveal">
+          <div class="exp-head">
+            <div>
+              <div class="exp-id">SE-6</div>
+              <div class="exp-title">Rank restaurants with deals higher + offers filter</div>
+            </div>
+            <div class="exp-tags">
+              <span class="exp-tag et-must">Must Have</span>
+              <span class="exp-tag et-rank">Ranking + Filter</span>
+            </div>
+          </div>
+          <div class="exp-body">
+            <p>Restaurants with active deals receive a ranking boost in search results. Additionally, an &ldquo;Offers&rdquo; filter chip appears at the top of search results. When activated, the filter shows only restaurants with active deals; when deactivated, all restaurants reappear in the default ranked order.</p>
+            <p><strong>The conversion rationale:</strong> Deals are one of the highest-intent conversion signals in food delivery. A user who can see &ldquo;20% off&rdquo; on a restaurant they were already considering will convert at a materially higher rate than one who doesn&rsquo;t know a deal exists. Burying deals inside restaurant pages means most users never discover them. Surfacing deal availability at the search layer closes the discovery gap.</p>
+            <p>The filter chip also addresses a specific user behaviour: deal-seekers who open the app with the explicit goal of finding offers. These users currently have no efficient way to filter for deals except by browsing. The filter turns a manual hunt into a one-tap action.</p>
+          </div>
+          <div class="exp-roi">
+            <div class="roi-item"><div class="roi-label">Ranking lever</div><div class="roi-val">Deal-weighted score boost</div></div>
+            <div class="roi-item"><div class="roi-label">New UI</div><div class="roi-val">Offers filter chip at search top</div></div>
+            <div class="roi-item"><div class="roi-label">Target behaviour</div><div class="roi-val">Deal-seeking sessions</div></div>
+          </div>
+        </div>
+
+        <!-- SE-7 -->
+        <div class="exp-card exp-must reveal">
+          <div class="exp-head">
+            <div>
+              <div class="exp-id">SE-7</div>
+              <div class="exp-title">Price tier indicator (taka symbol) on restaurant cards</div>
+            </div>
+            <div class="exp-tags">
+              <span class="exp-tag et-must">Must Have</span>
+              <span class="exp-tag et-ux">Discovery Signal</span>
+            </div>
+          </div>
+          <div class="exp-body">
+            <p>Add a price tier indicator to each restaurant search result card, using one, two, or three currency (৳) symbols to represent the restaurant&rsquo;s relative price range. The tier is calculated from the restaurant&rsquo;s median basket size, classified into three buckets: lower, mid-level, and higher median basket.</p>
+            <p><strong>Why median basket size:</strong> A restaurant&rsquo;s average order value is a better proxy for a user&rsquo;s expected spend than item prices, because it reflects real ordering behaviour - including add-ons, portions, and typical combination orders. Median (rather than mean) is used to reduce the effect of outlier orders. The three-tier classification keeps the signal simple and actionable without requiring users to process exact numbers.</p>
+            <p><strong>The discovery problem it solves:</strong> Without a price signal in search results, a user browsing results for &ldquo;pizza&rdquo; has no way to distinguish a casual fast-food option from a premium restaurant before clicking through. This leads to click-throughs that end in drop-off when the user sees the price range. The ৳/৳৳/৳৳৳ indicator reduces this friction by setting price expectations at the search layer, before a user invests attention in a restaurant page.</p>
+          </div>
+          <div class="exp-roi">
+            <div class="roi-item"><div class="roi-label">Data source</div><div class="roi-val">Median basket size per restaurant</div></div>
+            <div class="roi-item"><div class="roi-label">Tiers</div><div class="roi-val">৳ &middot; ৳৳ &middot; ৳৳৳</div></div>
+            <div class="roi-item"><div class="roi-label">UX benefit</div><div class="roi-val">Reduce uninformed click-through drop-off</div></div>
+          </div>
+        </div>
+
+      </div><!-- /exp-stack -->
+
+      <h3>Priority summary across all experiments</h3>
+      <div class="matrix-wrap reveal">
+        <table class="priority-matrix">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Experiment</th>
+              <th>Priority</th>
+              <th>Signal category</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>SE-1</td>
+              <td data-label="Experiment">Indicators for previously ordered items</td>
+              <td data-label="Priority"><span class="p-must">Must Have</span></td>
+              <td data-label="Signal category">Personalisation</td>
+            </tr>
+            <tr>
+              <td>SE-Banglish</td>
+              <td data-label="Experiment">Banglish &amp; typo correction mapping</td>
+              <td data-label="Priority"><span class="p-must">Must Have</span></td>
+              <td data-label="Signal category">NLP / Language</td>
+            </tr>
+            <tr>
+              <td>SE-3</td>
+              <td data-label="Experiment">Rank restaurants with higher ratings higher</td>
+              <td data-label="Priority"><span class="p-should">Should Have</span></td>
+              <td data-label="Signal category">Quality Ranking</td>
+            </tr>
+            <tr>
+              <td>SE-4</td>
+              <td data-label="Experiment">Badge: prior order + high-rated restaurant</td>
+              <td data-label="Priority"><span class="p-must">Must Have</span></td>
+              <td data-label="Signal category">Personalisation</td>
+            </tr>
+            <tr>
+              <td>SE-5</td>
+              <td data-label="Experiment">Badge for favourite restaurants</td>
+              <td data-label="Priority"><span class="p-must">Must Have</span></td>
+              <td data-label="Signal category">Personalisation</td>
+            </tr>
+            <tr>
+              <td>SE-6</td>
+              <td data-label="Experiment">Rank deal restaurants higher + offers filter</td>
+              <td data-label="Priority"><span class="p-must">Must Have</span></td>
+              <td data-label="Signal category">Deal Discovery</td>
+            </tr>
+            <tr>
+              <td>SE-7</td>
+              <td data-label="Experiment">Price tier indicator (৳/৳৳/৳৳৳)</td>
+              <td data-label="Priority"><span class="p-must">Must Have</span></td>
+              <td data-label="Signal category">Price Discovery</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 06 METRICS -->
+    <section class="cs-section" id="metrics">
+      <div class="section-eyebrow">06 &mdash; Metrics</div>
+      <h2>How I would measure success - and what I&rsquo;d monitor to know if something was going wrong.</h2>
+
+      <div class="callout callout-orange reveal">
+        <p><strong>North Star metric:</strong> Search-to-order conversion rate - the % of search sessions that result in a completed order. All six experiments are designed to move this metric. Sub-metrics exist per experiment to diagnose which lever is working and which isn&rsquo;t.</p>
+      </div>
+
+      <table class="signal-table reveal">
+        <thead>
+          <tr>
+            <th>Metric category</th>
+            <th>Metric</th>
+            <th>Why it&rsquo;s tracked</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Core conversion</td>
+            <td data-label="Metric">Search-to-order conversion rate (overall)</td>
+            <td data-label="Why it&rsquo;s tracked">The single metric that tells us whether the search improvements are producing business value. Measured pre/post experiment launch and monitored weekly. Any regression triggers immediate investigation.</td>
+          </tr>
+          <tr>
+            <td>Language quality</td>
+            <td data-label="Metric">Zero-result query rate &amp; typo/Banglish query share</td>
+            <td data-label="Why it&rsquo;s tracked">Baseline for the Banglish experiment. Post-launch, zero-result rate should decline as more variant spellings resolve to valid restaurant matches. We also track what % of queries are detected as Banglish or typo-type to validate the initial ROI assumption.</td>
+          </tr>
+          <tr>
+            <td>Personalisation</td>
+            <td data-label="Metric">Click-through rate on results with personalisation badges vs. without</td>
+            <td data-label="Why it&rsquo;s tracked">Validates that the prior-order, favourite, and high-rated badges are actually influencing user behaviour. If badged results don&rsquo;t show a higher CTR than undecorated results, the badge design may need revisiting before we invest in further personalisation depth.</td>
+          </tr>
+          <tr>
+            <td>Deal engagement</td>
+            <td data-label="Metric">Offers filter usage rate &amp; conversion rate on filtered sessions</td>
+            <td data-label="Why it&rsquo;s tracked">If the filter is never used, the deal-seeker hypothesis was wrong. If it&rsquo;s used but doesn&rsquo;t improve conversion, the deal inventory may be too thin. Both scenarios tell us something different about the business health of the deals programme, not just the search UX.</td>
+          </tr>
+          <tr>
+            <td>Quality</td>
+            <td data-label="Metric">Post-order satisfaction score (ratings given after orders from search)</td>
+            <td data-label="Why it&rsquo;s tracked">SE-3 and SE-4 are designed to surface higher-quality restaurants. If they&rsquo;re working, the orders they generate should produce higher satisfaction scores than the baseline. A drop in post-order ratings after the ranking change is a signal we&rsquo;ve over-optimised for the wrong quality signal.</td>
+          </tr>
+          <tr>
+            <td>Discovery</td>
+            <td data-label="Metric">Uninformed click-through bounce rate (users who view &amp; exit restaurant page without ordering)</td>
+            <td data-label="Why it&rsquo;s tracked">SE-7 (price tier) is specifically designed to reduce click-throughs that end in drop-off due to price mismatch. If the price indicator is working, the bounce rate from restaurant pages for users who arrived via search should decline. A stable bounce rate post-launch suggests price wasn&rsquo;t the primary drop-off driver.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 07 RISKS -->
+    <section class="cs-section" id="risks">
+      <div class="section-eyebrow">07 &mdash; Risks</div>
+      <h2>What could go wrong - and how I designed against each risk.</h2>
+      <div class="risk-grid reveal">
+        <div class="risk-card">
+          <div class="risk-level r-high">High</div>
+          <div class="risk-title">Banglish mapping creates false positives and breaks valid searches</div>
+          <div class="risk-body">An overly aggressive typo correction that remaps a legitimate rare query to a common one will frustrate users with genuine unusual search intent. Mitigated by: building the correction layer as a candidate-expansion system (adds matches, doesn&rsquo;t replace them), requiring a confidence threshold before remapping, and staging rollout with close monitoring of the zero-result rate post-launch.</div>
+        </div>
+        <div class="risk-card">
+          <div class="risk-level r-high">High</div>
+          <div class="risk-title">Personalisation badges increase cognitive load and clutter the results UI</div>
+          <div class="risk-body">Three new badge types (prior order, high-rated prior order, favourite) simultaneously appearing on a results page could make the UI feel noisy. Mitigated by: clear visual hierarchy in the design (priority order: favourite &gt; high-rated prior &gt; prior order), constraining badges to a single icon per card, and A/B testing the badge density with a holdout group before full rollout.</div>
+        </div>
+        <div class="risk-card">
+          <div class="risk-level r-high">High</div>
+          <div class="risk-title">Deal ranking boost disadvantages quality restaurants without active promotions</div>
+          <div class="risk-body">A restaurant with 4.9 stars and no active deals could be ranked below a mediocre restaurant running a discount. Mitigated by: capping the deal ranking boost so it cannot overcome a large quality signal differential; the boost helps deal restaurants surface, not override the quality baseline.</div>
+        </div>
+        <div class="risk-card">
+          <div class="risk-level r-med">Medium</div>
+          <div class="risk-title">Price tier (৳/৳৳/৳৳৳) miscalibration leads to user price mismatch</div>
+          <div class="risk-body">If the median basket thresholds are set incorrectly, a restaurant could display the wrong tier, leading to misaligned price expectations. Mitigated by: validating the threshold calibration against a stratified sample of restaurants before launch, with manual QA spot-checks across the catalogue. The tiers should be reviewed and recalibrated as restaurant menu pricing shifts over time.</div>
+        </div>
+        <div class="risk-card">
+          <div class="risk-level r-med">Medium</div>
+          <div class="risk-title">ROI data collection delays slow down the experiment gating process</div>
+          <div class="risk-body">The ROI framework requires analytics data (typo query %, conversion delta by query type) before experiments can be greenlit. If data infrastructure is not in place to measure these inputs, the framework stalls. Mitigated by: identifying the required data points early and confirming availability with the analytics team before the CRD was finalised, not after.</div>
+        </div>
+        <div class="risk-card">
+          <div class="risk-level r-low">Low</div>
+          <div class="risk-title">Experiment interactions cause attribution ambiguity in results</div>
+          <div class="risk-body">Launching six experiments simultaneously makes it difficult to attribute conversion changes to any specific change. Mitigated by: sequencing experiments in priority order with a holdout group, and using flagging in the analytics layer to distinguish sessions that triggered each specific feature. Complex interaction effects would require full-factorial A/B testing, which I noted as a future iteration if attribution ambiguity became material.</div>
+        </div>
+      </div>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 08 LESSONS -->
+    <section class="cs-section" id="lessons">
+      <div class="section-eyebrow">08 &mdash; Lessons</div>
+      <h2>What this initiative taught me about evidence-based product decisions and local market depth.</h2>
+      <div class="lesson-list reveal">
+        <div class="lesson-item">
+          <div class="lesson-num">01</div>
+          <div>
+            <div class="lesson-title">The best PM question is &ldquo;what data would tell me not to build this?&rdquo;</div>
+            <div class="lesson-body">Every PM wants to build features. The discipline is knowing which ones not to build. The ROI decision matrix I created for this initiative - defining the statistical conditions that would either justify or kill each experiment - is the most transferable thing I took from it. <strong>Features built without a falsifiable hypothesis are bets, not decisions.</strong> The matrix forced every experiment to earn its place on the roadmap.</div>
+          </div>
+        </div>
+        <div class="lesson-item">
+          <div class="lesson-num">02</div>
+          <div>
+            <div class="lesson-title">Localisation is a product requirement, not a translation task</div>
+            <div class="lesson-body">Banglish is not a quirk of the Bangladeshi market - it&rsquo;s how a large share of educated, digitally-fluent users type. Treating it as a translation problem (map Banglish to English) misses the point. It required explicit product thinking: <strong>what is the user&rsquo;s actual intent? What variations of that intent will my system encounter? How do I handle the ones it doesn&rsquo;t recognise?</strong> These are PM questions, not engineering questions.</div>
+          </div>
+        </div>
+        <div class="lesson-item">
+          <div class="lesson-num">03</div>
+          <div>
+            <div class="lesson-title">Personalisation earns its complexity only when it changes behaviour</div>
+            <div class="lesson-body">Adding three personalisation badge types to search results is technically straightforward. What made the spec rigorous was tying each badge type to a specific behavioural hypothesis: favourites are clicked more when they&rsquo;re visible; prior-order badges reduce the decision cost for returning users. <strong>Without the behavioural hypothesis, personalisation is decoration.</strong> With it, it&rsquo;s a testable intervention with a measurable outcome.</div>
+          </div>
+        </div>
+        <div class="lesson-item">
+          <div class="lesson-num">04</div>
+          <div>
+            <div class="lesson-title">Ranking changes require holding the quality floor</div>
+            <div class="lesson-body">Every time you adjust search ranking - for deals, for ratings, for personalisation - you risk eroding the quality baseline for users who aren&rsquo;t in the target segment. I specified explicit caps on ranking boosts throughout the CRD to prevent any single signal from overwhelming the quality signal. <strong>The goal of ranking experiments is to surface better options for more users, not to reward the loudest signal.</strong></div>
+          </div>
+        </div>
+        <div class="lesson-item">
+          <div class="lesson-num">05</div>
+          <div>
+            <div class="lesson-title">A CRD is a conversation tool, not just a documentation artefact</div>
+            <div class="lesson-body">The Change Requirement Document for this initiative served as the primary alignment artefact across data, engineering, design, and stakeholders. Writing it forced me to be specific about every assumption I was making. Every &ldquo;TBD&rdquo; in the document was a conversation I still needed to have. <strong>Ambiguity in a spec is always cheaper to resolve before development than during it.</strong></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main><!-- /cs-body -->
+
+  <!-- APPENDIX -->
+  <div class="appendix-band">
+    <div class="appendix-inner">
+      <div class="appendix-header">
+        <div class="appendix-eyebrow">Appendix</div>
+        <div class="appendix-title">Spec Reference</div>
+        <div class="appendix-sub">Formal spec IDs, descriptions, and acceptance notes from the original Change Requirement Document authored for this initiative.</div>
+      </div>
+
+      <!-- FULL SPEC TABLE -->
+      <div class="appendix-block reveal">
+        <div class="appendix-block-label">Appendix A &mdash; Full Experiment Spec Reference (from CRD)</div>
+        <table class="appendix-table">
+          <thead>
+            <tr><th>#</th><th>Title</th><th>Description</th><th>Priority</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>SE-1</td>
+              <td data-label="Title">Indicators for previously ordered items</td>
+              <td data-label="Description">If a user has ordered an item previously, there will be an icon at the right side of the item search result indicating that the item has been bought previously. A single icon for a single prior order transaction; a multiple-order icon for multiple prior transactions.</td>
+              <td data-label="Priority">Must have</td>
+            </tr>
+            <tr>
+              <td>SE-3</td>
+              <td data-label="Title">Rank restaurants with a higher number of ratings higher</td>
+              <td data-label="Description">Add extra score points to restaurants whose rating value is above a threshold rating value AND whose rating count is above a threshold rating count. Both conditions must be met.</td>
+              <td data-label="Priority">Should have</td>
+            </tr>
+            <tr>
+              <td>SE-4</td>
+              <td data-label="Title">Add badge to restaurants where I have ordered earlier and rated highly</td>
+              <td data-label="Description">Identify restaurants where the user has ordered previously and the restaurant has a rating value above a threshold. Mark those restaurants with icon specifications in the search result card.</td>
+              <td data-label="Priority">Must have</td>
+            </tr>
+            <tr>
+              <td>SE-5</td>
+              <td data-label="Title">Add badge to restaurants which are favourite</td>
+              <td data-label="Description">If the search result contains any restaurant that is in the user&rsquo;s favourite list, mark those restaurants with a &ldquo;favourite&rdquo; icon in the search result card.</td>
+              <td data-label="Priority">Must have</td>
+            </tr>
+            <tr>
+              <td>SE-6</td>
+              <td data-label="Title">Rank restaurants with deals higher + offers filter</td>
+              <td data-label="Description">Pull restaurants with active deals to the top of search results. Add an offers filter chip at the top of results. When activated, show only restaurants with active deals; deactivate to return to full ranked list.</td>
+              <td data-label="Priority">Must have</td>
+            </tr>
+            <tr>
+              <td>SE-7</td>
+              <td data-label="Title">Add currency (taka) symbol to search results at restaurant level</td>
+              <td data-label="Description">A currency icon will appear with each restaurant in results: single (৳), double (৳৳), or triple (৳৳৳) based on classified median basket size. Lower median basket = ৳; mid-level = ৳৳; higher = ৳৳৳.</td>
+              <td data-label="Priority">Must have</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- ROI STATS REQUIRED -->
+      <div class="appendix-block reveal">
+        <div class="appendix-block-label">Appendix B &mdash; Statistics Required to Prove ROI (from CRD)</div>
+        <table class="appendix-table">
+          <thead>
+            <tr><th>Experiment</th><th>Metric A</th><th>Metric B</th><th>Build condition</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Banglish / Typo</td>
+              <td data-label="Metric A">% of search queries that are typos or Banglish variations</td>
+              <td data-label="Metric B">Conversion rate for erroneous queries vs. clean queries</td>
+              <td data-label="Build condition">A high + B high = build. A high + B low = skip. A low + B high = depends on A value. A low + B low = skip.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </div><!-- /appendix-band -->
+
+  <!-- FOOTER -->
+  <footer>
+    <a href="work.html">&larr; Back to all case studies</a>
+    &nbsp;&nbsp;&middot;&nbsp;&nbsp;
+    <a href="index.html">Akash Poddar</a>
+    &nbsp;&nbsp;&middot;&nbsp;&nbsp;
+    <a href="index.html#contact">Get in touch</a>
+  </footer>
+
+  <script>
+    const reveals = document.querySelectorAll('.reveal');
+    const isMobile = window.innerWidth < 768;
+    const io = new IntersectionObserver((entries) => {
+      const visible = entries.filter(e => e.isIntersecting)
+        .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+      if (!visible.length) return;
+      requestAnimationFrame(() => {
+        visible.forEach((entry, i) => {
+          entry.target.style.transitionDelay = isMobile ? '0s' : (i * 0.05) + 's';
+          entry.target.classList.add('visible');
+          io.unobserve(entry.target);
+        });
+      });
+    }, { threshold: 0.06, rootMargin: '0px 0px -40px 0px' });
+    reveals.forEach(r => io.observe(r));
+
+    const tocItems = document.querySelectorAll('.toc-item');
+    const sections = document.querySelectorAll('.cs-section[id]');
+    const tocObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          tocItems.forEach(t => t.classList.remove('active'));
+          const active = document.querySelector(`.toc-item[href="#${entry.target.id}"]`);
+          if (active) active.classList.add('active');
+        }
+      });
+    }, { threshold: 0, rootMargin: '-101px 0px -85% 0px' });
+    sections.forEach(s => tocObserver.observe(s));
+  </script>
+
+</body>
+</html>
