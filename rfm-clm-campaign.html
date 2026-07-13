@@ -1,0 +1,1151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-62DWPTYD6F"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-62DWPTYD6F');
+  </script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27><rect width=%2732%27 height=%2732%27 rx=%274%27 fill=%27%230e0e0e%27/><text x=%2716%27 y=%2722%27 font-family=%27Georgia,serif%27 font-size=%2714%27 font-weight=%27600%27 fill=%27%23f7f5f0%27 text-anchor=%27middle%27>AP</text></svg>" />
+  <title>Pathao Food RFM &amp; CLM Engine - Lifecycle Segmentation at Scale | Akash Poddar</title>
+  <meta name="description" content="How I built Pathao Food's RFM-based Customer Lifecycle Management engine - segmenting 3.9M+ users into 28 recency x value cohorts and designing a targeted, budget-governed reactivation program." />
+  <link rel="canonical" href="https://echo-akash.github.io/rfm-clm-campaign.html" />
+  <meta property="og:title" content="Pathao Food RFM & CLM Engine - Lifecycle Segmentation at Scale | Akash Poddar" />
+  <meta property="og:description" content="Segmenting 3.9M+ Pathao Food users into a 28-cell RFM x recency matrix, and designing a targeted, budget-governed lifecycle reactivation program." />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://echo-akash.github.io/rfm-clm-campaign.html" />
+  <meta property="og:image" content="https://echo-akash.github.io/og-image.png" />
+  <meta name="author" content="Akash Poddar" />
+  <meta name="robots" content="index, follow" />
+  <meta name="theme-color" content="#0e0e0e" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Pathao Food RFM & CLM Engine - Lifecycle Segmentation at Scale",
+    "description": "How Akash Poddar built Pathao Food's RFM-based Customer Lifecycle Management engine, segmenting 3.9M+ users into 28 recency x value cohorts and designing a targeted, budget-governed reactivation program.",
+    "author": { "@type": "Person", "name": "Akash Poddar", "url": "https://echo-akash.github.io/" },
+    "publisher": { "@type": "Person", "name": "Akash Poddar" }
+  }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,300;1,9..144,500&family=DM+Sans:wght@300;400;500&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,300;1,9..144,500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" /></noscript>
+  <style>
+    :root {
+      --ink: #0e0e0e;
+      --ink-mid: #444;
+      --ink-muted: #696969;
+      --ink-faint: #bbb;
+      --surface: #f7f5f0;
+      --white: #ffffff;
+      --accent: #a15c07;
+      --accent-light: #fbf0de;
+      --accent-dark: #6b3d05;
+      --accent2: #0f766e;
+      --accent2-light: #ecfdf5;
+      --green: #166534;
+      --green-light: #dcfce7;
+      --amber: #b45309;
+      --amber-light: #fef3e2;
+      --line: rgba(0,0,0,0.08);
+      --serif: 'Fraunces', Georgia, serif;
+      --sans: 'DM Sans', system-ui, sans-serif;
+      --radius: 10px;
+      --ease: cubic-bezier(0.16, 1, 0.3, 1);
+      --wide-w: 1000px;
+      --t-diamond: #38bdf8;
+      --t-platinum: #94a3b8;
+      --t-gold: #eab308;
+      --t-silver: #cbd5e1;
+      --t-bronze: #b45309;
+      --t-iron: #64748b;
+      --t-rust: #b91c1c;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+    }
+    body { font-family: var(--sans); background: var(--surface); color: var(--ink); font-size: 15px; line-height: 1.6; overflow-x: hidden; }
+
+    /* ── NAV ── */
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 0 40px; height: 56px; background: rgba(247,245,240,0.88); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); }
+    .nav-logo { font-family: var(--serif); font-size: 16px; font-weight: 600; color: var(--ink); text-decoration: none; letter-spacing: -0.02em; }
+    .nav-links { display: flex; gap: 32px; list-style: none; }
+    .nav-links a { font-size: 13px; color: var(--ink-mid); text-decoration: none; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--accent); }
+    .nav-cta { font-size: 13px; padding: 7px 18px; background: var(--ink); color: var(--white); border-radius: 20px; text-decoration: none; transition: background 0.2s; }
+    .nav-cta:hover { background: var(--accent); }
+
+    /* ── HERO ── */
+    .cs-hero { background: var(--ink); padding: 120px 40px 80px; position: relative; overflow: hidden; }
+    .cs-hero-inner { max-width: var(--wide-w); margin: 0 auto; position: relative; z-index: 1; }
+    .cs-hero-grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px); background-size: 60px 60px; }
+    .cs-hero-shimmer { position: absolute; inset: 0; background: radial-gradient(ellipse 60% 60% at 70% 50%, rgba(161,92,7,0.22) 0%, transparent 70%); }
+    .cs-hero-bar { height: 4px; background: linear-gradient(90deg, #a15c07, #eab308); border-radius: 2px; width: 64px; margin-bottom: 28px; }
+    .cs-meta-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 24px; }
+    .cs-tag { font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; padding: 5px 14px; border-radius: 20px; }
+    .tag-blue   { background: rgba(29,78,216,0.22); color: #93c5fd; border: 1px solid rgba(29,78,216,0.35); }
+    .tag-purple { background: rgba(124,58,237,0.18); color: #c4a8ff; border: 1px solid rgba(124,58,237,0.25); }
+    .tag-green  { background: rgba(22,101,52,0.2); color: #6ee7b7; border: 1px solid rgba(22,101,52,0.28); }
+    .tag-gray   { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.45); border: 1px solid rgba(255,255,255,0.1); }
+    .cs-hero-title { font-family: var(--serif); font-size: clamp(34px, 5.5vw, 60px); font-weight: 600; letter-spacing: -0.03em; line-height: 0.95; color: #fff; margin-bottom: 20px; }
+    .cs-hero-title em { font-style: italic; font-weight: 300; color: rgba(255,255,255,0.38); }
+    .cs-hero-sub { font-size: 17px; font-weight: 300; color: rgba(255,255,255,0.5); max-width: 640px; line-height: 1.7; margin-bottom: 48px; }
+    .cs-hero-sub strong { color: rgba(255,255,255,0.8); font-weight: 400; }
+    .cs-kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 40px; }
+    .cs-kpi { padding-right: 32px; border-right: 1px solid rgba(255,255,255,0.08); }
+    .cs-kpi:last-child { border-right: none; }
+    .cs-kpi-num { font-family: var(--serif); font-size: 32px; font-weight: 600; letter-spacing: -0.02em; color: #fff; line-height: 1; margin-bottom: 6px; }
+    .cs-kpi-num span { font-size: 20px; font-style: italic; font-weight: 300; color: rgba(255,255,255,0.35); }
+    .cs-kpi-label { font-size: 11px; color: rgba(255,255,255,0.38); line-height: 1.4; max-width: 130px; }
+
+    /* ── TOC ── */
+    .toc-bar { position: sticky; top: 56px; z-index: 90; background: var(--white); border-bottom: 1px solid var(--line); overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+    .toc-bar::-webkit-scrollbar { display: none; }
+    .toc-inner { max-width: var(--wide-w); margin: 0 auto; display: flex; padding: 0 40px; }
+    .toc-item { font-size: 12px; color: var(--ink-muted); text-decoration: none; padding: 14px 20px; white-space: nowrap; border-bottom: 2px solid transparent; transition: color 0.2s, border-color 0.2s; display: flex; align-items: center; gap: 6px; }
+    .toc-item:hover { color: var(--accent); border-bottom-color: var(--accent); }
+    .toc-item.active { color: var(--accent); border-bottom-color: var(--accent); }
+    .toc-num { font-size: 10px; color: var(--ink-faint); }
+
+    /* ── BODY ── */
+    .cs-body { max-width: var(--wide-w); margin: 0 auto; padding: 0 40px; }
+    .cs-section { padding: 72px 0 0; content-visibility: auto; contain-intrinsic-size: 0 600px; }
+    .cs-section:last-of-type { padding-bottom: 80px; }
+    .section-eyebrow { font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+    .section-eyebrow::after { content: ''; flex: 0 0 32px; height: 1px; background: var(--accent); opacity: 0.4; }
+    .cs-section h2 { font-family: var(--serif); font-size: 32px; font-weight: 600; letter-spacing: -0.02em; color: var(--ink); line-height: 1.15; margin-bottom: 28px; }
+    .cs-section h3 { font-family: var(--serif); font-size: 20px; font-weight: 600; letter-spacing: -0.01em; color: var(--ink); margin: 40px 0 16px; }
+    .cs-section p { font-size: 15px; color: var(--ink-mid); line-height: 1.8; font-weight: 300; margin-bottom: 16px; }
+    .cs-section p:last-child { margin-bottom: 0; }
+    .cs-section p strong { color: var(--ink); font-weight: 500; }
+    .cs-divider { border: none; border-top: 1px solid var(--line); margin: 56px 0 0; }
+
+    /* ── CALLOUT ── */
+    .callout { border-left: 3px solid var(--accent); border-radius: 0 var(--radius) var(--radius) 0; padding: 20px 24px; margin: 28px 0; }
+    .callout-blue   { background: var(--accent-light); }
+    .callout-blue p strong { color: var(--accent-dark); }
+    .callout-purple { background: var(--accent2-light); border-left-color: var(--accent2); }
+    .callout-purple p strong { color: var(--accent2); }
+    .callout-green  { background: var(--green-light); border-left-color: var(--green); }
+    .callout-green p strong { color: var(--green); }
+    .callout-amber  { background: var(--amber-light); border-left-color: var(--amber); }
+    .callout-amber p strong { color: var(--amber); }
+    .callout p { margin-bottom: 0; color: var(--ink); font-weight: 400; font-size: 14px; line-height: 1.75; }
+
+    /* ── AI BADGE (reused as DATA badge) ── */
+    .ai-badge { display: inline-flex; align-items: center; gap: 7px; background: linear-gradient(135deg, rgba(161,92,7,0.1), rgba(15,118,110,0.12)); border: 1px solid rgba(15,118,110,0.25); border-radius: 20px; padding: 6px 16px; font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent2); margin-bottom: 14px; }
+    .ai-badge-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent2); flex-shrink: 0; animation: aipulse 2s ease-in-out infinite; }
+    @keyframes aipulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+    @media (prefers-reduced-motion: reduce) { .ai-badge-dot { animation: none; } }
+
+    /* ── STEP LIST ── */
+    .step-list { display: flex; flex-direction: column; margin: 28px 0; }
+    .step-item { display: grid; grid-template-columns: 56px 1fr; gap: 0 20px; padding: 28px 0; border-top: 1px solid var(--line); align-items: start; }
+    .step-item:last-child { border-bottom: 1px solid var(--line); }
+    .step-num { font-family: var(--serif); font-size: 28px; font-weight: 600; color: var(--accent); letter-spacing: -0.02em; line-height: 1; padding-top: 4px; }
+    .step-title { font-family: var(--serif); font-size: 18px; font-weight: 600; color: var(--ink); margin-bottom: 8px; line-height: 1.2; }
+    .step-body { font-size: 14px; color: var(--ink-mid); line-height: 1.75; font-weight: 300; }
+    .step-body strong { color: var(--ink); font-weight: 500; }
+
+    /* ── THREE-LAYER CARDS ── */
+    .layer-stack { display: flex; flex-direction: column; gap: 16px; margin: 28px 0; }
+    .layer-card { background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); padding: 28px; position: relative; overflow: hidden; }
+    .layer-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; }
+    .layer-fundamental::before { background: linear-gradient(90deg, #a15c07, #eab308); }
+    .layer-technical::before  { background: linear-gradient(90deg, #0f766e, #34d399); }
+    .layer-sentiment::before  { background: linear-gradient(90deg, #b91c1c, #f87171); }
+    .layer-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 16px; }
+    .layer-title-group {}
+    .layer-num { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 4px; }
+    .layer-title { font-family: var(--serif); font-size: 21px; font-weight: 600; color: var(--ink); line-height: 1.1; margin-bottom: 6px; }
+    .layer-freq { font-size: 12px; font-weight: 500; color: var(--ink-muted); }
+    .layer-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+    .layer-tag { font-size: 11px; padding: 3px 10px; border-radius: 20px; font-weight: 500; }
+    .lt-blue   { background: var(--accent-light); color: var(--accent-dark); }
+    .lt-purple { background: var(--accent2-light); color: var(--accent2); }
+    .lt-green  { background: #fee2e2; color: #b91c1c; }
+    .layer-body { font-size: 14px; color: var(--ink-mid); line-height: 1.8; font-weight: 300; }
+    .layer-body strong { color: var(--ink); font-weight: 500; }
+
+    /* ── WEIGHT BARS ── */
+    .weight-section { margin: 28px 0; }
+    .weight-group-label { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-muted); margin-bottom: 14px; padding-bottom: 8px; border-bottom: 1px solid var(--line); }
+    .weight-list { display: flex; flex-direction: column; gap: 10px; }
+    .weight-row { display: flex; align-items: center; gap: 12px; }
+    .weight-label { font-size: 13px; color: var(--ink-mid); flex: 0 0 auto; width: 180px; min-width: 0; }
+    .weight-bar-bg { flex: 1; min-width: 0; height: 6px; background: var(--line); border-radius: 3px; overflow: hidden; }
+    .weight-bar-fill { height: 100%; border-radius: 3px; background: linear-gradient(90deg, var(--accent), #eab308); }
+    .weight-pct { font-size: 12px; font-weight: 500; color: var(--ink-muted); flex: 0 0 32px; text-align: right; }
+
+    /* ── TIER GRID (7 RFM value tiers) ── */
+    .tier-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px; margin: 28px 0; }
+    .tier-card { background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px 10px; text-align: center; }
+    .tier-dot { width: 13px; height: 13px; border-radius: 50%; margin: 0 auto 10px; }
+    .tier-name { font-family: var(--serif); font-size: 14px; font-weight: 600; color: var(--ink); margin-bottom: 6px; line-height: 1.2; }
+    .tier-pct { font-family: var(--serif); font-size: 19px; font-weight: 600; color: var(--ink); line-height: 1; margin-bottom: 4px; }
+    .tier-size { font-size: 10px; color: var(--ink-muted); line-height: 1.35; }
+
+    /* ── INDICATOR GRID ── */
+    .ind-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin: 28px 0; }
+    .ind-card { background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px 12px; text-align: center; }
+    .ind-icon { font-size: 22px; margin-bottom: 8px; line-height: 1; }
+    .ind-pct { font-family: var(--serif); font-size: 20px; font-weight: 600; color: var(--accent2); line-height: 1; margin-bottom: 4px; }
+    .ind-name { font-size: 11px; font-weight: 500; color: var(--ink); margin-bottom: 4px; }
+    .ind-examples { font-size: 10px; color: var(--ink-muted); line-height: 1.4; }
+
+    /* ── SOURCE GRID ── */
+    .source-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 28px 0; }
+    .source-card { background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); padding: 24px; }
+    .source-icon { font-size: 26px; margin-bottom: 10px; line-height: 1; }
+    .source-title { font-family: var(--serif); font-size: 16px; font-weight: 600; color: var(--ink); margin-bottom: 8px; }
+    .source-body { font-size: 13px; color: var(--ink-mid); line-height: 1.65; }
+    .source-tag { display: inline-block; margin-top: 12px; font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; padding: 4px 10px; border-radius: 20px; background: var(--accent-light); color: var(--accent-dark); }
+
+    /* ── SIGNAL TABLE ── */
+    .signal-table { width: 100%; border-collapse: collapse; margin: 28px 0; font-size: 13.5px; }
+    .signal-table th { text-align: left; font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-muted); padding: 12px 16px; border-bottom: 2px solid var(--line); }
+    .signal-table td { padding: 14px 16px; border-bottom: 1px solid var(--line); color: var(--ink-mid); vertical-align: top; line-height: 1.6; }
+    .signal-table td:first-child { font-weight: 500; color: var(--ink); }
+    .signal-table tr:last-child td { border-bottom: none; }
+    .signal-table tr:hover td { background: rgba(161,92,7,0.03); }
+
+    /* ── MATRIX PILLS ── */
+    .mx-pill { display: inline-block; font-size: 10px; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; padding: 3px 9px; border-radius: 20px; margin-top: 4px; }
+    .mx-treat { background: var(--accent2-light); color: var(--accent2); }
+    .mx-control { background: var(--line); color: var(--ink-muted); }
+    .mx-num { font-weight: 600; color: var(--ink); }
+
+    /* ── TWO / THREE COL ── */
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 28px 0; }
+    .two-col-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 18px; margin: 28px 0; }
+
+    /* ── CARD ── */
+    .card { background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); padding: 24px; }
+    .card-label { font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; }
+    .card h4 { font-family: var(--serif); font-size: 17px; font-weight: 600; color: var(--ink); margin-bottom: 8px; line-height: 1.3; }
+    .card p { font-size: 13.5px; color: var(--ink-mid); line-height: 1.7; margin-bottom: 0; }
+
+    /* ── RISK / SCENARIO GRID ── */
+    .risk-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 28px 0; }
+    .risk-card { background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); padding: 22px; }
+    .risk-level { font-size: 10px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; padding: 3px 10px; border-radius: 20px; display: inline-block; margin-bottom: 10px; }
+    .r-high { background: #faeae7; color: #8c3320; }
+    .r-med  { background: var(--amber-light); color: var(--amber); }
+    .r-low  { background: var(--green-light); color: var(--green); }
+    .risk-title { font-size: 14px; font-weight: 500; color: var(--ink); margin-bottom: 8px; line-height: 1.35; }
+    .risk-body { font-size: 13px; color: var(--ink-mid); line-height: 1.7; }
+
+    /* ── LESSON LIST ── */
+    .lesson-list { display: flex; flex-direction: column; margin: 28px 0; }
+    .lesson-item { display: grid; grid-template-columns: 48px 1fr; gap: 0 20px; padding: 28px 0; border-top: 1px solid var(--line); }
+    .lesson-item:last-child { border-bottom: 1px solid var(--line); }
+    .lesson-num { font-family: var(--serif); font-size: 24px; font-weight: 600; color: var(--accent); opacity: 0.4; line-height: 1; padding-top: 4px; }
+    .lesson-title { font-family: var(--serif); font-size: 18px; font-weight: 600; color: var(--ink); margin-bottom: 8px; line-height: 1.2; }
+    .lesson-body { font-size: 14px; color: var(--ink-mid); line-height: 1.75; font-weight: 300; }
+    .lesson-body strong { color: var(--ink); font-weight: 500; }
+
+    /* ── VIDEO CARD (reused as "map" style CTA card, unused here but kept for pattern parity) ── */
+    .video-card { display: flex; align-items: center; gap: 24px; background: var(--ink); border-radius: var(--radius); padding: 28px 32px; margin: 28px 0; text-decoration: none; position: relative; overflow: hidden; border: 1px solid rgba(255,255,255,0.06); transition: border-color 0.25s, transform 0.25s var(--ease); }
+    .video-card:hover { border-color: rgba(161,92,7,0.55); transform: translateY(-2px); }
+    .video-card-bg { position: absolute; inset: 0; background: radial-gradient(ellipse 50% 80% at 90% 50%, rgba(161,92,7,0.18) 0%, transparent 70%); pointer-events: none; }
+    .video-play-btn { flex-shrink: 0; width: 52px; height: 52px; border-radius: 50%; background: var(--accent); color: #fff; display: flex; align-items: center; justify-content: center; transition: background 0.2s, transform 0.2s; position: relative; z-index: 1; }
+    .video-card:hover .video-play-btn { background: #c17a12; transform: scale(1.08); }
+    .video-card-content { display: flex; align-items: center; gap: 20px; flex: 1; position: relative; z-index: 1; flex-wrap: wrap; }
+    .video-card-text { flex: 1; min-width: 0; }
+    .video-card-label { font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #eab308; margin-bottom: 5px; }
+    .video-card-title { font-family: var(--serif); font-size: 18px; font-weight: 600; color: #fff; line-height: 1.2; margin-bottom: 5px; }
+    .video-card-sub { font-size: 12px; color: rgba(255,255,255,0.38); line-height: 1.5; }
+    .video-card-cta { flex-shrink: 0; display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.55); white-space: nowrap; transition: color 0.2s; }
+    .video-card:hover .video-card-cta { color: #fff; }
+
+    /* ── APPENDIX BAND ── */
+    .appendix-band { background: #111; border-top: 1px solid rgba(255,255,255,0.06); padding: 80px 40px; }
+    .appendix-inner { max-width: var(--wide-w); margin: 0 auto; }
+    .appendix-header { margin-bottom: 56px; }
+    .appendix-eyebrow { font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent2); margin-bottom: 12px; }
+    .appendix-title { font-family: var(--serif); font-size: 32px; font-weight: 600; letter-spacing: -0.02em; color: #fff; margin-bottom: 12px; }
+    .appendix-sub { font-size: 15px; color: rgba(255,255,255,0.4); font-weight: 300; max-width: 560px; line-height: 1.7; }
+    .appendix-block { margin-bottom: 56px; }
+    .appendix-block:last-child { margin-bottom: 0; }
+    .appendix-block-label { font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.3); margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .appendix-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .appendix-table th { text-align: left; font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,255,255,0.3); padding: 10px 16px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+    .appendix-table td { padding: 14px 16px; border-bottom: 1px solid rgba(255,255,255,0.06); color: rgba(255,255,255,0.55); vertical-align: top; line-height: 1.65; }
+    .appendix-table td:first-child { color: rgba(255,255,255,0.25); font-size: 11px; white-space: nowrap; font-weight: 500; letter-spacing: 0.04em; }
+    .appendix-table tr:last-child td { border-bottom: none; }
+    .appendix-table tr:hover td { background: rgba(255,255,255,0.02); }
+    .appendix-flow-intro { font-size: 14px; color: rgba(255,255,255,0.4); margin-bottom: 28px; font-weight: 300; }
+    .flow-steps { display: flex; flex-direction: column; }
+    .flow-arrow { text-align: center; color: rgba(255,255,255,0.15); font-size: 18px; padding: 4px 0 4px 24px; }
+    .flow-step { display: grid; grid-template-columns: 40px 1fr; gap: 0 16px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); border-radius: var(--radius); padding: 18px 20px; align-items: start; }
+    .flow-step-final { background: rgba(15,118,110,0.12); border-color: rgba(15,118,110,0.3); }
+    .flow-step-num { font-family: var(--serif); font-size: 18px; font-weight: 600; color: var(--accent2); line-height: 1; padding-top: 2px; }
+    .flow-step-final .flow-step-num { font-size: 20px; }
+    .flow-step-title { font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.7); margin-bottom: 5px; }
+    .flow-step-text { font-size: 12.5px; color: rgba(255,255,255,0.38); line-height: 1.65; }
+
+    /* ── REVEAL ── */
+    .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.6s var(--ease), transform 0.6s var(--ease); }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* ── FOOTER ── */
+    footer { background: var(--ink); border-top: 1px solid rgba(255,255,255,0.06); padding: 24px 40px; text-align: center; font-size: 12px; color: rgba(255,255,255,0.55); }
+    footer a { color: rgba(255,255,255,0.55); text-decoration: none; }
+    footer a:hover { color: var(--white); }
+
+    /* ══════════════════════════════════════════
+       RESPONSIVE - 768px
+    ══════════════════════════════════════════ */
+    @media (max-width: 768px) {
+      nav { padding: 0 20px; }
+      .nav-links { display: none; }
+
+      .cs-hero { padding: 96px 20px 52px; }
+      .cs-hero-title { font-size: clamp(28px, 8vw, 44px); }
+      .cs-hero-sub { font-size: 14px; margin-bottom: 32px; }
+      .cs-kpi-row { grid-template-columns: 1fr 1fr; gap: 24px 16px; padding-top: 28px; }
+      .cs-kpi { border-right: none !important; padding-right: 0 !important; padding-left: 0 !important; }
+      .cs-kpi:nth-child(odd) { border-right: 1px solid rgba(255,255,255,0.1) !important; padding-right: 16px !important; }
+      .cs-kpi-num { font-size: 24px; }
+      .cs-kpi-label { font-size: 11px; }
+
+      .toc-inner { padding: 0 16px; }
+      .toc-item { padding: 12px 12px; font-size: 11px; }
+      .cs-body { padding: 0 20px; }
+      .cs-section { padding: 48px 0 0; }
+      .cs-section h2 { font-size: 22px; margin-bottom: 20px; }
+      .cs-section h3 { font-size: 17px; margin: 28px 0 12px; }
+      .cs-section p { font-size: 14px; line-height: 1.75; }
+      .cs-divider { margin: 40px 0 0; }
+      .callout { padding: 16px 18px; }
+
+      .two-col, .two-col-3, .risk-grid, .source-grid { grid-template-columns: 1fr; }
+
+      .ind-grid { grid-template-columns: repeat(3, 1fr); gap: 10px; }
+      .tier-grid { grid-template-columns: repeat(4, 1fr); gap: 8px; }
+
+      .layer-card { padding: 22px; }
+      .layer-head { flex-direction: column; gap: 12px; }
+
+      .weight-label { width: 120px; font-size: 12px; }
+
+      .step-item { grid-template-columns: 40px 1fr; gap: 0 14px; padding: 20px 0; }
+      .step-num { font-size: 22px; }
+      .step-title { font-size: 16px; }
+      .step-body { font-size: 13.5px; }
+
+      .lesson-item { grid-template-columns: 40px 1fr; gap: 0 14px; padding: 20px 0; }
+      .lesson-num { font-size: 20px; }
+      .lesson-title { font-size: 16px; }
+      .lesson-body { font-size: 13.5px; }
+
+      .video-card { padding: 20px; gap: 16px; }
+      .video-play-btn { width: 44px; height: 44px; }
+      .video-card-title { font-size: 16px; }
+      .video-card-cta { display: none; }
+
+      .signal-table { border-collapse: separate; border-spacing: 0; font-size: 13px; }
+      .signal-table thead { display: none; }
+      .signal-table tbody { display: flex; flex-direction: column; gap: 12px; }
+      .signal-table tr { display: block; background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px; }
+      .signal-table td { display: block; padding: 4px 0; border: none; white-space: normal; font-size: 13.5px; line-height: 1.65; }
+      .signal-table td:first-child { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); padding-bottom: 8px; margin-bottom: 4px; border-bottom: 1px solid var(--line); }
+      .signal-table td[data-label]::before { content: attr(data-label); display: block; font-size: 10px; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase; color: var(--ink-muted); margin-top: 8px; margin-bottom: 2px; }
+
+      .appendix-table { border-collapse: separate; border-spacing: 0; }
+      .appendix-table thead { display: none; }
+      .appendix-table tbody { display: flex; flex-direction: column; gap: 12px; }
+      .appendix-table tr { display: block; border: 1px solid rgba(255,255,255,0.09); border-radius: var(--radius); padding: 16px; background: rgba(255,255,255,0.025); }
+      .appendix-table td { display: block; padding: 4px 0; border: none; font-size: 13px; line-height: 1.65; white-space: normal; color: rgba(255,255,255,0.6); }
+      .appendix-table td:first-child { font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent2) !important; padding-bottom: 8px; margin-bottom: 4px; border-bottom: 1px solid rgba(255,255,255,0.07); }
+      .appendix-table td[data-label]::before { content: attr(data-label); display: block; font-size: 10px; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase; color: rgba(255,255,255,0.28); margin-top: 8px; margin-bottom: 2px; }
+
+      .appendix-band { padding: 52px 20px 60px; }
+      .appendix-title { font-size: 24px; }
+      .appendix-sub { font-size: 14px; }
+      .flow-step { grid-template-columns: 32px 1fr; gap: 0 12px; padding: 14px 16px; }
+      .flow-step-num { font-size: 15px; }
+      .flow-step-title { font-size: 12px; }
+      .flow-step-text { font-size: 12px; }
+
+      footer { padding: 20px; }
+    }
+
+    /* ══════════════════════════════════════════
+       RESPONSIVE - 480px
+    ══════════════════════════════════════════ */
+    @media (max-width: 480px) {
+      .cs-hero { padding: 88px 16px 44px; }
+      .cs-body { padding: 0 16px; }
+      .appendix-band { padding: 44px 16px 52px; }
+      .cs-kpi-row { gap: 20px 12px; }
+      .cs-kpi-num { font-size: 22px; }
+      .cs-kpi-label { font-size: 10px; }
+      .ind-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+      .ind-card { padding: 14px 10px; }
+      .ind-pct { font-size: 18px; }
+      .tier-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+      .weight-label { width: 90px; font-size: 11px; }
+      .card { padding: 18px; }
+      .risk-card { padding: 18px; }
+      .layer-card { padding: 18px; }
+      .source-card { padding: 18px; }
+      .video-card { padding: 18px; gap: 14px; }
+      .video-play-btn { width: 40px; height: 40px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a class="nav-logo" href="index.html">Akash Poddar</a>
+    <ul class="nav-links">
+      <li><a href="work.html">Case Studies</a></li>
+      <li><a href="index.html#experience">Experience</a></li>
+      <li><a href="index.html#skills">Skills</a></li>
+      <li><a href="index.html#contact">Contact</a></li>
+    </ul>
+    <a class="nav-cta" href="index.html#contact">Get in touch</a>
+  </nav>
+
+  <!-- HERO -->
+  <div class="cs-hero">
+    <div class="cs-hero-grid"></div>
+    <div class="cs-hero-shimmer"></div>
+    <div class="cs-hero-inner">
+      <div class="cs-hero-bar"></div>
+      <div class="cs-meta-row">
+        <span class="cs-tag tag-blue">User Lifecycle (CLM)</span>
+        <span class="cs-tag tag-purple">RFM Segmentation &middot; Growth</span>
+        <span class="cs-tag tag-green">0&rarr;1 Program</span>
+        <span class="cs-tag tag-gray">Pathao Food &middot; 2024</span>
+      </div>
+      <h1 class="cs-hero-title">RFM &amp; CLM Engine<br><em>Reactivating a 3.9M-User Base</em></h1>
+      <p class="cs-hero-sub">How I designed Pathao Food's Customer Lifecycle Management program from the ground up: scoring every user on <strong>Recency, Frequency, and Monetary value</strong>, building a 28-segment matrix out of it, and turning that matrix into a budget-governed, always-on reactivation engine - not a one-off promo blast.</p>
+      <div class="cs-kpi-row">
+        <div class="cs-kpi">
+          <div class="cs-kpi-num">3.9M<span>+ users</span></div>
+          <div class="cs-kpi-label">Scored and segmented across the RFM engine</div>
+        </div>
+        <div class="cs-kpi">
+          <div class="cs-kpi-num">28<span>segments</span></div>
+          <div class="cs-kpi-label">7 value tiers &times; 4 recency cohorts</div>
+        </div>
+        <div class="cs-kpi">
+          <div class="cs-kpi-num">83<span>%</span></div>
+          <div class="cs-kpi-label">Of the base sat in the lowest-value, most-dormant tier</div>
+        </div>
+        <div class="cs-kpi">
+          <div class="cs-kpi-num">12<span>weeks</span></div>
+          <div class="cs-kpi-label">Always-on lifecycle comms roadmap I designed</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOC -->
+  <nav class="toc-bar" aria-label="Table of contents">
+    <div class="toc-inner">
+      <a class="toc-item active" href="#background"><span class="toc-num">01</span> Background</a>
+      <a class="toc-item" href="#problem"><span class="toc-num">02</span> Problem</a>
+      <a class="toc-item" href="#approach"><span class="toc-num">03</span> My Approach</a>
+      <a class="toc-item" href="#framework"><span class="toc-num">04</span> RFM Framework</a>
+      <a class="toc-item" href="#tiers"><span class="toc-num">05</span> Value Tiers</a>
+      <a class="toc-item" href="#treatment"><span class="toc-num">06</span> Treatment Logic</a>
+      <a class="toc-item" href="#budget"><span class="toc-num">07</span> Budget Governance</a>
+      <a class="toc-item" href="#roadmap"><span class="toc-num">08</span> Roadmap</a>
+      <a class="toc-item" href="#metrics"><span class="toc-num">09</span> Metrics</a>
+      <a class="toc-item" href="#risks"><span class="toc-num">10</span> Risks</a>
+      <a class="toc-item" href="#lessons"><span class="toc-num">11</span> Lessons</a>
+    </div>
+  </nav>
+
+  <!-- BODY -->
+  <div class="cs-body">
+
+    <!-- 01 BACKGROUND -->
+    <section class="cs-section" id="background">
+      <div class="section-eyebrow">01 &mdash; Background</div>
+      <h2>A super-app with millions of food users, and no systematic way to keep them.</h2>
+      <p>Pathao is Bangladesh's leading super-app - rides, deliveries, and food ordering under one roof. Pathao Food, the food delivery vertical, had built up a user base in the millions over several years of acquisition pushes, seasonal campaigns, and organic growth riding on the rest of the super-app.</p>
+      <p>What it hadn't built was a systematic way to <strong>manage that base over time.</strong> Retention activity existed, but it was campaign-shaped: a promo push around a holiday, a blanket "we miss you" notification, a discount code blasted to everyone regardless of whether they needed the nudge. There was no persistent model of who a user was in their lifecycle - newly acquired, loyal and active, drifting, or already gone - and no infrastructure that let the growth team target spend at the users who actually needed it.</p>
+      <p>I proposed and built the RFM-based Customer Lifecycle Management (CLM) engine to close that gap: a persistent segmentation model that scores every user on Recency, Frequency, and Monetary value, and a treatment framework built directly on top of it - so retention spend goes where it changes behaviour, not where it's easiest to send a push notification.</p>
+      <div class="callout callout-blue reveal">
+        <p><strong>The product vision:</strong> Replace one-off retention campaigns with a persistent lifecycle infrastructure - one that classifies every user into a value-and-recency segment, prescribes the right treatment for that segment, and measures success on cohort migration and long-term behaviour change, not just short-term redemption.</p>
+      </div>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 02 PROBLEM -->
+    <section class="cs-section" id="problem">
+      <div class="section-eyebrow">02 &mdash; Problem</div>
+      <h2>Blanket campaigns were burning budget on the wrong users - and missing the real one.</h2>
+      <p>When I pulled the full active-user base and looked at it through a recency and value lens for the first time, three problems became impossible to ignore.</p>
+
+      <div class="step-list reveal">
+        <div class="step-item">
+          <div class="step-num">01</div>
+          <div>
+            <div class="step-title">No segmentation meant no discipline in where promo budget went</div>
+            <div class="step-body">Retention pushes went out to broad user lists with little differentiation. A user who had ordered food three days ago received the same "come back" promo as a user who hadn't ordered in eight months. <strong>Spend wasn't correlated with need</strong> - it was correlated with whichever list was easiest to pull. That's an expensive way to run retention at super-app scale.</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">02</div>
+          <div>
+            <div class="step-title">A massive dormant tail was being treated the same as everyone else - or ignored entirely</div>
+            <div class="step-body">When I scored the base, <strong>78% of users hadn't placed a food order in 200+ days</strong>, and the large majority of the total base fell into the lowest-value tier. This wasn't a small edge case to clean up later - it was the dominant shape of the user base. Any retention strategy that didn't put this group at the centre of the plan was solving the wrong problem.</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">03</div>
+          <div>
+            <div class="step-title">No way to isolate what the spend was actually causing</div>
+            <div class="step-body">Without a control group built into the design, there was no way to know whether a user who came back after a promo would have come back anyway. <strong>Every campaign retro was guesswork about incrementality.</strong> I needed a framework where holding out a group wasn't an afterthought bolted onto an existing campaign, but a first-class part of how every segment's treatment was decided.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 03 APPROACH -->
+    <section class="cs-section" id="approach">
+      <div class="section-eyebrow">03 &mdash; My Approach</div>
+      <h2>Five decisions that turned a spreadsheet exercise into lifecycle infrastructure.</h2>
+
+      <div class="step-list reveal">
+        <div class="step-item">
+          <div class="step-num">01</div>
+          <div>
+            <div class="step-title">Build a persistent engine, not a campaign</div>
+            <div class="step-body">The brief could have been answered with a single "win-back" promo blast. I deliberately scoped it wider: <strong>a reusable RFM scoring and segmentation model that any future campaign - not just this one - could plug into.</strong> That meant defining recency bands, a value-tier taxonomy, and a scoring cadence as durable infrastructure, not a spreadsheet built for one send.</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">02</div>
+          <div>
+            <div class="step-title">Name the value tiers in plain language cross-functional teams could actually use</div>
+            <div class="step-body">Raw RFM scores are meaningless in a stand-up with finance or marketing. I mapped every user's combined Frequency and Monetary score into <strong>seven named value tiers - Diamond down to Rust</strong> - so growth, finance, and comms could talk about "the Rust cohort" instead of "users scoring 1-2 on F and M," and immediately understand where they sat in the value ladder.</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">03</div>
+          <div>
+            <div class="step-title">Cross value tier with recency to get a matrix that's actually actionable</div>
+            <div class="step-body">A value tier alone doesn't tell you whether to spend on someone this week. I crossed the 7 value tiers with 4 recency bands (0&ndash;30, 31&ndash;90, 91&ndash;200, 200+ days since last food order) to produce a <strong>28-cell matrix</strong> - the smallest structure that let me prescribe a distinct treatment, message, and budget allocation per segment instead of one blanket rule.</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">04</div>
+          <div>
+            <div class="step-title">Design control holdouts into the matrix itself, not as an afterthought</div>
+            <div class="step-body">Instead of holding out a random sample after the fact, I built the holdout logic directly into the treatment matrix: <strong>segments that were already organically engaged - recently active, already ordering food as their primary app behaviour - were deliberately excluded from treatment</strong>, both to protect margin and to give every future analysis a clean, built-in incrementality baseline.</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">05</div>
+          <div>
+            <div class="step-title">Model the budget before asking for it, and measure more than redemption</div>
+            <div class="step-body">Before taking this to finance, I modelled promo burn across worst, average, and good-case redemption scenarios and two different discount-cap structures - so the ask was grounded in numbers, not intuition. <strong>I also designed the measurement framework - 20+ metrics across eight categories - before launch</strong>, so success would be judged on cohort migration and tier stability, not just how many promo codes got redeemed.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 04 RFM FRAMEWORK -->
+    <section class="cs-section" id="framework">
+      <div class="section-eyebrow">04 &mdash; RFM Framework</div>
+      <h2>Two axes, 28 cells, and a user base that looked nothing like I expected.</h2>
+      <p>RFM segmentation scores every user on three independent dimensions and combines them into an addressable structure. I defined how each axis would be measured for Pathao Food specifically, then combined them into the matrix that drove every downstream decision.</p>
+
+      <div class="layer-stack reveal">
+        <div class="layer-card layer-fundamental">
+          <div class="layer-head">
+            <div class="layer-title-group">
+              <div class="layer-num">Axis 01</div>
+              <div class="layer-title">Recency</div>
+              <div class="layer-freq">Days since last food order &middot; 4 bands</div>
+            </div>
+            <div class="layer-tags">
+              <span class="layer-tag lt-blue">0&ndash;30D</span>
+              <span class="layer-tag lt-blue">31&ndash;90D</span>
+              <span class="layer-tag lt-blue">91&ndash;200D</span>
+              <span class="layer-tag lt-blue">200D+</span>
+            </div>
+          </div>
+          <div class="layer-body">
+            <strong>Answers: how long has it been since this user last ordered food?</strong> I set the band cuts at 30, 90, and 200 days rather than even splits, because the treatment logic changes sharply at each of those points - a user at day 25 is still organically warm, a user at day 250 needs a fundamentally different (and more expensive) reactivation offer than a user at day 40.
+          </div>
+        </div>
+
+        <div class="layer-card layer-technical">
+          <div class="layer-head">
+            <div class="layer-title-group">
+              <div class="layer-num">Axis 02 &amp; 03</div>
+              <div class="layer-title">Frequency &amp; Monetary</div>
+              <div class="layer-freq">Combined into 7 named value tiers</div>
+            </div>
+            <div class="layer-tags">
+              <span class="layer-tag lt-purple">Order count</span>
+              <span class="layer-tag lt-purple">Spend</span>
+              <span class="layer-tag lt-purple">Composite score</span>
+            </div>
+          </div>
+          <div class="layer-body">
+            <strong>Answers: how valuable is this user when they are active?</strong> I combined order frequency and cumulative spend into a single composite value score, then mapped that score into seven tiers - Diamond, Platinum, Gold, Silver, Bronze, Iron, Rust - so the value axis could be communicated as clearly as the recency axis.
+          </div>
+        </div>
+
+        <div class="layer-card layer-sentiment">
+          <div class="layer-head">
+            <div class="layer-title-group">
+              <div class="layer-num">Cross-cut</div>
+              <div class="layer-title">Food-Usage Category</div>
+              <div class="layer-freq">Primary &middot; Secondary &middot; Non-food</div>
+            </div>
+            <div class="layer-tags">
+              <span class="layer-tag lt-green">Primary</span>
+              <span class="layer-tag lt-green">Secondary</span>
+              <span class="layer-tag lt-green">Non-food</span>
+            </div>
+          </div>
+          <div class="layer-body">
+            <strong>Answers: is food this user's primary reason for being on Pathao at all?</strong> Because Pathao is a super-app, a user can be high-value overall - frequent rides, high spend - while barely touching food. I tagged every segment's dominant food-usage status so the campaign could tell the difference between "win this user back to food" and "reactivate this user in food, full stop."
+          </div>
+        </div>
+      </div>
+
+      <div class="callout callout-amber reveal">
+        <p><strong>The number that reframed the whole program:</strong> once I ran the scoring, <strong>3,913,386 users</strong> fell into the addressable base. Of those, <strong>83% sat in the lowest-value Rust tier</strong>, and <strong>78% hadn't ordered food in 200+ days.</strong> This wasn't a loyalty program for an already-engaged base - it was overwhelmingly a reactivation problem for a long, dormant tail, and that single insight changed where I put the program's priority and budget.</p>
+      </div>
+
+      <h3>The 28-segment matrix</h3>
+      <p>Every one of the 3.9M+ users falls into exactly one of 28 cells - one of 7 value tiers crossed with one of 4 recency bands. Each cell shows its population and whether it received a promotional treatment or was deliberately held out as a control.</p>
+
+      <table class="signal-table reveal">
+        <thead>
+          <tr>
+            <th>Value Tier</th>
+            <th>0&ndash;30 days</th>
+            <th>31&ndash;90 days</th>
+            <th>91&ndash;200 days</th>
+            <th>200+ days</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Diamond</td>
+            <td data-label="0–30 days"><span class="mx-num">244</span><br><span class="mx-pill mx-control">Control</span></td>
+            <td data-label="31–90 days"><span class="mx-num">45</span><br><span class="mx-pill mx-treat">Treated</span></td>
+            <td data-label="91–200 days"><span class="mx-num">12</span><br><span class="mx-pill mx-treat">Treated</span></td>
+            <td data-label="200+ days"><span class="mx-num">503</span><br><span class="mx-pill mx-treat">Treated</span></td>
+          </tr>
+          <tr>
+            <td>Platinum</td>
+            <td data-label="0–30 days"><span class="mx-num">2,053</span><br><span class="mx-pill mx-control">Control</span></td>
+            <td data-label="31–90 days"><span class="mx-num">1,095</span><br><span class="mx-pill mx-treat">Treated</span></td>
+            <td data-label="91–200 days"><span class="mx-num">330</span><br><span class="mx-pill mx-treat">Treated</span></td>
+            <td data-label="200+ days"><span class="mx-num">5,760</span><br><span class="mx-pill mx-treat">Treated</span></td>
+          </tr>
+          <tr>
+            <td>Gold</td>
+            <td data-label="0–30 days"><span class="mx-num">2,090</span><br><span class="mx-pill mx-treat">Treated</span></td>
+            <td data-label="31–90 days"><span class="mx-num">1,026</span><br><span class="mx-pill mx-treat">Treated</span></td>
+            <td data-label="91–200 days"><span class="mx-num">1,625</span><br><span class="mx-pill mx-treat">Treated</span></td>
+            <td data-label="200+ days"><span class="mx-num">35,782</span><br><span class="mx-pill mx-treat">Treated</span></td>
+          </tr>
+          <tr>
+            <td>Silver</td>
+            <td data-label="0–30 days"><span class="mx-num">9,755</span><br><span class="mx-pill mx-control">Control</span></td>
+            <td data-label="31–90 days"><span class="mx-num">8,520</span><br><span class="mx-pill mx-treat">Treated</span></td>
+            <td data-label="91–200 days"><span class="mx-num">1,531</span><br><span class="mx-pill mx-treat">Treated</span></td>
+            <td data-label="200+ days"><span class="mx-num">7,952</span><br><span class="mx-pill mx-treat">Treated</span></td>
+          </tr>
+          <tr>
+            <td>Bronze</td>
+            <td data-label="0–30 days"><span class="mx-num">9,716</span><br><span class="mx-pill mx-treat">Treated</span></td>
+            <td data-label="31–90 days"><span class="mx-num">7,772</span><br><span class="mx-pill mx-treat">Treated</span></td>
+            <td data-label="91–200 days"><span class="mx-num">13,961</span><br><span class="mx-pill mx-treat">Treated</span></td>
+            <td data-label="200+ days"><span class="mx-num">50,167</span><br><span class="mx-pill mx-treat">Treated</span></td>
+          </tr>
+          <tr>
+            <td>Iron</td>
+            <td data-label="0–30 days"><span class="mx-num">48,360</span><br><span class="mx-pill mx-treat">Treated</span></td>
+            <td data-label="31–90 days"><span class="mx-num">57,557</span><br><span class="mx-pill mx-treat">Treated</span></td>
+            <td data-label="91–200 days"><span class="mx-num">67,504</span><br><span class="mx-pill mx-treat">Treated</span></td>
+            <td data-label="200+ days"><span class="mx-num">313,406</span><br><span class="mx-pill mx-treat">Treated</span></td>
+          </tr>
+          <tr>
+            <td>Rust</td>
+            <td data-label="0–30 days"><span class="mx-num">137,978</span><br><span class="mx-pill mx-treat">Treated</span></td>
+            <td data-label="31–90 days"><span class="mx-num">188,635</span><br><span class="mx-pill mx-treat">Treated</span></td>
+            <td data-label="91–200 days"><span class="mx-num">283,477</span><br><span class="mx-pill mx-treat">Treated</span></td>
+            <td data-label="200+ days"><span class="mx-num">2,656,530</span><br><span class="mx-pill mx-treat">Treated</span></td>
+          </tr>
+        </tbody>
+      </table>
+      <p style="font-size:12.5px;color:var(--ink-muted);">Bottom-right cell - Rust tier, 200+ days dormant - is the single largest segment in the base at 2,656,530 users, 68% of the entire addressable population on its own.</p>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 05 VALUE TIERS -->
+    <section class="cs-section" id="tiers">
+      <div class="section-eyebrow">05 &mdash; Value Tiers</div>
+      <h2>Seven tiers, one value ladder, an extreme long tail.</h2>
+      <p>I named the tiers after a familiar loyalty-ladder convention - Diamond at the top, Rust at the bottom - specifically so non-technical stakeholders could reason about segment value at a glance. Underneath the names, each tier is a composite Frequency + Monetary score band, computed against the full active base.</p>
+
+      <div class="tier-grid reveal">
+        <div class="tier-card"><div class="tier-dot" style="background:var(--t-diamond)"></div><div class="tier-name">Diamond</div><div class="tier-pct">0.02%</div><div class="tier-size">~800 users</div></div>
+        <div class="tier-card"><div class="tier-dot" style="background:var(--t-platinum)"></div><div class="tier-name">Platinum</div><div class="tier-pct">0.24%</div><div class="tier-size">~9.2K users</div></div>
+        <div class="tier-card"><div class="tier-dot" style="background:var(--t-gold)"></div><div class="tier-name">Gold</div><div class="tier-pct">1.04%</div><div class="tier-size">~40.5K users</div></div>
+        <div class="tier-card"><div class="tier-dot" style="background:var(--t-silver)"></div><div class="tier-name">Silver</div><div class="tier-pct">0.71%</div><div class="tier-size">~27.8K users</div></div>
+        <div class="tier-card"><div class="tier-dot" style="background:var(--t-bronze)"></div><div class="tier-name">Bronze</div><div class="tier-pct">2.09%</div><div class="tier-size">~81.6K users</div></div>
+        <div class="tier-card"><div class="tier-dot" style="background:var(--t-iron)"></div><div class="tier-name">Iron</div><div class="tier-pct">12.44%</div><div class="tier-size">~486.8K users</div></div>
+        <div class="tier-card"><div class="tier-dot" style="background:var(--t-rust)"></div><div class="tier-name">Rust</div><div class="tier-pct">83.5%</div><div class="tier-size">~3.27M users</div></div>
+      </div>
+
+      <p>The distribution isn't a gentle pyramid - it's a cliff. Diamond through Bronze together hold less than 4% of the base. <strong>Iron and Rust alone account for over 96% of all users.</strong> That shape told me something a flatter distribution wouldn't have: this program couldn't be designed primarily around rewarding the top of the ladder. The real product problem, and the real budget, needed to live at the bottom of it.</p>
+
+      <div class="callout callout-purple reveal">
+        <p><strong>Why I kept seven tiers instead of collapsing them:</strong> it would have been simpler to run this as three buckets - high, medium, low. I kept seven because the treatment logic genuinely differs between adjacent tiers, especially near the bottom: Iron and Rust needed materially different discount depths and messaging even though both sit in the "low value" region of a simpler model. Collapsing them would have hidden exactly the granularity the campaign needed to act on.</p>
+      </div>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 06 TREATMENT LOGIC -->
+    <section class="cs-section" id="treatment">
+      <div class="section-eyebrow">06 &mdash; Treatment Logic</div>
+      <h2>Different offer, different target, different reason - for every cell in the matrix.</h2>
+      <p>I didn't design one promo and apply it everywhere. Each of the 28 segments has its own combination of: whether it's treated at all, the discount depth and minimum order value, the usage cap, whether curated collections accompany the push, and which RFM dimension the treatment is designed to move - recency alone, or recency and frequency together.</p>
+
+      <h3>Freshly active users (0&ndash;30 days): spend only where it's needed</h3>
+      <p>Within the most recent recency band, I split treatment on food-usage category, not just tier. Users who were already ordering food as their primary app behaviour got <strong>no promo at all</strong>, regardless of value tier - they were already converting organically, and spending budget on them would have been pure margin loss. Users who were active on Pathao but not yet primary food users got treated, specifically to cross-sell them into the food vertical.</p>
+
+      <table class="signal-table reveal">
+        <thead>
+          <tr><th>Tier</th><th>Food status</th><th>Treatment</th><th>Offer</th><th>Target</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Diamond</td><td data-label="Food status">Primary</td><td data-label="Treatment">No treatment</td><td data-label="Offer">&mdash;</td><td data-label="Target">Organic, no intervention needed</td></tr>
+          <tr><td>Platinum</td><td data-label="Food status">Primary</td><td data-label="Treatment">No treatment</td><td data-label="Offer">&mdash;</td><td data-label="Target">Organic, no intervention needed</td></tr>
+          <tr><td>Gold</td><td data-label="Food status">Not yet primary</td><td data-label="Treatment">Treated</td><td data-label="Offer">30% off, up to Tk80, MOV Tk349, cap 2 uses + collections</td><td data-label="Target">Recency &amp; frequency (cross-sell to food)</td></tr>
+          <tr><td>Silver</td><td data-label="Food status">Primary</td><td data-label="Treatment">No treatment</td><td data-label="Offer">&mdash;</td><td data-label="Target">Organic, no intervention needed</td></tr>
+          <tr><td>Bronze</td><td data-label="Food status">Not yet primary</td><td data-label="Treatment">Treated</td><td data-label="Offer">30% off, up to Tk80, MOV Tk249, cap 2 uses</td><td data-label="Target">Recency &amp; frequency (cross-sell to food)</td></tr>
+          <tr><td>Iron</td><td data-label="Food status">Secondary</td><td data-label="Treatment">Treated</td><td data-label="Offer">20% off, up to Tk80, MOV Tk249, single use</td><td data-label="Target">Recency</td></tr>
+          <tr><td>Rust</td><td data-label="Food status">Secondary</td><td data-label="Treatment">Treated</td><td data-label="Offer">20% off, up to Tk80, MOV Tk249, single use</td><td data-label="Target">Recency</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Dormant users (200+ days): the largest, most expensive-to-move segment</h3>
+      <p>At the other end of the recency axis, every tier gets treated - the priority flips entirely to <strong>just getting one order placed again.</strong> Discounts here are the deepest in the entire matrix, minimum order values are lowered to reduce friction, and usage caps are raised so a single reactivation can turn into a short habit-forming streak.</p>
+
+      <table class="signal-table reveal">
+        <thead>
+          <tr><th>Tier</th><th>Food status</th><th>Treatment</th><th>Offer</th><th>Target</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Diamond</td><td data-label="Food status">Primary</td><td data-label="Treatment">Treated</td><td data-label="Offer">50% off, up to Tk100, MOV Tk349, cap 3 uses</td><td data-label="Target">Recency</td></tr>
+          <tr><td>Platinum</td><td data-label="Food status">Primary</td><td data-label="Treatment">Treated</td><td data-label="Offer">50% off, up to Tk100, MOV Tk349, cap 3 uses</td><td data-label="Target">Recency</td></tr>
+          <tr><td>Gold</td><td data-label="Food status">Primary</td><td data-label="Treatment">Treated</td><td data-label="Offer">50% off, up to Tk100, MOV Tk349, cap 3 uses</td><td data-label="Target">Recency</td></tr>
+          <tr><td>Silver</td><td data-label="Food status">Secondary</td><td data-label="Treatment">Treated</td><td data-label="Offer">50% off, up to Tk100, MOV Tk249, cap 3 uses</td><td data-label="Target">Recency</td></tr>
+          <tr><td>Bronze</td><td data-label="Food status">Secondary</td><td data-label="Treatment">Treated</td><td data-label="Offer">50% off, up to Tk100, MOV Tk249, cap 3 uses</td><td data-label="Target">Recency</td></tr>
+          <tr><td>Iron</td><td data-label="Food status">Secondary</td><td data-label="Treatment">Treated</td><td data-label="Offer">50% off, up to Tk100, MOV Tk249, cap 3 uses</td><td data-label="Target">Recency</td></tr>
+          <tr><td>Rust</td><td data-label="Food status">Secondary</td><td data-label="Treatment">Treated</td><td data-label="Offer">50% off, up to Tk100, MOV Tk249, cap 3 uses</td><td data-label="Target">Recency</td></tr>
+        </tbody>
+      </table>
+
+      <div class="callout callout-green reveal">
+        <p><strong>The control-holdout decision:</strong> only 5 of 28 segments - the already-primary, already-fresh, higher-value tiers in the 0&ndash;30 day band - were held out as control, covering roughly 24,000 users, under 1% of the base. Every other segment, including all four recency bands of the dominant Rust tier, received a tailored treatment. That's a deliberate, asymmetric holdout: protect margin on the small slice that doesn't need spend, and commit budget everywhere else, especially the dormant tail that makes up the majority of the base.</p>
+      </div>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 07 BUDGET GOVERNANCE -->
+    <section class="cs-section" id="budget">
+      <div class="section-eyebrow">07 &mdash; Budget Governance</div>
+      <h2>Modelling the worst case before asking anyone to approve the average case.</h2>
+      <p>A 28-segment matrix with differentiated discount depths is only useful if finance will actually fund it. Before this went to sign-off, I built a burn model across every segment - projecting cost under three redemption scenarios and two different discount-cap structures, so the conversation with finance started from numbers, not intuition.</p>
+
+      <div class="two-col-3 reveal">
+        <div class="risk-card">
+          <div class="risk-level r-high">Worst case</div>
+          <div class="risk-title">100% theoretical redemption</div>
+          <div class="risk-body">Every eligible user in every treated segment redeems their offer at maximum usage. This is the ceiling I modelled to know the absolute exposure - not a forecast, a boundary. It's the number that makes a budget conversation honest.</div>
+        </div>
+        <div class="risk-card">
+          <div class="risk-level r-med">Average case</div>
+          <div class="risk-title">~12.55% redemption</div>
+          <div class="risk-body">Modelled off realistic promo redemption benchmarks for this offer structure and audience. This is the figure I built the actual budget ask around - roughly an order of magnitude below the worst case, and the number I held the campaign accountable to.</div>
+        </div>
+        <div class="risk-card">
+          <div class="risk-level r-low">Good case</div>
+          <div class="risk-title">~16% redemption</div>
+          <div class="risk-body">An upside scenario reflecting stronger-than-typical engagement, used to show finance the ceiling of value the program could return if the offers landed better than the average-case assumption.</div>
+        </div>
+      </div>
+
+      <h3>Two discount-cap structures, modelled side by side</h3>
+      <p>I also stress-tested two different discount-cap ceilings - a higher-cap structure (Tk80&ndash;100 max discount per order) and a lower-cap structure (Tk50&ndash;70 max discount per order) - across every tier and cohort, so the eventual budget decision could weigh reactivation strength against cost efficiency directly, rather than guessing at the trade-off.</p>
+      <div class="callout callout-amber reveal">
+        <p><strong>What this modelling changed:</strong> the worst-case exposure across the matrix looked alarming in isolation - well over Tk100M under the higher-cap structure. Framed against the realistic 12.55&ndash;16% redemption range, the expected spend landed roughly an order of magnitude lower. Presenting both numbers together, instead of just the ask, was what got the program funded without a drawn-out negotiation.</p>
+      </div>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 08 ROADMAP -->
+    <section class="cs-section" id="roadmap">
+      <div class="section-eyebrow">08 &mdash; Execution Roadmap</div>
+      <h2>A 12-week comms sequence, not a single blast.</h2>
+      <p>Segmentation and offers only work if the delivery cadence gives users more than one reason to come back. I designed a 12-week rolling sequence that alternates between direct promo pushes, curated content collections, and cuisine-specific moments - so the same dormant user sees several different reasons to open the app, not the same discount code on repeat.</p>
+
+      <div class="step-list reveal">
+        <div class="step-item">
+          <div class="step-num">01</div>
+          <div><div class="step-title">General re-engagement push</div><div class="step-body">A broad "place an order" notification to re-establish app presence before any promo lands, so the first touch doesn't feel purely transactional.</div></div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">02</div>
+          <div><div class="step-title">Promo 1 launch</div><div class="step-body">Segment-specific offers go live across Dhaka and Chattogram - four promo variants tuned to different MOV and usage-cap combinations depending on the receiving segment.</div></div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">03</div>
+          <div><div class="step-title">Promo 1 reminder</div><div class="step-body">A reminder push for users who saw the first promo but hadn't redeemed it yet - recovering intent that didn't convert on the first touch.</div></div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">04</div>
+          <div><div class="step-title">Collection: Free Delivery</div><div class="step-body">A curated in-app collection surfacing free-delivery restaurants, giving high-frequency-sensitive segments a low-friction reason to order without needing a discount code.</div></div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">05</div>
+          <div><div class="step-title">Promo 2</div><div class="step-body">A second promo wave, timed roughly a month after the first so segments that missed the initial window get another entry point.</div></div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">06</div>
+          <div><div class="step-title">Collection: Fast Delivery</div><div class="step-body">A speed-focused collection targeting users likely to be swayed by convenience rather than price - a different lever from discounting.</div></div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">07</div>
+          <div><div class="step-title">Collection: New on Pathao</div><div class="step-body">Surfacing newly onboarded restaurant partners to give returning dormant users something genuinely new to discover, not just a repeat of what they left behind.</div></div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">08</div>
+          <div><div class="step-title">Cuisine collection: Fast Food</div><div class="step-body">The first of two cuisine-specific collections, using purchase-history signals to personalise the reactivation moment around a cuisine the user is likely to want.</div></div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">09</div>
+          <div><div class="step-title">Cuisine collection: Biryani</div><div class="step-body">A second cuisine-specific collection - biryani is one of the highest-affinity categories on the platform, used deliberately as a late-funnel pull.</div></div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">10</div>
+          <div><div class="step-title">Promo 3</div><div class="step-body">A third and final scheduled promo wave, closing out the structured 12-week window while the program transitions into an always-on, trigger-based state for individual segments.</div></div>
+        </div>
+      </div>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 09 METRICS -->
+    <section class="cs-section" id="metrics">
+      <div class="section-eyebrow">09 &mdash; Metrics</div>
+      <h2>Twenty metrics across eight categories - because redemption rate alone lies.</h2>
+      <div class="callout callout-blue reveal">
+        <p><strong>North Star:</strong> the % of treated users whose RFM value improved after the campaign - not the redemption rate. A user can redeem a promo once and never return; a user whose recency and frequency genuinely improve is the actual product of a lifecycle program. I designed the full measurement framework around this distinction before launch.</p>
+      </div>
+
+      <table class="signal-table reveal">
+        <thead>
+          <tr><th>Category</th><th>Metric</th><th>Why it's on the dashboard</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Engagement</td><td data-label="Metric">PN open rate, app engagement rate, promo utilisation rate</td><td data-label="Why it's on the dashboard">The funnel's first checkpoint - did the communication even land and get noticed before any behaviour could change?</td></tr>
+          <tr><td>Conversion</td><td data-label="Metric">Order conversion rate; first-time conversion rate for non-food users</td><td data-label="Why it's on the dashboard">Distinguishes users who converted to an order from users who merely engaged with the message - and separately tracks whether the cross-sell into food for non-food users actually worked.</td></tr>
+          <tr><td>Monetary</td><td data-label="Metric">Average order value, campaign revenue</td><td data-label="Why it's on the dashboard">The direct commercial return on the promo spend - the number finance cares about most immediately.</td></tr>
+          <tr><td>Retention</td><td data-label="Metric">Repeat purchase rate; post-campaign retention rate</td><td data-label="Why it's on the dashboard">Whether a reactivated user placed one order and vanished again, or kept ordering after the promo incentive disappeared - the real test of whether the intervention worked.</td></tr>
+          <tr><td>Cohort Improvement</td><td data-label="Metric">Recency, frequency, and monetary improvement rate; % of users with any RFM improvement</td><td data-label="Why it's on the dashboard">The North Star category - measures whether a user's underlying behaviour genuinely shifted, independent of any single order.</td></tr>
+          <tr><td>User Category Transition</td><td data-label="Metric">Promotion to primary food user rate; demotion to non-food rate; lateral movement; transition success rate</td><td data-label="Why it's on the dashboard">Tracks the cross-sell objective specifically - are Secondary and Non-food users actually becoming Primary food users, or just placing an isolated promo order?</td></tr>
+          <tr><td>Cohort Stability</td><td data-label="Metric">Cohort stability rate; improvement-to-demotion ratio</td><td data-label="Why it's on the dashboard">Checks the program isn't just shuffling users sideways - are more users improving tier than falling to a lower one?</td></tr>
+          <tr><td>RFM Distribution Shift</td><td data-label="Metric">Average RFM value increase; RFM segmentation retention</td><td data-label="Why it's on the dashboard">The macro view - is the entire user-base distribution shifting up and to the right over time, or is the same 83% still sitting in Rust six months later?</td></tr>
+        </tbody>
+      </table>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 10 RISKS -->
+    <section class="cs-section" id="risks">
+      <div class="section-eyebrow">10 &mdash; Risks</div>
+      <h2>What could go wrong - and how I designed against it.</h2>
+      <div class="risk-grid reveal">
+        <div class="risk-card">
+          <div class="risk-level r-high">High</div>
+          <div class="risk-title">Training the dormant tail to only return for a discount</div>
+          <div class="risk-body">Aggressive 50%-off offers on the 200+ day cohort risk creating a base that orders exclusively on promo weeks and churns again the moment the code expires. Mitigated by: the post-campaign retention metric specifically isolating behaviour after the incentive disappears, and a deliberate mix of discount pushes with non-discount levers (free delivery, curated collections) so not every re-engagement moment is price-driven.</div>
+        </div>
+        <div class="risk-card">
+          <div class="risk-level r-high">High</div>
+          <div class="risk-title">Budget exposure if redemption runs above the modelled average case</div>
+          <div class="risk-body">A 3.9M-user matrix with deep discounts on the largest segments carries real financial exposure if redemption behaves closer to the worst case than the average case. Mitigated by: hard usage caps per segment, MOV floors on every offer, and the three-scenario burn model built specifically to give finance an honest ceiling, not just a hopeful average.</div>
+        </div>
+        <div class="risk-card">
+          <div class="risk-level r-med">Medium</div>
+          <div class="risk-title">Control holdout resentment or leakage</div>
+          <div class="risk-body">Users in held-out segments who notice peers receiving offers they don't could churn out of frustration, or word-of-mouth could partially "leak" promo codes across segments and contaminate the incrementality read. Mitigated by: keeping holdouts limited to already-organically-engaged segments least likely to notice or need the offer, and segment-specific promo codes rather than a shared code.</div>
+        </div>
+        <div class="risk-card">
+          <div class="risk-level r-med">Medium</div>
+          <div class="risk-title">Seven-tier taxonomy adding coordination overhead</div>
+          <div class="risk-body">More segments means more variants for comms, engineering, and finance to track and QA before each send. Mitigated by: the plain-language tier naming convention specifically designed to reduce cross-team confusion, and grouping the 28-cell matrix into a small number of distinct treatment archetypes rather than 28 fully bespoke campaigns.</div>
+        </div>
+        <div class="risk-card">
+          <div class="risk-level r-low">Low</div>
+          <div class="risk-title">Cuisine-specific collections underperforming generic promos</div>
+          <div class="risk-body">Personalised cuisine collections are a newer lever than straightforward discounting and could see lower engagement than expected. Mitigated by: sequencing them alongside proven discount waves rather than replacing them, so the roadmap doesn't depend entirely on an unproven tactic succeeding.</div>
+        </div>
+      </div>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 11 LESSONS -->
+    <section class="cs-section" id="lessons">
+      <div class="section-eyebrow">11 &mdash; Lessons</div>
+      <h2>What building a lifecycle engine taught me that a single feature never would.</h2>
+      <div class="lesson-list reveal">
+        <div class="lesson-item">
+          <div class="lesson-num">01</div>
+          <div>
+            <div class="lesson-title">CLM work is a different kind of PM job - the "feature" is a decision framework, not a screen</div>
+            <div class="lesson-body">There's no single UI to demo for this project - the deliverable is a scoring model, a 28-cell decision matrix, a budget model, and a measurement framework. <strong>My job was defining the rules that decide what millions of individual users experience</strong>, not designing any one experience directly. That's a materially different kind of ownership than shipping a screen, and it required thinking in populations and distributions rather than user flows.</div>
+          </div>
+        </div>
+        <div class="lesson-item">
+          <div class="lesson-num">02</div>
+          <div>
+            <div class="lesson-title">The most important insight came from the distribution, not the average</div>
+            <div class="lesson-body">If I'd only looked at average recency or average tier across the base, I'd have missed the real story entirely. <strong>Seeing that 83% of users sat in the lowest tier, and 78% were 200+ days dormant, reframed the whole program</strong> from "reward loyal users" to "this is fundamentally a reactivation problem at massive scale." Segment-level distributions, not blended averages, are where the real product decisions live.</div>
+          </div>
+        </div>
+        <div class="lesson-item">
+          <div class="lesson-num">03</div>
+          <div>
+            <div class="lesson-title">Designing the control group is a product decision, not a data-science afterthought</div>
+            <div class="lesson-body">It would have been easy to launch treatment everywhere and worry about measurement later. <strong>I designed the holdouts as part of the segmentation logic itself</strong> - deciding which specific segments to exclude, and why, before a single promo went out. That decision determines whether the retro six months later can say anything credible about incrementality, or just reports a redemption number nobody can act on.</div>
+          </div>
+        </div>
+        <div class="lesson-item">
+          <div class="lesson-num">04</div>
+          <div>
+            <div class="lesson-title">Budget credibility comes from showing the worst case, not hiding it</div>
+            <div class="lesson-body">My instinct going into the finance conversation was to lead with the realistic average-case number. <strong>Leading with the worst-case exposure first, then showing how redemption modelling brought it down to a defensible ask, built more trust</strong> than presenting only the number I wanted approved. Finance stakeholders fund plans they can see the edges of.</div>
+          </div>
+        </div>
+        <div class="lesson-item">
+          <div class="lesson-num">05</div>
+          <div>
+            <div class="lesson-title">Measure the behaviour change, not the mechanism that triggered it</div>
+            <div class="lesson-body">Redemption rate measures whether people used a discount code. It says nothing about whether they became a better long-term customer. <strong>Building cohort-improvement and tier-stability metrics into the framework from day one</strong> - not bolted on after a promo underperformed on redemption alone - was the decision that made this a lifecycle program instead of a discount campaign with extra reporting.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div><!-- /cs-body -->
+
+  <!-- APPENDIX BAND -->
+  <div class="appendix-band">
+    <div class="appendix-inner">
+
+      <div class="appendix-header">
+        <div class="appendix-eyebrow">Appendix &mdash; The Evidence</div>
+        <h2 class="appendix-title">Framework Spec Excerpts</h2>
+        <p class="appendix-sub">User stories, acceptance criteria, and the segmentation-to-measurement pipeline as specified in the CLM program design.</p>
+      </div>
+
+      <!-- USER STORIES -->
+      <div class="appendix-block reveal">
+        <div class="appendix-block-label">Appendix A &mdash; User Stories</div>
+        <table class="appendix-table">
+          <thead>
+            <tr><th>ID</th><th>As a&hellip;</th><th>I want&hellip;</th><th>So that&hellip;</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>US.1</td>
+              <td data-label="As a…">Growth manager planning a retention campaign</td>
+              <td data-label="I want…">every user pre-classified into a recency and value segment</td>
+              <td data-label="So that…">I can target spend at the segments that need it instead of blasting the entire base uniformly</td>
+            </tr>
+            <tr>
+              <td>US.2</td>
+              <td data-label="As a…">Dormant user who hasn't ordered food in over 200 days</td>
+              <td data-label="I want…">a compelling, low-friction offer that acknowledges I've been away</td>
+              <td data-label="So that…">re-entering the app to order food feels worth the switching cost back from habits I've formed elsewhere</td>
+            </tr>
+            <tr>
+              <td>US.3</td>
+              <td data-label="As a…">Finance stakeholder approving campaign budget</td>
+              <td data-label="I want…">a modelled cost range across realistic and worst-case redemption scenarios</td>
+              <td data-label="So that…">I can approve spend against a defensible ceiling, not an optimistic single estimate</td>
+            </tr>
+            <tr>
+              <td>US.4</td>
+              <td data-label="As a…">Product/growth lead reviewing the campaign after launch</td>
+              <td data-label="I want…">metrics on cohort migration and tier stability, not just redemption count</td>
+              <td data-label="So that…">I know whether the program changed user behaviour or just gave away margin to users who'd have ordered anyway</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- ACCEPTANCE CRITERIA -->
+      <div class="appendix-block reveal">
+        <div class="appendix-block-label">Appendix B &mdash; Key Acceptance Criteria</div>
+        <table class="appendix-table">
+          <thead>
+            <tr><th>#</th><th>Criteria</th><th>Owner</th><th>Verified by</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>AC.1</td>
+              <td data-label="Criteria">Every active user must be scored and placed into exactly one of the 28 recency x value-tier segments, with no unclassified users in the eligible base.</td>
+              <td data-label="Owner">Data / Growth</td>
+              <td data-label="Verified by">QA: row count of scored users reconciles to full active-base count with zero nulls on tier or recency band</td>
+            </tr>
+            <tr>
+              <td>AC.2</td>
+              <td data-label="Criteria">Each segment's treatment - offer, MOV, usage cap, control/treatment status - must be resolvable from the treatment mapping without manual lookup at send time.</td>
+              <td data-label="Owner">Growth / CRM</td>
+              <td data-label="Verified by">Config review: treatment mapping table validated against comms tooling before each scheduled send</td>
+            </tr>
+            <tr>
+              <td>AC.3</td>
+              <td data-label="Criteria">Burn projections must be produced for worst-case, average-case (~12.55% redemption), and good-case (~16% redemption) scenarios across both discount-cap structures before budget sign-off.</td>
+              <td data-label="Owner">Growth / Finance</td>
+              <td data-label="Verified by">Finance review: all three scenarios present and reconciled against approved budget ceiling</td>
+            </tr>
+            <tr>
+              <td>AC.4</td>
+              <td data-label="Criteria">Control-holdout segments must be excluded from every promotional touchpoint for the full campaign window, with no cross-segment code leakage.</td>
+              <td data-label="Owner">CRM / Eng</td>
+              <td data-label="Verified by">Audit: holdout segment IDs checked against every send list prior to dispatch</td>
+            </tr>
+            <tr>
+              <td>AC.5</td>
+              <td data-label="Criteria">All eight metric categories must report at segment level, not just campaign-aggregate level, so cohort migration is visible per tier and per recency band.</td>
+              <td data-label="Owner">Data / Analytics</td>
+              <td data-label="Verified by">Dashboard review: each of the 28 segments individually selectable in the reporting view</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- DATA TO INSIGHT PIPELINE -->
+      <div class="appendix-block reveal">
+        <div class="appendix-block-label">Appendix C &mdash; Segmentation-to-Measurement Pipeline</div>
+        <p class="appendix-flow-intro">How a raw order history becomes a targeted treatment, and how that treatment's impact is measured back into the model.</p>
+        <div class="flow-steps">
+          <div class="flow-step">
+            <div class="flow-step-num">1</div>
+            <div>
+              <div class="flow-step-title">Raw order &amp; usage data ingestion</div>
+              <div class="flow-step-text">Order history, spend, and cross-vertical app usage (rides, other services) pulled for every user in the active base to compute Recency, Frequency, and Monetary inputs.</div>
+            </div>
+          </div>
+          <div class="flow-arrow">&#8595;</div>
+          <div class="flow-step">
+            <div class="flow-step-num">2</div>
+            <div>
+              <div class="flow-step-title">RFM scoring &amp; tier assignment</div>
+              <div class="flow-step-text">Recency bucketed into 4 bands. Frequency and Monetary combined into a composite score and mapped into 7 named value tiers, Diamond through Rust. Food-usage category (Primary / Secondary / Non-food) tagged per user.</div>
+            </div>
+          </div>
+          <div class="flow-arrow">&#8595;</div>
+          <div class="flow-step">
+            <div class="flow-step-num">3</div>
+            <div>
+              <div class="flow-step-title">28-segment matrix construction</div>
+              <div class="flow-step-text">Every user placed into one of 28 cells. Each cell resolved against the treatment mapping to determine control/treatment status, offer structure, and target RFM dimension.</div>
+            </div>
+          </div>
+          <div class="flow-arrow">&#8595;</div>
+          <div class="flow-step">
+            <div class="flow-step-num">4</div>
+            <div>
+              <div class="flow-step-title">Budget modelling &amp; sign-off</div>
+              <div class="flow-step-text">Segment-level burn projected across three redemption scenarios and two discount-cap structures. Reconciled against approved budget before any send is scheduled.</div>
+            </div>
+          </div>
+          <div class="flow-arrow">&#8595;</div>
+          <div class="flow-step">
+            <div class="flow-step-num">5</div>
+            <div>
+              <div class="flow-step-title">12-week comms execution</div>
+              <div class="flow-step-text">Push notifications, promo drops, and curated collections dispatched on the rolling schedule, segment by segment, per the treatment mapping.</div>
+            </div>
+          </div>
+          <div class="flow-arrow">&#8595;</div>
+          <div class="flow-step flow-step-final">
+            <div class="flow-step-num">&#10003;</div>
+            <div>
+              <div class="flow-step-title">Segment-level measurement feeds the next cycle</div>
+              <div class="flow-step-text">Engagement, conversion, monetary, retention, cohort-improvement, transition, stability, and distribution-shift metrics computed per segment &middot; Users re-scored on the next cycle and re-placed into the matrix &middot; Treatment mapping refined based on what moved each segment and what didn't.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div><!-- /appendix-band -->
+
+  <!-- FOOTER -->
+  <footer>
+    <a href="work.html">&larr; Back to all case studies</a>
+    &nbsp;&nbsp;&middot;&nbsp;&nbsp;
+    <a href="index.html">Akash Poddar</a>
+    &nbsp;&nbsp;&middot;&nbsp;&nbsp;
+    <a href="index.html#contact">Get in touch</a>
+  </footer>
+
+  <script>
+    const reveals = document.querySelectorAll('.reveal');
+    const isMobile = window.innerWidth < 768;
+    const io = new IntersectionObserver((entries) => {
+      const visible = entries.filter(e => e.isIntersecting)
+        .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+      if (!visible.length) return;
+      requestAnimationFrame(() => {
+        visible.forEach((entry, i) => {
+          entry.target.style.transitionDelay = isMobile ? '0s' : (i * 0.05) + 's';
+          entry.target.classList.add('visible');
+          io.unobserve(entry.target);
+        });
+      });
+    }, { threshold: 0.06, rootMargin: '0px 0px -40px 0px' });
+    reveals.forEach(r => io.observe(r));
+
+    const tocItems = document.querySelectorAll('.toc-item');
+    const sections = document.querySelectorAll('.cs-section[id]');
+    const tocObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          tocItems.forEach(t => t.classList.remove('active'));
+          const active = document.querySelector(`.toc-item[href="#${entry.target.id}"]`);
+          if (active) active.classList.add('active');
+        }
+      });
+    }, { threshold: 0, rootMargin: '-101px 0px -85% 0px' });
+    sections.forEach(s => tocObserver.observe(s));
+  </script>
+
+</body>
+</html>
