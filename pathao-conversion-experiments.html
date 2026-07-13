@@ -1,0 +1,1129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-62DWPTYD6F"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-62DWPTYD6F');
+  </script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27><rect width=%2732%27 height=%2732%27 rx=%274%27 fill=%27%230e0e0e%27/><text x=%2716%27 y=%2722%27 font-family=%27Georgia,serif%27 font-size=%2714%27 font-weight=%27600%27 fill=%27%23f7f5f0%27 text-anchor=%27middle%27>AP</text></svg>" />
+  <title>Pathao Food Conversion Experiments - Building a Growth Program | Akash Poddar</title>
+  <meta name="description" content="How I built Pathao Food's end-to-end experimentation program - funnel diagnosis, hypothesis-driven A/B tests, and a prioritized search ranking backlog designed to move conversion." />
+  <link rel="canonical" href="https://echo-akash.github.io/pathao-conversion-experiments.html" />
+  <meta property="og:title" content="Pathao Food Conversion Experiments - Building a Growth Program | Akash Poddar" />
+  <meta property="og:description" content="Funnel diagnosis, a two-track experiment portfolio, and a P0-P4 prioritized search ranking backlog - built to move Pathao Food's conversion rate." />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://echo-akash.github.io/pathao-conversion-experiments.html" />
+  <meta property="og:image" content="https://echo-akash.github.io/og-image.png" />
+  <meta name="author" content="Akash Poddar" />
+  <meta name="robots" content="index, follow" />
+  <meta name="theme-color" content="#0e0e0e" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Pathao Food Conversion Experiments - Building a Growth Program",
+    "description": "How Akash Poddar built Pathao Food's end-to-end experimentation program - funnel diagnosis, a two-track A/B test portfolio, and a prioritized search ranking backlog.",
+    "author": { "@type": "Person", "name": "Akash Poddar", "url": "https://echo-akash.github.io/" },
+    "publisher": { "@type": "Person", "name": "Akash Poddar" }
+  }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,300;1,9..144,500&family=DM+Sans:wght@300;400;500&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,300;1,9..144,500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" /></noscript>
+  <style>
+    :root {
+      --ink: #0e0e0e;
+      --ink-mid: #444;
+      --ink-muted: #696969;
+      --ink-faint: #bbb;
+      --surface: #f7f5f0;
+      --white: #ffffff;
+      --accent: #4338ca;
+      --accent-light: #eef2ff;
+      --accent-dark: #312e81;
+      --accent2: #e11d48;
+      --accent2-light: #ffe4e6;
+      --green: #166534;
+      --green-light: #dcfce7;
+      --amber: #b45309;
+      --amber-light: #fef3e2;
+      --line: rgba(0,0,0,0.08);
+      --serif: 'Fraunces', Georgia, serif;
+      --sans: 'DM Sans', system-ui, sans-serif;
+      --radius: 10px;
+      --ease: cubic-bezier(0.16, 1, 0.3, 1);
+      --wide-w: 1000px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+    }
+    body { font-family: var(--sans); background: var(--surface); color: var(--ink); font-size: 15px; line-height: 1.6; overflow-x: hidden; }
+
+    /* ── NAV ── */
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 0 40px; height: 56px; background: rgba(247,245,240,0.88); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); }
+    .nav-logo { font-family: var(--serif); font-size: 16px; font-weight: 600; color: var(--ink); text-decoration: none; letter-spacing: -0.02em; }
+    .nav-links { display: flex; gap: 32px; list-style: none; }
+    .nav-links a { font-size: 13px; color: var(--ink-mid); text-decoration: none; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--accent); }
+    .nav-cta { font-size: 13px; padding: 7px 18px; background: var(--ink); color: var(--white); border-radius: 20px; text-decoration: none; transition: background 0.2s; }
+    .nav-cta:hover { background: var(--accent); }
+
+    /* ── HERO ── */
+    .cs-hero { background: var(--ink); padding: 120px 40px 80px; position: relative; overflow: hidden; }
+    .cs-hero-inner { max-width: var(--wide-w); margin: 0 auto; position: relative; z-index: 1; }
+    .cs-hero-grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px); background-size: 60px 60px; }
+    .cs-hero-shimmer { position: absolute; inset: 0; background: radial-gradient(ellipse 60% 60% at 70% 50%, rgba(67,56,202,0.22) 0%, transparent 70%); }
+    .cs-hero-bar { height: 4px; background: linear-gradient(90deg, #4338ca, #818cf8); border-radius: 2px; width: 64px; margin-bottom: 28px; }
+    .cs-meta-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 24px; }
+    .cs-tag { font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; padding: 5px 14px; border-radius: 20px; }
+    .tag-blue   { background: rgba(67,56,202,0.24); color: #a5b4fc; border: 1px solid rgba(67,56,202,0.4); }
+    .tag-purple { background: rgba(225,29,72,0.18); color: #fda4af; border: 1px solid rgba(225,29,72,0.3); }
+    .tag-green  { background: rgba(22,101,52,0.2); color: #6ee7b7; border: 1px solid rgba(22,101,52,0.28); }
+    .tag-gray   { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.45); border: 1px solid rgba(255,255,255,0.1); }
+    .cs-hero-title { font-family: var(--serif); font-size: clamp(34px, 5.5vw, 58px); font-weight: 600; letter-spacing: -0.03em; line-height: 0.97; color: #fff; margin-bottom: 20px; }
+    .cs-hero-title em { font-style: italic; font-weight: 300; color: rgba(255,255,255,0.38); }
+    .cs-hero-sub { font-size: 17px; font-weight: 300; color: rgba(255,255,255,0.5); max-width: 660px; line-height: 1.7; margin-bottom: 48px; }
+    .cs-hero-sub strong { color: rgba(255,255,255,0.8); font-weight: 400; }
+    .cs-kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 40px; }
+    .cs-kpi { padding-right: 32px; border-right: 1px solid rgba(255,255,255,0.08); }
+    .cs-kpi:last-child { border-right: none; }
+    .cs-kpi-num { font-family: var(--serif); font-size: 32px; font-weight: 600; letter-spacing: -0.02em; color: #fff; line-height: 1; margin-bottom: 6px; }
+    .cs-kpi-num span { font-size: 20px; font-style: italic; font-weight: 300; color: rgba(255,255,255,0.35); }
+    .cs-kpi-label { font-size: 11px; color: rgba(255,255,255,0.38); line-height: 1.4; max-width: 140px; }
+
+    /* ── TOC ── */
+    .toc-bar { position: sticky; top: 56px; z-index: 90; background: var(--white); border-bottom: 1px solid var(--line); overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+    .toc-bar::-webkit-scrollbar { display: none; }
+    .toc-inner { max-width: var(--wide-w); margin: 0 auto; display: flex; padding: 0 40px; }
+    .toc-item { font-size: 12px; color: var(--ink-muted); text-decoration: none; padding: 14px 20px; white-space: nowrap; border-bottom: 2px solid transparent; transition: color 0.2s, border-color 0.2s; display: flex; align-items: center; gap: 6px; }
+    .toc-item:hover { color: var(--accent); border-bottom-color: var(--accent); }
+    .toc-item.active { color: var(--accent); border-bottom-color: var(--accent); }
+    .toc-num { font-size: 10px; color: var(--ink-faint); }
+
+    /* ── BODY ── */
+    .cs-body { max-width: var(--wide-w); margin: 0 auto; padding: 0 40px; }
+    .cs-section { padding: 72px 0 0; content-visibility: auto; contain-intrinsic-size: 0 600px; }
+    .cs-section:last-of-type { padding-bottom: 80px; }
+    .section-eyebrow { font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+    .section-eyebrow::after { content: ''; flex: 0 0 32px; height: 1px; background: var(--accent); opacity: 0.4; }
+    .cs-section h2 { font-family: var(--serif); font-size: 32px; font-weight: 600; letter-spacing: -0.02em; color: var(--ink); line-height: 1.15; margin-bottom: 28px; }
+    .cs-section h3 { font-family: var(--serif); font-size: 20px; font-weight: 600; letter-spacing: -0.01em; color: var(--ink); margin: 40px 0 16px; }
+    .cs-section p { font-size: 15px; color: var(--ink-mid); line-height: 1.8; font-weight: 300; margin-bottom: 16px; }
+    .cs-section p:last-child { margin-bottom: 0; }
+    .cs-section p strong { color: var(--ink); font-weight: 500; }
+    .cs-divider { border: none; border-top: 1px solid var(--line); margin: 56px 0 0; }
+
+    /* ── CALLOUT ── */
+    .callout { border-left: 3px solid var(--accent); border-radius: 0 var(--radius) var(--radius) 0; padding: 20px 24px; margin: 28px 0; }
+    .callout-blue   { background: var(--accent-light); }
+    .callout-blue p strong { color: var(--accent-dark); }
+    .callout-purple { background: var(--accent2-light); border-left-color: var(--accent2); }
+    .callout-purple p strong { color: var(--accent2); }
+    .callout-green  { background: var(--green-light); border-left-color: var(--green); }
+    .callout-green p strong { color: var(--green); }
+    .callout-amber  { background: var(--amber-light); border-left-color: var(--amber); }
+    .callout-amber p strong { color: var(--amber); }
+    .callout p { margin-bottom: 0; color: var(--ink); font-weight: 400; font-size: 14px; line-height: 1.75; }
+
+    /* ── STEP LIST ── */
+    .step-list { display: flex; flex-direction: column; margin: 28px 0; }
+    .step-item { display: grid; grid-template-columns: 56px 1fr; gap: 0 20px; padding: 28px 0; border-top: 1px solid var(--line); align-items: start; }
+    .step-item:last-child { border-bottom: 1px solid var(--line); }
+    .step-num { font-family: var(--serif); font-size: 28px; font-weight: 600; color: var(--accent); letter-spacing: -0.02em; line-height: 1; padding-top: 4px; }
+    .step-title { font-family: var(--serif); font-size: 18px; font-weight: 600; color: var(--ink); margin-bottom: 8px; line-height: 1.2; }
+    .step-body { font-size: 14px; color: var(--ink-mid); line-height: 1.75; font-weight: 300; }
+    .step-body strong { color: var(--ink); font-weight: 500; }
+
+    /* ── PIPELINE (5-stage lifecycle, replaces the "three layer" pattern for this experiment-led case study) ── */
+    .pipeline-track { display: flex; flex-direction: column; gap: 14px; margin: 28px 0; }
+    .pipe-stage { background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); padding: 22px 26px; display: grid; grid-template-columns: 44px 1fr auto; gap: 4px 18px; align-items: center; position: relative; overflow: hidden; }
+    .pipe-stage::before { content: ''; position: absolute; top: 0; left: 0; bottom: 0; width: 3px; }
+    .pipe-stage.pipe-done::before { background: var(--green); }
+    .pipe-stage.pipe-active::before { background: var(--accent); }
+    .pipe-stage.pipe-planned::before { background: var(--ink-faint); }
+    .pipe-num { font-family: var(--serif); font-size: 22px; font-weight: 600; color: var(--ink-faint); line-height: 1; grid-row: 1 / 3; }
+    .pipe-title { font-family: var(--serif); font-size: 17px; font-weight: 600; color: var(--ink); line-height: 1.25; }
+    .pipe-body { grid-column: 2 / 3; font-size: 13.5px; color: var(--ink-mid); line-height: 1.7; font-weight: 300; }
+    .pipe-status { font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; padding: 4px 12px; border-radius: 20px; white-space: nowrap; grid-row: 1; justify-self: end; }
+    .status-done { background: var(--green-light); color: var(--green); }
+    .status-active { background: var(--accent-light); color: var(--accent-dark); }
+    .status-planned { background: rgba(0,0,0,0.05); color: var(--ink-muted); }
+    .pipe-arrow { text-align: center; color: var(--ink-faint); font-size: 15px; }
+
+    /* ── FUNNEL VISUAL (illustrative shape, not tied to unverified numbers) ── */
+    .funnel-viz { display: flex; flex-direction: column; align-items: stretch; gap: 2px; margin: 28px 0; }
+    .funnel-row { position: relative; background: linear-gradient(90deg, var(--accent), #818cf8); border-radius: 6px; padding: 14px 22px; color: #fff; margin: 0 auto; width: 100%; }
+    .funnel-row:nth-child(1) { width: 100%; }
+    .funnel-row:nth-child(2) { width: 88%; }
+    .funnel-row:nth-child(3) { width: 74%; }
+    .funnel-row:nth-child(4) { width: 60%; }
+    .funnel-row:nth-child(5) { width: 46%; background: linear-gradient(90deg, var(--accent-dark), var(--accent)); }
+    .funnel-stage-name { font-size: 13px; font-weight: 500; }
+    .funnel-stage-fric { font-size: 11.5px; font-weight: 300; color: rgba(255,255,255,0.75); margin-top: 2px; }
+
+    /* ── TWO TRACK PORTFOLIO ── */
+    .track-header { display: flex; align-items: center; gap: 10px; margin: 40px 0 18px; }
+    .track-badge { font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; padding: 4px 12px; border-radius: 20px; }
+    .track-badge.dep-yes { background: var(--accent2-light); color: var(--accent2); }
+    .track-badge.dep-no  { background: var(--green-light); color: var(--green); }
+    .track-title { font-family: var(--serif); font-size: 17px; font-weight: 600; color: var(--ink); }
+
+    .exp-card-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin: 0 0 28px; }
+    .exp-card { background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); padding: 22px; display: flex; flex-direction: column; gap: 10px; }
+    .exp-card-tag { font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); }
+    .exp-card h4 { font-family: var(--serif); font-size: 16px; font-weight: 600; color: var(--ink); line-height: 1.3; }
+    .exp-card p { font-size: 13px; color: var(--ink-mid); line-height: 1.65; font-weight: 300; margin: 0; }
+    .exp-card p strong { color: var(--ink); font-weight: 500; }
+
+    .quickwin-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 0 0 20px; }
+    .qw-item { background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px 18px; font-size: 13.5px; color: var(--ink-mid); line-height: 1.6; font-weight: 300; }
+    .qw-item strong { color: var(--ink); font-weight: 500; display: block; margin-bottom: 3px; font-size: 14px; }
+
+    /* ── DEEP DIVE EXPERIMENT BLOCK ── */
+    .deepdive { background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); padding: 30px 32px; margin: 28px 0; }
+    .deepdive-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 18px; }
+    .deepdive-title { font-family: var(--serif); font-size: 20px; font-weight: 600; color: var(--ink); }
+    .deepdive-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
+    .dd-block-label { font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 6px; }
+    .dd-block-body { font-size: 13.5px; color: var(--ink-mid); line-height: 1.65; font-weight: 300; }
+    .dd-block-body strong { color: var(--ink); font-weight: 500; }
+
+    /* ── PRIORITY CHIPS ── */
+    .p-chip { font-size: 10px; font-weight: 700; letter-spacing: 0.04em; padding: 3px 10px; border-radius: 20px; display: inline-block; white-space: nowrap; }
+    .p0 { background: #fee2e2; color: #b91c1c; }
+    .p1 { background: #ffedd5; color: #c2410c; }
+    .p2 { background: var(--amber-light); color: var(--amber); }
+    .p3 { background: var(--accent-light); color: var(--accent-dark); }
+    .p4 { background: rgba(0,0,0,0.05); color: var(--ink-muted); }
+
+    /* ── SEARCH RANKING TABLE ── */
+    .rank-table { width: 100%; border-collapse: collapse; margin: 28px 0; font-size: 13.5px; }
+    .rank-table th { text-align: left; font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-muted); padding: 12px 14px; border-bottom: 2px solid var(--line); }
+    .rank-table td { padding: 14px 14px; border-bottom: 1px solid var(--line); color: var(--ink-mid); vertical-align: top; line-height: 1.6; }
+    .rank-table td:first-child { width: 56px; }
+    .rank-table td:nth-child(2) { font-weight: 500; color: var(--ink); }
+    .rank-table tr:last-child td { border-bottom: none; }
+    .rank-table tr:hover td { background: rgba(67,56,202,0.03); }
+
+    /* ── SIGNAL TABLE (metrics) ── */
+    .signal-table { width: 100%; border-collapse: collapse; margin: 28px 0; font-size: 13.5px; }
+    .signal-table th { text-align: left; font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-muted); padding: 12px 16px; border-bottom: 2px solid var(--line); }
+    .signal-table td { padding: 14px 16px; border-bottom: 1px solid var(--line); color: var(--ink-mid); vertical-align: top; line-height: 1.6; }
+    .signal-table td:first-child { font-weight: 500; color: var(--ink); }
+    .signal-table tr:last-child td { border-bottom: none; }
+    .signal-table tr:hover td { background: rgba(67,56,202,0.03); }
+
+    /* ── QUADRANT (prioritization framework) ── */
+    .quad-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 28px 0; }
+    .quad-card { border-radius: var(--radius); padding: 22px; border: 1px solid var(--line); }
+    .quad-now { background: var(--green-light); border-color: rgba(22,101,52,0.2); }
+    .quad-bet { background: var(--accent-light); border-color: rgba(67,56,202,0.2); }
+    .quad-nice { background: var(--amber-light); border-color: rgba(180,83,9,0.2); }
+    .quad-back { background: rgba(0,0,0,0.03); }
+    .quad-label { font-size: 10px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 8px; }
+    .quad-now .quad-label { color: var(--green); }
+    .quad-bet .quad-label { color: var(--accent-dark); }
+    .quad-nice .quad-label { color: var(--amber); }
+    .quad-back .quad-label { color: var(--ink-muted); }
+    .quad-title { font-family: var(--serif); font-size: 16px; font-weight: 600; color: var(--ink); margin-bottom: 8px; }
+    .quad-body { font-size: 13px; color: var(--ink-mid); line-height: 1.65; font-weight: 300; }
+
+    /* ── TWO / THREE COL ── */
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 28px 0; }
+    .two-col-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 18px; margin: 28px 0; }
+
+    /* ── CARD ── */
+    .card { background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); padding: 24px; }
+    .card-label { font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; }
+    .card h4 { font-family: var(--serif); font-size: 17px; font-weight: 600; color: var(--ink); margin-bottom: 8px; line-height: 1.3; }
+    .card p { font-size: 13.5px; color: var(--ink-mid); line-height: 1.7; margin-bottom: 0; }
+
+    /* ── RISK GRID ── */
+    .risk-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 28px 0; }
+    .risk-card { background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); padding: 22px; }
+    .risk-level { font-size: 10px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; padding: 3px 10px; border-radius: 20px; display: inline-block; margin-bottom: 10px; }
+    .r-high { background: #faeae7; color: #8c3320; }
+    .r-med  { background: var(--amber-light); color: var(--amber); }
+    .r-low  { background: var(--green-light); color: var(--green); }
+    .risk-title { font-size: 14px; font-weight: 500; color: var(--ink); margin-bottom: 8px; line-height: 1.35; }
+    .risk-body { font-size: 13px; color: var(--ink-mid); line-height: 1.7; }
+
+    /* ── LESSON LIST ── */
+    .lesson-list { display: flex; flex-direction: column; margin: 28px 0; }
+    .lesson-item { display: grid; grid-template-columns: 48px 1fr; gap: 0 20px; padding: 28px 0; border-top: 1px solid var(--line); }
+    .lesson-item:last-child { border-bottom: 1px solid var(--line); }
+    .lesson-num { font-family: var(--serif); font-size: 24px; font-weight: 600; color: var(--accent); opacity: 0.4; line-height: 1; padding-top: 4px; }
+    .lesson-title { font-family: var(--serif); font-size: 18px; font-weight: 600; color: var(--ink); margin-bottom: 8px; line-height: 1.2; }
+    .lesson-body { font-size: 14px; color: var(--ink-mid); line-height: 1.75; font-weight: 300; }
+    .lesson-body strong { color: var(--ink); font-weight: 500; }
+
+    /* ── APPENDIX BAND ── */
+    .appendix-band { background: #111; border-top: 1px solid rgba(255,255,255,0.06); padding: 80px 40px; }
+    .appendix-inner { max-width: var(--wide-w); margin: 0 auto; }
+    .appendix-header { margin-bottom: 56px; }
+    .appendix-eyebrow { font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); margin-bottom: 12px; }
+    .appendix-title { font-family: var(--serif); font-size: 32px; font-weight: 600; letter-spacing: -0.02em; color: #fff; margin-bottom: 12px; }
+    .appendix-sub { font-size: 15px; color: rgba(255,255,255,0.4); font-weight: 300; max-width: 560px; line-height: 1.7; }
+    .appendix-block { margin-bottom: 56px; }
+    .appendix-block:last-child { margin-bottom: 0; }
+    .appendix-block-label { font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.3); margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .appendix-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .appendix-table th { text-align: left; font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,255,255,0.3); padding: 10px 16px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+    .appendix-table td { padding: 14px 16px; border-bottom: 1px solid rgba(255,255,255,0.06); color: rgba(255,255,255,0.55); vertical-align: top; line-height: 1.65; }
+    .appendix-table td:first-child { color: rgba(255,255,255,0.25); font-size: 11px; white-space: nowrap; font-weight: 500; letter-spacing: 0.04em; }
+    .appendix-table tr:last-child td { border-bottom: none; }
+    .appendix-table tr:hover td { background: rgba(255,255,255,0.02); }
+    .appendix-flow-intro { font-size: 14px; color: rgba(255,255,255,0.4); margin-bottom: 28px; font-weight: 300; }
+    .flow-steps { display: flex; flex-direction: column; }
+    .flow-arrow { text-align: center; color: rgba(255,255,255,0.15); font-size: 18px; padding: 4px 0 4px 24px; }
+    .flow-step { display: grid; grid-template-columns: 40px 1fr; gap: 0 16px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); border-radius: var(--radius); padding: 18px 20px; align-items: start; }
+    .flow-step-final { background: rgba(67,56,202,0.12); border-color: rgba(67,56,202,0.3); }
+    .flow-step-num { font-family: var(--serif); font-size: 18px; font-weight: 600; color: var(--accent); line-height: 1; padding-top: 2px; }
+    .flow-step-final .flow-step-num { font-size: 20px; }
+    .flow-step-title { font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.7); margin-bottom: 5px; }
+    .flow-step-text { font-size: 12.5px; color: rgba(255,255,255,0.38); line-height: 1.65; }
+
+    /* ── REVEAL ── */
+    .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.6s var(--ease), transform 0.6s var(--ease); }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* ── FOOTER ── */
+    footer { background: var(--ink); border-top: 1px solid rgba(255,255,255,0.06); padding: 24px 40px; text-align: center; font-size: 12px; color: rgba(255,255,255,0.55); }
+    footer a { color: rgba(255,255,255,0.55); text-decoration: none; }
+    footer a:hover { color: var(--white); }
+
+    /* ══════════════════════════════════════════
+       RESPONSIVE - 768px
+    ══════════════════════════════════════════ */
+    @media (max-width: 768px) {
+      nav { padding: 0 20px; }
+      .nav-links { display: none; }
+
+      /* Hero */
+      .cs-hero { padding: 96px 20px 52px; }
+      .cs-hero-title { font-size: clamp(28px, 8vw, 44px); }
+      .cs-hero-sub { font-size: 14px; margin-bottom: 32px; }
+      .cs-kpi-row { grid-template-columns: 1fr 1fr; gap: 24px 16px; padding-top: 28px; }
+      .cs-kpi { border-right: none !important; padding-right: 0 !important; padding-left: 0 !important; }
+      .cs-kpi:nth-child(odd) { border-right: 1px solid rgba(255,255,255,0.1) !important; padding-right: 16px !important; }
+      .cs-kpi-num { font-size: 24px; }
+      .cs-kpi-label { font-size: 11px; }
+
+      /* TOC + body */
+      .toc-inner { padding: 0 16px; }
+      .toc-item { padding: 12px 12px; font-size: 11px; }
+      .cs-body { padding: 0 20px; }
+      .cs-section { padding: 48px 0 0; }
+      .cs-section h2 { font-size: 22px; margin-bottom: 20px; }
+      .cs-section h3 { font-size: 17px; margin: 28px 0 12px; }
+      .cs-section p { font-size: 14px; line-height: 1.75; }
+      .cs-divider { margin: 40px 0 0; }
+      .callout { padding: 16px 18px; }
+
+      /* Grids → single column */
+      .two-col, .two-col-3, .risk-grid, .exp-card-grid, .quickwin-grid, .quad-grid { grid-template-columns: 1fr; }
+      .deepdive-grid { grid-template-columns: 1fr 1fr; }
+
+      /* Pipeline */
+      .pipe-stage { grid-template-columns: 32px 1fr; padding: 18px 18px; }
+      .pipe-num { font-size: 18px; }
+      .pipe-title { font-size: 15px; }
+      .pipe-status { grid-column: 2; justify-self: start; margin-top: 6px; }
+      .pipe-body { font-size: 13px; }
+
+      /* Funnel */
+      .funnel-row { width: 100% !important; padding: 12px 16px; }
+      .funnel-stage-name { font-size: 12.5px; }
+      .funnel-stage-fric { font-size: 11px; }
+
+      /* Steps */
+      .step-item { grid-template-columns: 40px 1fr; gap: 0 14px; padding: 20px 0; }
+      .step-num { font-size: 22px; }
+      .step-title { font-size: 16px; }
+      .step-body { font-size: 13.5px; }
+
+      /* Lessons */
+      .lesson-item { grid-template-columns: 40px 1fr; gap: 0 14px; padding: 20px 0; }
+      .lesson-num { font-size: 20px; }
+      .lesson-title { font-size: 16px; }
+      .lesson-body { font-size: 13.5px; }
+
+      /* Deep dive */
+      .deepdive { padding: 22px; }
+      .deepdive-title { font-size: 18px; }
+
+      /* Search ranking table → stacked cards */
+      .rank-table { border-collapse: separate; border-spacing: 0; font-size: 13px; }
+      .rank-table thead { display: none; }
+      .rank-table tbody { display: flex; flex-direction: column; gap: 12px; }
+      .rank-table tr { display: block; background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px; }
+      .rank-table td { display: block; width: auto !important; padding: 4px 0; border: none; white-space: normal; font-size: 13.5px; line-height: 1.65; }
+      .rank-table td[data-label]::before { content: attr(data-label); display: block; font-size: 10px; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase; color: var(--ink-muted); margin-top: 8px; margin-bottom: 2px; }
+
+      /* Signal table → stacked cards */
+      .signal-table { border-collapse: separate; border-spacing: 0; font-size: 13px; }
+      .signal-table thead { display: none; }
+      .signal-table tbody { display: flex; flex-direction: column; gap: 12px; }
+      .signal-table tr { display: block; background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px; }
+      .signal-table td { display: block; padding: 4px 0; border: none; white-space: normal; font-size: 13.5px; line-height: 1.65; }
+      .signal-table td:first-child { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); padding-bottom: 8px; margin-bottom: 4px; border-bottom: 1px solid var(--line); }
+      .signal-table td[data-label]::before { content: attr(data-label); display: block; font-size: 10px; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase; color: var(--ink-muted); margin-top: 8px; margin-bottom: 2px; }
+
+      /* Appendix tables → stacked cards */
+      .appendix-table { border-collapse: separate; border-spacing: 0; }
+      .appendix-table thead { display: none; }
+      .appendix-table tbody { display: flex; flex-direction: column; gap: 12px; }
+      .appendix-table tr { display: block; border: 1px solid rgba(255,255,255,0.09); border-radius: var(--radius); padding: 16px; background: rgba(255,255,255,0.025); }
+      .appendix-table td { display: block; padding: 4px 0; border: none; font-size: 13px; line-height: 1.65; white-space: normal; color: rgba(255,255,255,0.6); }
+      .appendix-table td:first-child { font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent) !important; padding-bottom: 8px; margin-bottom: 4px; border-bottom: 1px solid rgba(255,255,255,0.07); }
+      .appendix-table td[data-label]::before { content: attr(data-label); display: block; font-size: 10px; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase; color: rgba(255,255,255,0.28); margin-top: 8px; margin-bottom: 2px; }
+
+      /* Appendix */
+      .appendix-band { padding: 52px 20px 60px; }
+      .appendix-title { font-size: 24px; }
+      .appendix-sub { font-size: 14px; }
+      .flow-step { grid-template-columns: 32px 1fr; gap: 0 12px; padding: 14px 16px; }
+      .flow-step-num { font-size: 15px; }
+      .flow-step-title { font-size: 12px; }
+      .flow-step-text { font-size: 12px; }
+
+      footer { padding: 20px; }
+    }
+
+    /* ══════════════════════════════════════════
+       RESPONSIVE - 480px
+    ══════════════════════════════════════════ */
+    @media (max-width: 480px) {
+      .cs-hero { padding: 88px 16px 44px; }
+      .cs-body { padding: 0 16px; }
+      .appendix-band { padding: 44px 16px 52px; }
+      .cs-kpi-row { gap: 20px 12px; }
+      .cs-kpi-num { font-size: 22px; }
+      .cs-kpi-label { font-size: 10px; }
+      .card { padding: 18px; }
+      .risk-card { padding: 18px; }
+      .exp-card { padding: 18px; }
+      .qw-item { padding: 14px; }
+      .deepdive-grid { grid-template-columns: 1fr; }
+      .quad-card { padding: 18px; }
+      .pipe-stage { padding: 16px 14px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a class="nav-logo" href="index.html">Akash Poddar</a>
+    <ul class="nav-links">
+      <li><a href="work.html">Case Studies</a></li>
+      <li><a href="index.html#experience">Experience</a></li>
+      <li><a href="index.html#skills">Skills</a></li>
+      <li><a href="index.html#contact">Contact</a></li>
+    </ul>
+    <a class="nav-cta" href="index.html#contact">Get in touch</a>
+  </nav>
+
+  <!-- HERO -->
+  <div class="cs-hero">
+    <div class="cs-hero-grid"></div>
+    <div class="cs-hero-shimmer"></div>
+    <div class="cs-hero-inner">
+      <div class="cs-hero-bar"></div>
+      <div class="cs-meta-row">
+        <span class="cs-tag tag-blue">Growth &amp; CRO</span>
+        <span class="cs-tag tag-purple">A/B Testing &middot; Search Ranking</span>
+        <span class="cs-tag tag-green">0&rarr;1 Process</span>
+        <span class="cs-tag tag-gray">Pathao Food &middot; Super App</span>
+      </div>
+      <h1 class="cs-hero-title">Not a Feature.<br><em>An Experimentation Engine.</em></h1>
+      <p class="cs-hero-sub">How I built Pathao Food's conversion experimentation program from scratch: diagnosing funnel friction, running a two-track portfolio of A/B tests and no-dependency quick wins, and redesigning the search ranking algorithm's scoring logic - <strong>a repeatable system for finding and shipping conversion lift, not a single shipped feature.</strong></p>
+      <div class="cs-kpi-row">
+        <div class="cs-kpi">
+          <div class="cs-kpi-num">35<span>+ ideas</span></div>
+          <div class="cs-kpi-label">Experiments scoped across the order funnel and search ranking</div>
+        </div>
+        <div class="cs-kpi">
+          <div class="cs-kpi-num">5<span> stages</span></div>
+          <div class="cs-kpi-label">End-to-end experimentation lifecycle designed and owned</div>
+        </div>
+        <div class="cs-kpi">
+          <div class="cs-kpi-num">10<span> factors</span></div>
+          <div class="cs-kpi-label">Search ranking experiments prioritized P0&ndash;P4</div>
+        </div>
+        <div class="cs-kpi">
+          <div class="cs-kpi-num">2<span> tracks</span></div>
+          <div class="cs-kpi-label">Engineering-dependent A/B tests running parallel to no-dependency quick wins</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOC -->
+  <nav class="toc-bar" aria-label="Table of contents">
+    <div class="toc-inner">
+      <a class="toc-item active" href="#background"><span class="toc-num">01</span> Background</a>
+      <a class="toc-item" href="#problem"><span class="toc-num">02</span> Problem</a>
+      <a class="toc-item" href="#framework"><span class="toc-num">03</span> My Framework</a>
+      <a class="toc-item" href="#funnel"><span class="toc-num">04</span> Funnel Diagnosis</a>
+      <a class="toc-item" href="#portfolio"><span class="toc-num">05</span> Experiment Portfolio</a>
+      <a class="toc-item" href="#deepdives"><span class="toc-num">06</span> Deep-Dives</a>
+      <a class="toc-item" href="#ranking"><span class="toc-num">07</span> Search Ranking</a>
+      <a class="toc-item" href="#prioritization"><span class="toc-num">08</span> Prioritization</a>
+      <a class="toc-item" href="#metrics"><span class="toc-num">09</span> Metrics</a>
+      <a class="toc-item" href="#risks"><span class="toc-num">10</span> Risks</a>
+      <a class="toc-item" href="#lessons"><span class="toc-num">11</span> Lessons</a>
+    </div>
+  </nav>
+
+  <!-- BODY -->
+  <div class="cs-body">
+
+    <!-- 01 BACKGROUND -->
+    <section class="cs-section" id="background">
+      <div class="section-eyebrow">01 &mdash; Background</div>
+      <h2>A funnel dashboard tells you where users drop off. It doesn't tell you what to do about it.</h2>
+      <p>Pathao Food is the food delivery vertical of Pathao, Bangladesh's leading super-app. By the time I picked up this workstream, the team had a working funnel dashboard - search, restaurant view, menu browse, checkout, and place order were all instrumented, and drop-off at each stage was visible. <strong>What didn't exist yet was a structured way to turn those drop-off numbers into a prioritized, shippable set of experiments.</strong></p>
+      <p>This is the gap most growth teams hit: analytics tells you a story is wrong, but nobody has built the muscle to turn "conversion drops here" into "here are 12 ranked hypotheses, here's how we'll test the top 3, and here's what we'll measure." I took that gap as the brief - not to ship one CRO feature, but to <strong>build the operating system for finding, prioritizing, and running conversion experiments across the app</strong>, and apply it immediately to the highest-friction parts of the ordering journey and to the search ranking algorithm underneath it.</p>
+      <div class="callout callout-blue reveal">
+        <p><strong>The reframe:</strong> This case study isn't about one feature launch. It's about the process I built to keep finding conversion opportunities - funnel diagnosis, hypothesis writing, prioritization discipline, and a search ranking backlog - so that "improve conversion" stops being a one-off project and becomes a standing program.</p>
+      </div>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 02 PROBLEM -->
+    <section class="cs-section" id="problem">
+      <div class="section-eyebrow">02 &mdash; Problem</div>
+      <h2>Three structural gaps were blocking conversion gains from ever reaching the roadmap.</h2>
+      <div class="step-list reveal">
+        <div class="step-item">
+          <div class="step-num">01</div>
+          <div>
+            <div class="step-title">Friction points were known, but never translated into testable hypotheses</div>
+            <div class="step-body">The funnel dashboard could show that the checkout step lost users, or that search-to-order conversion lagged. But <strong>a drop-off number is a symptom, not a diagnosis.</strong> Nobody had gone stage-by-stage and asked "why here, specifically, and what's the smallest change that would tell us if this theory is right?" Without that translation layer, drop-off data sat in a dashboard and never became a backlog item.</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">02</div>
+          <div>
+            <div class="step-title">Every idea competed for the same engineering queue, regardless of effort or confidence</div>
+            <div class="step-body">A one-line color change and a multi-sprint checkout redesign were both pitched the same way - as "improvements." <strong>Without a prioritization framework that separated dependency on engineering/data-engineering resourcing from actual impact confidence,</strong> the backlog had no mechanism to protect quick, low-risk wins from being crowded out by bigger, uncertain bets.</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">03</div>
+          <div>
+            <div class="step-title">The search ranking algorithm was a static formula nobody was actively experimenting on</div>
+            <div class="step-body">Search is the first real decision point in the food ordering journey, and it ran on a fixed scoring formula - name match, featured status, and cuisine tags, with static weights nobody had revisited since launch. <strong>A live ranking algorithm that never gets experimented on is a missed lever</strong>, especially when small weight changes (how much to reward a featured restaurant, a higher rating, or a higher rating count) can be tested without touching the UI at all.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 03 FRAMEWORK -->
+    <section class="cs-section" id="framework">
+      <div class="section-eyebrow">03 &mdash; My Framework</div>
+      <h2>A five-stage lifecycle, so conversion work never stalls at "we noticed a problem."</h2>
+      <p>I structured the program as a repeatable pipeline rather than a one-time audit. Each stage has a clear owner and a clear exit criterion - the pipeline below reflects exactly where the program stood: foundational stages already running, my own deliverable actively in motion, and the downstream stages scoped and ready to hand off.</p>
+
+      <div class="pipeline-track reveal">
+        <div class="pipe-stage pipe-done">
+          <div class="pipe-num">01</div>
+          <div class="pipe-title">Data Collection</div>
+          <div class="pipe-status status-done">Foundation in place</div>
+          <div class="pipe-body">Instrument and pull conversion rates at every defined funnel checkpoint - search, restaurant view, menu, checkout, place order. This baseline already existed and fed directly into my diagnosis work.</div>
+        </div>
+        <div class="pipe-stage pipe-done">
+          <div class="pipe-num">02</div>
+          <div class="pipe-title">Friction Analysis</div>
+          <div class="pipe-status status-done">Foundation in place</div>
+          <div class="pipe-body">Identify drop-offs and unusually long dwell times at each funnel step, so effort gets pointed at the stages actually losing users rather than the stages that feel most visible.</div>
+        </div>
+        <div class="pipe-stage pipe-active">
+          <div class="pipe-num">03</div>
+          <div class="pipe-title">Experiment Definition</div>
+          <div class="pipe-status status-active">My core deliverable</div>
+          <div class="pipe-body">Turn every identified friction point into a written hypothesis, a specific variant to test, and an expected outcome - then tag each one by engineering/data-engineering dependency and priority (P0&ndash;P4). This is the stage where PM judgment does the heavy lifting, and it's where this case study concentrates.</div>
+        </div>
+        <div class="pipe-stage pipe-planned">
+          <div class="pipe-num">04</div>
+          <div class="pipe-title">Implementation</div>
+          <div class="pipe-status status-planned">Roadmap handoff</div>
+          <div class="pipe-body">Hand finalized variants to design for UI/UX treatment and to engineering for build - sequenced by the prioritization framework, not by whoever asks first.</div>
+        </div>
+        <div class="pipe-stage pipe-planned">
+          <div class="pipe-num">05</div>
+          <div class="pipe-title">Monitoring</div>
+          <div class="pipe-status status-planned">Roadmap handoff</div>
+          <div class="pipe-body">Watch the funnel dashboard post-launch against the specific metric each experiment was designed to move, and feed results back into the next round of prioritization.</div>
+        </div>
+      </div>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 04 FUNNEL DIAGNOSIS -->
+    <section class="cs-section" id="funnel">
+      <div class="section-eyebrow">04 &mdash; Funnel Diagnosis</div>
+      <h2>Five checkpoints between opening the app and a confirmed order - each with its own friction story.</h2>
+      <p>Before writing a single hypothesis, I mapped the ordering journey into five checkpoints and asked what was specifically breaking at each one - not generically, but in terms an engineer or designer could act on.</p>
+
+      <div class="funnel-viz reveal">
+        <div class="funnel-row">
+          <div class="funnel-stage-name">Discovery &amp; Search</div>
+          <div class="funnel-stage-fric">Static ranking weights, no personalization, discount and offer signals buried in filter order</div>
+        </div>
+        <div class="funnel-row">
+          <div class="funnel-stage-name">Restaurant &amp; Menu Browse</div>
+          <div class="funnel-stage-fric">Missing or poorly cropped food images, thin menu descriptions, no dietary or delivery-time cues</div>
+        </div>
+        <div class="funnel-row">
+          <div class="funnel-stage-name">Add to Cart</div>
+          <div class="funnel-stage-fric">No sense of urgency or social proof at the point of decision; limited quick-share or discovery loops</div>
+        </div>
+        <div class="funnel-row">
+          <div class="funnel-stage-name">Checkout</div>
+          <div class="funnel-stage-fric">Single dense screen with no visual sense of progress, raising perceived complexity</div>
+        </div>
+        <div class="funnel-row">
+          <div class="funnel-stage-name">Place Order</div>
+          <div class="funnel-stage-fric">Low-contrast CTA; rush-hour rider shortages driving system cancellations instead of a wait option</div>
+        </div>
+      </div>
+      <p style="font-size:12.5px;color:var(--ink-faint);font-weight:300;">Visual is illustrative of the funnel shape, not a plot of measured conversion data.</p>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 05 EXPERIMENT PORTFOLIO -->
+    <section class="cs-section" id="portfolio">
+      <div class="section-eyebrow">05 &mdash; Experiment Portfolio</div>
+      <h2>Two parallel tracks, so quick wins never wait on the engineering queue.</h2>
+      <p>The single biggest structural decision I made was to stop treating "the backlog" as one undifferentiated list. I split it into two tracks that could move at completely different speeds.</p>
+
+      <div class="track-header">
+        <span class="track-badge dep-yes">Requires DE / Engineering</span>
+        <span class="track-title">Track A &mdash; Structural A/B Tests</span>
+      </div>
+      <p>Bigger bets that touch UI, backend logic, or the ranking pipeline - each needs a proper hypothesis, a built variant, and a monitored rollout.</p>
+      <div class="exp-card-grid reveal">
+        <div class="exp-card">
+          <div class="exp-card-tag">Place Order CTA</div>
+          <h4>Color Contrast Variant</h4>
+          <p><strong>Hypothesis:</strong> a higher-contrast "Place Order" button draws more attention and reduces last-step hesitation.</p>
+        </div>
+        <div class="exp-card">
+          <div class="exp-card-tag">Checkout Flow</div>
+          <h4>Multi-Step with Progress Bar</h4>
+          <p><strong>Hypothesis:</strong> breaking checkout into steps with a visible progress indicator reduces perceived complexity and abandonment.</p>
+        </div>
+        <div class="exp-card">
+          <div class="exp-card-tag">Search Results Display</div>
+          <h4>Grid View vs. Detailed List View</h4>
+          <p><strong>Hypothesis:</strong> image-led grid results speed up recognition, while a detailed list reduces mis-selection through richer information.</p>
+        </div>
+      </div>
+
+      <div class="track-header">
+        <span class="track-badge dep-no">No Dependency</span>
+        <span class="track-title">Track B &mdash; Quick-Win Content &amp; Merchandising Fixes</span>
+      </div>
+      <p>Twenty-three ideas that needed no engineering build - content quality, ordering logic on existing app cards and filters, and small UX affordances. A representative sample:</p>
+      <div class="quickwin-grid reveal">
+        <div class="qw-item"><strong>Complete the menu image gaps</strong>Every menu item gets a photo; visual gaps were quietly costing conversions on otherwise-strong restaurants.</div>
+        <div class="qw-item"><strong>Fix cropped restaurant &amp; food banners</strong>Several banners were mis-framed and cropping out the food itself.</div>
+        <div class="qw-item"><strong>Add enticing menu descriptions</strong>Short, appetite-driving copy for every item, not just a name and price.</div>
+        <div class="qw-item"><strong>"Popular for Lunch" app card</strong>A time-boxed (11am&ndash;4pm) card tagging restaurants with lunch-appropriate items, mirroring the existing "sokaler nasta" breakfast card.</div>
+        <div class="qw-item"><strong>Reorder the discount filter</strong>Move "Offering Discount" earlier in the filter row - it currently sits after Sort, Filter, and Above-4-star and is easy to miss.</div>
+        <div class="qw-item"><strong>Surface restaurants with offers first</strong>Within "All Restaurants," restaurants with active offers should rank ahead of ones without.</div>
+        <div class="qw-item"><strong>Reorder budget-meal app card</strong>Bring the budget-meals card ahead of "Delicious Deals," where it's currently buried in 4th position.</div>
+        <div class="qw-item"><strong>Weather- &amp; time-aware suggestions</strong>Mood-based food prompts (juicy/cold items on hot days, warm items on cool days) and dietary icons for quick scanning.</div>
+        <div class="qw-item"><strong>Rush-hour waitlist instead of cancellation</strong>Offer an estimated-wait option during rider shortages instead of an automatic system cancellation.</div>
+        <div class="qw-item"><strong>In-app quick tips &amp; delivery-time tags</strong>Tooltips for low-adoption features, plus visible delivery-time estimates per item to set expectations upfront.</div>
+      </div>
+      <div class="callout callout-purple reveal">
+        <p><strong>Why split it this way:</strong> Track B could start shipping within days - no roadmap slot required - while Track A's bigger bets went through proper design and engineering scoping in parallel. The two tracks never competed for the same resource, so momentum on quick wins didn't stall while the bigger tests were being built.</p>
+      </div>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 06 DEEP DIVES -->
+    <section class="cs-section" id="deepdives">
+      <div class="section-eyebrow">06 &mdash; Deep-Dives</div>
+      <h2>Three experiments, worked through end-to-end.</h2>
+      <p>Below is the level of detail I took every experiment to before it was ready to hand off - hypothesis, variant, dependency, and the metric that would prove or kill it.</p>
+
+      <div class="deepdive reveal">
+        <div class="deepdive-head">
+          <div class="deepdive-title">Place Order Button &mdash; Color Contrast Test</div>
+          <span class="p-chip p1">Track A &middot; P1</span>
+        </div>
+        <div class="deepdive-grid">
+          <div><div class="dd-block-label">Hypothesis</div><div class="dd-block-body">A more visually distinct, contrasting CTA color draws the eye at the final decision point and reduces drop-off right before order confirmation.</div></div>
+          <div><div class="dd-block-label">Variant</div><div class="dd-block-body">Swap the existing "Place Order" button to a higher-contrast color against its surrounding UI, holding copy and placement constant.</div></div>
+          <div><div class="dd-block-label">Dependency</div><div class="dd-block-body">Front-end only - a one-sprint change, no backend or data-engineering involvement required.</div></div>
+          <div><div class="dd-block-label">Success Metric</div><div class="dd-block-body">Cart-to-order conversion rate, measured against the existing button as control.</div></div>
+        </div>
+      </div>
+
+      <div class="deepdive reveal">
+        <div class="deepdive-head">
+          <div class="deepdive-title">Checkout &mdash; Multi-Step Flow with Progress Bar</div>
+          <span class="p-chip p1">Track A &middot; P1</span>
+        </div>
+        <div class="deepdive-grid">
+          <div><div class="dd-block-label">Hypothesis</div><div class="dd-block-body">Splitting checkout into clear steps with a visible progress bar gives users a sense of control and lowers the perceived complexity that causes mid-checkout abandonment.</div></div>
+          <div><div class="dd-block-label">Variant</div><div class="dd-block-body">Replace the single dense checkout screen with a paged flow (address &rarr; payment &rarr; review) and a persistent progress indicator across the top.</div></div>
+          <div><div class="dd-block-label">Dependency</div><div class="dd-block-body">Requires front-end rework and QA across payment states - the largest build in Track A.</div></div>
+          <div><div class="dd-block-label">Success Metric</div><div class="dd-block-body">Checkout-start-to-completion rate, plus time-to-complete-checkout as a guardrail against added friction.</div></div>
+        </div>
+      </div>
+
+      <div class="deepdive reveal">
+        <div class="deepdive-head">
+          <div class="deepdive-title">"Popular for Lunch" App Card</div>
+          <span class="p-chip p2">Track B &middot; No Dependency</span>
+        </div>
+        <div class="deepdive-grid">
+          <div><div class="dd-block-label">Hypothesis</div><div class="dd-block-body">Users will discover lunch-appropriate restaurants more easily from a dedicated, time-boxed app card, increasing footfall into those restaurants during lunch hours.</div></div>
+          <div><div class="dd-block-label">Variant</div><div class="dd-block-body">A new app card, visible 11am&ndash;4pm, tagging restaurants with genuinely lunch-appropriate menus (explicitly excluding sweet shops and fast-food-only outlets) - placed beside the existing breakfast-focused card.</div></div>
+          <div><div class="dd-block-label">Measurement Design</div><div class="dd-block-body">Because no prior baseline existed for tagged restaurants, I specified capturing each restaurant's baseline performance <strong>before</strong> placement in the card, then comparing post-placement performance against that same baseline - rather than comparing against untagged restaurants, which would confound the read.</div></div>
+          <div><div class="dd-block-label">Success Metric</div><div class="dd-block-body">Footfall and order conversion lift for tagged restaurants, baseline vs. post-placement.</div></div>
+        </div>
+      </div>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 07 SEARCH RANKING -->
+    <section class="cs-section" id="ranking">
+      <div class="section-eyebrow">07 &mdash; Search Ranking</div>
+      <h2>The search algorithm nobody was experimenting on - until a prioritized backlog existed for it.</h2>
+      <p>Search ranking scored restaurants on name match, featured status, and primary/secondary cuisine tags, with static weights that hadn't been revisited since launch. I treated the scoring formula itself as an experimentation surface and built a prioritized backlog of weight and logic changes, each with its own rationale.</p>
+
+      <table class="rank-table reveal">
+        <thead>
+          <tr><th>Priority</th><th>Experiment</th><th>What Changes</th><th>Expected Outcome</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td data-label="Priority"><span class="p-chip p0">P0</span></td>
+            <td data-label="Experiment">Badge restaurants I've ordered from before</td>
+            <td data-label="What Changes">Surface a "previously ordered" badge in search results</td>
+            <td data-label="Expected Outcome">Faster re-order decisions, higher repeat-order conversion</td>
+          </tr>
+          <tr>
+            <td data-label="Priority"><span class="p-chip p0">P0</span></td>
+            <td data-label="Experiment">Rank restaurants' active deals higher</td>
+            <td data-label="What Changes">Give live discounts/deals more ranking weight</td>
+            <td data-label="Expected Outcome">Better matching of price-sensitive intent with visible offers</td>
+          </tr>
+          <tr>
+            <td data-label="Priority"><span class="p-chip p1">P1</span></td>
+            <td data-label="Experiment">Increase "is_featured" weight</td>
+            <td data-label="What Changes">Raise featured-tag weight from ~25% toward 30&ndash;40% of composite score</td>
+            <td data-label="Expected Outcome">More attention and conversion on featured restaurants</td>
+          </tr>
+          <tr>
+            <td data-label="Priority"><span class="p-chip p1">P1</span></td>
+            <td data-label="Experiment">Reward higher star ratings</td>
+            <td data-label="What Changes">Add tiered bonus points above defined rating thresholds (e.g. 4.0&ndash;4.3, &gt;4.3)</td>
+            <td data-label="Expected Outcome">Higher user satisfaction from surfacing better-reviewed restaurants</td>
+          </tr>
+          <tr>
+            <td data-label="Priority"><span class="p-chip p1">P1</span></td>
+            <td data-label="Experiment">Reward higher rating volume</td>
+            <td data-label="What Changes">Add bonus points once a restaurant's rating count clears a threshold</td>
+            <td data-label="Expected Outcome">Trust signal from social proof reflected in ranking, not just average score</td>
+          </tr>
+          <tr>
+            <td data-label="Priority"><span class="p-chip p1">P1</span></td>
+            <td data-label="Experiment">Personalize with order &amp; search history</td>
+            <td data-label="What Changes">Weight results by the individual user's past behavior</td>
+            <td data-label="Expected Outcome">More relevant top-of-search results per user</td>
+          </tr>
+          <tr>
+            <td data-label="Priority"><span class="p-chip p1">P1</span></td>
+            <td data-label="Experiment">Show price signal in food-item results</td>
+            <td data-label="What Changes">Add a visible price indicator directly in search results</td>
+            <td data-label="Expected Outcome">Faster filtering by budget without an extra tap</td>
+          </tr>
+          <tr>
+            <td data-label="Priority"><span class="p-chip p2">P2</span></td>
+            <td data-label="Experiment">Data-quality scoring</td>
+            <td data-label="What Changes">Bonus points for restaurants with complete data and quality images</td>
+            <td data-label="Expected Outcome">Incentivizes restaurants to keep listings updated</td>
+          </tr>
+          <tr>
+            <td data-label="Priority"><span class="p-chip p2">P2</span></td>
+            <td data-label="Experiment">Novelty score for new restaurants</td>
+            <td data-label="What Changes">Temporary ranking boost during a restaurant's first weeks live</td>
+            <td data-label="Expected Outcome">Higher exploration and conversion for new supply</td>
+          </tr>
+          <tr>
+            <td data-label="Priority"><span class="p-chip p3">P3</span></td>
+            <td data-label="Experiment">Time-of-day personalization</td>
+            <td data-label="What Changes">Boost lunch/dinner/late-night tagged restaurants during their relevant hours</td>
+            <td data-label="Expected Outcome">More relevant results tied to search timing</td>
+          </tr>
+          <tr>
+            <td data-label="Priority"><span class="p-chip p4">P4</span></td>
+            <td data-label="Experiment">Seasonal cuisine highlight</td>
+            <td data-label="What Changes">Boost seasonal tags (BBQ in summer, hot beverages in winter)</td>
+            <td data-label="Expected Outcome">Incremental seasonal conversion lift</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 08 PRIORITIZATION -->
+    <section class="cs-section" id="prioritization">
+      <div class="section-eyebrow">08 &mdash; Prioritization</div>
+      <h2>A two-axis framework: dependency on the x-axis, priority tier on the y-axis.</h2>
+      <p>Every experiment - whether a funnel fix or a ranking-weight change - got plotted on the same two axes: does it need engineering/DE resourcing, and how high is its priority tier (P0&ndash;P4, reflecting my confidence in impact and how directly it addresses a diagnosed friction point). That gave the team a shared, defensible answer to "what do we build next?"</p>
+
+      <div class="quad-grid reveal">
+        <div class="quad-card quad-now">
+          <div class="quad-label">Ship Now</div>
+          <div class="quad-title">No Dependency &middot; High Priority</div>
+          <div class="quad-body">Menu image fixes, discount filter reorder, offer-first sorting, "previously ordered" badge logic. Ships within days; no roadmap slot needed.</div>
+        </div>
+        <div class="quad-card quad-bet">
+          <div class="quad-label">Roadmap Bets</div>
+          <div class="quad-title">Requires Eng/DE &middot; High Priority</div>
+          <div class="quad-body">Checkout progress bar, CTA color test, featured-weight and rating-weight tuning in the ranking algorithm. Scoped, sequenced, and handed to engineering with clear success metrics.</div>
+        </div>
+        <div class="quad-card quad-nice">
+          <div class="quad-label">Nice to Have</div>
+          <div class="quad-title">No Dependency &middot; Lower Priority</div>
+          <div class="quad-body">Localized loading-screen quotes, weekly digest emails, social check-in rewards. Low cost, but not tied to a diagnosed friction point - queued behind higher-confidence items.</div>
+        </div>
+        <div class="quad-card quad-back">
+          <div class="quad-label">Backlog</div>
+          <div class="quad-title">Requires Eng/DE &middot; Lower Priority</div>
+          <div class="quad-body">Seasonal cuisine highlighting, time-of-day ranking personalization. Kept visible in the backlog rather than discarded, so they resurface once the higher-priority queue clears.</div>
+        </div>
+      </div>
+      <div class="callout callout-amber reveal">
+        <p><strong>Why this mattered:</strong> without separating "needs engineering" from "priority," the backlog defaults to whichever idea is loudest, not whichever idea is most likely to move conversion. The quadrant made trade-offs visible and defensible in planning conversations, instead of implicit and political.</p>
+      </div>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 09 METRICS -->
+    <section class="cs-section" id="metrics">
+      <div class="section-eyebrow">09 &mdash; Metrics</div>
+      <h2>Every experiment ships with the metric that will kill it, defined before launch.</h2>
+      <div class="callout callout-blue reveal">
+        <p><strong>North Star:</strong> Search-to-order conversion rate - the share of search sessions that end in a placed order. Every experiment in this program, whether a funnel fix or a ranking change, ultimately has to move this number or a clearly-linked stage metric feeding into it.</p>
+      </div>
+
+      <table class="signal-table reveal">
+        <thead>
+          <tr><th>Stage</th><th>Metric</th><th>Why it's on the dashboard</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Search</td>
+            <td data-label="Metric">Click-through rate on top-3 search results</td>
+            <td data-label="Why it's on the dashboard">Direct read on whether ranking-weight changes are surfacing more relevant restaurants at the top of results.</td>
+          </tr>
+          <tr>
+            <td>Browse</td>
+            <td data-label="Metric">Menu-to-cart conversion rate</td>
+            <td data-label="Why it's on the dashboard">Tests whether image, description, and dietary-icon fixes actually translate browsing into an add-to-cart action.</td>
+          </tr>
+          <tr>
+            <td>Checkout</td>
+            <td data-label="Metric">Checkout-start-to-completion rate</td>
+            <td data-label="Why it's on the dashboard">The core read on whether the progress-bar variant reduces mid-checkout abandonment.</td>
+          </tr>
+          <tr>
+            <td>Place Order</td>
+            <td data-label="Metric">Cart-to-order conversion rate</td>
+            <td data-label="Why it's on the dashboard">Isolates the very last step, where the CTA color test is designed to have its effect.</td>
+          </tr>
+          <tr>
+            <td>Merchandising</td>
+            <td data-label="Metric">Footfall lift for restaurants placed in a new app card, baseline vs. post-placement</td>
+            <td data-label="Why it's on the dashboard">The only fair way to evaluate app-card placements where no pre-existing comparison group exists.</td>
+          </tr>
+          <tr>
+            <td>Guardrail</td>
+            <td data-label="Metric">System-cancellation rate during rush hours</td>
+            <td data-label="Why it's on the dashboard">Ensures the rush-hour waitlist experiment is actually reducing cancellations, not just delaying them.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 10 RISKS -->
+    <section class="cs-section" id="risks">
+      <div class="section-eyebrow">10 &mdash; Risks</div>
+      <h2>What could go wrong - and how the program was designed against it.</h2>
+      <div class="risk-grid reveal">
+        <div class="risk-card">
+          <div class="risk-level r-high">High</div>
+          <div class="risk-title">No pre-existing baseline for new app-card placements</div>
+          <div class="risk-body">Without a "before" state, any lift from a new card like "Popular for Lunch" is unprovable. Mitigated by requiring baseline capture for every tagged restaurant before placement, not after.</div>
+        </div>
+        <div class="risk-card">
+          <div class="risk-level r-high">High</div>
+          <div class="risk-title">Quick wins shipped without design review degrade trust in the UI</div>
+          <div class="risk-body">The speed advantage of Track B could tempt the team to skip design polish entirely. Mitigated by requiring a lightweight design sign-off even for no-dependency changes, so speed didn't come at the cost of visual consistency.</div>
+        </div>
+        <div class="risk-card">
+          <div class="risk-level r-high">High</div>
+          <div class="risk-title">Ranking changes reward "featured" or "novel" restaurants at the expense of genuine quality</div>
+          <div class="risk-body">Over-weighting featured status or novelty could surface paid or new placements over restaurants users actually prefer. Mitigated by pairing every weight increase with a rating-quality and rating-volume signal, so no single lever can dominate the score.</div>
+        </div>
+        <div class="risk-card">
+          <div class="risk-level r-med">Medium</div>
+          <div class="risk-title">Running Track A and Track B experiments simultaneously confounds the read</div>
+          <div class="risk-body">If a checkout redesign and a CTA color test both ship in the same window, it's hard to attribute conversion movement to either. Mitigated by sequencing overlapping-funnel-stage experiments and keeping non-overlapping-stage experiments running in true parallel.</div>
+        </div>
+        <div class="risk-card">
+          <div class="risk-level r-med">Medium</div>
+          <div class="risk-title">Rush-hour waitlist experiment shifts poor experience from "cancelled" to "kept waiting"</div>
+          <div class="risk-body">Replacing cancellations with a wait option only helps if the estimated wait is accurate. Mitigated by tying the offered wait time to real-time rider availability rather than a fixed estimate, and treating cancellation rate as a guardrail metric.</div>
+        </div>
+        <div class="risk-card">
+          <div class="risk-level r-low">Low</div>
+          <div class="risk-title">Backlog becomes stale as market conditions shift</div>
+          <div class="risk-body">A P3/P4 item like seasonal cuisine highlighting can lose relevance if not revisited. Mitigated by keeping the prioritization framework as a living document reviewed each planning cycle, not a one-time ranking exercise.</div>
+        </div>
+      </div>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 11 LESSONS -->
+    <section class="cs-section" id="lessons">
+      <div class="section-eyebrow">11 &mdash; Lessons</div>
+      <h2>What building an experimentation program - rather than a single feature - taught me.</h2>
+      <div class="lesson-list reveal">
+        <div class="lesson-item">
+          <div class="lesson-num">01</div>
+          <div>
+            <div class="lesson-title">A dashboard shows you a wound; a framework tells you how to treat it</div>
+            <div class="lesson-body">Funnel analytics were already good before I started. What was missing was the discipline of turning "conversion drops here" into a written hypothesis, a scoped variant, and a defined success metric. <strong>The real PM deliverable in this program wasn't a chart - it was the translation layer between data and a shippable experiment.</strong></div>
+          </div>
+        </div>
+        <div class="lesson-item">
+          <div class="lesson-num">02</div>
+          <div>
+            <div class="lesson-title">Splitting the backlog by dependency protects momentum</div>
+            <div class="lesson-body">The single highest-leverage structural decision in this program was separating no-dependency quick wins from engineering-dependent bets into two tracks. <strong>Momentum on the easy wins never had to wait for the hard ones to get scoped</strong> - and the hard ones got proper design and engineering time instead of being rushed to keep pace with quick wins.</div>
+          </div>
+        </div>
+        <div class="lesson-item">
+          <div class="lesson-num">03</div>
+          <div>
+            <div class="lesson-title">A live ranking algorithm is an experimentation surface, not a fixed asset</div>
+            <div class="lesson-body">Search ranking had run unchanged since launch simply because nobody had framed it as testable. <strong>Treating the scoring weights themselves as a backlog of experiments - not a black box - unlocked ten prioritized ranking tests</strong> that require no new UI at all, just changes to how existing signals are weighted.</div>
+          </div>
+        </div>
+        <div class="lesson-item">
+          <div class="lesson-num">04</div>
+          <div>
+            <div class="lesson-title">Measurement design has to be solved before the experiment, not after</div>
+            <div class="lesson-body">The "Popular for Lunch" app card had no natural control group - there was no historical baseline for restaurants that had never been featured. <strong>I had to design the before/after comparison methodology as part of writing the hypothesis</strong>, not leave it for whoever analyzed results later. An experiment with no measurement plan isn't an experiment.</div>
+          </div>
+        </div>
+        <div class="lesson-item">
+          <div class="lesson-num">05</div>
+          <div>
+            <div class="lesson-title">Prioritization frameworks earn trust by making trade-offs visible, not by being clever</div>
+            <div class="lesson-body">The P0&ndash;P4 x dependency quadrant isn't a novel framework - its value was that it gave stakeholders a shared, visible reason for why one experiment shipped before another. <strong>Once trade-offs are visible, prioritization debates stop being about whose idea is loudest and start being about the framework's inputs</strong> - which is a much healthier argument to have.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div><!-- /cs-body -->
+
+  <!-- APPENDIX BAND -->
+  <div class="appendix-band">
+    <div class="appendix-inner">
+
+      <div class="appendix-header">
+        <div class="appendix-eyebrow">Appendix &mdash; The Evidence</div>
+        <h2 class="appendix-title">Experiment Specs &amp; Pipeline</h2>
+        <p class="appendix-sub">Sample hypotheses, the prioritized search ranking backlog, and the experiment-to-launch pipeline as I specified them.</p>
+      </div>
+
+      <!-- SAMPLE HYPOTHESES -->
+      <div class="appendix-block reveal">
+        <div class="appendix-block-label">Appendix A &mdash; Sample Hypotheses</div>
+        <table class="appendix-table">
+          <thead>
+            <tr><th>ID</th><th>Idea</th><th>Hypothesis</th><th>Track</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>H.1</td>
+              <td data-label="Idea">Place Order CTA color change</td>
+              <td data-label="Hypothesis">A more noticeable color will attract attention and encourage users to proceed with the order</td>
+              <td data-label="Track">A &middot; P1</td>
+            </tr>
+            <tr>
+              <td>H.2</td>
+              <td data-label="Idea">Checkout progress bar</td>
+              <td data-label="Hypothesis">A visible progress bar gives users a sense of control and reduces perceived complexity</td>
+              <td data-label="Track">A &middot; P1</td>
+            </tr>
+            <tr>
+              <td>H.3</td>
+              <td data-label="Idea">Search results grid view</td>
+              <td data-label="Hypothesis">Visual appeal makes it easier for users to identify and select desired items</td>
+              <td data-label="Track">A &middot; P2</td>
+            </tr>
+            <tr>
+              <td>H.4</td>
+              <td data-label="Idea">"Popular for Lunch" app card</td>
+              <td data-label="Hypothesis">Users find lunch items more easily from a dedicated card, increasing footfall to tagged restaurants</td>
+              <td data-label="Track">B &middot; P1</td>
+            </tr>
+            <tr>
+              <td>H.5</td>
+              <td data-label="Idea">Rush-hour waitlist</td>
+              <td data-label="Hypothesis">An estimated-wait option during rider shortages reduces system cancellations versus an automatic cancel</td>
+              <td data-label="Track">B &middot; P1</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- RANKING BACKLOG -->
+      <div class="appendix-block reveal">
+        <div class="appendix-block-label">Appendix B &mdash; Full Search Ranking Backlog (P0&ndash;P4)</div>
+        <table class="appendix-table">
+          <thead>
+            <tr><th>Priority</th><th>Experiment</th><th>Notes</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>P0</td><td data-label="Experiment">"Previously ordered" badge</td><td data-label="Notes">Owner: search/ranking pod</td></tr>
+            <tr><td>P0</td><td data-label="Experiment">Rank active restaurant deals higher</td><td data-label="Notes">Owner: search/ranking pod</td></tr>
+            <tr><td>P1</td><td data-label="Experiment">Increase is_featured weight (~25%&rarr;30-40%)</td><td data-label="Notes">Requires A/A validation before rollout</td></tr>
+            <tr><td>P1</td><td data-label="Experiment">Rating-threshold bonus points</td><td data-label="Notes">Threshold tiers to be set from ratings distribution</td></tr>
+            <tr><td>P1</td><td data-label="Experiment">Rating-count bonus points</td><td data-label="Notes">Guards against low-volume high-rating outliers</td></tr>
+            <tr><td>P1</td><td data-label="Experiment">User history personalization</td><td data-label="Notes">Owner: data engineering</td></tr>
+            <tr><td>P1</td><td data-label="Experiment">Price signal in item search results</td><td data-label="Notes">Front-end only</td></tr>
+            <tr><td>P2</td><td data-label="Experiment">Data-quality scoring bonus</td><td data-label="Notes">Requires data-completeness audit tooling</td></tr>
+            <tr><td>P2</td><td data-label="Experiment">Novelty score for new restaurants</td><td data-label="Notes">Time-boxed boost, first 4 weeks live</td></tr>
+            <tr><td>P3</td><td data-label="Experiment">Time-of-day ranking personalization</td><td data-label="Notes">Requires meal-time tagging per restaurant</td></tr>
+            <tr><td>P4</td><td data-label="Experiment">Seasonal cuisine highlight</td><td data-label="Notes">Lowest confidence; revisit each season</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- PIPELINE -->
+      <div class="appendix-block reveal">
+        <div class="appendix-block-label">Appendix C &mdash; Experiment-to-Launch Pipeline</div>
+        <p class="appendix-flow-intro">How a diagnosed friction point becomes a monitored, shipped experiment.</p>
+        <div class="flow-steps">
+          <div class="flow-step">
+            <div class="flow-step-num">1</div>
+            <div>
+              <div class="flow-step-title">Pull funnel conversion data</div>
+              <div class="flow-step-text">Conversion rate at every defined checkpoint: search, browse, cart, checkout, place order.</div>
+            </div>
+          </div>
+          <div class="flow-arrow">&#8595;</div>
+          <div class="flow-step">
+            <div class="flow-step-num">2</div>
+            <div>
+              <div class="flow-step-title">Identify friction points</div>
+              <div class="flow-step-text">Locate drop-offs and abnormal dwell times; rank stages by opportunity size.</div>
+            </div>
+          </div>
+          <div class="flow-arrow">&#8595;</div>
+          <div class="flow-step">
+            <div class="flow-step-num">3</div>
+            <div>
+              <div class="flow-step-title">Write hypothesis + variant + dependency tag</div>
+              <div class="flow-step-text">Every idea gets a written hypothesis, a specific variant, a dependency tag (Track A/B), and a priority (P0&ndash;P4).</div>
+            </div>
+          </div>
+          <div class="flow-arrow">&#8595;</div>
+          <div class="flow-step">
+            <div class="flow-step-num">4</div>
+            <div>
+              <div class="flow-step-title">Design + engineering build</div>
+              <div class="flow-step-text">Track B ships direct to content/config owners; Track A goes through design UX pass and engineering scoping, sequenced by the prioritization quadrant.</div>
+            </div>
+          </div>
+          <div class="flow-arrow">&#8595;</div>
+          <div class="flow-step">
+            <div class="flow-step-num">5</div>
+            <div>
+              <div class="flow-step-title">Monitor against the pre-defined metric</div>
+              <div class="flow-step-text">Each experiment is checked against the specific stage metric and guardrail defined before launch - not a generic "did conversion go up" read.</div>
+            </div>
+          </div>
+          <div class="flow-arrow">&#8595;</div>
+          <div class="flow-step flow-step-final">
+            <div class="flow-step-num">&#10003;</div>
+            <div>
+              <div class="flow-step-title">Feed results back into the backlog</div>
+              <div class="flow-step-text">Wins get scaled; misses get documented reasoning; the prioritization quadrant is re-run with fresh evidence for the next cycle.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div><!-- /appendix-band -->
+
+  <!-- FOOTER -->
+  <footer>
+    <a href="work.html">&larr; Back to all case studies</a>
+    &nbsp;&nbsp;&middot;&nbsp;&nbsp;
+    <a href="index.html">Akash Poddar</a>
+    &nbsp;&nbsp;&middot;&nbsp;&nbsp;
+    <a href="index.html#contact">Get in touch</a>
+  </footer>
+
+  <script>
+    const reveals = document.querySelectorAll('.reveal');
+    const isMobile = window.innerWidth < 768;
+    const io = new IntersectionObserver((entries) => {
+      const visible = entries.filter(e => e.isIntersecting)
+        .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+      if (!visible.length) return;
+      requestAnimationFrame(() => {
+        visible.forEach((entry, i) => {
+          entry.target.style.transitionDelay = isMobile ? '0s' : (i * 0.05) + 's';
+          entry.target.classList.add('visible');
+          io.unobserve(entry.target);
+        });
+      });
+    }, { threshold: 0.06, rootMargin: '0px 0px -40px 0px' });
+    reveals.forEach(r => io.observe(r));
+
+    const tocItems = document.querySelectorAll('.toc-item');
+    const sections = document.querySelectorAll('.cs-section[id]');
+    const tocObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          tocItems.forEach(t => t.classList.remove('active'));
+          const active = document.querySelector(`.toc-item[href="#${entry.target.id}"]`);
+          if (active) active.classList.add('active');
+        }
+      });
+    }, { threshold: 0, rootMargin: '-101px 0px -85% 0px' });
+    sections.forEach(s => tocObserver.observe(s));
+  </script>
+
+</body>
+</html>
