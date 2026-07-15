@@ -1,0 +1,1179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-62DWPTYD6F"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-62DWPTYD6F');
+  </script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27><rect width=%2732%27 height=%2732%27 rx=%274%27 fill=%27%230e0e0e%27/><text x=%2716%27 y=%2722%27 font-family=%27Georgia,serif%27 font-size=%2714%27 font-weight=%27600%27 fill=%27%23f7f5f0%27 text-anchor=%27middle%27>AP</text></svg>" />
+  <title>Puffy CRO Case Study - Two Evidence-Backed Growth Experiments | Akash Poddar</title>
+  <meta name="description" content="An independent conversion-rate audit of Puffy.com: two fully-specified A/B tests - a health-stakes hero section and a new-home bundle offer - with uplift decomposition and revenue modeling." />
+  <link rel="canonical" href="https://echo-akash.github.io/puffy-cro-case-study.html" />
+  <meta property="og:title" content="Puffy CRO Case Study - Two Evidence-Backed Growth Experiments | Akash Poddar" />
+  <meta property="og:description" content="Diagnosing why a feature-led mattress landing page misses two high-intent buyer moments, and specifying two evidence-backed A/B tests to close the gap." />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://echo-akash.github.io/puffy-cro-case-study.html" />
+  <meta property="og:image" content="https://echo-akash.github.io/og-image.png" />
+  <meta name="author" content="Akash Poddar" />
+  <meta name="robots" content="index, follow" />
+  <meta name="theme-color" content="#0e0e0e" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Puffy CRO Case Study - Two Evidence-Backed Growth Experiments",
+    "description": "An independent conversion-rate audit of Puffy.com, specifying two evidence-backed A/B tests - a health-stakes hero section and a new-home bundle offer - with uplift decomposition and revenue modeling.",
+    "author": { "@type": "Person", "name": "Akash Poddar", "url": "https://echo-akash.github.io/" },
+    "publisher": { "@type": "Person", "name": "Akash Poddar" }
+  }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,300;1,9..144,500&family=DM+Sans:wght@300;400;500&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,300;1,9..144,500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" /></noscript>
+  <style>
+    :root {
+      --ink: #0e0e0e;
+      --ink-mid: #444;
+      --ink-muted: #696969;
+      --ink-faint: #bbb;
+      --surface: #f7f5f0;
+      --white: #ffffff;
+      --accent: #4f46e5;
+      --accent-light: #eef2ff;
+      --accent-dark: #3730a3;
+      --accent2: #f43f5e;
+      --accent2-light: #fff1f2;
+      --accent2-dark: #9f1239;
+      --green: #166534;
+      --green-light: #dcfce7;
+      --amber: #b45309;
+      --amber-light: #fef3e2;
+      --line: rgba(0,0,0,0.08);
+      --serif: 'Fraunces', Georgia, serif;
+      --sans: 'DM Sans', system-ui, sans-serif;
+      --radius: 10px;
+      --ease: cubic-bezier(0.16, 1, 0.3, 1);
+      --wide-w: 1000px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+    }
+    body { font-family: var(--sans); background: var(--surface); color: var(--ink); font-size: 15px; line-height: 1.6; overflow-x: hidden; }
+
+    /* ── NAV ── */
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 0 40px; height: 56px; background: rgba(247,245,240,0.88); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); }
+    .nav-logo { font-family: var(--serif); font-size: 16px; font-weight: 600; color: var(--ink); text-decoration: none; letter-spacing: -0.02em; }
+    .nav-links { display: flex; gap: 32px; list-style: none; }
+    .nav-links a { font-size: 13px; color: var(--ink-mid); text-decoration: none; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--accent); }
+    .nav-cta { font-size: 13px; padding: 7px 18px; background: var(--ink); color: var(--white); border-radius: 20px; text-decoration: none; transition: background 0.2s; }
+    .nav-cta:hover { background: var(--accent); }
+
+    /* ── HERO ── */
+    .cs-hero { background: var(--ink); padding: 120px 40px 80px; position: relative; overflow: hidden; }
+    .cs-hero-inner { max-width: var(--wide-w); margin: 0 auto; position: relative; z-index: 1; }
+    .cs-hero-wave { position: absolute; inset: 0; opacity: 0.55; }
+    .cs-hero-wave svg { width: 100%; height: 100%; }
+    .cs-hero-shimmer { position: absolute; inset: 0; background: radial-gradient(ellipse 60% 60% at 75% 30%, rgba(79,70,229,0.22) 0%, transparent 70%), radial-gradient(ellipse 45% 50% at 15% 85%, rgba(244,63,94,0.14) 0%, transparent 70%); }
+    .cs-hero-bar { height: 4px; background: linear-gradient(90deg, #4f46e5, #f43f5e); border-radius: 2px; width: 64px; margin-bottom: 28px; }
+    .cs-meta-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 24px; }
+    .cs-tag { font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; padding: 5px 14px; border-radius: 20px; }
+    .tag-indigo { background: rgba(79,70,229,0.22); color: #b4b0fa; border: 1px solid rgba(79,70,229,0.38); }
+    .tag-rose   { background: rgba(244,63,94,0.16); color: #fca5b5; border: 1px solid rgba(244,63,94,0.3); }
+    .tag-emerald{ background: rgba(22,101,52,0.2); color: #6ee7b7; border: 1px solid rgba(22,101,52,0.28); }
+    .tag-gray   { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.45); border: 1px solid rgba(255,255,255,0.1); }
+    .cs-hero-title { font-family: var(--serif); font-size: clamp(34px, 5.5vw, 58px); font-weight: 600; letter-spacing: -0.03em; line-height: 0.98; color: #fff; margin-bottom: 20px; }
+    .cs-hero-title em { font-style: italic; font-weight: 300; color: rgba(255,255,255,0.4); }
+    .cs-hero-sub { font-size: 17px; font-weight: 300; color: rgba(255,255,255,0.5); max-width: 660px; line-height: 1.7; margin-bottom: 48px; }
+    .cs-hero-sub strong { color: rgba(255,255,255,0.8); font-weight: 400; }
+    .cs-kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 40px; }
+    .cs-kpi { padding-right: 32px; border-right: 1px solid rgba(255,255,255,0.08); }
+    .cs-kpi:last-child { border-right: none; }
+    .cs-kpi-num { font-family: var(--serif); font-size: 30px; font-weight: 600; letter-spacing: -0.02em; color: #fff; line-height: 1; margin-bottom: 6px; }
+    .cs-kpi-num span { font-size: 18px; font-style: italic; font-weight: 300; color: rgba(255,255,255,0.35); }
+    .cs-kpi-label { font-size: 11px; color: rgba(255,255,255,0.38); line-height: 1.4; max-width: 150px; }
+
+    /* ── TOC ── */
+    .toc-bar { position: sticky; top: 56px; z-index: 90; background: var(--white); border-bottom: 1px solid var(--line); overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+    .toc-bar::-webkit-scrollbar { display: none; }
+    .toc-inner { max-width: var(--wide-w); margin: 0 auto; display: flex; padding: 0 40px; }
+    .toc-item { font-size: 12px; color: var(--ink-muted); text-decoration: none; padding: 14px 20px; white-space: nowrap; border-bottom: 2px solid transparent; transition: color 0.2s, border-color 0.2s; display: flex; align-items: center; gap: 6px; }
+    .toc-item:hover { color: var(--accent); border-bottom-color: var(--accent); }
+    .toc-item.active { color: var(--accent); border-bottom-color: var(--accent); }
+    .toc-num { font-size: 10px; color: var(--ink-faint); }
+
+    /* ── BODY ── */
+    .cs-body { max-width: var(--wide-w); margin: 0 auto; padding: 0 40px; }
+    .cs-section { padding: 72px 0 0; content-visibility: auto; contain-intrinsic-size: 0 600px; }
+    .cs-section:last-of-type { padding-bottom: 80px; }
+    .section-eyebrow { font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+    .section-eyebrow::after { content: ''; flex: 0 0 32px; height: 1px; background: var(--accent); opacity: 0.4; }
+    .cs-section h2 { font-family: var(--serif); font-size: 32px; font-weight: 600; letter-spacing: -0.02em; color: var(--ink); line-height: 1.15; margin-bottom: 28px; }
+    .cs-section h3 { font-family: var(--serif); font-size: 20px; font-weight: 600; letter-spacing: -0.01em; color: var(--ink); margin: 40px 0 16px; }
+    .cs-section p { font-size: 15px; color: var(--ink-mid); line-height: 1.8; font-weight: 300; margin-bottom: 16px; }
+    .cs-section p:last-child { margin-bottom: 0; }
+    .cs-section p strong { color: var(--ink); font-weight: 500; }
+    .cs-divider { border: none; border-top: 1px solid var(--line); margin: 56px 0 0; }
+
+    /* ── CALLOUT ── */
+    .callout { border-left: 3px solid var(--accent); border-radius: 0 var(--radius) var(--radius) 0; padding: 20px 24px; margin: 28px 0; }
+    .callout-indigo { background: var(--accent-light); }
+    .callout-indigo p strong { color: var(--accent-dark); }
+    .callout-rose { background: var(--accent2-light); border-left-color: var(--accent2); }
+    .callout-rose p strong { color: var(--accent2-dark); }
+    .callout-green  { background: var(--green-light); border-left-color: var(--green); }
+    .callout-green p strong { color: var(--green); }
+    .callout-amber  { background: var(--amber-light); border-left-color: var(--amber); }
+    .callout-amber p strong { color: var(--amber); }
+    .callout p { margin-bottom: 0; color: var(--ink); font-weight: 400; font-size: 14px; line-height: 1.75; }
+
+    /* ── STEP LIST (also used for sequential calc walkthroughs) ── */
+    .step-list { display: flex; flex-direction: column; margin: 28px 0; }
+    .step-item { display: grid; grid-template-columns: 56px 1fr; gap: 0 20px; padding: 28px 0; border-top: 1px solid var(--line); align-items: start; }
+    .step-item:last-child { border-bottom: 1px solid var(--line); }
+    .step-num { font-family: var(--serif); font-size: 28px; font-weight: 600; color: var(--accent); letter-spacing: -0.02em; line-height: 1; padding-top: 4px; }
+    .step-title { font-family: var(--serif); font-size: 18px; font-weight: 600; color: var(--ink); margin-bottom: 8px; line-height: 1.2; }
+    .step-body { font-size: 14px; color: var(--ink-mid); line-height: 1.75; font-weight: 300; }
+    .step-body strong { color: var(--ink); font-weight: 500; }
+    .step-mono { font-family: 'DM Sans', monospace; font-size: 13.5px; color: var(--ink); background: var(--white); border: 1px solid var(--line); border-radius: 6px; padding: 10px 14px; display: inline-block; margin-top: 8px; }
+
+    /* ── HYPOTHESIS CARD ── */
+    .hyp-card { background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); padding: 32px; margin: 28px 0; position: relative; overflow: hidden; }
+    .hyp-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; }
+    .hyp-card.hc-rose::before { background: linear-gradient(90deg, #f43f5e, #fb7185); }
+    .hyp-card.hc-green::before { background: linear-gradient(90deg, #166534, #22c55e); }
+    .hyp-label { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 14px; }
+    .hyp-statement { font-family: var(--serif); font-size: 19px; font-weight: 500; color: var(--ink); line-height: 1.5; margin-bottom: 22px; }
+    .hyp-outcomes-label { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-muted); margin-bottom: 12px; }
+    .hyp-outcomes { display: flex; flex-wrap: wrap; gap: 10px; }
+    .hyp-pill { font-size: 12.5px; font-weight: 500; padding: 7px 16px; border-radius: 20px; }
+    .hc-rose .hyp-pill { background: var(--accent2-light); color: var(--accent2-dark); }
+    .hc-green .hyp-pill { background: var(--green-light); color: var(--green); }
+
+    /* ── EVIDENCE STAT GRID ── */
+    .evid-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin: 28px 0; }
+    .evid-card { background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); padding: 22px 16px; text-align: center; }
+    .evid-num { font-family: var(--serif); font-size: 27px; font-weight: 600; line-height: 1; margin-bottom: 8px; }
+    .hc-rose-context .evid-num, .evid-num.n-rose { color: var(--accent2); }
+    .evid-num.n-green { color: var(--green); }
+    .evid-label { font-size: 12px; color: var(--ink); font-weight: 500; line-height: 1.4; margin-bottom: 6px; }
+    .evid-source { font-size: 10.5px; color: var(--ink-faint); }
+
+    /* ── SIGNAL / DATA TABLE ── */
+    .signal-table { width: 100%; border-collapse: collapse; margin: 28px 0; font-size: 13.5px; }
+    .signal-table th { text-align: left; font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-muted); padding: 12px 16px; border-bottom: 2px solid var(--line); }
+    .signal-table td { padding: 14px 16px; border-bottom: 1px solid var(--line); color: var(--ink-mid); vertical-align: top; line-height: 1.6; }
+    .signal-table td:first-child { font-weight: 500; color: var(--ink); }
+    .signal-table tr:last-child td { border-bottom: none; }
+    .signal-table tr:hover td { background: rgba(79,70,229,0.03); }
+
+    /* ── TWO / THREE COL ── */
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 28px 0; }
+    .two-col-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 18px; margin: 28px 0; }
+
+    /* ── CARD ── */
+    .card { background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); padding: 24px; }
+    .card-label { font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; }
+    .card h4 { font-family: var(--serif); font-size: 17px; font-weight: 600; color: var(--ink); margin-bottom: 8px; line-height: 1.3; }
+    .card p { font-size: 13.5px; color: var(--ink-mid); line-height: 1.7; margin-bottom: 0; }
+
+    /* ── CONTROL / VARIANT COMPARE (signature component) ── */
+    .compare-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 0; margin: 28px 0; border-radius: var(--radius); overflow: hidden; border: 1px solid var(--line); }
+    .compare-col { padding: 26px; background: var(--white); }
+    .compare-variant { background: linear-gradient(180deg, var(--accent-light), var(--white) 60%); border-left: 1px solid var(--line); }
+    .compare-tag { font-size: 10.5px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 16px; display: inline-block; padding: 4px 12px; border-radius: 20px; }
+    .compare-control .compare-tag { background: var(--surface); color: var(--ink-muted); border: 1px solid var(--line); }
+    .compare-variant .compare-tag { background: var(--accent); color: #fff; }
+    .compare-list { list-style: none; display: flex; flex-direction: column; gap: 11px; }
+    .compare-list li { font-size: 13.5px; color: var(--ink-mid); line-height: 1.6; padding-left: 18px; position: relative; }
+    .compare-list li::before { content: '\2013'; position: absolute; left: 0; color: var(--ink-faint); }
+    .compare-variant .compare-list li::before { content: '+'; color: var(--accent); font-weight: 700; }
+    .compare-variant .compare-list li strong { color: var(--ink); font-weight: 500; }
+
+    /* ── UPLIFT / WEIGHT BARS ── */
+    .weight-section { margin: 28px 0; }
+    .weight-group-label { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-muted); margin-bottom: 14px; padding-bottom: 8px; border-bottom: 1px solid var(--line); }
+    .weight-list { display: flex; flex-direction: column; gap: 16px; }
+    .weight-row { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+    .weight-label { font-size: 13px; color: var(--ink); font-weight: 500; flex: 0 0 auto; width: 210px; min-width: 0; }
+    .weight-bar-bg { flex: 1; min-width: 120px; height: 6px; background: var(--line); border-radius: 3px; overflow: hidden; }
+    .weight-bar-fill { height: 100%; border-radius: 3px; }
+    .fill-rose { background: linear-gradient(90deg, var(--accent2), #fda4af); }
+    .fill-green { background: linear-gradient(90deg, var(--green), #4ade80); }
+    .weight-pct { font-size: 12.5px; font-weight: 600; color: var(--ink); flex: 0 0 64px; text-align: right; }
+    .weight-why { flex-basis: 100%; font-size: 12px; color: var(--ink-muted); line-height: 1.55; padding-left: 224px; margin-top: -8px; }
+
+    /* ── RISK GRID ── */
+    .risk-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 28px 0; }
+    .risk-card { background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); padding: 22px; }
+    .risk-level { font-size: 10px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; padding: 3px 10px; border-radius: 20px; display: inline-block; margin-bottom: 10px; }
+    .r-high { background: #faeae7; color: #8c3320; }
+    .r-med  { background: var(--amber-light); color: var(--amber); }
+    .r-low  { background: var(--green-light); color: var(--green); }
+    .risk-title { font-size: 14px; font-weight: 500; color: var(--ink); margin-bottom: 8px; line-height: 1.35; }
+    .risk-body { font-size: 13px; color: var(--ink-mid); line-height: 1.7; }
+
+    /* ── LESSON LIST ── */
+    .lesson-list { display: flex; flex-direction: column; margin: 28px 0; }
+    .lesson-item { display: grid; grid-template-columns: 48px 1fr; gap: 0 20px; padding: 28px 0; border-top: 1px solid var(--line); }
+    .lesson-item:last-child { border-bottom: 1px solid var(--line); }
+    .lesson-num { font-family: var(--serif); font-size: 24px; font-weight: 600; color: var(--accent); opacity: 0.4; line-height: 1; padding-top: 4px; }
+    .lesson-title { font-family: var(--serif); font-size: 18px; font-weight: 600; color: var(--ink); margin-bottom: 8px; line-height: 1.2; }
+    .lesson-body { font-size: 14px; color: var(--ink-mid); line-height: 1.75; font-weight: 300; }
+    .lesson-body strong { color: var(--ink); font-weight: 500; }
+
+    /* ── REVENUE TOTAL CARD ── */
+    .total-card { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 20px; background: var(--ink); border-radius: var(--radius); padding: 28px 32px; margin: 28px 0; }
+    .total-item { flex: 1; min-width: 160px; }
+    .total-label { font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.4); margin-bottom: 8px; }
+    .total-num { font-family: var(--serif); font-size: 30px; font-weight: 600; color: #fff; letter-spacing: -0.02em; }
+    .total-num.t-rose { color: #fda4af; }
+    .total-num.t-green { color: #6ee7b7; }
+    .total-sep { width: 1px; height: 40px; background: rgba(255,255,255,0.1); }
+
+    /* ── PRIORITY BADGE ── */
+    .priority-badge { font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; padding: 4px 12px; border-radius: 20px; display: inline-block; }
+    .pb-first { background: var(--accent-light); color: var(--accent-dark); }
+    .pb-second { background: var(--amber-light); color: var(--amber); }
+
+    /* ── APPENDIX BAND ── */
+    .appendix-band { background: #111; border-top: 1px solid rgba(255,255,255,0.06); padding: 80px 40px; }
+    .appendix-inner { max-width: var(--wide-w); margin: 0 auto; }
+    .appendix-header { margin-bottom: 56px; }
+    .appendix-eyebrow { font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); margin-bottom: 12px; }
+    .appendix-title { font-family: var(--serif); font-size: 32px; font-weight: 600; letter-spacing: -0.02em; color: #fff; margin-bottom: 12px; }
+    .appendix-sub { font-size: 15px; color: rgba(255,255,255,0.4); font-weight: 300; max-width: 560px; line-height: 1.7; }
+    .appendix-block { margin-bottom: 56px; }
+    .appendix-block:last-child { margin-bottom: 0; }
+    .appendix-block-label { font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.3); margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .appendix-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .appendix-table th { text-align: left; font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,255,255,0.3); padding: 10px 16px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+    .appendix-table td { padding: 14px 16px; border-bottom: 1px solid rgba(255,255,255,0.06); color: rgba(255,255,255,0.55); vertical-align: top; line-height: 1.65; }
+    .appendix-table td:first-child { color: rgba(255,255,255,0.25); font-size: 11px; white-space: nowrap; font-weight: 500; letter-spacing: 0.04em; }
+    .appendix-table tr:last-child td { border-bottom: none; }
+    .appendix-table tr:hover td { background: rgba(255,255,255,0.02); }
+    .appendix-table a { color: #b4b0fa; }
+    .appendix-flow-intro { font-size: 14px; color: rgba(255,255,255,0.4); margin-bottom: 28px; font-weight: 300; }
+
+    /* ── REVEAL ── */
+    .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.6s var(--ease), transform 0.6s var(--ease); }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* ── FOOTER ── */
+    footer { background: var(--ink); border-top: 1px solid rgba(255,255,255,0.06); padding: 24px 40px; text-align: center; font-size: 12px; color: rgba(255,255,255,0.55); }
+    footer a { color: rgba(255,255,255,0.55); text-decoration: none; }
+    footer a:hover { color: var(--white); }
+
+    /* ══════════════════════════════════════════
+       RESPONSIVE - 768px
+    ══════════════════════════════════════════ */
+    @media (max-width: 768px) {
+      nav { padding: 0 20px; }
+      .nav-links { display: none; }
+
+      /* Hero */
+      .cs-hero { padding: 96px 20px 52px; }
+      .cs-hero-title { font-size: clamp(28px, 8vw, 44px); }
+      .cs-hero-sub { font-size: 14px; margin-bottom: 32px; }
+      .cs-kpi-row { grid-template-columns: 1fr 1fr; gap: 24px 16px; padding-top: 28px; }
+      .cs-kpi { border-right: none !important; padding-right: 0 !important; padding-left: 0 !important; }
+      .cs-kpi:nth-child(odd) { border-right: 1px solid rgba(255,255,255,0.1) !important; padding-right: 16px !important; }
+      .cs-kpi-num { font-size: 23px; }
+      .cs-kpi-label { font-size: 11px; }
+
+      /* TOC + body */
+      .toc-inner { padding: 0 16px; }
+      .toc-item { padding: 12px 12px; font-size: 11px; }
+      .cs-body { padding: 0 20px; }
+      .cs-section { padding: 48px 0 0; }
+      .cs-section h2 { font-size: 22px; margin-bottom: 20px; }
+      .cs-section h3 { font-size: 17px; margin: 28px 0 12px; }
+      .cs-section p { font-size: 14px; line-height: 1.75; }
+      .cs-divider { margin: 40px 0 0; }
+      .callout { padding: 16px 18px; }
+
+      /* Grids → single column */
+      .two-col, .two-col-3, .risk-grid, .evid-grid, .compare-wrap { grid-template-columns: 1fr; }
+      .compare-variant { border-left: none; border-top: 1px solid var(--line); }
+
+      .hyp-card { padding: 22px; }
+      .hyp-statement { font-size: 17px; }
+
+      /* Weight/uplift bars - stack label above bar on mobile */
+      .weight-row { flex-direction: column; align-items: flex-start; gap: 8px; }
+      .weight-label { width: auto; font-size: 13px; }
+      .weight-bar-bg { width: 100%; }
+      .weight-pct { text-align: left; }
+      .weight-why { padding-left: 0; margin-top: 2px; }
+
+      /* Steps */
+      .step-item { grid-template-columns: 40px 1fr; gap: 0 14px; padding: 20px 0; }
+      .step-num { font-size: 22px; }
+      .step-title { font-size: 16px; }
+      .step-body { font-size: 13.5px; }
+
+      /* Lessons */
+      .lesson-item { grid-template-columns: 40px 1fr; gap: 0 14px; padding: 20px 0; }
+      .lesson-num { font-size: 20px; }
+      .lesson-title { font-size: 16px; }
+      .lesson-body { font-size: 13.5px; }
+
+      .total-card { padding: 22px; flex-direction: column; align-items: flex-start; }
+      .total-sep { display: none; }
+
+      /* Signal table → stacked cards */
+      .signal-table { border-collapse: separate; border-spacing: 0; font-size: 13px; }
+      .signal-table thead { display: none; }
+      .signal-table tbody { display: flex; flex-direction: column; gap: 12px; }
+      .signal-table tr { display: block; background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px; }
+      .signal-table td { display: block; padding: 4px 0; border: none; white-space: normal; font-size: 13.5px; line-height: 1.65; }
+      .signal-table td:first-child { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); padding-bottom: 8px; margin-bottom: 4px; border-bottom: 1px solid var(--line); }
+      .signal-table td[data-label]::before { content: attr(data-label); display: block; font-size: 10px; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase; color: var(--ink-muted); margin-top: 8px; margin-bottom: 2px; }
+
+      /* Appendix tables → stacked cards */
+      .appendix-table { border-collapse: separate; border-spacing: 0; }
+      .appendix-table thead { display: none; }
+      .appendix-table tbody { display: flex; flex-direction: column; gap: 12px; }
+      .appendix-table tr { display: block; border: 1px solid rgba(255,255,255,0.09); border-radius: var(--radius); padding: 16px; background: rgba(255,255,255,0.025); }
+      .appendix-table td { display: block; padding: 4px 0; border: none; font-size: 13px; line-height: 1.65; white-space: normal; color: rgba(255,255,255,0.6); }
+      .appendix-table td:first-child { font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent) !important; padding-bottom: 8px; margin-bottom: 4px; border-bottom: 1px solid rgba(255,255,255,0.07); }
+      .appendix-table td[data-label]::before { content: attr(data-label); display: block; font-size: 10px; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase; color: rgba(255,255,255,0.28); margin-top: 8px; margin-bottom: 2px; }
+
+      /* Appendix */
+      .appendix-band { padding: 52px 20px 60px; }
+      .appendix-title { font-size: 24px; }
+      .appendix-sub { font-size: 14px; }
+
+      footer { padding: 20px; }
+    }
+
+    /* ══════════════════════════════════════════
+       RESPONSIVE - 480px
+    ══════════════════════════════════════════ */
+    @media (max-width: 480px) {
+      .cs-hero { padding: 88px 16px 44px; }
+      .cs-body { padding: 0 16px; }
+      .appendix-band { padding: 44px 16px 52px; }
+      .cs-kpi-row { gap: 20px 12px; }
+      .cs-kpi-num { font-size: 21px; }
+      .cs-kpi-label { font-size: 10px; }
+      .evid-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+      .evid-card { padding: 16px 10px; }
+      .evid-num { font-size: 22px; }
+      .card { padding: 18px; }
+      .risk-card { padding: 18px; }
+      .hyp-card { padding: 18px; }
+      .compare-col { padding: 18px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a class="nav-logo" href="index.html">Akash Poddar</a>
+    <ul class="nav-links">
+      <li><a href="work.html">Case Studies</a></li>
+      <li><a href="index.html#experience">Experience</a></li>
+      <li><a href="index.html#skills">Skills</a></li>
+      <li><a href="index.html#contact">Contact</a></li>
+    </ul>
+    <a class="nav-cta" href="index.html#contact">Get in touch</a>
+  </nav>
+
+  <!-- HERO -->
+  <div class="cs-hero">
+    <div class="cs-hero-wave" aria-hidden="true">
+      <svg viewBox="0 0 1000 400" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M-50,260 C 80,180 160,340 260,260 C 360,180 440,340 540,260 C 640,180 720,340 820,260 C 920,180 980,300 1050,250" fill="none" stroke="#4f46e5" stroke-width="1.5" opacity="0.35"/>
+        <path d="M-50,300 C 100,340 200,220 320,290 C 440,360 540,240 660,300 C 760,350 860,260 1050,310" fill="none" stroke="#f43f5e" stroke-width="1.5" opacity="0.28"/>
+        <path d="M-50,340 C 120,300 220,380 340,330 C 460,280 560,380 680,330 C 780,290 880,370 1050,335" fill="none" stroke="#4f46e5" stroke-width="1" opacity="0.16"/>
+      </svg>
+    </div>
+    <div class="cs-hero-shimmer"></div>
+    <div class="cs-hero-inner">
+      <div class="cs-hero-bar"></div>
+      <div class="cs-meta-row">
+        <span class="cs-tag tag-indigo">CRO &amp; Experimentation</span>
+        <span class="cs-tag tag-rose">Sleep &amp; Wellness D2C</span>
+        <span class="cs-tag tag-emerald">Independent Research</span>
+        <span class="cs-tag tag-gray">Puffy.com &middot; 2026</span>
+      </div>
+      <h1 class="cs-hero-title">Selling sleep,<br><em>not just a mattress.</em></h1>
+      <p class="cs-hero-sub">An independent conversion-rate audit of Puffy.com, diagnosing why a feature-led landing page misses two of its highest-intent buyer moments, and specifying <strong>two evidence-backed A/B tests</strong>, each modeled against a real revenue bar, to close the gap.</p>
+      <div class="cs-kpi-row">
+        <div class="cs-kpi">
+          <div class="cs-kpi-num">2<span>tests</span></div>
+          <div class="cs-kpi-label">Independently specced experiments, hypothesis through revenue model</div>
+        </div>
+        <div class="cs-kpi">
+          <div class="cs-kpi-num">21<span>&ndash;31%</span></div>
+          <div class="cs-kpi-label">Projected relative CVR uplift range, decomposed by mechanism</div>
+        </div>
+        <div class="cs-kpi">
+          <div class="cs-kpi-num">$4.2M<span>+</span></div>
+          <div class="cs-kpi-label">Conservative annual incremental revenue projected, per test</div>
+        </div>
+        <div class="cs-kpi">
+          <div class="cs-kpi-num">$3.375M<span>bar</span></div>
+          <div class="cs-kpi-label">Minimum revenue threshold each hypothesis had to clear</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOC -->
+  <nav class="toc-bar" aria-label="Table of contents">
+    <div class="toc-inner">
+      <a class="toc-item active" href="#background"><span class="toc-num">01</span> Background</a>
+      <a class="toc-item" href="#diagnosis"><span class="toc-num">02</span> Diagnosis</a>
+      <a class="toc-item" href="#approach"><span class="toc-num">03</span> Approach</a>
+      <a class="toc-item" href="#test1"><span class="toc-num">04</span> Test 1: Health Hero</a>
+      <a class="toc-item" href="#test2"><span class="toc-num">05</span> Test 2: Bundle Offer</a>
+      <a class="toc-item" href="#prioritization"><span class="toc-num">06</span> Prioritization</a>
+      <a class="toc-item" href="#revenue"><span class="toc-num">07</span> Revenue Model</a>
+      <a class="toc-item" href="#risks"><span class="toc-num">08</span> Risks &amp; Ethics</a>
+      <a class="toc-item" href="#reflection"><span class="toc-num">09</span> Reflection</a>
+    </div>
+  </nav>
+
+  <!-- BODY -->
+  <div class="cs-body">
+
+    <!-- 01 BACKGROUND -->
+    <section class="cs-section" id="background">
+      <div class="section-eyebrow">01 &mdash; Background</div>
+      <h2>Why I picked apart a mattress company's landing page.</h2>
+      <p>Puffy is a US direct-to-consumer sleep brand selling mattresses, bedding, and bedroom furniture online. This is not a client engagement or a role I held, it's an <strong>independent research case study</strong> I built to demonstrate how I approach conversion-rate optimization as a product manager: starting from a live site, not a hypothetical brief.</p>
+      <p>I chose a high-consideration, low-frequency e-commerce category on purpose. Mattresses are a considered purchase - buyers don't shop them often, price points are high relative to average online baskets, and the sales narrative usually leans on product specifications (foam density, certifications, trial periods) rather than the buyer's actual motivation for being on the page that day. That gap between <strong>what the page says</strong> and <strong>why the visitor is really there</strong> is exactly the kind of problem CRO work is supposed to find.</p>
+      <p>My method for this audit followed four steps: (1) walk the live landing page and PDP experience the way a first-time visitor would, noting what the page leads with and what it leaves out; (2) build two independent evidence bases - sleep-health research and marriage/new-household market data - to ground any hypothesis in more than intuition; (3) write each hypothesis in a testable form, with an expected outcome and a revenue threshold, exactly as I would for a real experimentation roadmap; and (4) model the revenue impact transparently, stating every assumption so the logic could be swapped for real analytics the moment they were available.</p>
+      <div class="callout callout-indigo reveal">
+        <p><strong>Scope of this case study:</strong> two fully-specified A/B tests - a health-stakes hero section and a new-home bundle offer - each carried from hypothesis through rationale, control/variant spec, uplift decomposition, and a revenue model built to clear a stated <strong>$3.375M annual incremental revenue</strong> bar.</p>
+      </div>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 02 DIAGNOSIS -->
+    <section class="cs-section" id="diagnosis">
+      <div class="section-eyebrow">02 &mdash; Diagnosis</div>
+      <h2>A page selling a product, not solving a problem.</h2>
+      <p>Puffy's landing experience is built around comfort and credibility: a hero image of the mattress, a "Shop Now" call to action, and feature-forward copy - CertiPUR-US certification, foam composition, the length of the sleep trial. It's a clean, trustworthy presentation. It's also entirely product-first: it assumes the visitor already knows they want a mattress and just needs reassurance about quality.</p>
+      <p>That assumption breaks down for a large share of traffic. Two buyer realities go completely unaddressed on the page as it stands today:</p>
+
+      <div class="step-list reveal">
+        <div class="step-item">
+          <div class="step-num">01</div>
+          <div>
+            <div class="step-title">The messaging-to-motivation gap</div>
+            <div class="step-body">Most visitors aren't shopping for foam density - they're shopping because something in their life isn't working: back pain, exhaustion, a sleep-satisfaction score they'd never admit out loud. <strong>The page never names the problem it solves</strong>, so it never earns the urgency a considered purchase like this needs to convert cold traffic.</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">02</div>
+          <div>
+            <div class="step-title">The basket-composition gap</div>
+            <div class="step-body">The entire funnel is merchandised around a single mattress purchase. There's no path for the visitor who isn't just replacing a mattress but <strong>furnishing an entire new home</strong> - a newly married couple, a first-time renter - who would rather solve five furnishing problems in one purchase than shop them one at a time.</div>
+          </div>
+        </div>
+      </div>
+
+      <p>Both gaps point to the same underlying diagnosis: the page optimizes for people who have already decided what they want, and does very little for the much larger set of visitors who are still deciding <em>why</em> they're here. The scale of that second group is not small - it's a documented, well-researched public-health and life-stage reality:</p>
+
+      <div class="evid-grid reveal">
+        <div class="evid-card">
+          <div class="evid-num n-rose">70M</div>
+          <div class="evid-label">Americans struggle with sleep issues</div>
+          <div class="evid-source">ScienceDirect</div>
+        </div>
+        <div class="evid-card">
+          <div class="evid-num n-rose">50%</div>
+          <div class="evid-label">of adults grade their own sleep an "F"</div>
+          <div class="evid-source">NSF Sleep in America, 2025</div>
+        </div>
+        <div class="evid-card">
+          <div class="evid-num n-rose">60%</div>
+          <div class="evid-label">of adults don't get enough sleep</div>
+          <div class="evid-source">NSF 2025 Poll</div>
+        </div>
+        <div class="evid-card">
+          <div class="evid-num n-green">2.1M</div>
+          <div class="evid-label">new US marriages annually - a recurring furnishing audience</div>
+          <div class="evid-source">US marriage statistics</div>
+        </div>
+      </div>
+      <p>Neither audience is a niche. They're just invisible to a landing page that only speaks in product features.</p>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 03 APPROACH -->
+    <section class="cs-section" id="approach">
+      <div class="section-eyebrow">03 &mdash; My Approach</div>
+      <h2>A repeatable framework: hypothesis, evidence, spec, model.</h2>
+      <p>Rather than pitch "improve the messaging" as a vague direction, I held both tests to the same discipline I'd expect on a real experimentation roadmap.</p>
+
+      <div class="step-list reveal">
+        <div class="step-item">
+          <div class="step-num">01</div>
+          <div>
+            <div class="step-title">Anchor every hypothesis to a named segment and a specific driver</div>
+            <div class="step-body">Not "improve conversion" but "cold paid-search visitors with an unaddressed pain point" and "newly married couples in a furnishing mindset." A hypothesis that doesn't name who it's for and what behavior it changes isn't testable.</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">02</div>
+          <div>
+            <div class="step-title">Build the evidence base before writing a headline</div>
+            <div class="step-body">Every claim in both tests - the health risks of poor sleep, the size of the newlywed/renter segment, the savings customers get from bundling - is sourced from public research, not assumed. <strong>The creative comes after the evidence, not before it.</strong></div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">03</div>
+          <div>
+            <div class="step-title">Decompose the uplift into named mechanisms, not one guessed number</div>
+            <div class="step-body">"25% uplift" means nothing on its own. I broke each projection into five contributing mechanisms - problem recognition, message-match, decision friction, and so on - each with its own defensible range, then combined them non-additively into a realistic band.</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">04</div>
+          <div>
+            <div class="step-title">Model revenue with a stated conservative and upside scenario</div>
+            <div class="step-body">Both tests are held to the same $3.375M annual incremental revenue bar, using the same traffic and baseline conversion assumptions, so they can be compared on equal footing rather than each using whatever numbers make the pitch look best.</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">05</div>
+          <div>
+            <div class="step-title">Sequence by reach and effort, not by whichever idea is most exciting</div>
+            <div class="step-body">A bigger projected number doesn't automatically ship first. I scored both tests on audience reach, implementation effort, and validation risk before deciding which one earns the first test slot.</div>
+          </div>
+        </div>
+      </div>
+
+      <h3>Two hypotheses, two different levers</h3>
+      <div class="two-col reveal">
+        <div class="card">
+          <div class="card-label">Test 1 &middot; Jump to <a href="#test1" style="color:inherit;text-decoration:underline;">section 04</a></div>
+          <h4>Health-Stakes Hero Section</h4>
+          <p>Reframes the landing page from "here's our mattress" to "here's what poor sleep is doing to you, and here's the fix" - targeting the broadest share of visitors, including cold paid traffic.</p>
+        </div>
+        <div class="card">
+          <div class="card-label">Test 2 &middot; Jump to <a href="#test2" style="color:inherit;text-decoration:underline;">section 05</a></div>
+          <h4>New-Home Bundle Offer</h4>
+          <p>Adds a curated bundling path for newlyweds and first-time renters - shifting the mission from "I need a mattress" to "I need to furnish my new home," raising both CVR and basket size.</p>
+        </div>
+      </div>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 04 TEST 1 -->
+    <section class="cs-section" id="test1">
+      <div class="section-eyebrow">04 &mdash; Test 1</div>
+      <h2>Give visitors their health stakes before their comfort options.</h2>
+
+      <div class="hyp-card hc-rose reveal">
+        <div class="hyp-label">Hypothesis</div>
+        <div class="hyp-statement">Adding a <strong>Health-Issue Hero Section</strong> above the current hero - naming the health risks linked to poor sleep and connecting them to a targeted mattress solution - will make the page feel personally relevant before it asks visitors to evaluate product specs.</div>
+        <div class="hyp-outcomes-label">Expected outcome</div>
+        <div class="hyp-outcomes">
+          <span class="hyp-pill">25% relative CVR uplift</span>
+          <span class="hyp-pill">Min. $3.375M annual revenue</span>
+          <span class="hyp-pill">Longer landing-page engagement</span>
+          <span class="hyp-pill">Higher primary-CTA click-through</span>
+        </div>
+      </div>
+
+      <h3>Why this test: the evidence base</h3>
+      <p>The current page talks about comfort. It never talks about consequences. Sleep research gives a very concrete, very large pool of visitors a reason to care immediately:</p>
+      <div class="evid-grid reveal">
+        <div class="evid-card">
+          <div class="evid-num n-rose">10%</div>
+          <div class="evid-label">of Americans wake up with pain daily</div>
+          <div class="evid-source">Ortho Bethesda</div>
+        </div>
+        <div class="evid-card">
+          <div class="evid-num n-rose">48%</div>
+          <div class="evid-label">less low-back pain on a medium-firm mattress</div>
+          <div class="evid-source">ScienceDirect</div>
+        </div>
+        <div class="evid-card">
+          <div class="evid-num n-rose">70M</div>
+          <div class="evid-label">Americans (21% of the population) struggle with sleep</div>
+          <div class="evid-source">ScienceDirect</div>
+        </div>
+        <div class="evid-card">
+          <div class="evid-num n-rose">50%</div>
+          <div class="evid-label">of adults grade their own sleep satisfaction an "F"</div>
+          <div class="evid-source">NSF 2025</div>
+        </div>
+      </div>
+
+      <h3>The health risks poor sleep creates</h3>
+      <p>These aren't soft correlations - they're the kind of numbers that make a health-first message feel earned rather than manipulative:</p>
+      <table class="signal-table reveal">
+        <thead><tr><th>Health condition</th><th>Risk increase</th><th>Source</th></tr></thead>
+        <tbody>
+          <tr><td>Type 2 Diabetes</td><td data-label="Risk increase">3&times; higher</td><td data-label="Source">Johns Hopkins Medicine</td></tr>
+          <tr><td>Heart disease</td><td data-label="Risk increase">48% increased</td><td data-label="Source">Johns Hopkins Medicine</td></tr>
+          <tr><td>Obesity (if &lt;5 hrs/night)</td><td data-label="Risk increase">50% higher</td><td data-label="Source">Johns Hopkins Medicine</td></tr>
+          <tr><td>Dementia</td><td data-label="Risk increase">33% increased</td><td data-label="Source">Johns Hopkins Medicine</td></tr>
+          <tr><td>Colorectal cancer</td><td data-label="Risk increase">36% increased</td><td data-label="Source">Johns Hopkins Medicine</td></tr>
+          <tr><td>Major depression (insomniacs)</td><td data-label="Risk increase">4&times; higher</td><td data-label="Source">Harvard Health</td></tr>
+          <tr><td>Brain aging</td><td data-label="Risk increase">3&ndash;5 years faster</td><td data-label="Source">Johns Hopkins Medicine</td></tr>
+        </tbody>
+      </table>
+
+      <h3>What a better mattress actually fixes</h3>
+      <p>The message only works if the product genuinely delivers - so the hero can't just raise alarm, it has to close the loop with a proven mechanism:</p>
+      <table class="signal-table reveal">
+        <thead><tr><th>Benefit</th><th>Improvement</th><th>Study</th></tr></thead>
+        <tbody>
+          <tr><td>Extra sleep per night</td><td data-label="Improvement">+42 minutes</td><td data-label="Study">Comfort study, CW Williams</td></tr>
+          <tr><td>Sleep quality improvement</td><td data-label="Improvement">+55%</td><td data-label="Study">Systematic review, ScienceDirect</td></tr>
+          <tr><td>Back pain reduction</td><td data-label="Improvement">&minus;48%</td><td data-label="Study">Low back pain patients, ScienceDirect</td></tr>
+          <tr><td>Sleep quality after bedding replacement</td><td data-label="Improvement">Improved</td><td data-label="Study">Bedding study, Sleepycat</td></tr>
+        </tbody>
+      </table>
+
+      <div class="callout callout-amber reveal">
+        <p><strong>A secondary, not primary, motivator:</strong> poor sleep is also linked to lower sexual wellbeing in survey data (CBS News-cited research), and a subset of mattress features - bounce, edge support, motion isolation - address this directly. I chose not to lead with it: it broadens relevance for a portion of visitors without being necessary as the hook, and leading with health and pain relief keeps the primary message defensible and universal.</p>
+      </div>
+
+      <h3>Control vs. variant</h3>
+      <div class="compare-wrap reveal">
+        <div class="compare-col compare-control">
+          <span class="compare-tag">Control</span>
+          <ul class="compare-list">
+            <li>Standard hero: product image + "Shop Now" + comfort messaging</li>
+            <li>Feature-focused copy: CertiPUR-US, foam type, trial length</li>
+            <li>No connection between the product and a personal health stake</li>
+            <li>Single CTA, framed around the product, not the problem</li>
+          </ul>
+        </div>
+        <div class="compare-col compare-variant">
+          <span class="compare-tag">Variant</span>
+          <ul class="compare-list">
+            <li><strong>Health-issue flag banner</strong> at the top of the page naming the risk</li>
+            <li><strong>New hero section</strong> replacing the current one, framed around the health stake</li>
+            <li><strong>Health solutions section</strong> below the hero connecting symptom &rarr; mattress fix</li>
+            <li><strong>Quick CTA section</strong> giving a single, low-friction path to purchase</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>Uplift decomposition</h3>
+      <p>The 25% headline number is a combination of five separate effects, treated as multiplicative rather than purely additive - landing on a realistic <strong>21&ndash;31% relative uplift</strong>:</p>
+      <div class="weight-section reveal">
+        <div class="weight-list">
+          <div class="weight-row">
+            <span class="weight-label">Immediate problem recognition</span>
+            <div class="weight-bar-bg"><div class="weight-bar-fill fill-rose" style="width:70%"></div></div>
+            <span class="weight-pct">+6&ndash;8%</span>
+            <div class="weight-why">Visitors see their pain reflected immediately, so the page feels personally relevant from the first scroll.</div>
+          </div>
+          <div class="weight-row">
+            <span class="weight-label">Paid-traffic message match</span>
+            <div class="weight-bar-bg"><div class="weight-bar-fill fill-rose" style="width:60%"></div></div>
+            <span class="weight-pct">+5&ndash;7%</span>
+            <div class="weight-why">The page aligns better with ad intent and reduces bounce from mismatch - relevant for the 80% of visits that arrive via paid channels.</div>
+          </div>
+          <div class="weight-row">
+            <span class="weight-label">CTA engagement</span>
+            <div class="weight-bar-bg"><div class="weight-bar-fill fill-rose" style="width:35%"></div></div>
+            <span class="weight-pct">+2&ndash;4%</span>
+            <div class="weight-why">A single, clear purchase action reduces hesitation and decision fatigue.</div>
+          </div>
+          <div class="weight-row">
+            <span class="weight-label">PDP continuation rate</span>
+            <div class="weight-bar-bg"><div class="weight-bar-fill fill-rose" style="width:60%"></div></div>
+            <span class="weight-pct">+5&ndash;7%</span>
+            <div class="weight-why">More visitors move from landing page to product page because the mattress is framed as a solution, not a spec sheet.</div>
+          </div>
+          <div class="weight-row">
+            <span class="weight-label">Purchase confidence</span>
+            <div class="weight-bar-bg"><div class="weight-bar-fill fill-rose" style="width:40%"></div></div>
+            <span class="weight-pct">+3&ndash;5%</span>
+            <div class="weight-why">Connecting the mattress to real health benefits strengthens the rationale to buy now rather than "think about it."</div>
+          </div>
+        </div>
+      </div>
+
+      <h3>Revenue model</h3>
+      <div class="step-list reveal">
+        <div class="step-item">
+          <div class="step-num">01</div>
+          <div>
+            <div class="step-title">Baseline</div>
+            <div class="step-body">Monthly mattress PDP visitors: <strong>100,000</strong>. Baseline conversion rate: <strong>2.0%</strong> &rarr; <span class="step-mono">100,000 &times; 2.0% = 2,000 orders/mo</span></div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">02</div>
+          <div>
+            <div class="step-title">Variant, after a 25% relative uplift</div>
+            <div class="step-body">New conversion rate: <strong>2.5%</strong> &rarr; <span class="step-mono">100,000 &times; 2.5% = 2,500 orders/mo</span> &mdash; an incremental <strong>500 orders per month</strong>.</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">03</div>
+          <div>
+            <div class="step-title">Applying average order value</div>
+            <div class="step-body">Conservative scenario at <strong>$700 AOV</strong>: <span class="step-mono">500 &times; $700 &times; 12 = $4.2M/yr</span>. Stronger scenario at <strong>$800 AOV</strong>: <span class="step-mono">500 &times; $800 &times; 12 = $4.8M/yr</span>.</div>
+          </div>
+        </div>
+      </div>
+      <div class="total-card reveal">
+        <div class="total-item">
+          <div class="total-label">Conservative annual revenue</div>
+          <div class="total-num t-rose">$4.2M</div>
+        </div>
+        <div class="total-sep"></div>
+        <div class="total-item">
+          <div class="total-label">Stronger AOV scenario</div>
+          <div class="total-num t-rose">$4.8M</div>
+        </div>
+        <div class="total-sep"></div>
+        <div class="total-item">
+          <div class="total-label">Case threshold</div>
+          <div class="total-num">$3.375M &mdash; cleared</div>
+        </div>
+      </div>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 05 TEST 2 -->
+    <section class="cs-section" id="test2">
+      <div class="section-eyebrow">05 &mdash; Test 2</div>
+      <h2>Shift the mission from "a mattress" to "a whole new home."</h2>
+
+      <div class="hyp-card hc-green reveal">
+        <div class="hyp-label">Hypothesis</div>
+        <div class="hyp-statement">If Puffy adds a dedicated <strong>new-home / new-couple bundling section</strong> - curated packages like Starter Bedroom, Complete Bedroom, and Full Home - more first-time home and rental shoppers will convert, because the site shifts from selling a single mattress to selling a complete, affordable move-in solution.</div>
+        <div class="hyp-outcomes-label">Expected outcome</div>
+        <div class="hyp-outcomes">
+          <span class="hyp-pill">25% relative CVR uplift</span>
+          <span class="hyp-pill">Higher average order value</span>
+          <span class="hyp-pill">Higher bundle attachment rate</span>
+          <span class="hyp-pill">Min. $3.375M annual revenue</span>
+        </div>
+      </div>
+
+      <h3>Why this test: the audience is large and recurring</h3>
+      <div class="evid-grid reveal">
+        <div class="evid-card">
+          <div class="evid-num n-green">~2.1M</div>
+          <div class="evid-label">new US marriages every year</div>
+          <div class="evid-source">Marriage statistics</div>
+        </div>
+        <div class="evid-card">
+          <div class="evid-num n-green">~175K</div>
+          <div class="evid-label">new marriages per month - ongoing monthly demand</div>
+          <div class="evid-source">Marriage statistics</div>
+        </div>
+        <div class="evid-card">
+          <div class="evid-num n-green">60&ndash;70%</div>
+          <div class="evid-label">of newlyweds rent before they buy a home</div>
+          <div class="evid-source">Housing research</div>
+        </div>
+        <div class="evid-card">
+          <div class="evid-num n-green">100&ndash;125K</div>
+          <div class="evid-label">new couples renting and furnishing monthly</div>
+          <div class="evid-source">Derived estimate</div>
+        </div>
+      </div>
+      <p>That's a large, recurring audience actively in a "setup and furnish" mindset every single month - close to ideal conditions for a bundle offer.</p>
+
+      <h3>Why bundling works for the customer</h3>
+      <table class="signal-table reveal">
+        <thead><tr><th>Customer benefit</th><th>Finding</th><th>Source</th></tr></thead>
+        <tbody>
+          <tr><td>Cost savings</td><td data-label="Finding">Bundles save 15&ndash;30% vs. separate purchases</td><td data-label="Source">Market research</td></tr>
+          <tr><td>Example bundle pricing</td><td data-label="Finding">Full house packages sold for $1,299 with added freebies</td><td data-label="Source">Furniture World Outlet</td></tr>
+          <tr><td>Mattress + frame bundles</td><td data-label="Finding">Bundles save money vs. separate purchases</td><td data-label="Source">Harmony Beds</td></tr>
+          <tr><td>Shipping efficiency</td><td data-label="Finding">Bundling reduces shipments and per-item delivery cost</td><td data-label="Source">Sweetnight</td></tr>
+        </tbody>
+      </table>
+      <p>For a new couple juggling move-in costs, deposits, and time pressure, a bundle gives them a simple answer: <strong>buy everything you need in one place, and save money doing it.</strong></p>
+
+      <h3>Why bundling works for Puffy</h3>
+      <table class="signal-table reveal">
+        <thead><tr><th>Company benefit</th><th>Impact</th><th>Market evidence</th></tr></thead>
+        <tbody>
+          <tr><td>Higher average order value</td><td data-label="Impact">+20&ndash;40% revenue per customer</td><td data-label="Market evidence">Furniture/bedding sales research</td></tr>
+          <tr><td>Market size opportunity</td><td data-label="Impact">$123.9B furniture/bedding market, growing to $147.2B by 2027</td><td data-label="Market evidence">Industry report</td></tr>
+          <tr><td>Cross-sell success</td><td data-label="Impact">Bundles increase cross-category sales</td><td data-label="Market evidence">Retail pricing analysis</td></tr>
+          <tr><td>Inventory efficiency</td><td data-label="Impact">Slower-moving items paired with mattresses</td><td data-label="Market evidence">Industry best practice</td></tr>
+          <tr><td>Lower marketing cost</td><td data-label="Impact">One bundle ad sells multiple products at once</td><td data-label="Market evidence">Retail pricing analysis</td></tr>
+          <tr><td>Customer retention</td><td data-label="Impact">Bundle buyers more likely to return for other home needs</td><td data-label="Market evidence">Furniture packages research</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Control vs. variant</h3>
+      <div class="compare-wrap reveal">
+        <div class="compare-col compare-control">
+          <span class="compare-tag">Control</span>
+          <ul class="compare-list">
+            <li>Landing page stays focused on mattress-led merchandising only</li>
+            <li>Mattress hero, mattress benefits, mattress CTA</li>
+            <li>Standard single-product exploration path</li>
+            <li>No path for a "furnish my whole home" shopping mission</li>
+          </ul>
+        </div>
+        <div class="compare-col compare-variant">
+          <span class="compare-tag">Variant</span>
+          <ul class="compare-list">
+            <li><strong>New bundling section</strong> for newly married couples and first-time renters</li>
+            <li>Curated packages: <strong>Starter Bedroom, Complete Bedroom, Full Home</strong></li>
+            <li>Shifts the shopper from "I need a mattress" to <strong>"I need a complete solution"</strong></li>
+            <li>Matches the real shopping mission of a move-in or furnishing mindset</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>Uplift decomposition</h3>
+      <p>Five mechanisms, non-additive, landing on a realistic <strong>20&ndash;31% relative uplift</strong>:</p>
+      <div class="weight-section reveal">
+        <div class="weight-list">
+          <div class="weight-row">
+            <span class="weight-label">Segment relevance</span>
+            <div class="weight-bar-bg"><div class="weight-bar-fill fill-green" style="width:70%"></div></div>
+            <span class="weight-pct">+6&ndash;8%</span>
+            <div class="weight-why">The offer speaks directly to new couples and new-home renters instead of a generic shopper.</div>
+          </div>
+          <div class="weight-row">
+            <span class="weight-label">Higher perceived value</span>
+            <div class="weight-bar-bg"><div class="weight-bar-fill fill-green" style="width:60%"></div></div>
+            <span class="weight-pct">+5&ndash;7%</span>
+            <div class="weight-why">Bundles feel more complete and more economical than assembling separate purchases.</div>
+          </div>
+          <div class="weight-row">
+            <span class="weight-label">Lower decision friction</span>
+            <div class="weight-bar-bg"><div class="weight-bar-fill fill-green" style="width:35%"></div></div>
+            <span class="weight-pct">+2&ndash;4%</span>
+            <div class="weight-why">Users choose from curated packages instead of assembling products individually.</div>
+          </div>
+          <div class="weight-row">
+            <span class="weight-label">Stronger AOV lift</span>
+            <div class="weight-bar-bg"><div class="weight-bar-fill fill-green" style="width:60%"></div></div>
+            <span class="weight-pct">+5&ndash;7%</span>
+            <div class="weight-why">Larger packages increase basket size and total spend per order.</div>
+          </div>
+          <div class="weight-row">
+            <span class="weight-label">Better paid-traffic alignment</span>
+            <div class="weight-bar-bg"><div class="weight-bar-fill fill-green" style="width:40%"></div></div>
+            <span class="weight-pct">+2&ndash;5%</span>
+            <div class="weight-why">Paid visitors see an offer that fits a move-in or furnishing mindset rather than a single-SKU ad.</div>
+          </div>
+        </div>
+      </div>
+
+      <h3>Revenue model</h3>
+      <div class="step-list reveal">
+        <div class="step-item">
+          <div class="step-num">01</div>
+          <div>
+            <div class="step-title">Baseline</div>
+            <div class="step-body">Monthly mattress PDP visitors: <strong>100,000</strong>. Baseline conversion rate: <strong>2.0%</strong> &rarr; <span class="step-mono">100,000 &times; 2.0% = 2,000 orders/mo</span></div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">02</div>
+          <div>
+            <div class="step-title">Variant, after a 25% relative uplift</div>
+            <div class="step-body">New conversion rate: <strong>2.5%</strong> &rarr; <span class="step-mono">100,000 &times; 2.5% = 2,500 orders/mo</span> &mdash; an incremental <strong>500 orders per month</strong>.</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">03</div>
+          <div>
+            <div class="step-title">Applying average order value</div>
+            <div class="step-body">Conservative scenario at <strong>$700 AOV</strong>: <span class="step-mono">500 &times; $700 &times; 12 = $4.2M/yr</span>. Stronger scenario at <strong>$800 AOV</strong>: <span class="step-mono">500 &times; $800 &times; 12 = $4.8M/yr</span> - and this test carries additional AOV upside from bundle attachment that a single-SKU test doesn't.</div>
+          </div>
+        </div>
+      </div>
+      <div class="total-card reveal">
+        <div class="total-item">
+          <div class="total-label">Conservative annual revenue</div>
+          <div class="total-num t-green">$4.2M</div>
+        </div>
+        <div class="total-sep"></div>
+        <div class="total-item">
+          <div class="total-label">Stronger AOV scenario</div>
+          <div class="total-num t-green">$4.8M</div>
+        </div>
+        <div class="total-sep"></div>
+        <div class="total-item">
+          <div class="total-label">Case threshold</div>
+          <div class="total-num">$3.375M &mdash; cleared</div>
+        </div>
+      </div>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 06 PRIORITIZATION -->
+    <section class="cs-section" id="prioritization">
+      <div class="section-eyebrow">06 &mdash; Prioritization</div>
+      <h2>Same revenue bar, different sequencing logic.</h2>
+      <p>Both tests clear the $3.375M threshold at identical assumed traffic and AOV, so the projected number alone can't break the tie. I sequenced them using reach, effort, and what each test validates for the other.</p>
+
+      <table class="signal-table reveal">
+        <thead><tr><th>Dimension</th><th>Test 1 &middot; Health Hero</th><th>Test 2 &middot; Bundle Offer</th></tr></thead>
+        <tbody>
+          <tr><td>Audience reach</td><td data-label="Test 1 · Health Hero">Broadest - applies to essentially all landing-page traffic, including 80% cold paid search</td><td data-label="Test 2 · Bundle Offer">Narrower - newlyweds and first-time renters specifically</td></tr>
+          <tr><td>Implementation effort</td><td data-label="Test 1 · Health Hero">Lower - new hero and messaging layer on an existing page</td><td data-label="Test 2 · Bundle Offer">Higher - new merchandising logic, bundle pricing, and package inventory</td></tr>
+          <tr><td>What it validates</td><td data-label="Test 1 · Health Hero">Whether problem-first messaging beats feature-first messaging at all</td><td data-label="Test 2 · Bundle Offer">Whether a narrower, higher-AOV audience responds to a bigger commitment</td></tr>
+          <tr><td>Verdict</td><td data-label="Test 1 · Health Hero"><span class="priority-badge pb-first">Ship first</span></td><td data-label="Test 2 · Bundle Offer"><span class="priority-badge pb-second">Ship second</span></td></tr>
+        </tbody>
+      </table>
+
+      <div class="callout callout-indigo reveal">
+        <p><strong>Sequencing logic:</strong> I'd run Test 1 first because it validates message-market fit across the broadest visitor segment and requires the lower implementation lift. Test 2 follows once the health-first positioning is proven - it targets a narrower but potentially higher-AOV audience, and a successful Test 1 also derisks the idea that problem-first (rather than product-first) framing works on this page at all.</p>
+      </div>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 07 REVENUE MODEL -->
+    <section class="cs-section" id="revenue">
+      <div class="section-eyebrow">07 &mdash; Revenue Model</div>
+      <h2>How I stress-tested the numbers before trusting them.</h2>
+      <p>I don't have access to Puffy's live analytics, so every dollar figure in this case study rests on a stated, auditable assumption set rather than real traffic data. That's a limitation I want to be explicit about rather than hide: the modeling method is sound, but the inputs are illustrative until validated against actual site data.</p>
+
+      <table class="signal-table reveal">
+        <thead><tr><th>Assumption</th><th>Value</th><th>Why I chose it</th></tr></thead>
+        <tbody>
+          <tr><td>Monthly mattress PDP visitors</td><td data-label="Value">100,000</td><td data-label="Why I chose it">A round, mid-market traffic figure for a national DTC mattress brand's core product page</td></tr>
+          <tr><td>Baseline conversion rate</td><td data-label="Value">2.0%</td><td data-label="Why I chose it">Consistent with typical PDP-to-purchase rates for considered e-commerce categories</td></tr>
+          <tr><td>Relative CVR uplift modeled</td><td data-label="Value">25%</td><td data-label="Why I chose it">The midpoint of each test's 20&ndash;31% decomposed range, used consistently across both tests</td></tr>
+          <tr><td>AOV scenarios</td><td data-label="Value">$700 conservative / $800 stronger</td><td data-label="Why I chose it">Brackets typical mattress-category order values without assuming best-case bundle attachment</td></tr>
+        </tbody>
+      </table>
+
+      <table class="signal-table reveal">
+        <thead><tr><th>Test</th><th>Conservative (annual)</th><th>Stronger AOV (annual)</th></tr></thead>
+        <tbody>
+          <tr><td>Test 1 &middot; Health Hero</td><td data-label="Conservative (annual)">$4.2M</td><td data-label="Stronger AOV (annual)">$4.8M</td></tr>
+          <tr><td>Test 2 &middot; Bundle Offer</td><td data-label="Conservative (annual)">$4.2M<br><span style="font-size:11.5px;color:var(--ink-faint);">+ untracked AOV upside from bundle attachment</span></td><td data-label="Stronger AOV (annual)">$4.8M</td></tr>
+        </tbody>
+      </table>
+
+      <div class="callout callout-amber reveal">
+        <p><strong>What this model is - and isn't:</strong> it's a transparent, defensible way to reason about scale before committing engineering time to a test. It is not a guarantee. The first real deliverable of either test in production would be replacing every assumption in the table above with Puffy's actual analytics.</p>
+      </div>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 08 RISKS -->
+    <section class="cs-section" id="risks">
+      <div class="section-eyebrow">08 &mdash; Risks &amp; Ethics</div>
+      <h2>Where a health-fear headline could go wrong.</h2>
+      <div class="risk-grid reveal">
+        <div class="risk-card">
+          <div class="risk-level r-high">High</div>
+          <div class="risk-title">Overstating causation in health messaging</div>
+          <div class="risk-body">Poor sleep correlates with diabetes, heart disease, and depression risk - a mattress upgrade doesn't cure any of them. Copy must frame the mattress as improving sleep quality, which is linked to better outcomes, never as treating or preventing a disease. Mitigated by: legal/medical copy review before launch, and framing every claim as "linked to" rather than "causes."</div>
+        </div>
+        <div class="risk-card">
+          <div class="risk-level r-high">High</div>
+          <div class="risk-title">Unverified traffic and conversion assumptions</div>
+          <div class="risk-body">The entire revenue model rests on assumed, not measured, traffic and baseline CVR. Mitigated by: treating every dollar figure in this case study as directional, and requiring real analytics access as the first step before any engineering resourcing decision.</div>
+        </div>
+        <div class="risk-card">
+          <div class="risk-level r-med">Medium</div>
+          <div class="risk-title">Fear-based tone eroding brand trust</div>
+          <div class="risk-body">Leading with health risk can read as manipulative if the tone tips into alarmism, especially for a brand whose base personality is comfort and warmth. Mitigated by: A/B testing tone variants (clinical vs. empathetic framing) and tracking bounce rate and time-on-page as trust guardrail metrics, not just CVR.</div>
+        </div>
+        <div class="risk-card">
+          <div class="risk-level r-med">Medium</div>
+          <div class="risk-title">Bundle offer cannibalizing higher-margin single-item sales</div>
+          <div class="risk-body">A cheaper bundled mattress-plus-frame sale could replace what would have been two separate, higher-margin purchases. Mitigated by: tracking margin-blended AOV, not just revenue-blended AOV, as a required guardrail metric alongside the primary conversion metric.</div>
+        </div>
+        <div class="risk-card">
+          <div class="risk-level r-low">Low</div>
+          <div class="risk-title">Sample-size risk on the narrower bundle segment</div>
+          <div class="risk-body">Test 2 targets a smaller share of traffic than Test 1, which means longer runtime to reach statistical power. Mitigated by: sizing the test window against the segment's actual traffic share before launch, covered in Appendix C.</div>
+        </div>
+        <div class="risk-card">
+          <div class="risk-level r-low">Low</div>
+          <div class="risk-title">Novelty effect inflating early results</div>
+          <div class="risk-body">A new hero section or bundle path may see an initial lift purely from being new, which fades over time. Mitigated by: running each test for a minimum of two full business cycles and monitoring for lift decay before calling a result.</div>
+        </div>
+      </div>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 09 REFLECTION -->
+    <section class="cs-section" id="reflection">
+      <div class="section-eyebrow">09 &mdash; Reflection</div>
+      <h2>What running this exercise reinforced about CRO as a PM.</h2>
+      <div class="lesson-list reveal">
+        <div class="lesson-item">
+          <div class="lesson-num">01</div>
+          <div>
+            <div class="lesson-title">A hypothesis is a testable link, not a headline idea</div>
+            <div class="lesson-body">"Add a health section" is a creative idea. "Cold paid-search visitors will convert 6-8% better if they see their pain point recognized before the product" is a hypothesis. <strong>The difference is whether it names a segment, a mechanism, and a measurable outcome</strong> - and that difference is what makes a test worth building instead of just an opinion worth having.</div>
+          </div>
+        </div>
+        <div class="lesson-item">
+          <div class="lesson-num">02</div>
+          <div>
+            <div class="lesson-title">Decomposing uplift disciplines optimism</div>
+            <div class="lesson-body">It's easy to say "this could lift conversion 25%." It's much harder - and much more honest - to defend five separate mechanisms and show your work for each one. <strong>Naming the mechanisms is what turns a guess into a model</strong>, and it's the difference stakeholders can actually interrogate and trust.</div>
+          </div>
+        </div>
+        <div class="lesson-item">
+          <div class="lesson-num">03</div>
+          <div>
+            <div class="lesson-title">A revenue model is only as credible as its stated assumptions</div>
+            <div class="lesson-body">Without access to Puffy's real analytics, the honest move was to say so plainly rather than present the numbers as more certain than they are. <strong>Transparency about what you don't know is part of the deliverable</strong>, not a weakness to hide from a pitch.</div>
+          </div>
+        </div>
+        <div class="lesson-item">
+          <div class="lesson-num">04</div>
+          <div>
+            <div class="lesson-title">Prioritization is a second decision, not a byproduct of the first</div>
+            <div class="lesson-body">Both tests clear the same revenue bar. The choice of which one ships first came down to reach, effort, and what each test would tell me about the other - <strong>not which projection had the bigger number attached to it.</strong></div>
+          </div>
+        </div>
+        <div class="lesson-item">
+          <div class="lesson-num">05</div>
+          <div>
+            <div class="lesson-title">Emotional relevance only works if the product truth backs it up</div>
+            <div class="lesson-body">Health-stakes messaging is only defensible because a better mattress genuinely reduces pain and improves sleep quality - the evidence in section 04 is the reason the framing isn't manipulative. <strong>Borrowed urgency without a real underlying mechanism is a liability, not a growth lever.</strong></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div><!-- /cs-body -->
+
+  <!-- APPENDIX BAND -->
+  <div class="appendix-band">
+    <div class="appendix-inner">
+
+      <div class="appendix-header">
+        <div class="appendix-eyebrow">Appendix &mdash; The Evidence</div>
+        <h2 class="appendix-title">Sources &amp; Measurement Plan</h2>
+        <p class="appendix-sub">Every statistic cited in this case study, plus the testing and measurement design I'd use to actually run these experiments.</p>
+      </div>
+
+      <!-- SOURCES -->
+      <div class="appendix-block reveal">
+        <div class="appendix-block-label">Appendix A &mdash; Source References</div>
+        <table class="appendix-table">
+          <thead><tr><th>Topic</th><th>Source</th></tr></thead>
+          <tbody>
+            <tr><td>Daily pain from sleep position</td><td data-label="Source">Ortho Bethesda</td></tr>
+            <tr><td>Mattress firmness &amp; back pain reduction</td><td data-label="Source">ScienceDirect</td></tr>
+            <tr><td>Sleep issue prevalence</td><td data-label="Source">ScienceDirect</td></tr>
+            <tr><td>Sleep satisfaction survey</td><td data-label="Source">National Sleep Foundation, 2025</td></tr>
+            <tr><td>Diabetes, heart disease, obesity, dementia, brain-aging risk</td><td data-label="Source">Johns Hopkins Medicine</td></tr>
+            <tr><td>Depression &amp; insomnia risk</td><td data-label="Source">Harvard Health Publishing</td></tr>
+            <tr><td>Extra sleep from a comfort upgrade</td><td data-label="Source">CW Williams Community Health</td></tr>
+            <tr><td>Mattress effect on sleep quality</td><td data-label="Source">Sleepycat</td></tr>
+            <tr><td>Sleep &amp; sexual wellbeing correlation</td><td data-label="Source">CBS News</td></tr>
+            <tr><td>Mattress features relevant to intimacy</td><td data-label="Source">Naplab, Onsen</td></tr>
+            <tr><td>Bundle vs. bed-frame savings</td><td data-label="Source">Harmony Beds</td></tr>
+            <tr><td>Full-home package pricing example</td><td data-label="Source">Furniture World Outlet</td></tr>
+            <tr><td>Shipping/bundling efficiency</td><td data-label="Source">Sweetnight</td></tr>
+            <tr><td>Furniture/bedding market size</td><td data-label="Source">Industry sales report, 2022&ndash;2027</td></tr>
+            <tr><td>Bundle cross-sell and retention effects</td><td data-label="Source">DataWeave, Neolivin</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- MEASUREMENT PLAN -->
+      <div class="appendix-block reveal">
+        <div class="appendix-block-label">Appendix B &mdash; Testing &amp; Measurement Plan</div>
+        <p class="appendix-flow-intro">The statistical scaffolding I'd put around both tests before calling any result - illustrative, using the same assumed 100,000 monthly PDP visitors stated in Section 07.</p>
+        <table class="appendix-table">
+          <thead><tr><th>Element</th><th>Test 1 &middot; Health Hero</th><th>Test 2 &middot; Bundle Offer</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>Primary metric</td>
+              <td data-label="Test 1 · Health Hero">Landing page &rarr; purchase conversion rate</td>
+              <td data-label="Test 2 · Bundle Offer">Landing page &rarr; purchase conversion rate</td>
+            </tr>
+            <tr>
+              <td>Guardrail metrics</td>
+              <td data-label="Test 1 · Health Hero">Bounce rate, time on page, PDP click-through rate</td>
+              <td data-label="Test 2 · Bundle Offer">Margin-blended AOV, single-item cannibalization rate</td>
+            </tr>
+            <tr>
+              <td>Minimum detectable effect</td>
+              <td data-label="Test 1 · Health Hero">15% relative lift (conservative vs. the 21&ndash;31% modeled range)</td>
+              <td data-label="Test 2 · Bundle Offer">15% relative lift (conservative vs. the 20&ndash;31% modeled range)</td>
+            </tr>
+            <tr>
+              <td>Approx. sample size</td>
+              <td data-label="Test 1 · Health Hero">~37,000 visitors per arm (95% confidence, 80% power)</td>
+              <td data-label="Test 2 · Bundle Offer">~37,000 visitors per arm within the newlywed/renter segment</td>
+            </tr>
+            <tr>
+              <td>Estimated runtime</td>
+              <td data-label="Test 1 · Health Hero">~3 weeks at 100K monthly PDP traffic, split evenly</td>
+              <td data-label="Test 2 · Bundle Offer">Longer - depends on what share of traffic is newlyweds/renters; needs segment-level traffic data before committing to a launch date</td>
+            </tr>
+            <tr>
+              <td>Minimum test duration</td>
+              <td data-label="Test 1 · Health Hero">2 full business cycles, to rule out novelty effect</td>
+              <td data-label="Test 2 · Bundle Offer">2 full business cycles, to rule out novelty effect</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </div><!-- /appendix-band -->
+
+  <!-- FOOTER -->
+  <footer>
+    <a href="work.html">&larr; Back to all case studies</a>
+    &nbsp;&nbsp;&middot;&nbsp;&nbsp;
+    <a href="index.html">Akash Poddar</a>
+    &nbsp;&nbsp;&middot;&nbsp;&nbsp;
+    <a href="index.html#contact">Get in touch</a>
+  </footer>
+
+  <script>
+    const reveals = document.querySelectorAll('.reveal');
+    const isMobile = window.innerWidth < 768;
+    const io = new IntersectionObserver((entries) => {
+      const visible = entries.filter(e => e.isIntersecting)
+        .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+      if (!visible.length) return;
+      requestAnimationFrame(() => {
+        visible.forEach((entry, i) => {
+          entry.target.style.transitionDelay = isMobile ? '0s' : (i * 0.05) + 's';
+          entry.target.classList.add('visible');
+          io.unobserve(entry.target);
+        });
+      });
+    }, { threshold: 0.06, rootMargin: '0px 0px -40px 0px' });
+    reveals.forEach(r => io.observe(r));
+
+    const tocItems = document.querySelectorAll('.toc-item');
+    const sections = document.querySelectorAll('.cs-section[id]');
+    const tocObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          tocItems.forEach(t => t.classList.remove('active'));
+          const active = document.querySelector(`.toc-item[href="#${entry.target.id}"]`);
+          if (active) active.classList.add('active');
+        }
+      });
+    }, { threshold: 0, rootMargin: '-101px 0px -85% 0px' });
+    sections.forEach(s => tocObserver.observe(s));
+  </script>
+
+</body>
+</html>
