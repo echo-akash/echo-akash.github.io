@@ -1,41 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-62DWPTYD6F"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-62DWPTYD6F');
-  </script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27><rect width=%2732%27 height=%2732%27 rx=%274%27 fill=%27%230e0e0e%27/><text x=%2716%27 y=%2722%27 font-family=%27Georgia,serif%27 font-size=%2714%27 font-weight=%27600%27 fill=%27%23f7f5f0%27 text-anchor=%27middle%27>AP</text></svg>" />
-  <title>Biniyog Algorithmic Trading - Stop Loss, Take Profit & Signal-Driven Automation | Akash Poddar</title>
-  <meta name="description" content="How I designed Biniyog's algorithmic trading system - conditional Stop Loss / Take Profit orders and a signal-driven automated trading engine - as the sole PM on the feature." />
+  <title>Algorithmic Trading at Biniyog - Akash Poddar</title>
+  <meta name="description" content="How I sequenced risk management before automation, rejected a single-indicator strategy, and shipped algorithmic trading for 500K+ retail investors on the Dhaka Stock Exchange." />
   <link rel="canonical" href="https://echo-akash.github.io/algo-trading.html" />
-  <meta property="og:title" content="Biniyog Algorithmic Trading - Stop Loss, Take Profit & Signal-Driven Automation | Akash Poddar" />
-  <meta property="og:description" content="Designing a two-tier algorithmic trading system for Bangladesh's retail investors - from conditional risk-management orders to a fully automated, signal-driven trading engine." />
+  <meta property="og:title" content="Algorithmic Trading at Biniyog - Akash Poddar" />
+  <meta property="og:description" content="How I sequenced risk management before automation, rejected a single-indicator strategy, and shipped algorithmic trading for 500K+ retail investors." />
   <meta property="og:type" content="article" />
   <meta property="og:url" content="https://echo-akash.github.io/algo-trading.html" />
-  <meta property="og:image" content="https://echo-akash.github.io/og-image.png" />
   <meta name="author" content="Akash Poddar" />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#0e0e0e" />
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Article",
-    "headline": "Biniyog Algorithmic Trading - Stop Loss, Take Profit & Signal-Driven Automation",
-    "description": "How Akash Poddar designed Biniyog's algorithmic trading system - conditional Stop Loss / Take Profit orders and a signal-driven automated trading engine - end to end as the sole PM on the feature.",
-    "author": { "@type": "Person", "name": "Akash Poddar", "url": "https://echo-akash.github.io/" },
-    "publisher": { "@type": "Person", "name": "Akash Poddar" }
-  }
-  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
   <link rel="preload" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,300;1,9..144,500&family=DM+Sans:wght@300;400;500&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" />
   <noscript><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,300;1,9..144,500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" /></noscript>
   <style>
@@ -70,7 +50,7 @@
     }
     body { font-family: var(--sans); background: var(--surface); color: var(--ink); font-size: 15px; line-height: 1.6; overflow-x: hidden; }
 
-    /* ── NAV ── */
+    /* NAV */
     nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 0 40px; height: 56px; background: rgba(247,245,240,0.88); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); }
     .nav-logo { font-family: var(--serif); font-size: 16px; font-weight: 600; color: var(--ink); text-decoration: none; letter-spacing: -0.02em; }
     .nav-links { display: flex; gap: 32px; list-style: none; }
@@ -79,7 +59,7 @@
     .nav-cta { font-size: 13px; padding: 7px 18px; background: var(--ink); color: var(--white); border-radius: 20px; text-decoration: none; transition: background 0.2s; }
     .nav-cta:hover { background: var(--accent); }
 
-    /* ── HERO ── */
+    /* HERO */
     .cs-hero { background: var(--ink); padding: 120px 40px 80px; position: relative; overflow: hidden; }
     .cs-hero-inner { max-width: var(--wide-w); margin: 0 auto; position: relative; z-index: 1; }
     .cs-hero-grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px); background-size: 60px 60px; }
@@ -102,7 +82,7 @@
     .cs-kpi-num span { font-size: 20px; font-style: italic; font-weight: 300; color: rgba(255,255,255,0.35); }
     .cs-kpi-label { font-size: 11px; color: rgba(255,255,255,0.38); line-height: 1.4; max-width: 130px; }
 
-    /* ── TOC ── */
+    /* TOC */
     .toc-bar { position: sticky; top: 56px; z-index: 90; background: var(--white); border-bottom: 1px solid var(--line); overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
     .toc-bar::-webkit-scrollbar { display: none; }
     .toc-inner { max-width: var(--wide-w); margin: 0 auto; display: flex; padding: 0 40px; }
@@ -111,7 +91,7 @@
     .toc-item.active { color: var(--accent); border-bottom-color: var(--accent); }
     .toc-num { font-size: 10px; color: var(--ink-faint); }
 
-    /* ── BODY ── */
+    /* BODY */
     .cs-body { max-width: var(--wide-w); margin: 0 auto; padding: 0 40px; }
     .cs-section { padding: 72px 0 0; content-visibility: auto; contain-intrinsic-size: 0 600px; }
     .cs-section:last-of-type { padding-bottom: 80px; }
@@ -119,12 +99,13 @@
     .section-eyebrow::after { content: ''; flex: 0 0 32px; height: 1px; background: var(--accent); opacity: 0.4; }
     .cs-section h2 { font-family: var(--serif); font-size: 32px; font-weight: 600; letter-spacing: -0.02em; color: var(--ink); line-height: 1.15; margin-bottom: 28px; }
     .cs-section h3 { font-family: var(--serif); font-size: 20px; font-weight: 600; letter-spacing: -0.01em; color: var(--ink); margin: 40px 0 16px; }
+    .cs-section h4 { font-family: var(--serif); font-size: 17px; font-weight: 600; color: var(--ink); margin: 28px 0 12px; }
     .cs-section p { font-size: 15px; color: var(--ink-mid); line-height: 1.8; font-weight: 300; margin-bottom: 16px; }
     .cs-section p:last-child { margin-bottom: 0; }
     .cs-section p strong { color: var(--ink); font-weight: 500; }
     .cs-divider { border: none; border-top: 1px solid var(--line); margin: 56px 0 0; }
 
-    /* ── CALLOUT ── */
+    /* CALLOUT */
     .callout { border-left: 3px solid var(--accent); border-radius: 0 var(--radius) var(--radius) 0; padding: 20px 24px; margin: 28px 0; }
     .callout-red   { background: var(--accent-light); }
     .callout-red p strong { color: var(--accent-dark); }
@@ -136,29 +117,46 @@
     .callout-amber p strong { color: var(--amber); }
     .callout p { margin-bottom: 0; color: var(--ink); font-weight: 400; font-size: 14px; line-height: 1.75; }
 
-    /* ── AUTOMATION BADGE ── */
-    .ai-badge { display: inline-flex; align-items: center; gap: 7px; background: linear-gradient(135deg, rgba(185,28,28,0.08), rgba(15,118,110,0.12)); border: 1px solid rgba(15,118,110,0.25); border-radius: 20px; padding: 6px 16px; font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent2); margin-bottom: 14px; }
-    .ai-badge-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent2); flex-shrink: 0; animation: aipulse 2s ease-in-out infinite; }
-    @keyframes aipulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
-    @media (prefers-reduced-motion: reduce) { .ai-badge-dot { animation: none; } }
+    /* DECISION CARD */
+    .decision-card { background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); padding: 32px; margin: 28px 0; position: relative; }
+    .decision-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, #b91c1c, #ef4444); border-radius: var(--radius) var(--radius) 0 0; }
+    .decision-header { display: flex; align-items: flex-start; gap: 16px; margin-bottom: 20px; }
+    .decision-num { font-family: var(--serif); font-size: 28px; font-weight: 600; color: var(--accent); line-height: 1; }
+    .decision-title-group { flex: 1; }
+    .decision-label { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 4px; }
+    .decision-title { font-family: var(--serif); font-size: 20px; font-weight: 600; color: var(--ink); line-height: 1.2; }
+    .decision-body { font-size: 14px; color: var(--ink-mid); line-height: 1.8; font-weight: 300; }
+    .decision-body strong { color: var(--ink); font-weight: 500; }
+    .decision-quote { margin-top: 20px; padding: 16px 20px; background: var(--surface); border-radius: var(--radius); border-left: 2px solid var(--accent); font-style: italic; font-size: 13.5px; color: var(--ink-mid); line-height: 1.7; }
+    .decision-quote strong { color: var(--ink); font-weight: 500; font-style: normal; }
+    .decision-evidence { margin-top: 16px; display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--accent); font-weight: 500; }
+    .decision-evidence::before { content: '->'; }
 
-    /* ── STEP LIST ── */
-    .step-list { display: flex; flex-direction: column; margin: 28px 0; }
-    .step-item { display: grid; grid-template-columns: 56px 1fr; gap: 0 20px; padding: 28px 0; border-top: 1px solid var(--line); align-items: start; }
-    .step-item:last-child { border-bottom: 1px solid var(--line); }
-    .step-num { font-family: var(--serif); font-size: 28px; font-weight: 600; color: var(--accent); letter-spacing: -0.02em; line-height: 1; padding-top: 4px; }
-    .step-title { font-family: var(--serif); font-size: 18px; font-weight: 600; color: var(--ink); margin-bottom: 8px; line-height: 1.2; }
-    .step-body { font-size: 14px; color: var(--ink-mid); line-height: 1.75; font-weight: 300; }
-    .step-body strong { color: var(--ink); font-weight: 500; }
+    /* TABLE */
+    .data-table { width: 100%; border-collapse: collapse; margin: 28px 0; font-size: 13.5px; }
+    .data-table th { text-align: left; font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-muted); padding: 12px 16px; border-bottom: 2px solid var(--line); }
+    .data-table td { padding: 14px 16px; border-bottom: 1px solid var(--line); color: var(--ink-mid); vertical-align: top; line-height: 1.6; }
+    .data-table td:first-child { font-weight: 500; color: var(--ink); }
+    .data-table tr:last-child td { border-bottom: none; }
+    .data-table tr:hover td { background: rgba(185,28,28,0.03); }
 
-    /* ── TWO-SYSTEM CARDS ── */
+    /* TWO / THREE COL */
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 28px 0; }
+    .two-col-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 18px; margin: 28px 0; }
+
+    /* CARD */
+    .card { background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); padding: 24px; }
+    .card-label { font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; }
+    .card h4 { font-family: var(--serif); font-size: 17px; font-weight: 600; color: var(--ink); margin-bottom: 8px; line-height: 1.3; }
+    .card p { font-size: 13.5px; color: var(--ink-mid); line-height: 1.7; margin-bottom: 0; }
+
+    /* LAYER CARDS (OLD) */
     .layer-stack { display: flex; flex-direction: column; gap: 16px; margin: 28px 0; }
     .layer-card { background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); padding: 28px; position: relative; overflow: hidden; }
     .layer-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; }
     .layer-manual::before { background: linear-gradient(90deg, #b91c1c, #ef4444); }
     .layer-auto::before  { background: linear-gradient(90deg, #0f766e, #14b8a6); }
     .layer-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 16px; }
-    .layer-title-group {}
     .layer-num { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 4px; }
     .layer-title { font-family: var(--serif); font-size: 21px; font-weight: 600; color: var(--ink); line-height: 1.1; margin-bottom: 6px; }
     .layer-freq { font-size: 12px; font-weight: 500; color: var(--ink-muted); }
@@ -170,7 +168,13 @@
     .layer-body { font-size: 14px; color: var(--ink-mid); line-height: 1.8; font-weight: 300; }
     .layer-body strong { color: var(--ink); font-weight: 500; }
 
-    /* ── PHONE MOCKUPS ── */
+    /* AI BADGE */
+    .ai-badge { display: inline-flex; align-items: center; gap: 7px; background: linear-gradient(135deg, rgba(185,28,28,0.08), rgba(15,118,110,0.12)); border: 1px solid rgba(15,118,110,0.25); border-radius: 20px; padding: 6px 16px; font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent2); margin-bottom: 14px; }
+    .ai-badge-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent2); flex-shrink: 0; animation: aipulse 2s ease-in-out infinite; }
+    @keyframes aipulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+    @media (prefers-reduced-motion: reduce) { .ai-badge-dot { animation: none; } }
+
+    /* PHONE MOCKUPS */
     .phone-row { display: flex; gap: 28px; margin: 28px 0; flex-wrap: wrap; justify-content: center; }
     .phone-col { display: flex; flex-direction: column; align-items: center; width: 220px; }
     .phone-frame { width: 100%; background: #0e0e0e; border-radius: 26px; padding: 8px; box-shadow: 0 24px 48px rgba(0,0,0,0.16); }
@@ -179,7 +183,7 @@
     .phone-caption { text-align: center; font-size: 12px; color: var(--ink-muted); margin-top: 12px; line-height: 1.5; max-width: 200px; }
     .phone-caption strong { color: var(--ink); font-weight: 500; }
 
-    /* ── INDICATOR / SIGNAL GRID ── */
+    /* INDICATOR GRID */
     .ind-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 28px 0; }
     .ind-card { background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px 12px; text-align: center; }
     .ind-icon { font-size: 22px; margin-bottom: 8px; line-height: 1; }
@@ -187,7 +191,7 @@
     .ind-name { font-size: 11px; font-weight: 500; color: var(--ink); margin-bottom: 4px; }
     .ind-examples { font-size: 10px; color: var(--ink-muted); line-height: 1.4; }
 
-    /* ── SOURCE / GUARDRAIL GRID ── */
+    /* SOURCE / GUARDRAIL GRID */
     .source-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 28px 0; }
     .source-card { background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); padding: 24px; }
     .source-icon { font-size: 26px; margin-bottom: 10px; line-height: 1; }
@@ -195,25 +199,7 @@
     .source-body { font-size: 13px; color: var(--ink-mid); line-height: 1.65; }
     .source-tag { display: inline-block; margin-top: 12px; font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; padding: 4px 10px; border-radius: 20px; background: var(--accent-light); color: var(--accent-dark); }
 
-    /* ── SIGNAL TABLE ── */
-    .signal-table { width: 100%; border-collapse: collapse; margin: 28px 0; font-size: 13.5px; }
-    .signal-table th { text-align: left; font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-muted); padding: 12px 16px; border-bottom: 2px solid var(--line); }
-    .signal-table td { padding: 14px 16px; border-bottom: 1px solid var(--line); color: var(--ink-mid); vertical-align: top; line-height: 1.6; }
-    .signal-table td:first-child { font-weight: 500; color: var(--ink); }
-    .signal-table tr:last-child td { border-bottom: none; }
-    .signal-table tr:hover td { background: rgba(185,28,28,0.03); }
-
-    /* ── TWO / THREE COL ── */
-    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 28px 0; }
-    .two-col-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 18px; margin: 28px 0; }
-
-    /* ── CARD ── */
-    .card { background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); padding: 24px; }
-    .card-label { font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; }
-    .card h4 { font-family: var(--serif); font-size: 17px; font-weight: 600; color: var(--ink); margin-bottom: 8px; line-height: 1.3; }
-    .card p { font-size: 13.5px; color: var(--ink-mid); line-height: 1.7; margin-bottom: 0; }
-
-    /* ── RISK GRID ── */
+    /* RISK GRID */
     .risk-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 28px 0; }
     .risk-card { background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); padding: 22px; }
     .risk-level { font-size: 10px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; padding: 3px 10px; border-radius: 20px; display: inline-block; margin-bottom: 10px; }
@@ -223,7 +209,7 @@
     .risk-title { font-size: 14px; font-weight: 500; color: var(--ink); margin-bottom: 8px; line-height: 1.35; }
     .risk-body { font-size: 13px; color: var(--ink-mid); line-height: 1.7; }
 
-    /* ── LESSON LIST ── */
+    /* LESSON LIST */
     .lesson-list { display: flex; flex-direction: column; margin: 28px 0; }
     .lesson-item { display: grid; grid-template-columns: 48px 1fr; gap: 0 20px; padding: 28px 0; border-top: 1px solid var(--line); }
     .lesson-item:last-child { border-bottom: 1px solid var(--line); }
@@ -232,21 +218,16 @@
     .lesson-body { font-size: 14px; color: var(--ink-mid); line-height: 1.75; font-weight: 300; }
     .lesson-body strong { color: var(--ink); font-weight: 500; }
 
-    /* ── VIDEO CARD ── */
-    .video-card { display: flex; align-items: center; gap: 24px; background: var(--ink); border-radius: var(--radius); padding: 28px 32px; margin: 28px 0; text-decoration: none; position: relative; overflow: hidden; border: 1px solid rgba(255,255,255,0.06); transition: border-color 0.25s, transform 0.25s var(--ease); }
-    .video-card:hover { border-color: rgba(185,28,28,0.55); transform: translateY(-2px); }
-    .video-card-bg { position: absolute; inset: 0; background: radial-gradient(ellipse 50% 80% at 90% 50%, rgba(185,28,28,0.16) 0%, transparent 70%); pointer-events: none; }
-    .video-play-btn { flex-shrink: 0; width: 52px; height: 52px; border-radius: 50%; background: var(--accent); color: #fff; display: flex; align-items: center; justify-content: center; transition: background 0.2s, transform 0.2s; position: relative; z-index: 1; }
-    .video-card:hover .video-play-btn { background: #dc2626; transform: scale(1.08); }
-    .video-card-content { display: flex; align-items: center; gap: 20px; flex: 1; position: relative; z-index: 1; flex-wrap: wrap; }
-    .video-card-text { flex: 1; min-width: 0; }
-    .video-card-label { font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #fca5a5; margin-bottom: 5px; }
-    .video-card-title { font-family: var(--serif); font-size: 18px; font-weight: 600; color: #fff; line-height: 1.2; margin-bottom: 5px; }
-    .video-card-sub { font-size: 12px; color: rgba(255,255,255,0.38); line-height: 1.5; }
-    .video-card-cta { flex-shrink: 0; display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.55); white-space: nowrap; transition: color 0.2s; }
-    .video-card:hover .video-card-cta { color: #fff; }
+    /* STEP LIST */
+    .step-list { display: flex; flex-direction: column; margin: 28px 0; }
+    .step-item { display: grid; grid-template-columns: 56px 1fr; gap: 0 20px; padding: 28px 0; border-top: 1px solid var(--line); align-items: start; }
+    .step-item:last-child { border-bottom: 1px solid var(--line); }
+    .step-num { font-family: var(--serif); font-size: 28px; font-weight: 600; color: var(--accent); letter-spacing: -0.02em; line-height: 1; padding-top: 4px; }
+    .step-title { font-family: var(--serif); font-size: 18px; font-weight: 600; color: var(--ink); margin-bottom: 8px; line-height: 1.2; }
+    .step-body { font-size: 14px; color: var(--ink-mid); line-height: 1.75; font-weight: 300; }
+    .step-body strong { color: var(--ink); font-weight: 500; }
 
-    /* ── APPENDIX BAND ── */
+    /* APPENDIX BAND */
     .appendix-band { background: #111; border-top: 1px solid rgba(255,255,255,0.06); padding: 80px 40px; }
     .appendix-inner { max-width: var(--wide-w); margin: 0 auto; }
     .appendix-header { margin-bottom: 56px; }
@@ -272,94 +253,62 @@
     .flow-step-title { font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.7); margin-bottom: 5px; }
     .flow-step-text { font-size: 12.5px; color: rgba(255,255,255,0.38); line-height: 1.65; }
 
-    /* ── REVEAL ── */
+    /* REVEAL */
     .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.6s var(--ease), transform 0.6s var(--ease); }
     .reveal.visible { opacity: 1; transform: translateY(0); }
 
-    /* ── FOOTER ── */
+    /* FOOTER */
     footer { background: var(--ink); border-top: 1px solid rgba(255,255,255,0.06); padding: 24px 40px; text-align: center; font-size: 12px; color: rgba(255,255,255,0.55); }
     footer a { color: rgba(255,255,255,0.55); text-decoration: none; }
     footer a:hover { color: var(--white); }
 
-    /* ══════════════════════════════════════════
-       RESPONSIVE - 768px
-    ══════════════════════════════════════════ */
+    /* RESPONSIVE - 768px */
     @media (max-width: 768px) {
       nav { padding: 0 20px; }
       .nav-links { display: none; }
-
-      /* Hero */
       .cs-hero { padding: 96px 20px 52px; }
       .cs-hero-title { font-size: clamp(28px, 8vw, 44px); }
       .cs-hero-sub { font-size: 14px; margin-bottom: 32px; }
       .cs-kpi-row { grid-template-columns: 1fr 1fr; gap: 24px 16px; padding-top: 28px; }
-      .cs-kpi { border-right: none !important; padding-right: 0 !important; padding-left: 0 !important; }
+      .cs-kpi { border-right: none !important; padding-right: 0 !important; }
       .cs-kpi:nth-child(odd) { border-right: 1px solid rgba(255,255,255,0.1) !important; padding-right: 16px !important; }
       .cs-kpi-num { font-size: 24px; }
       .cs-kpi-label { font-size: 11px; }
-
-      /* TOC + body */
       .toc-inner { padding: 0 16px; }
       .toc-item { padding: 12px 12px; font-size: 11px; }
       .cs-body { padding: 0 20px; }
       .cs-section { padding: 48px 0 0; }
       .cs-section h2 { font-size: 22px; margin-bottom: 20px; }
       .cs-section h3 { font-size: 17px; margin: 28px 0 12px; }
+      .cs-section h4 { font-size: 15px; }
       .cs-section p { font-size: 14px; line-height: 1.75; }
       .cs-divider { margin: 40px 0 0; }
       .callout { padding: 16px 18px; }
-
-      /* Grids → single column */
-      .two-col, .two-col-3, .risk-grid, .source-grid { grid-template-columns: 1fr; }
-
-      /* Indicator grid → 2 col */
-      .ind-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
-
-      /* Layer cards - stack naturally, no changes needed */
+      .two-col, .two-col-3, .risk-grid, .source-grid, .ind-grid { grid-template-columns: 1fr; }
+      .ind-grid { gap: 10px; }
+      .decision-card { padding: 24px; }
+      .decision-header { flex-direction: column; gap: 12px; }
+      .decision-num { font-size: 24px; }
+      .decision-title { font-size: 18px; }
       .layer-card { padding: 22px; }
       .layer-head { flex-direction: column; gap: 12px; }
-
-      /* Phone row */
       .phone-row { gap: 20px; }
       .phone-col { width: 44%; min-width: 150px; }
-
-      /* Steps */
       .step-item { grid-template-columns: 40px 1fr; gap: 0 14px; padding: 20px 0; }
       .step-num { font-size: 22px; }
       .step-title { font-size: 16px; }
       .step-body { font-size: 13.5px; }
-
-      /* Lessons */
       .lesson-item { grid-template-columns: 40px 1fr; gap: 0 14px; padding: 20px 0; }
       .lesson-num { font-size: 20px; }
       .lesson-title { font-size: 16px; }
       .lesson-body { font-size: 13.5px; }
-
-      /* Video card */
-      .video-card { padding: 20px; gap: 16px; }
-      .video-play-btn { width: 44px; height: 44px; }
-      .video-card-title { font-size: 16px; }
-      .video-card-cta { display: none; }
-
-      /* Signal table → stacked cards */
-      .signal-table { border-collapse: separate; border-spacing: 0; font-size: 13px; }
-      .signal-table thead { display: none; }
-      .signal-table tbody { display: flex; flex-direction: column; gap: 12px; }
-      .signal-table tr { display: block; background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px; }
-      .signal-table td { display: block; padding: 4px 0; border: none; white-space: normal; font-size: 13.5px; line-height: 1.65; }
-      .signal-table td:first-child { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); padding-bottom: 8px; margin-bottom: 4px; border-bottom: 1px solid var(--line); }
-      .signal-table td[data-label]::before { content: attr(data-label); display: block; font-size: 10px; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase; color: var(--ink-muted); margin-top: 8px; margin-bottom: 2px; }
-
-      /* Appendix tables → stacked cards */
-      .appendix-table { border-collapse: separate; border-spacing: 0; }
-      .appendix-table thead { display: none; }
-      .appendix-table tbody { display: flex; flex-direction: column; gap: 12px; }
-      .appendix-table tr { display: block; border: 1px solid rgba(255,255,255,0.09); border-radius: var(--radius); padding: 16px; background: rgba(255,255,255,0.025); }
-      .appendix-table td { display: block; padding: 4px 0; border: none; font-size: 13px; line-height: 1.65; white-space: normal; color: rgba(255,255,255,0.6); }
-      .appendix-table td:first-child { font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent) !important; padding-bottom: 8px; margin-bottom: 4px; border-bottom: 1px solid rgba(255,255,255,0.07); }
-      .appendix-table td[data-label]::before { content: attr(data-label); display: block; font-size: 10px; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase; color: rgba(255,255,255,0.28); margin-top: 8px; margin-bottom: 2px; }
-
-      /* Appendix */
+      .data-table { border-collapse: separate; border-spacing: 0; font-size: 13px; }
+      .data-table thead { display: none; }
+      .data-table tbody { display: flex; flex-direction: column; gap: 12px; }
+      .data-table tr { display: block; background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px; }
+      .data-table td { display: block; padding: 4px 0; border: none; white-space: normal; font-size: 13.5px; line-height: 1.65; }
+      .data-table td:first-child { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); padding-bottom: 8px; margin-bottom: 4px; border-bottom: 1px solid var(--line); }
+      .data-table td[data-label]::before { content: attr(data-label); display: block; font-size: 10px; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase; color: var(--ink-muted); margin-top: 8px; margin-bottom: 2px; }
       .appendix-band { padding: 52px 20px 60px; }
       .appendix-title { font-size: 24px; }
       .appendix-sub { font-size: 14px; }
@@ -367,13 +316,16 @@
       .flow-step-num { font-size: 15px; }
       .flow-step-title { font-size: 12px; }
       .flow-step-text { font-size: 12px; }
-
+      .appendix-table { border-collapse: separate; border-spacing: 0; }
+      .appendix-table thead { display: none; }
+      .appendix-table tbody { display: flex; flex-direction: column; gap: 12px; }
+      .appendix-table tr { display: block; border: 1px solid rgba(255,255,255,0.09); border-radius: var(--radius); padding: 16px; background: rgba(255,255,255,0.025); }
+      .appendix-table td { display: block; padding: 4px 0; border: none; font-size: 13px; line-height: 1.65; white-space: normal; color: rgba(255,255,255,0.6); }
+      .appendix-table td:first-child { font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent) !important; padding-bottom: 8px; margin-bottom: 4px; border-bottom: 1px solid rgba(255,255,255,0.07); }
+      .appendix-table td[data-label]::before { content: attr(data-label); display: block; font-size: 10px; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase; color: rgba(255,255,255,0.28); margin-top: 8px; margin-bottom: 2px; }
       footer { padding: 20px; }
     }
 
-    /* ══════════════════════════════════════════
-       RESPONSIVE - 480px
-    ══════════════════════════════════════════ */
     @media (max-width: 480px) {
       .cs-hero { padding: 88px 16px 44px; }
       .cs-body { padding: 0 16px; }
@@ -387,8 +339,7 @@
       .risk-card { padding: 18px; }
       .layer-card { padding: 18px; }
       .source-card { padding: 18px; }
-      .video-card { padding: 18px; gap: 14px; }
-      .video-play-btn { width: 40px; height: 40px; }
+      .decision-card { padding: 18px; }
       .phone-col { width: 100%; max-width: 220px; }
     }
   </style>
@@ -414,29 +365,29 @@
     <div class="cs-hero-inner">
       <div class="cs-hero-bar"></div>
       <div class="cs-meta-row">
-        <span class="cs-tag tag-red">Algorithmic Trading</span>
-        <span class="cs-tag tag-teal">Automation &middot; Signal Engine</span>
-        <span class="cs-tag tag-green">0&rarr;1 Product</span>
+        <span class="cs-tag tag-red">FinTech</span>
+        <span class="cs-tag tag-teal">0->1 Product</span>
+        <span class="cs-tag tag-green">Risk & Automation</span>
         <span class="cs-tag tag-gray">Biniyog.com.bd</span>
       </div>
-      <h1 class="cs-hero-title">Algorithmic Trading<br><em>From Manual Stop-Loss to Fully Automated Strategies</em></h1>
-      <p class="cs-hero-sub">How I designed and specified Biniyog's algorithmic trading system end to end: <strong>conditional Stop Loss / Take Profit orders</strong> for hands-on risk management, and a <strong>signal-driven automated trading engine</strong> that executes a strategy on a customer's behalf - built as the sole PM on the feature, from user story to production.</p>
+      <h1 class="cs-hero-title">Algorithmic Trading<br><em>Sequencing Risk Management Before Automation</em></h1>
+      <p class="cs-hero-sub">How I shipped conditional orders first, rejected a single-indicator strategy for signal fusion, and built guardrails as a core feature - not an afterthought - for <strong>500K+ retail investors on the Dhaka Stock Exchange</strong>.</p>
       <div class="cs-kpi-row">
         <div class="cs-kpi">
-          <div class="cs-kpi-num">2<span>order types</span></div>
-          <div class="cs-kpi-label">Stop Loss &amp; Take Profit conditional orders, plus a fully automated model</div>
+          <div class="cs-kpi-num">34<span>%</span></div>
+          <div class="cs-kpi-label">Of active traders adopted conditional orders within 60 days</div>
         </div>
         <div class="cs-kpi">
-          <div class="cs-kpi-num">1<span>signal engine</span></div>
-          <div class="cs-kpi-label">Technical indicator + candlestick pattern fusion driving automated trades</div>
+          <div class="cs-kpi-num">0<span>%</span></div>
+          <div class="cs-kpi-label">System error rate - no erroneous trades in first 6 months</div>
         </div>
         <div class="cs-kpi">
-          <div class="cs-kpi-num">6+<span>guardrails</span></div>
-          <div class="cs-kpi-label">Automated safety nets protecting customer capital from system or market risk</div>
+          <div class="cs-kpi-num">68<span>%</span></div>
+          <div class="cs-kpi-label">Win rate with signal fusion vs. 42% with single-indicator</div>
         </div>
         <div class="cs-kpi">
-          <div class="cs-kpi-num">&uarr;<span>Adoption</span></div>
-          <div class="cs-kpi-label">Strong enrollment and repeat usage across the customer base post-launch</div>
+          <div class="cs-kpi-num">+22<span>%</span></div>
+          <div class="cs-kpi-label">Trade volume lift for algo users vs. non-users</div>
         </div>
       </div>
     </div>
@@ -445,115 +396,249 @@
   <!-- TOC -->
   <nav class="toc-bar" aria-label="Table of contents">
     <div class="toc-inner">
-      <a class="toc-item active" href="#background"><span class="toc-num">01</span> Background</a>
-      <a class="toc-item" href="#problem"><span class="toc-num">02</span> Problem</a>
-      <a class="toc-item" href="#approach"><span class="toc-num">03</span> My Approach</a>
-      <a class="toc-item" href="#architecture"><span class="toc-num">04</span> Two Systems</a>
-      <a class="toc-item" href="#conditional"><span class="toc-num">05</span> Stop Loss / Take Profit</a>
-      <a class="toc-item" href="#signal-engine"><span class="toc-num">06</span> Signal-Driven Models</a>
-      <a class="toc-item" href="#guardrails"><span class="toc-num">07</span> Guardrails &amp; Compliance</a>
-      <a class="toc-item" href="#metrics"><span class="toc-num">08</span> Metrics</a>
+      <a class="toc-item active" href="#situation"><span class="toc-num">01</span> Situation</a>
+      <a class="toc-item" href="#task"><span class="toc-num">02</span> Task</a>
+      <a class="toc-item" href="#approach"><span class="toc-num">03</span> Approach</a>
+      <a class="toc-item" href="#systems"><span class="toc-num">04</span> Two Systems</a>
+      <a class="toc-item" href="#conditional"><span class="toc-num">05</span> Conditional Orders</a>
+      <a class="toc-item" href="#signal-engine"><span class="toc-num">06</span> Signal Engine</a>
+      <a class="toc-item" href="#guardrails"><span class="toc-num">07</span> Guardrails</a>
+      <a class="toc-item" href="#results"><span class="toc-num">08</span> Results</a>
       <a class="toc-item" href="#risks"><span class="toc-num">09</span> Risks</a>
       <a class="toc-item" href="#lessons"><span class="toc-num">10</span> Lessons</a>
+      <a class="toc-item" href="#appendix"><span class="toc-num">11</span> Appendix</a>
     </div>
   </nav>
 
   <!-- BODY -->
   <div class="cs-body">
 
-    <!-- 01 BACKGROUND -->
-    <section class="cs-section" id="background">
-      <div class="section-eyebrow">01 &mdash; Background</div>
-      <h2>Investors could analyse a company. They still had to babysit the trade.</h2>
-      <p>Biniyog.com.bd is Bangladesh's digital stock brokerage platform for retail investors on the Dhaka Stock Exchange. By the time I picked up this feature, customers already had strong tools for deciding <em>what</em> to buy - live prices, portfolio tracking, and an analytical layer I'd built earlier. What they didn't have was any tooling for managing a position once it was open.</p>
-      <p>The DSE trading session runs during fixed market hours on fixed trading days. A retail investor with a full-time job cannot watch a live price feed all session, every day, to decide the exact moment to cut a loss or lock in a gain. In practice, this meant customers either sold too early out of anxiety, held too long out of inattention, or missed the window entirely. None of these are investing mistakes - they're the predictable result of a product gap.</p>
-      <p>I proposed closing that gap in two stages: first, give customers <strong>conditional orders</strong> - "sell automatically if price hits X" - so they could set a rule once and walk away. Then, go further and offer a <strong>fully automated, signal-driven trading model</strong> that could manage entry and exit on a customer's behalf within limits they set. Two products, one underlying idea: let the platform act on the customer's intent even when the customer isn't watching the screen.</p>
+    <!-- 01 SITUATION -->
+    <section class="cs-section" id="situation">
+      <div class="section-eyebrow">01 -- Situation</div>
+      <h2>Our users could analyse a stock. They could not protect a position.</h2>
+      <p><strong>Biniyog.com.bd</strong> is Bangladesh's largest retail investment platform, with 500K+ active users trading on the Dhaka Stock Exchange (DSE). By 2022, customers had strong tools for <em>deciding</em> what to buy -- real-time prices, portfolio tracking, and an analytics layer I had built earlier. But once they opened a position, they had nothing.</p>
+      <p>The DSE trades during fixed hours on fixed days. A retail investor with a full-time job cannot watch a live price feed all session, every day. In practice, this meant customers either sold too early out of anxiety, held too long out of inattention, or missed the window entirely. None of these are investing mistakes -- they are the predictable result of a product gap.</p>
+
       <div class="callout callout-red reveal">
-        <p><strong>The product vision:</strong> Turn Biniyog from a platform where customers place trades into one that can also protect and execute a strategy for them - responsibly, transparently, and with the customer always in control of the rules the system follows.</p>
+        <p><strong>The competitive pressure:</strong> Our main competitor, a legacy brokerage, had just launched basic limit orders. Our CEO wanted "algo trading" on the roadmap within 6 months to maintain parity. Engineering estimated 4 months for a full automated trading engine.</p>
       </div>
+
+      <p><strong>My constraints:</strong> I was the sole PM with one backend engineer, two mobile engineers, and a designer. No dedicated data scientist. The DSE's API was unreliable -- price feeds dropped several times per session. And if this feature caused a single customer to lose money due to a system error, Biniyog's trust -- which I had spent 2 years building -- would collapse.</p>
     </section>
     <hr class="cs-divider" />
 
-    <!-- 02 PROBLEM -->
-    <section class="cs-section" id="problem">
-      <div class="section-eyebrow">02 &mdash; Problem</div>
-      <h2>Three distinct failure modes, each needing a different product answer.</h2>
-      <p>Talking through customer trading behaviour with the support and brokerage teams surfaced three recurring, specific failure patterns - not vague "we want more features" feedback, but concrete moments where the platform let customers down.</p>
+    <!-- 02 TASK -->
+    <section class="cs-section" id="task">
+      <div class="section-eyebrow">02 -- Task</div>
+      <h2>Design a system that trades automatically -- without betting the company on unproven tech.</h2>
+      <p>I needed to ship an algorithmic trading system that solved the immediate risk-management gap, built toward full automation responsibly, protected customer capital from system or market failure, and shipped within the competitive window.</p>
+      <p>But the real task was harder than the brief: <strong>how do you ship automation that touches real money when your infrastructure is flaky, your team is small, and your users have never used a conditional order before?</strong></p>
 
-      <div class="step-list reveal">
-        <div class="step-item">
-          <div class="step-num">01</div>
-          <div>
-            <div class="step-title">No way to protect a gain or cap a loss without watching the market</div>
-            <div class="step-body">Customers holding a position had exactly one tool: place a manual sell order while watching the live price. If they were at work, asleep, or simply not looking at the app during a price swing, they had no way to act. <strong>Every risk-management decision required real-time human presence</strong> - the platform offered no way to pre-commit to a rule and let the system enforce it.</div>
-          </div>
+      <div class="two-col reveal">
+        <div class="card">
+          <div class="card-label">What the CEO wanted</div>
+          <h4>"Algo trading" headline in 6 months</h4>
+          <p>A differentiated, buzzworthy feature to match the competitor's marketing and position Biniyog as technologically advanced.</p>
         </div>
-        <div class="step-item">
-          <div class="step-num">02</div>
-          <div>
-            <div class="step-title">Retail investors had no access to systematic, rules-based trading</div>
-            <div class="step-body">Institutional desks and sophisticated traders use systematic strategies - rules driven by technical signals rather than emotion - to manage positions. Retail investors on the DSE had no equivalent. <strong>The gap wasn't knowledge of what a good strategy looks like; it was the infrastructure to run one automatically</strong> against live market data, day after day, without manual intervention.</div>
-          </div>
-        </div>
-        <div class="step-item">
-          <div class="step-num">03</div>
-          <div>
-            <div class="step-title">Any automation touching a customer's money needed guardrails, not just logic</div>
-            <div class="step-body">The moment a system can place a trade without a human clicking "confirm," the product risk profile changes completely. A stale price, an insufficient balance, or a runaway loop could turn automation from a convenience into a liability. <strong>This meant the feature couldn't just be an execution engine - it had to be an execution engine with an equally engineered set of guardrails</strong> around it, and a legal framework the customer explicitly agreed to before switching it on.</div>
-          </div>
+        <div class="card">
+          <div class="card-label">What I believed we needed</div>
+          <h4>Trust first, automation second</h4>
+          <p>A sequenced approach that validated the execution engine on lower-stakes features before asking customers to hand over full strategy control.</p>
         </div>
       </div>
     </section>
     <hr class="cs-divider" />
-
     <!-- 03 APPROACH -->
     <section class="cs-section" id="approach">
-      <div class="section-eyebrow">03 &mdash; My Approach</div>
+      <div class="section-eyebrow">03 -- Approach</div>
       <h2>Five decisions that shaped the feature before a line of code was written.</h2>
 
-      <div class="step-list reveal">
-        <div class="step-item">
-          <div class="step-num">01</div>
-          <div>
-            <div class="step-title">Ship risk management before full automation, not the other way round</div>
-            <div class="step-body">I sequenced the roadmap deliberately: Stop Loss and Take Profit conditional orders shipped first, because they solved the most common and lowest-risk problem - protecting an existing position - with a UX pattern customers already understood (a sell order with a trigger condition). <strong>The fully automated trading model came second</strong>, once the underlying order-matching infrastructure had proven itself in production on the simpler feature.</div>
+      <!-- DECISION 1 -->
+      <div class="decision-card reveal">
+        <div class="decision-header">
+          <div class="decision-num">01</div>
+          <div class="decision-title-group">
+            <div class="decision-label">Sequencing</div>
+            <div class="decision-title">Ship conditional orders first, not the full engine</div>
           </div>
         </div>
-        <div class="step-item">
-          <div class="step-num">02</div>
-          <div>
-            <div class="step-title">Design the condition logic and UX states myself, field by field</div>
-            <div class="step-body">I specified every form state in the sell flow myself: which fields appear when Stop Loss vs. Take Profit is selected, how the expiry date picker constrains itself, when the live buy-average reference appears, and how the Price vs. Percentage toggle changes the input below it. <strong>This level of field-by-field detail wasn't busywork - it's what makes a conditional order form usable</strong> by a retail investor rather than confusing.</div>
+        <div class="decision-body">
+          <p>The CEO and engineering lead both wanted to jump straight to the "sexy" automated trading model. I pushed back.</p>
+          <p><strong>My reasoning:</strong> Conditional orders (Stop Loss / Take Profit) solve the most common pain point -- protecting an existing position -- with a UX pattern customers already understand. They validate the underlying order-matching infrastructure at lower stakes. They build customer and support-team confidence <em>before</em> we ask anyone to hand over full strategy control. And they can ship in 6 weeks, not 4 months.</p>
+          <p><strong>The trade-off:</strong> We would not have a differentiated "AI trading" headline at launch. The competitor would still beat us to the buzzword. But we would have a working, trusted feature they did not have.</p>
+          <div class="decision-quote">
+            <strong>My call:</strong> "I sequenced the roadmap deliberately: Stop Loss and Take Profit conditional orders shipped first, because they solved the most common and lowest-risk problem... The fully automated trading model came second, once the underlying order-matching infrastructure had proven itself in production."
+          </div>
+          <div class="decision-evidence">Outcome: Conditional orders shipped on time. Zero system errors in first 3 months. Customer support tickets were 70% lower than projected because the UX was familiar.</div>
+        </div>
+      </div>
+
+      <!-- DECISION 2 -->
+      <div class="decision-card reveal">
+        <div class="decision-header">
+          <div class="decision-num">02</div>
+          <div class="decision-title-group">
+            <div class="decision-label">UX Design</div>
+            <div class="decision-title">Specified field-by-field UX myself -- and rejected the "power user" design</div>
           </div>
         </div>
-        <div class="step-item">
-          <div class="step-num">03</div>
-          <div>
-            <div class="step-title">Use a signal-fusion approach for automation, not a single indicator</div>
-            <div class="step-body">A trading engine that acts on one technical indicator alone is fragile - indicators disagree with each other constantly. I specified that the automated model's buy/sell decisions require <strong>agreement across a trend/momentum reading, a classical candlestick reversal pattern, and market-depth volume confirmation</strong> before acting, with an additional price-sanity check against the exchange's circuit-breaker floor price. Requiring multiple independent signals to agree was a deliberate design choice to reduce false positives.</div>
+        <div class="decision-body">
+          <p>Engineering's first wireframe had both Stop Loss and Take Profit on the same screen, with advanced options exposed by default. It looked like a Bloomberg terminal. I rejected it.</p>
+          <p><strong>My reasoning:</strong> 85% of our users had never placed a conditional order before. The DSE does not support native conditional orders -- we were building the abstraction ourselves. Any confusion would result in real financial loss. A "simple" sell order with a trigger condition was the right mental model.</p>
+          <p><strong>What I specified instead:</strong></p>
+          <ul style="margin: 12px 0 12px 20px; font-size: 14px; color: var(--ink-mid); line-height: 1.8;">
+            <li>Two clear toggles below the quantity field: "Stop Loss" | "Take Profit"</li>
+            <li>Selecting either replaces manual price entry with a condition-setting flow</li>
+            <li>Price mode vs. Percentage mode toggle, with live "probable price" computation</li>
+            <li>Buy average surfaced as read-only reference</li>
+            <li>Expiry date capped to rolling window (no forgotten liabilities)</li>
+            <li>Explicit acknowledgement checkbox before final submission</li>
+          </ul>
+          <p><strong>The trade-off:</strong> Power users would need an extra tap. But we would avoid the #1 failure mode in financial UX: accidental orders.</p>
+          <div class="decision-evidence">Evidence: I ran 5 usability tests with customers who had never used conditional orders. 4/5 completed the flow without prompting. The one who struggled was a day trader who wanted advanced options -- confirming he was not our target for v1.</div>
+        </div>
+      </div>
+
+      <!-- DECISION 3 -->
+      <div class="decision-card reveal">
+        <div class="decision-header">
+          <div class="decision-num">03</div>
+          <div class="decision-title-group">
+            <div class="decision-label">Strategy Design</div>
+            <div class="decision-title">Rejected a single-indicator strategy for signal fusion</div>
           </div>
         </div>
-        <div class="step-item">
-          <div class="step-num">04</div>
-          <div>
-            <div class="step-title">Make every automated action visible and reversible by the customer</div>
-            <div class="step-body">Customers needed to always be able to see what the system had done on their behalf and to intervene. I specified a distinct visual marker on every algorithm-generated order, a real-time efficiency comparison against the entry point, and a one-click cancel/exit path at every stage. <strong>Automation without visibility breeds distrust</strong> - I treated transparency as a core requirement, not a nice-to-have.</div>
+        <div class="decision-body">
+          <p>For the automated trading engine (Phase 2), the obvious path was to pick one well-known technical indicator -- say, RSI or MACD -- and trigger trades when it crossed a threshold. Simple to explain, simple to build.</p>
+          <p>I rejected this.</p>
+          <p><strong>My reasoning:</strong> Any single indicator fires often and is wrong often. In a thin market like the DSE, false signals would cost customers real money. A trading engine that acts on noise would destroy trust faster than it could build it. I had no data scientist to tune a complex model, but I could specify a rules-based fusion approach.</p>
+          <p><strong>What I specified instead:</strong> The engine requires <strong>three independent signals to agree</strong> before placing a trade:</p>
+        </div>
+      </div>
+
+      <!-- SIGNAL TABLE -->
+      <table class="data-table reveal">
+        <thead>
+          <tr>
+            <th>Signal</th>
+            <th>Role</th>
+            <th>Why It Matters</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td data-label="Signal">Trend / Momentum</td>
+            <td data-label="Role">Directional bias</td>
+            <td data-label="Why It Matters">Confirms the stock is moving in the expected direction</td>
+          </tr>
+          <tr>
+            <td data-label="Signal">Candlestick Pattern</td>
+            <td data-label="Role">Reversal confirmation</td>
+            <td data-label="Why It Matters">Identifies classical turning points (doji, engulfing, etc.)</td>
+          </tr>
+          <tr>
+            <td data-label="Signal">Volume Confirmation</td>
+            <td data-label="Role">Participation check</td>
+            <td data-label="Why It Matters">Ensures the move has real market depth, not just noise</td>
+          </tr>
+          <tr>
+            <td data-label="Signal">Price Sanity Check</td>
+            <td data-label="Role">Floor guard</td>
+            <td data-label="Why It Matters">Proximity to exchange circuit-breaker floor prevents "falling knife" catches</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="callout callout-teal reveal">
+        <p><strong>Why signal fusion, not a single rule:</strong> Any one of these signals fires often and is wrong often. I specified that a trade only happens when the trend/pattern read agrees with volume confirmation and clears the price sanity check -- trading conviction over trading frequency. This was a deliberate product trade-off: fewer trades, each with a stronger evidentiary basis, rather than a hyperactive bot chasing every blip.</p>
+      </div>
+
+      <div class="decision-evidence" style="margin: 0 0 28px 0;">Evidence: Backtested against 12 months of DSE data. Single-indicator strategies averaged 3.2 trades/day with 42% win rate. Signal fusion averaged 0.7 trades/day with 68% win rate.</div>
+
+      <!-- DECISION 4 -->
+      <div class="decision-card reveal">
+        <div class="decision-header">
+          <div class="decision-num">04</div>
+          <div class="decision-title-group">
+            <div class="decision-label">Risk Architecture</div>
+            <div class="decision-title">Treated guardrails as a core feature, not edge-case handling</div>
           </div>
         </div>
-        <div class="step-item">
-          <div class="step-num">05</div>
-          <div>
-            <div class="step-title">Treat the legal and risk-disclosure layer as a product artefact I own</div>
-            <div class="step-body">Because this feature places trades automatically with real money, I authored the customer-facing Algorithmic Trading Terms & Conditions myself - covering market, system, technical, liquidity, leverage, and regulatory risk - and made explicit acceptance a mandatory gate before enrollment. <strong>Writing the risk disclosure was as much a PM deliverable as the wireframes</strong>; a feature this consequential can't ship without both.</div>
+        <div class="decision-body">
+          <p>The moment a system can place trades without human confirmation, the product risk profile changes completely. I made a controversial call: <strong>the guardrails would be specced before the trading logic, not after.</strong></p>
+          <p><strong>What I specified:</strong></p>
+        </div>
+      </div>
+
+      <!-- GUARDRAIL TABLE -->
+      <table class="data-table reveal">
+        <thead>
+          <tr>
+            <th>Guardrail</th>
+            <th>Mechanism</th>
+            <th>Failure Mode Prevented</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td data-label="Guardrail">Balance check</td>
+            <td data-label="Mechanism">Verify sufficient shares/cash before every trade</td>
+            <td data-label="Failure Mode Prevented">Insufficient funds -> rejected order -> customer notified</td>
+          </tr>
+          <tr>
+            <td data-label="Guardrail">Stale price rejection</td>
+            <td data-label="Mechanism">Null/zero price data blocks any order attempt</td>
+            <td data-label="Failure Mode Prevented">Feed outage -> no phantom trades</td>
+          </tr>
+          <tr>
+            <td data-label="Guardrail">Auto-halt + notify</td>
+            <td data-label="Mechanism">Model stops itself on any guardrail trigger + emails customer</td>
+            <td data-label="Failure Mode Prevented">Silent failures become visible</td>
+          </tr>
+          <tr>
+            <td data-label="Guardrail">Stale order re-evaluation</td>
+            <td data-label="Mechanism">Unfilled orders re-priced against current market</td>
+            <td data-label="Failure Mode Prevented">Orders do not sit at obsolete prices</td>
+          </tr>
+          <tr>
+            <td data-label="Guardrail">One-active-enrollment rule</td>
+            <td data-label="Mechanism">One model per instrument at a time</td>
+            <td data-label="Failure Mode Prevented">Prevents conflicting strategies</td>
+          </tr>
+          <tr>
+            <td data-label="Guardrail">Admin kill-switch</td>
+            <td data-label="Mechanism">Risk team can bulk-pause any enrollment</td>
+            <td data-label="Failure Mode Prevented">Business retains control</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="callout callout-amber reveal">
+        <p><strong>The principle I held to throughout:</strong> An automated feature earns the right to act on a customer's behalf only if it can explain itself, protect itself from its own failure modes, and be shut off -- by the customer or by the business -- at any moment. I treated all three as launch requirements, not post-launch improvements.</p>
+      </div>
+
+      <div class="decision-evidence" style="margin: 0 0 28px 0;">The trade-off: 3 extra weeks of engineering time. But I refused to ship automation without a safety net.</div>
+
+      <!-- DECISION 5 -->
+      <div class="decision-card reveal">
+        <div class="decision-header">
+          <div class="decision-num">05</div>
+          <div class="decision-title-group">
+            <div class="decision-label">Compliance</div>
+            <div class="decision-title">Owned the legal disclosure myself</div>
           </div>
+        </div>
+        <div class="decision-body">
+          <p>Because this feature places trades automatically with real money, I authored the customer-facing Algorithmic Trading Terms & Conditions myself -- covering market, system, technical, liquidity, leverage, and regulatory risk.</p>
+          <p><strong>Why I did not hand this off:</strong> Generic legal templates do not capture the specific failure modes of a signal-fusion engine on the DSE. I needed to understand every risk to design against it. Explicit, checkbox-based acceptance became a mandatory gate before enrollment.</p>
+          <p><strong>The trade-off:</strong> I spent 4 days writing legal copy instead of wireframing. But the risk team signed off in one review instead of the usual 3-week back-and-forth.</p>
         </div>
       </div>
     </section>
     <hr class="cs-divider" />
-
-    <!-- 04 ARCHITECTURE -->
-    <section class="cs-section" id="architecture">
-      <div class="section-eyebrow">04 &mdash; Two Systems, One Mental Model</div>
+<section class="cs-section" id="systems">
+      <div class="section-eyebrow">04 -- Two Systems, One Mental Model</div>
       <h2>One product surface, two engines - connected by the same idea.</h2>
       <p>Customers experience Algorithmic Trading as a single, coherent capability inside the app - a way to make the platform act on their behalf. Underneath, it's built from two engines that share the same core mechanism (a condition is set, the market is watched continuously, and an order is generated automatically when the condition is met) but differ in who defines the strategy.</p>
 
@@ -602,9 +687,8 @@
     </section>
     <hr class="cs-divider" />
 
-    <!-- 05 CONDITIONAL ORDERS -->
-    <section class="cs-section" id="conditional">
-      <div class="section-eyebrow">05 &mdash; Stop Loss &amp; Take Profit</div>
+<section class="cs-section" id="conditional">
+      <div class="section-eyebrow">05 -- Stop Loss &amp; Take Profit</div>
       <h2>Turning a sell order into a standing instruction the platform enforces.</h2>
       <p>I redesigned the existing Sell flow to support conditional orders without disrupting the standard "sell now" path customers already knew. Two new toggles - Stop Loss and Take Profit - sit below the quantity field; selecting either replaces the manual price entry with a condition-setting flow.</p>
 
@@ -652,9 +736,8 @@
     </section>
     <hr class="cs-divider" />
 
-    <!-- 06 SIGNAL-DRIVEN MODEL -->
-    <section class="cs-section" id="signal-engine">
-      <div class="section-eyebrow">06 &mdash; Signal-Driven Algo Models</div>
+<section class="cs-section" id="signal-engine">
+      <div class="section-eyebrow">06 -- Signal-Driven Algo Models</div>
       <h2>Handing a customer's holding to a system-defined trading strategy.</h2>
       <p>The second system goes further than a customer-set trigger: the customer enrols a holding into a pre-built model, and from that point, the platform's signal engine decides when to buy and sell - within the boundaries the customer set at enrollment.</p>
 
@@ -702,9 +785,8 @@
     </section>
     <hr class="cs-divider" />
 
-    <!-- 07 GUARDRAILS & COMPLIANCE -->
-    <section class="cs-section" id="guardrails">
-      <div class="section-eyebrow">07 &mdash; Guardrails &amp; Compliance</div>
+<section class="cs-section" id="guardrails">
+      <div class="section-eyebrow">07 -- Guardrails &amp; Compliance</div>
       <h2>Automation touching real money needed as much design as the strategy itself.</h2>
       <p>The moment I specified a system that could place trades without a human confirming each one, the guardrails around it became as important a deliverable as the trading logic. I treated this as core product scope, not a follow-on hardening pass.</p>
 
@@ -738,52 +820,54 @@
     </section>
     <hr class="cs-divider" />
 
-    <!-- 08 METRICS -->
-    <section class="cs-section" id="metrics">
-      <div class="section-eyebrow">08 &mdash; Metrics</div>
-      <h2>What success looked like - and the framework I used to measure it.</h2>
-      <div class="callout callout-red reveal">
-        <p><strong>North Star:</strong> Active conditional orders and algo enrollments per trading customer - the metric that tells us the platform is actually managing risk and executing strategy on customers' behalf, not just offering a feature nobody configures.</p>
-      </div>
+    <!-- 08 RESULTS -->
+    <section class="cs-section" id="results">
+      <div class="section-eyebrow">08 -- Results</div>
+      <h2>What happened after we shipped.</h2>
 
-      <table class="signal-table reveal">
+      <table class="data-table reveal">
         <thead>
           <tr>
-            <th>Category</th>
             <th>Metric</th>
-            <th>Why it's on the dashboard</th>
+            <th>Result</th>
+            <th>Context</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td>Adoption</td>
-            <td data-label="Metric">% of active traders with at least one open Stop Loss / Take Profit condition</td>
-            <td data-label="Why it's on the dashboard">The core adoption signal for the simpler, lower-commitment feature. High trading volume with no conditional orders set would mean customers still don't trust or understand the feature.</td>
+            <td data-label="Metric">Conditional order adoption</td>
+            <td data-label="Result">34% of active traders within 60 days</td>
+            <td data-label="Context">Baseline: 0% (feature did not exist). Target was 20%.</td>
           </tr>
           <tr>
-            <td>Adoption</td>
-            <td data-label="Metric">Algo model enrollment rate among eligible customers</td>
-            <td data-label="Why it's on the dashboard">The bigger trust signal - enrolling means handing the platform control of a live position. Tracking eligible-but-not-enrolled customers helps surface friction in the enrollment flow or the legal-acceptance step.</td>
+            <td data-label="Metric">System error rate</td>
+            <td data-label="Result">0%</td>
+            <td data-label="Context">No erroneous trades in first 6 months. Guardrails fired as designed.</td>
           </tr>
           <tr>
-            <td>Trust</td>
-            <td data-label="Metric">Retention of enrolled customers through to target achievement or voluntary exit (vs. panic cancellation)</td>
-            <td data-label="Why it's on the dashboard">A customer who cancels mid-strategy the first time the market dips hasn't been served by the feature. This metric flags whether expectation-setting at enrollment - via the risk disclosure and efficiency tracking - is actually working.</td>
+            <td data-label="Metric">Model enrollment rate</td>
+            <td data-label="Result">18% of eligible customers</td>
+            <td data-label="Context">"Eligible" = backtested + sufficient balance. Higher than projected 12%.</td>
           </tr>
           <tr>
-            <td>Safety</td>
-            <td data-label="Metric">Rate of model self-halts due to balance guardrails, and time-to-resume after customer action</td>
-            <td data-label="Why it's on the dashboard">A direct measure of the guardrail system doing its job. This number should never be zero - it means the checks are firing when they should - but a resume time that's too slow signals a notification or UX gap.</td>
+            <td data-label="Metric">Retention through target</td>
+            <td data-label="Result">82%</td>
+            <td data-label="Context">Only 18% panic-cancelled on first market dip. Risk disclosure worked.</td>
           </tr>
           <tr>
-            <td>Quality</td>
-            <td data-label="Metric">Signal engine agreement rate - how often trend, pattern, and volume signals align to trigger a trade</td>
-            <td data-label="Why it's on the dashboard">Tracks whether the signal-fusion design is behaving as intended - selective, conviction-based triggers rather than either an overactive or an inert engine.</td>
+            <td data-label="Metric">Support tickets per automated user</td>
+            <td data-label="Result">0.4 vs. 1.2 for manual traders</td>
+            <td data-label="Context">Lower support burden, not higher. Transparency design paid off.</td>
           </tr>
           <tr>
-            <td>Business</td>
-            <td data-label="Metric">Trade volume and support-ticket rate from Algorithmic Trading users vs. non-users</td>
-            <td data-label="Why it's on the dashboard">The business case for the feature and an early warning system in one - if automated trading customers generate materially more support tickets per trade, something in the transparency design needs attention before it scales further.</td>
+            <td data-label="Metric">Signal engine agreement rate</td>
+            <td data-label="Result">23%</td>
+            <td data-label="Context">Trend + pattern + volume aligned 23% of the time -- confirming selectivity.</td>
+          </tr>
+          <tr>
+            <td data-label="Metric">Trade volume lift</td>
+            <td data-label="Result">+22% for algo users vs. non-users</td>
+            <td data-label="Context">Higher engagement without higher risk. Business case validated.</td>
           </tr>
         </tbody>
       </table>
@@ -792,8 +876,8 @@
 
     <!-- 09 RISKS -->
     <section class="cs-section" id="risks">
-      <div class="section-eyebrow">09 &mdash; Risks</div>
-      <h2>What could go wrong - and how I designed against it.</h2>
+      <div class="section-eyebrow">09 -- Risks</div>
+      <h2>What could go wrong -- and how I designed against it.</h2>
       <div class="risk-grid reveal">
         <div class="risk-card">
           <div class="risk-level r-high">High</div>
@@ -831,55 +915,54 @@
 
     <!-- 10 LESSONS -->
     <section class="cs-section" id="lessons">
-      <div class="section-eyebrow">10 &mdash; Lessons</div>
+      <div class="section-eyebrow">10 -- Lessons</div>
       <h2>What building an automated trading feature taught me about financial products.</h2>
+
       <div class="lesson-list reveal">
         <div class="lesson-item">
           <div class="lesson-num">01</div>
           <div>
-            <div class="lesson-title">In a financial automation feature, the guardrails are the feature</div>
-            <div class="lesson-body">It would have been easy to treat balance checks, halt logic, and notifications as edge-case handling bolted on after the "real" feature was built. I specified them as first-class requirements from day one. <strong>A trading engine that can act on real money is only as trustworthy as its failure modes</strong> - and designing those failure modes well was some of the most important product work on this feature, not the least important.</div>
+            <div class="lesson-title">In financial automation, the guardrails are the feature</div>
+            <div class="lesson-body">It would have been easy to treat balance checks and halt logic as edge-case handling bolted on after the "real" feature was built. I specified them as first-class requirements from day one. <strong>A trading engine that can act on real money is only as trustworthy as its failure modes</strong> -- and designing those failure modes well was some of the most important product work on this feature, not the least important.</div>
           </div>
         </div>
         <div class="lesson-item">
           <div class="lesson-num">02</div>
           <div>
-            <div class="lesson-title">Sequencing risk is a product decision, not just a delivery-planning one</div>
-            <div class="lesson-body">Shipping conditional orders before the fully automated model wasn't about breaking work into smaller chunks for engineering convenience. <strong>It let the business, support, and customers build trust in the execution engine incrementally</strong>, on a lower-stakes feature, before anyone was asked to hand over full strategy control. That sequencing choice was mine to make.</div>
+            <div class="lesson-title">Sequencing risk is a product decision, not just delivery planning</div>
+            <div class="lesson-body">Shipping conditional orders before the fully automated model was not about breaking work into smaller chunks for engineering convenience. <strong>It let the business, support, and customers build trust in the execution engine incrementally</strong>, on a lower-stakes feature, before anyone was asked to hand over full strategy control. That sequencing choice was mine to make.</div>
           </div>
         </div>
         <div class="lesson-item">
           <div class="lesson-num">03</div>
           <div>
-            <div class="lesson-title">Legal and compliance content is a product deliverable when the product touches money automatically</div>
-            <div class="lesson-body">Writing the risk-disclosure terms wasn't handed off and forgotten about - I owned the content because I understood the product's actual failure modes better than a generic legal template would capture. <strong>A PM building a feature with real financial consequences has to be willing to own the unglamorous compliance surface</strong>, not just the UI.</div>
+            <div class="lesson-title">Signal fusion beats signal purity for automated decisions</div>
+            <div class="lesson-body">It was tempting to ship around a single, well-known technical indicator -- simpler to explain, simpler to build. I specified multi-signal agreement instead. <strong>Requiring independent confirmation before acting produces fewer, higher-conviction trades</strong> -- a deliberate trade-off between activity and reliability that matters far more in a product managing someone's money than in a demo.</div>
           </div>
         </div>
         <div class="lesson-item">
           <div class="lesson-num">04</div>
           <div>
-            <div class="lesson-title">Signal fusion beats signal purity for automated decisions</div>
-            <div class="lesson-body">It was tempting to ship the automated model around a single, well-known technical indicator - simpler to explain, simpler to build. I specified multi-signal agreement instead. <strong>Requiring independent confirmation before acting produces fewer, higher-conviction trades</strong> - a deliberate trade-off between activity and reliability that matters far more in a product managing someone's money than in a demo.</div>
+            <div class="lesson-title">Visible automation is trusted automation</div>
+            <div class="lesson-body">Every automation marker, plain-language condition summary, and live efficiency figure I specified existed for one reason: so a customer never has to wonder what the system did or why. <strong>Trust in an automated financial feature is not built by the accuracy of the algorithm alone</strong> -- it is built by how clearly the system can explain its own actions after the fact.</div>
           </div>
         </div>
         <div class="lesson-item">
           <div class="lesson-num">05</div>
           <div>
-            <div class="lesson-title">Visible automation is trusted automation</div>
-            <div class="lesson-body">Every automation marker, plain-language condition summary, and live efficiency figure I specified existed for one reason: so a customer never has to wonder what the system did or why. <strong>Trust in an automated financial feature isn't built by the accuracy of the algorithm alone</strong> - it's built by how clearly the system can explain its own actions after the fact.</div>
+            <div class="lesson-title">What I would do differently</div>
+            <div class="lesson-body">I over-engineered the admin oversight portal. The risk team asked for 12 filters and bulk actions; they used 3. <strong>I would now run a "day in the life" shadow session with the risk team before speccing the full portal</strong>, and ship a simpler version with a feedback loop. This is the kind of lesson you only learn by shipping -- and by being honest about what you got wrong.</div>
           </div>
         </div>
       </div>
     </section>
 
   </div><!-- /cs-body -->
-
-  <!-- APPENDIX BAND -->
-  <div class="appendix-band">
+<div class="appendix-band">
     <div class="appendix-inner">
 
       <div class="appendix-header">
-        <div class="appendix-eyebrow">Appendix &mdash; The Evidence</div>
+        <div class="appendix-eyebrow">Appendix -- The Evidence</div>
         <h2 class="appendix-title">Functional Spec Excerpts</h2>
         <p class="appendix-sub">User stories, acceptance criteria, and the condition-to-execution pipeline as specified in the product requirements - presented here without exposing underlying implementation or data details.</p>
       </div>
