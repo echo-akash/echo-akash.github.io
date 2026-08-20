@@ -1,0 +1,1330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-62DWPTYD6F"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-62DWPTYD6F');
+  </script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27><rect width=%2732%27 height=%2732%27 rx=%274%27 fill=%27%230e0e0e%27/><text x=%2716%27 y=%2722%27 font-family=%27Georgia,serif%27 font-size=%2714%27 font-weight=%27600%27 fill=%27%23f7f5f0%27 text-anchor=%27middle%27>AP</text></svg>" />
+  <title>Split Pay - Pathao Food x Pathao Pay - Akash Poddar</title>
+  <meta name="description" content="How I spec'd a cross-product split-payment feature between Pathao Food and Pathao Pay - proportional bill splitting, escrow-backed settlement, and instant rider payout - as sole PM on the Food side. Fully specified and designed; pending development." />
+  <link rel="canonical" href="https://echo-akash.github.io/split-pay.html" />
+  <meta property="og:title" content="Split Pay - Pathao Food x Pathao Pay - Akash Poddar" />
+  <meta property="og:description" content="Designing a proportional split-payment feature that spans two products and two wallets, and decoupling rider payout from friend-approval outcomes." />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://echo-akash.github.io/split-pay.html" />
+  <meta property="og:image" content="https://echo-akash.github.io/og-image.png" />
+  <meta name="author" content="Akash Poddar" />
+  <meta name="robots" content="index, follow" />
+  <meta name="theme-color" content="#0e0e0e" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Pathao Split Pay - Proportional Bill Splitting & Cross-Product Settlement (Food x Pay)",
+    "description": "How Akash Poddar designed Split Pay for Pathao Food and Pathao Pay end to end - proportional item-based bill splitting, escrow-backed settlement, and rider payout decoupled from friend-approval outcomes - as sole PM on the Food side of a cross-product feature currently in design and pending development.",
+    "author": { "@type": "Person", "name": "Akash Poddar", "url": "https://echo-akash.github.io/" },
+    "publisher": { "@type": "Person", "name": "Akash Poddar" }
+  }
+  </script>
+  <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,300;1,9..144,500&family=DM+Sans:wght@300;400;500&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,300;1,9..144,500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" /></noscript>
+  <style>
+    :root {
+      --ink: #0e0e0e;
+      --ink-mid: #444;
+      --ink-muted: #696969;
+      --ink-faint: #bbb;
+      --surface: #f7f5f0;
+      --white: #ffffff;
+      --accent: #c2410c;
+      --accent-light: #fdf1e7;
+      --accent-dark: #9a3412;
+      --accent2: #0f766e;
+      --accent2-light: #e6f6f4;
+      --green: #166534;
+      --green-light: #dcfce7;
+      --amber: #b45309;
+      --amber-light: #fef3e2;
+      --gray: #57534e;
+      --gray-light: #f0efec;
+      --line: rgba(0,0,0,0.08);
+      --serif: 'Fraunces', Georgia, serif;
+      --sans: 'DM Sans', system-ui, sans-serif;
+      --radius: 10px;
+      --ease: cubic-bezier(0.16, 1, 0.3, 1);
+      --wide-w: 1000px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+    }
+    body { font-family: var(--sans); background: var(--surface); color: var(--ink); font-size: 15px; line-height: 1.6; overflow-x: hidden; }
+
+    /* NAV */
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 0 40px; height: 56px; background: rgba(247,245,240,0.88); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); }
+    .nav-logo { font-family: var(--serif); font-size: 16px; font-weight: 600; color: var(--ink); text-decoration: none; letter-spacing: -0.02em; }
+    .nav-links { display: flex; gap: 32px; list-style: none; }
+    .nav-links a { font-size: 13px; color: var(--ink-mid); text-decoration: none; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--accent); }
+    .nav-cta { font-size: 13px; padding: 7px 18px; background: var(--ink); color: var(--white); border-radius: 20px; text-decoration: none; transition: background 0.2s; }
+    .nav-cta:hover { background: var(--accent); }
+
+    /* HERO */
+    .cs-hero { background: var(--ink); padding: 120px 40px 80px; position: relative; overflow: hidden; }
+    .cs-hero-inner { max-width: var(--wide-w); margin: 0 auto; position: relative; z-index: 1; }
+    .cs-hero-grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px); background-size: 60px 60px; }
+    .cs-hero-shimmer { position: absolute; inset: 0; background: radial-gradient(ellipse 60% 60% at 70% 50%, rgba(194,65,12,0.2) 0%, transparent 70%); }
+    .cs-hero-bar { height: 4px; background: linear-gradient(90deg, #c2410c, #0f766e); border-radius: 2px; width: 64px; margin-bottom: 28px; }
+    .cs-meta-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 24px; }
+    .cs-tag { font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; padding: 5px 14px; border-radius: 20px; }
+    .tag-red    { background: rgba(194,65,12,0.22); color: #fdba8c; border: 1px solid rgba(194,65,12,0.35); }
+    .tag-teal   { background: rgba(15,118,110,0.2); color: #5eead4; border: 1px solid rgba(15,118,110,0.32); }
+    .tag-green  { background: rgba(22,101,52,0.2); color: #6ee7b7; border: 1px solid rgba(22,101,52,0.28); }
+    .tag-gray   { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.45); border: 1px solid rgba(255,255,255,0.1); }
+    .cs-hero-title { font-family: var(--serif); font-size: clamp(34px, 5.5vw, 60px); font-weight: 600; letter-spacing: -0.03em; line-height: 0.95; color: #fff; margin-bottom: 20px; }
+    .cs-hero-title em { font-style: italic; font-weight: 300; color: rgba(255,255,255,0.38); }
+    .cs-hero-sub { font-size: 17px; font-weight: 300; color: rgba(255,255,255,0.5); max-width: 660px; line-height: 1.7; margin-bottom: 48px; }
+    .cs-hero-sub strong { color: rgba(255,255,255,0.8); font-weight: 400; }
+    .cs-kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 40px; }
+    .cs-kpi { padding-right: 32px; border-right: 1px solid rgba(255,255,255,0.08); }
+    .cs-kpi:last-child { border-right: none; }
+    .cs-kpi-num { font-family: var(--serif); font-size: 32px; font-weight: 600; letter-spacing: -0.02em; color: #fff; line-height: 1; margin-bottom: 6px; }
+    .cs-kpi-num span { font-size: 20px; font-style: italic; font-weight: 300; color: rgba(255,255,255,0.35); }
+    .cs-kpi-label { font-size: 11px; color: rgba(255,255,255,0.38); line-height: 1.4; max-width: 150px; }
+    .cs-kpi-note { margin-top: 24px; font-size: 11.5px; color: rgba(255,255,255,0.32); font-weight: 300; line-height: 1.6; max-width: 640px; }
+
+    /* TOC */
+    .toc-bar { position: sticky; top: 56px; z-index: 90; background: var(--white); border-bottom: 1px solid var(--line); overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+    .toc-bar::-webkit-scrollbar { display: none; }
+    .toc-inner { max-width: var(--wide-w); margin: 0 auto; display: flex; padding: 0 40px; }
+    .toc-item { font-size: 12px; color: var(--ink-muted); text-decoration: none; padding: 14px 18px; white-space: nowrap; border-bottom: 2px solid transparent; transition: color 0.2s, border-color 0.2s; display: flex; align-items: center; gap: 6px; }
+    .toc-item:hover { color: var(--accent); border-bottom-color: var(--accent); }
+    .toc-item.active { color: var(--accent); border-bottom-color: var(--accent); }
+    .toc-num { font-size: 10px; color: var(--ink-faint); }
+
+    /* BODY */
+    .cs-body { max-width: var(--wide-w); margin: 0 auto; padding: 0 40px; }
+    .cs-section { padding: 72px 0 0; content-visibility: auto; contain-intrinsic-size: 0 600px; }
+    .cs-section:last-of-type { padding-bottom: 80px; }
+    .section-eyebrow { font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+    .section-eyebrow::after { content: ''; flex: 0 0 32px; height: 1px; background: var(--accent); opacity: 0.4; }
+    .cs-section h2 { font-family: var(--serif); font-size: 32px; font-weight: 600; letter-spacing: -0.02em; color: var(--ink); line-height: 1.15; margin-bottom: 28px; }
+    .cs-section h3 { font-family: var(--serif); font-size: 20px; font-weight: 600; letter-spacing: -0.01em; color: var(--ink); margin: 40px 0 16px; }
+    .cs-section h4 { font-family: var(--serif); font-size: 17px; font-weight: 600; color: var(--ink); margin: 28px 0 12px; }
+    .cs-section p { font-size: 15px; color: var(--ink-mid); line-height: 1.8; font-weight: 300; margin-bottom: 16px; }
+    .cs-section p:last-child { margin-bottom: 0; }
+    .cs-section p strong { color: var(--ink); font-weight: 500; }
+    .cs-divider { border: none; border-top: 1px solid var(--line); margin: 56px 0 0; }
+
+    /* CALLOUT */
+    .callout { border-left: 3px solid var(--accent); border-radius: 0 var(--radius) var(--radius) 0; padding: 20px 24px; margin: 28px 0; }
+    .callout-red   { background: var(--accent-light); }
+    .callout-red p strong { color: var(--accent-dark); }
+    .callout-teal { background: var(--accent2-light); border-left-color: var(--accent2); }
+    .callout-teal p strong { color: var(--accent2); }
+    .callout-green  { background: var(--green-light); border-left-color: var(--green); }
+    .callout-green p strong { color: var(--green); }
+    .callout-amber  { background: var(--amber-light); border-left-color: var(--amber); }
+    .callout-amber p strong { color: var(--amber); }
+    .callout-gray { background: var(--gray-light); border-left-color: var(--ink-faint); }
+    .callout-gray p strong { color: var(--ink); }
+    .callout p { margin-bottom: 0; color: var(--ink); font-weight: 400; font-size: 14px; line-height: 1.75; }
+
+    /* DECISION CARD */
+    .decision-card { background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); padding: 32px; margin: 28px 0; position: relative; }
+    .decision-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, #c2410c, #ea580c); border-radius: var(--radius) var(--radius) 0 0; }
+    .decision-header { display: flex; align-items: flex-start; gap: 16px; margin-bottom: 20px; }
+    .decision-num { font-family: var(--serif); font-size: 28px; font-weight: 600; color: var(--accent); line-height: 1; }
+    .decision-title-group { flex: 1; }
+    .decision-label { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 4px; }
+    .decision-title { font-family: var(--serif); font-size: 20px; font-weight: 600; color: var(--ink); line-height: 1.2; }
+    .decision-body { font-size: 14px; color: var(--ink-mid); line-height: 1.8; font-weight: 300; }
+    .decision-body strong { color: var(--ink); font-weight: 500; }
+    .decision-quote { margin-top: 20px; padding: 16px 20px; background: var(--surface); border-radius: var(--radius); border-left: 2px solid var(--accent); font-style: italic; font-size: 13.5px; color: var(--ink-mid); line-height: 1.7; }
+    .decision-quote strong { color: var(--ink); font-weight: 500; font-style: normal; }
+    .decision-evidence { margin-top: 16px; display: flex; align-items: flex-start; gap: 8px; font-size: 12px; color: var(--accent); font-weight: 500; }
+    .decision-evidence::before { content: '->'; flex-shrink: 0; }
+
+    /* TABLE */
+    .data-table { width: 100%; border-collapse: collapse; margin: 28px 0; font-size: 13.5px; }
+    .data-table th { text-align: left; font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-muted); padding: 12px 16px; border-bottom: 2px solid var(--line); }
+    .data-table td { padding: 14px 16px; border-bottom: 1px solid var(--line); color: var(--ink-mid); vertical-align: top; line-height: 1.6; }
+    .data-table td:first-child { font-weight: 500; color: var(--ink); }
+    .data-table tr:last-child td { border-bottom: none; }
+    .data-table tr:hover td { background: rgba(194,65,12,0.03); }
+    .data-table tr.total-row td { font-weight: 600; color: var(--ink); background: var(--surface); }
+
+    /* TWO / THREE COL */
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 28px 0; }
+    .two-col-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 18px; margin: 28px 0; }
+
+    /* CARD */
+    .card { background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); padding: 24px; }
+    .card-label { font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; }
+    .card h4 { font-family: var(--serif); font-size: 17px; font-weight: 600; color: var(--ink); margin-bottom: 8px; line-height: 1.3; }
+    .card p { font-size: 13.5px; color: var(--ink-mid); line-height: 1.7; margin-bottom: 0; }
+
+    /* LAYER CARDS */
+    .layer-stack { display: flex; flex-direction: column; gap: 16px; margin: 28px 0; }
+    .layer-card { background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); padding: 28px; position: relative; overflow: hidden; }
+    .layer-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; }
+    .layer-manual::before { background: linear-gradient(90deg, #c2410c, #ea580c); }
+    .layer-auto::before  { background: linear-gradient(90deg, #0f766e, #14b8a6); }
+    .layer-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 16px; }
+    .layer-num { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 4px; }
+    .layer-title { font-family: var(--serif); font-size: 21px; font-weight: 600; color: var(--ink); line-height: 1.1; margin-bottom: 6px; }
+    .layer-freq { font-size: 12px; font-weight: 500; color: var(--ink-muted); }
+    .layer-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+    .layer-tag { font-size: 11px; padding: 3px 10px; border-radius: 20px; font-weight: 500; }
+    .lt-red   { background: var(--accent-light); color: var(--accent-dark); }
+    .lt-teal { background: var(--accent2-light); color: var(--accent2); }
+    .lt-green  { background: var(--green-light); color: var(--green); }
+    .layer-body { font-size: 14px; color: var(--ink-mid); line-height: 1.8; font-weight: 300; }
+    .layer-body strong { color: var(--ink); font-weight: 500; }
+
+    /* STATUS / LIVE BADGE */
+    .ai-badge { display: inline-flex; align-items: center; gap: 7px; background: linear-gradient(135deg, rgba(194,65,12,0.08), rgba(15,118,110,0.12)); border: 1px solid rgba(15,118,110,0.25); border-radius: 20px; padding: 6px 16px; font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent2); margin-bottom: 14px; }
+    .ai-badge-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent2); flex-shrink: 0; animation: aipulse 2s ease-in-out infinite; }
+    @keyframes aipulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+    @media (prefers-reduced-motion: reduce) { .ai-badge-dot { animation: none; } }
+
+    /* PHONE MOCKUPS / PLACEHOLDERS */
+    .phone-row { display: flex; gap: 28px; margin: 28px 0; flex-wrap: wrap; justify-content: center; }
+    .phone-col { display: flex; flex-direction: column; align-items: center; width: 220px; }
+    .phone-frame { width: 100%; background: #0e0e0e; border-radius: 26px; padding: 8px; box-shadow: 0 24px 48px rgba(0,0,0,0.16); }
+    .phone-notch { width: 60px; height: 5px; border-radius: 3px; background: rgba(255,255,255,0.18); margin: 0 auto 6px; }
+    /*.phone-screen { width: 100%; display: block; border-radius: 18px; overflow: hidden; }*/
+    .phone-screen {
+      width: 100%;
+      aspect-ratio: 9 / 19.5;
+      object-fit: contain;          /* shows full image, adds padding instead of cropping */
+      background: #0e0e0e;          /* matches phone-frame bg, so padding is invisible */
+      display: block;
+      border-radius: 18px;
+    }
+    .placeholder-screen { aspect-ratio: 9 / 19.5; border-radius: 18px; background: repeating-linear-gradient(135deg, rgba(255,255,255,0.05) 0 10px, rgba(255,255,255,0.02) 10px 20px), linear-gradient(160deg, #232323, #141414); border: 1px dashed rgba(255,255,255,0.18); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 20px; gap: 10px; }
+    .placeholder-icon { font-size: 22px; opacity: 0.5; }
+    .placeholder-text { font-family: var(--sans); font-size: 11.5px; font-weight: 500; color: rgba(255,255,255,0.55); line-height: 1.5; }
+    .placeholder-text span { display: block; margin-top: 6px; font-size: 10px; font-weight: 400; color: rgba(255,255,255,0.32); text-transform: uppercase; letter-spacing: 0.06em; }
+    .phone-caption { text-align: center; font-size: 12px; color: var(--ink-muted); margin-top: 12px; line-height: 1.5; max-width: 210px; }
+    .phone-caption strong { color: var(--ink); font-weight: 500; }
+    .figma-link { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: var(--accent2); text-decoration: none; font-weight: 500; margin-top: 8px; }
+    .figma-link:hover { text-decoration: underline; }
+    .figma-link-wrap { text-align: center; margin-top: 4px; }
+
+    /* INDICATOR GRID */
+    .ind-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 28px 0; }
+    .ind-card { background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px 12px; text-align: center; }
+    .ind-icon { font-size: 22px; margin-bottom: 8px; line-height: 1; }
+    .ind-pct { font-family: var(--serif); font-size: 15px; font-weight: 600; color: var(--accent2); line-height: 1.2; margin-bottom: 4px; }
+    .ind-name { font-size: 11px; font-weight: 500; color: var(--ink); margin-bottom: 4px; }
+    .ind-examples { font-size: 10px; color: var(--ink-muted); line-height: 1.4; }
+
+    /* SOURCE / GUARDRAIL GRID */
+    .source-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 28px 0; }
+    .source-card { background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); padding: 24px; }
+    .source-icon { font-size: 26px; margin-bottom: 10px; line-height: 1; }
+    .source-title { font-family: var(--serif); font-size: 16px; font-weight: 600; color: var(--ink); margin-bottom: 8px; }
+    .source-body { font-size: 13px; color: var(--ink-mid); line-height: 1.65; }
+    .source-tag { display: inline-block; margin-top: 12px; font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; padding: 4px 10px; border-radius: 20px; background: var(--accent-light); color: var(--accent-dark); }
+
+    /* RISK GRID */
+    .risk-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 28px 0; }
+    .risk-card { background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); padding: 22px; }
+    .risk-level { font-size: 10px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; padding: 3px 10px; border-radius: 20px; display: inline-block; margin-bottom: 10px; }
+    .r-high { background: #faeae7; color: #8c3320; }
+    .r-med  { background: var(--amber-light); color: var(--amber); }
+    .r-low  { background: var(--green-light); color: var(--green); }
+    .risk-title { font-size: 14px; font-weight: 500; color: var(--ink); margin-bottom: 8px; line-height: 1.35; }
+    .risk-body { font-size: 13px; color: var(--ink-mid); line-height: 1.7; }
+
+    /* LESSON LIST */
+    .lesson-list { display: flex; flex-direction: column; margin: 28px 0; }
+    .lesson-item { display: grid; grid-template-columns: 48px 1fr; gap: 0 20px; padding: 28px 0; border-top: 1px solid var(--line); }
+    .lesson-item:last-child { border-bottom: 1px solid var(--line); }
+    .lesson-num { font-family: var(--serif); font-size: 24px; font-weight: 600; color: var(--accent); opacity: 0.4; line-height: 1; padding-top: 4px; }
+    .lesson-title { font-family: var(--serif); font-size: 18px; font-weight: 600; color: var(--ink); margin-bottom: 8px; line-height: 1.2; }
+    .lesson-body { font-size: 14px; color: var(--ink-mid); line-height: 1.75; font-weight: 300; }
+    .lesson-body strong { color: var(--ink); font-weight: 500; }
+
+    /* STEP LIST */
+    .step-list { display: flex; flex-direction: column; margin: 28px 0; }
+    .step-item { display: grid; grid-template-columns: 56px 1fr; gap: 0 20px; padding: 28px 0; border-top: 1px solid var(--line); align-items: start; }
+    .step-item:last-child { border-bottom: 1px solid var(--line); }
+    .step-num { font-family: var(--serif); font-size: 28px; font-weight: 600; color: var(--accent); letter-spacing: -0.02em; line-height: 1; padding-top: 4px; }
+    .step-title { font-family: var(--serif); font-size: 18px; font-weight: 600; color: var(--ink); margin-bottom: 8px; line-height: 1.2; }
+    .step-body { font-size: 14px; color: var(--ink-mid); line-height: 1.75; font-weight: 300; }
+    .step-body strong { color: var(--ink); font-weight: 500; }
+    .step-owner { display: inline-block; margin-top: 8px; font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; padding: 3px 10px; border-radius: 20px; background: var(--gray-light); color: var(--gray); }
+
+    /* APPENDIX BAND */
+    .appendix-band { background: #111; border-top: 1px solid rgba(255,255,255,0.06); padding: 80px 40px; }
+    .appendix-inner { max-width: var(--wide-w); margin: 0 auto; }
+    .appendix-header { margin-bottom: 56px; }
+    .appendix-eyebrow { font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); margin-bottom: 12px; }
+    .appendix-title { font-family: var(--serif); font-size: 32px; font-weight: 600; letter-spacing: -0.02em; color: #fff; margin-bottom: 12px; }
+    .appendix-sub { font-size: 15px; color: rgba(255,255,255,0.4); font-weight: 300; max-width: 580px; line-height: 1.7; }
+    .appendix-block { margin-bottom: 56px; }
+    .appendix-block:last-child { margin-bottom: 0; }
+    .appendix-block-label { font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.3); margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .appendix-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .appendix-table th { text-align: left; font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,255,255,0.3); padding: 10px 16px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+    .appendix-table td { padding: 14px 16px; border-bottom: 1px solid rgba(255,255,255,0.06); color: rgba(255,255,255,0.55); vertical-align: top; line-height: 1.65; }
+    .appendix-table td:first-child { color: rgba(255,255,255,0.25); font-size: 11px; white-space: nowrap; font-weight: 500; letter-spacing: 0.04em; }
+    .appendix-table tr:last-child td { border-bottom: none; }
+    .appendix-table tr:hover td { background: rgba(255,255,255,0.02); }
+    .appendix-flow-intro { font-size: 14px; color: rgba(255,255,255,0.4); margin-bottom: 28px; font-weight: 300; }
+    .flow-steps { display: flex; flex-direction: column; }
+    .flow-arrow { text-align: center; color: rgba(255,255,255,0.15); font-size: 18px; padding: 4px 0 4px 24px; }
+    .flow-step { display: grid; grid-template-columns: 40px 1fr; gap: 0 16px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); border-radius: var(--radius); padding: 18px 20px; align-items: start; }
+    .flow-step-final { background: rgba(194,65,12,0.1); border-color: rgba(194,65,12,0.3); }
+    .flow-step-num { font-family: var(--serif); font-size: 18px; font-weight: 600; color: var(--accent); line-height: 1; padding-top: 2px; }
+    .flow-step-final .flow-step-num { font-size: 20px; }
+    .flow-step-title { font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.7); margin-bottom: 5px; }
+    .flow-step-text { font-size: 12.5px; color: rgba(255,255,255,0.38); line-height: 1.65; }
+
+    /* REVEAL */
+    .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.6s var(--ease), transform 0.6s var(--ease); }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* FOOTER */
+    footer { background: var(--ink); border-top: 1px solid rgba(255,255,255,0.06); padding: 24px 40px; text-align: center; font-size: 12px; color: rgba(255,255,255,0.55); }
+    footer a { color: rgba(255,255,255,0.55); text-decoration: none; }
+    footer a:hover { color: var(--white); }
+
+    /* RESPONSIVE - 768px */
+    @media (max-width: 768px) {
+      nav { padding: 0 20px; }
+      .nav-links { display: none; }
+      .cs-hero { padding: 96px 20px 52px; }
+      .cs-hero-title { font-size: clamp(28px, 8vw, 44px); }
+      .cs-hero-sub { font-size: 14px; margin-bottom: 32px; }
+      .cs-kpi-row { grid-template-columns: 1fr 1fr; gap: 24px 16px; padding-top: 28px; }
+      .cs-kpi { border-right: none !important; padding-right: 0 !important; }
+      .cs-kpi:nth-child(odd) { border-right: 1px solid rgba(255,255,255,0.1) !important; padding-right: 16px !important; }
+      .cs-kpi-num { font-size: 24px; }
+      .cs-kpi-label { font-size: 11px; }
+      .cs-kpi-note { font-size: 11px; }
+      .toc-inner { padding: 0 16px; }
+      .toc-item { padding: 12px 12px; font-size: 11px; }
+      .cs-body { padding: 0 20px; }
+      .cs-section { padding: 48px 0 0; }
+      .cs-section h2 { font-size: 22px; margin-bottom: 20px; }
+      .cs-section h3 { font-size: 17px; margin: 28px 0 12px; }
+      .cs-section h4 { font-size: 15px; }
+      .cs-section p { font-size: 14px; line-height: 1.75; }
+      .cs-divider { margin: 40px 0 0; }
+      .callout { padding: 16px 18px; }
+      .two-col, .two-col-3, .risk-grid, .source-grid, .ind-grid { grid-template-columns: 1fr; }
+      .ind-grid { gap: 10px; }
+      .decision-card { padding: 24px; }
+      .decision-header { flex-direction: column; gap: 12px; }
+      .decision-num { font-size: 24px; }
+      .decision-title { font-size: 18px; }
+      .layer-card { padding: 22px; }
+      .layer-head { flex-direction: column; gap: 12px; }
+      .phone-row { gap: 20px; }
+      .phone-col { width: 44%; min-width: 150px; }
+      .step-item { grid-template-columns: 40px 1fr; gap: 0 14px; padding: 20px 0; }
+      .step-num { font-size: 22px; }
+      .step-title { font-size: 16px; }
+      .step-body { font-size: 13.5px; }
+      .lesson-item { grid-template-columns: 40px 1fr; gap: 0 14px; padding: 20px 0; }
+      .lesson-num { font-size: 20px; }
+      .lesson-title { font-size: 16px; }
+      .lesson-body { font-size: 13.5px; }
+      .data-table { border-collapse: separate; border-spacing: 0; font-size: 13px; }
+      .data-table thead { display: none; }
+      .data-table tbody { display: flex; flex-direction: column; gap: 12px; }
+      .data-table tr { display: block; background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px; }
+      .data-table tr.total-row { background: var(--surface); }
+      .data-table td { display: block; padding: 4px 0; border: none; white-space: normal; font-size: 13.5px; line-height: 1.65; }
+      .data-table td:first-child { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); padding-bottom: 8px; margin-bottom: 4px; border-bottom: 1px solid var(--line); }
+      .data-table td[data-label]::before { content: attr(data-label); display: block; font-size: 10px; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase; color: var(--ink-muted); margin-top: 8px; margin-bottom: 2px; }
+      .appendix-band { padding: 52px 20px 60px; }
+      .appendix-title { font-size: 24px; }
+      .appendix-sub { font-size: 14px; }
+      .flow-step { grid-template-columns: 32px 1fr; gap: 0 12px; padding: 14px 16px; }
+      .flow-step-num { font-size: 15px; }
+      .flow-step-title { font-size: 12px; }
+      .flow-step-text { font-size: 12px; }
+      .appendix-table { border-collapse: separate; border-spacing: 0; }
+      .appendix-table thead { display: none; }
+      .appendix-table tbody { display: flex; flex-direction: column; gap: 12px; }
+      .appendix-table tr { display: block; border: 1px solid rgba(255,255,255,0.09); border-radius: var(--radius); padding: 16px; background: rgba(255,255,255,0.025); }
+      .appendix-table td { display: block; padding: 4px 0; border: none; font-size: 13px; line-height: 1.65; white-space: normal; color: rgba(255,255,255,0.6); }
+      .appendix-table td:first-child { font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent) !important; padding-bottom: 8px; margin-bottom: 4px; border-bottom: 1px solid rgba(255,255,255,0.07); }
+      .appendix-table td[data-label]::before { content: attr(data-label); display: block; font-size: 10px; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase; color: rgba(255,255,255,0.28); margin-top: 8px; margin-bottom: 2px; }
+      footer { padding: 20px; }
+    }
+
+    @media (max-width: 480px) {
+      .cs-hero { padding: 88px 16px 44px; }
+      .cs-body { padding: 0 16px; }
+      .appendix-band { padding: 44px 16px 52px; }
+      .cs-kpi-row { gap: 20px 12px; }
+      .cs-kpi-num { font-size: 22px; }
+      .cs-kpi-label { font-size: 10px; }
+      .ind-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+      .ind-card { padding: 14px 10px; }
+      .card { padding: 18px; }
+      .risk-card { padding: 18px; }
+      .layer-card { padding: 18px; }
+      .source-card { padding: 18px; }
+      .decision-card { padding: 18px; }
+      .phone-col { width: 100%; max-width: 220px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a class="nav-logo" href="index.html">Akash Poddar</a>
+    <ul class="nav-links">
+      <li><a href="work.html">Case Studies</a></li>
+      <li><a href="index.html#experience">Experience</a></li>
+      <li><a href="index.html#skills">Skills</a></li>
+      <li><a href="index.html#contact">Contact</a></li>
+    </ul>
+    <a class="nav-cta" href="index.html#contact">Get in touch</a>
+  </nav>
+
+  <!-- HERO -->
+  <div class="cs-hero">
+    <div class="cs-hero-grid"></div>
+    <div class="cs-hero-shimmer"></div>
+    <div class="cs-hero-inner">
+      <div class="cs-hero-bar"></div>
+      <div class="cs-meta-row">
+        <span class="cs-tag tag-red">FinTech &times; Food</span>
+        <span class="cs-tag tag-teal">Cross-Product 0-&gt;1</span>
+        <span class="cs-tag tag-green">Sole PM, Both Products</span>
+        <span class="cs-tag tag-gray">Spec Complete &middot; Pre-Development</span>
+      </div>
+      <h1 class="cs-hero-title">Split Pay<br><em>Designing Money-Splitting Across Two Products</em></h1>
+      <p class="cs-hero-sub">How I spec'd proportional bill-splitting, escrow-backed settlement, and instant rider payout across <strong>Pathao Food and Pathao Pay</strong> - as sole PM on a feature that touches two codebases, two wallets, and one shared bill. The PRD, UX, calculation model, and cross-team acceptance criteria are complete; this case study documents the design work, not a live launch.</p>
+      <div class="cs-kpi-row">
+        <div class="cs-kpi">
+          <div class="cs-kpi-num">8</div>
+          <div class="cs-kpi-label">Feature specs (S-1 to S-8) I owned end-to-end, spanning Food's cart and Pay's wallet</div>
+        </div>
+        <div class="cs-kpi">
+          <div class="cs-kpi-num">2</div>
+          <div class="cs-kpi-label">Products coordinated in a single checkout - Pathao Food and Pathao Pay</div>
+        </div>
+        <div class="cs-kpi">
+          <div class="cs-kpi-num">70<span>%+</span></div>
+          <div class="cs-kpi-label">Target split-completion rate at launch - projected, pre-development</div>
+        </div>
+        <div class="cs-kpi">
+          <div class="cs-kpi-num">0</div>
+          <div class="cs-kpi-label">Poisha of unreconciled remainder per split, by design - explicit rounding rule</div>
+        </div>
+      </div>
+      <p class="cs-kpi-note">Split Pay is fully specified and designed - PRD, UX flows, and the calculation model are complete - but engineering has not started. Every figure in this case study marked <em>Projected</em> or <em>Target</em> is a pre-launch estimate with its methodology shown, not a measured result.</p>
+    </div>
+  </div>
+
+  <!-- TOC -->
+  <nav class="toc-bar" aria-label="Table of contents">
+    <div class="toc-inner">
+      <a class="toc-item active" href="#situation"><span class="toc-num">01</span> Situation</a>
+      <a class="toc-item" href="#task"><span class="toc-num">02</span> Task</a>
+      <a class="toc-item" href="#approach"><span class="toc-num">03</span> Approach</a>
+      <a class="toc-item" href="#systems"><span class="toc-num">04</span> Two Products</a>
+      <a class="toc-item" href="#calculation"><span class="toc-num">05</span> Split Math</a>
+      <a class="toc-item" href="#lifecycle"><span class="toc-num">06</span> Lifecycle</a>
+      <a class="toc-item" href="#guardrails"><span class="toc-num">07</span> Guardrails</a>
+      <a class="toc-item" href="#validation"><span class="toc-num">08</span> Validation Plan</a>
+      <a class="toc-item" href="#results"><span class="toc-num">09</span> Projected Impact</a>
+      <a class="toc-item" href="#risks"><span class="toc-num">10</span> Risks</a>
+      <a class="toc-item" href="#lessons"><span class="toc-num">11</span> Lessons</a>
+      <a class="toc-item" href="#appendix"><span class="toc-num">12</span> Appendix</a>
+    </div>
+  </nav>
+
+  <!-- BODY -->
+  <div class="cs-body">
+
+    <!-- 01 SITUATION -->
+    <section class="cs-section" id="situation">
+      <div class="section-eyebrow">01 -- Situation</div>
+      <h2>Splitting a food order meant doing the math yourself, then chasing five people for money.</h2>
+      <p><strong>Pathao Pay</strong> already had a "Request Money" tool that let any user ask a friend for a specific amount. For a group food order, that meant the person who placed the order had to manually work out everyone's share - including how to fairly divide VAT, the delivery charge, and any discount across people who ordered different things - and then fire off individual, disconnected money requests with no link back to the order itself.</p>
+      <p>In practice this broke down in one of three ways: the initiator gave up on splitting and simply absorbed the full bill; they split it informally and roughly, quietly under- or over-charging whoever added the tax and delivery portion in their head; or the group stopped ordering together altogether and placed smaller, individual orders instead - which is worse for order value and worse for the group-ordering use case Pathao Food wants to encourage.</p>
+      <p>Group food ordering - offices, hostels, family dinners - is a normal and recurring behaviour on the platform. The gap wasn't that people didn't want to split bills; it was that the only tool for it lived in a different app, understood nothing about the order, and made the requester do all the arithmetic.</p>
+
+      <div class="callout callout-red reveal">
+        <p><strong>Why this needed order-grouping, not just a better calculator:</strong> A generic "split this amount N ways" tool can't apportion VAT, delivery charge, and discounts fairly when people order different items at different prices. Getting the math right required Split Pay to know the actual cart - which meant building it inside Pathao Food, not inside Pathao Pay alone.</p>
+      </div>
+
+      <p><strong>My constraints:</strong> This wasn't a single-team feature. Pathao Food owns the cart, the order flow, and the UX; Pathao Pay owns the wallet, payment requests, and money movement. I was the PM authoring the PRD on the Food side, writing acceptance criteria that a separate Pay engineering team and a separate Pay PM stakeholder had to build against, with no shared backlog and no precedent inside Pathao for a feature that debits one wallet, holds funds in escrow, and pays out a rider - all while the underlying order still has to ship on time, regardless of what the initiator's friends decide to do.</p>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 02 TASK -->
+    <section class="cs-section" id="task">
+      <div class="section-eyebrow">02 -- Task</div>
+      <h2>Design a payment flow that touches two products and one non-negotiable constraint: the rider gets paid regardless of what friends do.</h2>
+      <p>I needed to spec a feature that let a user tag cart items to themselves and their friends, calculate each person's fair share automatically, request payment from each friend through Pathao Pay, and surface the outcome clearly in order history - while never letting the social uncertainty of "will my friend actually pay" put the order, the merchant, or the rider's payout at risk.</p>
+      <p>The brief was "add split pay to food orders." The actual product problem was harder: <strong>how do you let N people jointly fund a single order, when acceptance from any one of them is optional and can arrive after the food is already being prepared?</strong></p>
+
+      <div class="two-col reveal">
+        <div class="card">
+          <div class="card-label">What the initial ask sounded like</div>
+          <h4>"Let people split the bill in the app"</h4>
+          <p>A UI layer on top of Pay's existing Request Money tool - tag items, fire off requests, done. Treated as a checkout feature, not a money-movement design problem.</p>
+        </div>
+        <div class="card">
+          <div class="card-label">What I believed we needed</div>
+          <h4>A settlement model that never blocks delivery</h4>
+          <p>An architecture where the order's fulfilment - and the rider's payout - can never depend on whether an initiator's friends respond in time. Split completion and order completion had to be two separate, decoupled outcomes.</p>
+        </div>
+      </div>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 03 APPROACH -->
+    <section class="cs-section" id="approach">
+      <div class="section-eyebrow">03 -- Approach</div>
+      <h2>Six decisions that shaped the feature before a single screen was built.</h2>
+
+      <!-- DECISION 1 -->
+      <div class="decision-card reveal">
+        <div class="decision-header">
+          <div class="decision-num">01</div>
+          <div class="decision-title-group">
+            <div class="decision-label">Payment Architecture</div>
+            <div class="decision-title">Decoupled the order's payment guarantee from split completion</div>
+          </div>
+        </div>
+        <div class="decision-body">
+          <p>The obvious design treats "friend accepts payment request" as a step the order waits on before it can be confirmed as paid. I rejected that model outright.</p>
+          <p><strong>My reasoning:</strong> A rider can't wait on three strangers to individually decide whether to pay before picking up food that's already cooked. So I specified that Split Pay can only be entered with Pathao Pay as the confirmed payment method, and the full order amount is captured against the <strong>initiator's</strong> Pathao Pay balance at checkout - the order is fully funded the moment it's confirmed, independent of anyone else's response. Friends' "payment requests" are not a precondition for the order; they're a parallel reimbursement flow into the initiator's wallet that succeeds or fails on its own timeline.</p>
+          <p><strong>The trade-off:</strong> The initiator carries real short-term financial exposure the instant they confirm the order - not a small ask when a group order can run into several thousand taka. But it converts a multi-party, partially-completable payment problem into a single, always-resolved one: the order is paid, full stop, and everything after that is reimbursement bookkeeping.</p>
+          <div class="decision-quote">
+            <strong>My call:</strong> "The rider's payout can never be a function of my friends' Wi-Fi, notification settings, or mood. I specified that the order is financially whole at the moment of checkout - splitting is something that happens to the initiator's balance afterwards, not something the order depends on."
+          </div>
+          <div class="decision-evidence">Consequence traced through the spec: this single decision is why S-6 (rider payout) needed almost no special-case logic, and why S-3's "if any friend rejects, the initiator pays the total bill" rule is nearly free to implement - the initiator already paid it.</div>
+        </div>
+      </div>
+
+      <!-- DECISION 2 -->
+      <div class="decision-card reveal">
+        <div class="decision-header">
+          <div class="decision-num">02</div>
+          <div class="decision-title-group">
+            <div class="decision-label">Split Math</div>
+            <div class="decision-title">Chose item-price-weighted splitting over an equal split</div>
+          </div>
+        </div>
+        <div class="decision-body">
+          <p>The fastest thing to build is "divide the total by the number of people." I specified proportional, item-based splitting instead.</p>
+          <p><strong>My reasoning:</strong> An equal split is unfair the moment two people order differently priced items - and it's the single most common complaint about informal, manual splitting today. If Split Pay reproduced that unfairness natively, it wouldn't be solving the actual problem, just moving it into the app. Item-level tagging lets each participant's share track exactly what they ordered, with VAT, delivery charge, and discounts apportioned by the same ratio (S-2, S-8) - not divided evenly regardless of who ordered the biryani.</p>
+          <p><strong>The trade-off:</strong> Tagging every item to a person is more UI work for the initiator than tapping "split 4 ways." I accepted that friction deliberately - it's the cost of the split actually being correct - and offset it with sensible defaults (unassigned items default to the initiator, not to an even split across everyone).</p>
+          <div class="decision-evidence">Worked in detail in Section 05, using the exact bill-calculation example from the PRD.</div>
+        </div>
+      </div>
+
+      <!-- DECISION 3 -->
+      <div class="decision-card reveal">
+        <div class="decision-header">
+          <div class="decision-num">03</div>
+          <div class="decision-title-group">
+            <div class="decision-label">Failure Mode</div>
+            <div class="decision-title">Made friend rejection all-or-nothing, not partial</div>
+          </div>
+        </div>
+        <div class="decision-body">
+          <p>A tempting "smarter" design lets a split partially succeed - two of three friends pay, the initiator only covers the third person's share. I specified the opposite: if any single friend fails to accept their payment request, the entire split is cancelled and the initiator becomes liable for the full bill.</p>
+          <p><strong>My reasoning:</strong> Partial settlement sounds friendlier but multiplies the number of reconciliation states the system - and the initiator - has to track: which of N requests are pending, accepted, rejected, or expired, and what does "partially split" even mean in order history six months later? All-or-nothing collapses every outcome into two: <em>split completed</em> or <em>split cancelled, initiator pays</em>. Combined with Decision 1, this is also financially safe - the initiator already funded the order, so "cancelled" just means no reimbursement arrived, not a collections problem.</p>
+          <p><strong>The trade-off:</strong> One unresponsive friend can sink an entire group's split. I mitigated this - not solved it outright - with two upstream guardrails: an invalid-account alert at the moment of tagging (Section 07) so obviously-doomed splits fail early, not after checkout, and a "recently added contacts" surface so initiators default to friends who've reliably paid before.</p>
+          <div class="decision-evidence">This is a real usability risk I flag directly in Section 10 (Risks) rather than glossing over - it's the single biggest trade-off in the whole feature.</div>
+        </div>
+      </div>
+
+      <!-- DECISION 4 -->
+      <div class="decision-card reveal">
+        <div class="decision-header">
+          <div class="decision-num">04</div>
+          <div class="decision-title-group">
+            <div class="decision-label">Cross-Product Gate</div>
+            <div class="decision-title">Required a Pathao Pay account before entering the flow - with inline registration, not a dead end</div>
+          </div>
+        </div>
+        <div class="decision-body">
+          <p>Split Pay could theoretically support other payment rails for the initiator. I restricted it to Pathao Pay only, for both the initiator and every tagged friend.</p>
+          <p><strong>My reasoning:</strong> Every alternative - card-on-file transfers, mixed rails per participant - multiplies the settlement paths Pay's engine has to support and multiplies the ways a split can half-succeed. A single settlement rail keeps the money-movement contract between Food and Pay to one shape. Since this would otherwise exclude any user or friend without a Pay account, I specified that a Food user without Pay is redirected straight into Pay's registration flow rather than being told "not available" - and any tagged friend without a Pay account triggers an inline invalid-account alert at the moment of tagging, not a failure discovered later.</p>
+          <p><strong>The trade-off:</strong> This adds a hard registration step for new users mid-checkout. I judged that acceptable because Split Pay is opt-in - a user who doesn't want to register can simply pay normally - and because it turns Split Pay into a genuine acquisition channel for Pathao Pay, not just a Food feature that happens to use it.</p>
+          <div class="decision-evidence">This is also the feature's cross-sell case for Pay - quantified as a projected metric in Section 09.</div>
+        </div>
+      </div>
+
+      <!-- DECISION 5 -->
+      <div class="decision-card reveal">
+        <div class="decision-header">
+          <div class="decision-num">05</div>
+          <div class="decision-title-group">
+            <div class="decision-label">Cart Mutation Policy</div>
+            <div class="decision-title">Cart edits after tagging cancel the split - they never silently re-split</div>
+          </div>
+        </div>
+        <div class="decision-body">
+          <p>Once items are tagged and requests may already be in flight, the cart can still change - a customer adds an item, support (CX) adjusts an order, an out-of-stock item gets removed. I specified that <strong>any</strong> post-tagging cart change that increases a participant's payable amount cancels the split entirely and reverts liability to the initiator; a change that decreases it triggers an automatic partial-escrow release back through Pay - it never silently re-splits.</p>
+          <p><strong>My reasoning:</strong> Silently recalculating and re-sending requests after a friend has already agreed to pay one amount is a consent problem, not just an engineering one - nobody should discover they owe more without being asked again. Cancelling and re-collecting from the initiator alone is the option that never bills a participant for something they didn't explicitly agree to.</p>
+          <p><strong>The trade-off:</strong> A single cart edit - even a CX-initiated one the initiator didn't cause - kills a split that might already have three friends' agreement. I accepted this because the alternative (auto-adjusting live financial commitments between people) is a worse failure mode than "please redo the split."</p>
+          <div class="decision-evidence">Full increase/decrease/CX-triggered logic detailed in Section 07 (Guardrails).</div>
+        </div>
+      </div>
+
+      <!-- DECISION 6 -->
+      <div class="decision-card reveal">
+        <div class="decision-header">
+          <div class="decision-num">06</div>
+          <div class="decision-title-group">
+            <div class="decision-label">Privacy</div>
+            <div class="decision-title">Scoped what secondary participants can see in order history</div>
+          </div>
+        </div>
+        <div class="decision-body">
+          <p>Once a friend is tagged into a split, they have a legitimate reason to track the order. I specified that they see only delivery status in their timeline view - never the payment distribution, other participants' shares, or payment status details.</p>
+          <p><strong>My reasoning:</strong> Being tagged into someone else's order shouldn't grant visibility into that order's full financial breakdown - who paid what, who's still pending, what the total bill was. That's the initiator's information to hold, not something every tagged friend inherits by being on the split. The initiator retains full visibility (Section 06); everyone else gets exactly what they need to know their food is coming.</p>
+          <div class="decision-evidence">A small decision with an outsized trust payoff - it's the difference between "convenient" and "everyone can see my order history."</div>
+        </div>
+      </div>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 04 TWO PRODUCTS -->
+    <section class="cs-section" id="systems">
+      <div class="section-eyebrow">04 -- Two Products, One Transaction</div>
+      <h2>One checkout, two systems of record - split cleanly along a single line: money math vs. money movement.</h2>
+      <p>Customers experience Split Pay as one continuous flow inside Pathao Food. Underneath, it's built across two products that don't share a database or a release calendar, and I drew the boundary between them deliberately, so each side had exactly one job.</p>
+
+      <div class="layer-stack reveal">
+        <div class="layer-card layer-manual">
+          <div class="layer-head">
+            <div class="layer-title-group">
+              <div class="layer-num">Product 01</div>
+              <div class="layer-title">Pathao Food - Order &amp; Cart Layer</div>
+              <div class="layer-freq">Owns the pre-payment experience &middot; source of truth for the bill</div>
+            </div>
+            <div class="layer-tags">
+              <span class="layer-tag lt-red">Cart &amp; tagging UI</span>
+              <span class="layer-tag lt-red">Order confirmation</span>
+              <span class="layer-tag lt-red">Order history</span>
+            </div>
+          </div>
+          <div class="layer-body">
+            Owns the entire journey before money moves: the Split Pay entry point on the order confirmation screen, the introductory education screen shown until a user completes their first successful split, cart-item-to-friend tagging, contact selection, and the split view in order history. Every ratio and share calculation (S-2, S-8) happens here, against Food's own cart data - Pay never independently recomputes the bill.
+          </div>
+        </div>
+
+        <div class="layer-card layer-auto">
+          <div class="layer-head">
+            <div class="layer-title-group">
+              <div class="layer-num">Product 02</div>
+              <div class="layer-title">Pathao Pay - Wallet, Requests &amp; Settlement</div>
+              <div class="layer-freq">Owns everything once cash needs to move</div>
+            </div>
+            <div class="layer-tags">
+              <span class="layer-tag lt-teal">Payment requests</span>
+              <span class="layer-tag lt-teal">Escrow hold / release</span>
+              <span class="layer-tag lt-teal">Rider payout</span>
+            </div>
+          </div>
+          <div class="layer-body">
+            <div class="ai-badge"><span class="ai-badge-dot"></span>Settlement &amp; Escrow Layer</div>
+            Owns everything from the moment funds are captured: account verification and the registration redirect, generating and dispatching individual payment requests to each tagged friend, holding the initiator's captured payment, adjusting or releasing that hold when the cart changes, and settling the rider's payout independent of how the friend-side requests resolve.
+          </div>
+        </div>
+      </div>
+
+      <div class="callout callout-teal reveal">
+        <p><strong>Why I insisted on this boundary:</strong> Food owns the bill math exactly once - Pay trusts the amount it's told to move, rather than re-deriving it. Pay owns money movement exactly once - Food never touches a wallet balance directly. The trade-off is that every state change (a cart edit, a rejected request, a cancellation) needs a precise, versioned contract between two backlogs I didn't fully control - which is why the acceptance criteria in the Appendix specify a system-of-record for each field, not just a UI behaviour.</p>
+      </div>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 05 SPLIT CALCULATION ENGINE -->
+    <section class="cs-section" id="calculation">
+      <div class="section-eyebrow">05 -- Split Calculation Engine</div>
+      <h2>The math has to be specified before the UI - because the UI is just a way of collecting inputs to this formula.</h2>
+      <p>Every participant's payable amount is a function of the ratio of item prices tagged to them against the full order. I specified the exact sequence: tag items -> compute each person's raw item total -> compute the ratio across all participants -> apply that same ratio to the full bill (after VAT, delivery, and discounts) -> the payable amounts always sum back to the total, to the poisha.</p>
+
+      <h3>Worked example, as specified in the PRD</h3>
+      <p>Three friends split a food order. P1 is tagged to a pizza; P2 is tagged to a second pizza and a burger; P3 is tagged to a kacchi; P1 and P2 share a biryani between them.</p>
+
+      <table class="data-table reveal">
+        <thead>
+          <tr><th>Participant</th><th>Items tagged</th><th>Item subtotal</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td data-label="Participant">P1</td>
+            <td data-label="Items tagged">Pizza (qty 1 @ 200) + half of shared Biryani (qty 1 @ 300, split with P2)</td>
+            <td data-label="Item subtotal">200 + 150 = 350</td>
+          </tr>
+          <tr>
+            <td data-label="Participant">P2</td>
+            <td data-label="Items tagged">Pizza (qty 2 @ 200 = 400) + Burger (qty 3 @ 100 = 300) + half of shared Biryani = 150</td>
+            <td data-label="Item subtotal">400 + 300 + 150 = 850</td>
+          </tr>
+          <tr>
+            <td data-label="Participant">P3</td>
+            <td data-label="Items tagged">Kacchi (qty 2 @ 300 = 600)</td>
+            <td data-label="Item subtotal">600</td>
+          </tr>
+          <tr class="total-row">
+            <td data-label="Participant">Order total</td>
+            <td data-label="Items tagged">Sum of all item lines</td>
+            <td data-label="Item subtotal">1,800</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <table class="data-table reveal">
+        <thead>
+          <tr><th>Step</th><th>Calculation</th><th>Running total</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td data-label="Step">Item subtotal</td>
+            <td data-label="Calculation">200 + 400 + 300 + 600 + 300</td>
+            <td data-label="Running total">1,800</td>
+          </tr>
+          <tr>
+            <td data-label="Step">+ VAT, SD &amp; delivery charge</td>
+            <td data-label="Calculation">+ 300</td>
+            <td data-label="Running total">2,100</td>
+          </tr>
+          <tr>
+            <td data-label="Step">- MOV-based discount</td>
+            <td data-label="Calculation">- 100</td>
+            <td data-label="Running total">2,000</td>
+          </tr>
+          <tr class="total-row">
+            <td data-label="Step">- Promo</td>
+            <td data-label="Calculation">- 100</td>
+            <td data-label="Running total">1,900 (final bill)</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <table class="data-table reveal">
+        <thead>
+          <tr><th>Participant</th><th>Split ratio</th><th>Payable amount</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td data-label="Participant">P1</td>
+            <td data-label="Split ratio">1</td>
+            <td data-label="Payable amount">(1 / 6) &times; 1,900 = &#2547;316.67</td>
+          </tr>
+          <tr>
+            <td data-label="Participant">P2</td>
+            <td data-label="Split ratio">2</td>
+            <td data-label="Payable amount">(2 / 6) &times; 1,900 = &#2547;633.33</td>
+          </tr>
+          <tr>
+            <td data-label="Participant">P3</td>
+            <td data-label="Split ratio">3</td>
+            <td data-label="Payable amount">(3 / 6) &times; 1,900 = &#2547;950.00</td>
+          </tr>
+          <tr class="total-row">
+            <td data-label="Participant">Total</td>
+            <td data-label="Split ratio">1 : 2 : 3</td>
+            <td data-label="Payable amount">&#2547;1,900.00 - reconciles exactly</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="callout callout-gray reveal">
+        <p><strong>Fidelity note:</strong> The 1:2:3 ratio above is the simplified working ratio used in the original spec's example (derived from each participant's item-price contribution, including their half-share of the shared Biryani). I've kept the worked numbers exactly as specified rather than "correcting" them - the discipline of getting a spec's own arithmetic right is part of the job.</p>
+      </div>
+
+      <h3>Discount distribution follows the same ratio (S-8)</h3>
+      <p>Discounts aren't a flat deduction applied once - they're distributed proportionally across participants using the same split ratio, so nobody's share of the savings is disconnected from their share of the bill.</p>
+
+      <table class="data-table reveal">
+        <thead>
+          <tr><th>Participant</th><th>Ratio</th><th>Discount received (of &#2547;100 total)</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td data-label="Participant">P1</td>
+            <td data-label="Ratio">1</td>
+            <td data-label="Discount received">(1 / 3) &times; 100 = &#2547;33.33</td>
+          </tr>
+          <tr>
+            <td data-label="Participant">P2</td>
+            <td data-label="Ratio">2</td>
+            <td data-label="Discount received">(2 / 3) &times; 100 = &#2547;66.67</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="callout callout-amber reveal">
+        <p><strong>A gap I found and closed: rounding policy.</strong> The example above reconciles cleanly, but proportional division of real bills rarely lands on a whole poisha for every participant - the PRD didn't specify what happens to the fractional remainder. I specified that any leftover fraction after ratio-based division is added to the <strong>initiator's</strong> payable amount, never distributed silently across friends. That way the sum always reconciles exactly to the total bill, and the "extra poisha" always has one clearly accountable owner instead of being invisible rounding drift.</p>
+      </div>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 06 LIFECYCLE -->
+    <section class="cs-section" id="lifecycle">
+      <div class="section-eyebrow">06 -- Payment Lifecycle &amp; Settlement</div>
+      <h2>From "Split Pay" tap to rider payout - the full sequence I specified.</h2>
+      <p>This is the order the feature actually runs in, stitched together from S-1 through S-6. The critical property, carried through from Decision 1: <strong>steps 6 and 7 never wait on step 5.</strong></p>
+
+      <div class="step-list reveal">
+        <div class="step-item">
+          <div class="step-num">01</div>
+          <div>
+            <div class="step-title">Entry &amp; first-time education</div>
+            <div class="step-body">"Split Pay" appears as a clearly visible option on the order confirmation screen. A first-time user sees an introductory walkthrough explaining how splitting works - and it reappears on every attempt until they complete a successful split at least once, rather than a one-time tooltip they might miss.</div>
+            <span class="step-owner">Food &middot; FE</span>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">02</div>
+          <div>
+            <div class="step-title">Pathao Pay account verification</div>
+            <div class="step-body">The flow only proceeds if the initiator has a registered Pathao Pay account. If not, they're redirected straight into Pay's registration screen rather than being blocked - turning a hard requirement into an acquisition moment for Pay.</div>
+            <span class="step-owner">Food &rarr; Pay handoff</span>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">03</div>
+          <div>
+            <div class="step-title">Cart items shown as taggable rows</div>
+            <div class="step-body">Cart items render as separate rows by quantity - a "qty 3" burger becomes three individually taggable rows - so each unit can be assigned to a specific person rather than tagging at the line-item level.</div>
+            <span class="step-owner">Food &middot; FE</span>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">04</div>
+          <div>
+            <div class="step-title">Tagging friends from contacts</div>
+            <div class="step-body">The initiator assigns items to themselves or friends by picking from contacts or entering a mobile number. Their own contact always appears first; recently-added contacts surface above the full list; tagging a friend without a Pathao Pay account triggers an inline invalid-account alert immediately, not after checkout.</div>
+            <span class="step-owner">Food &middot; FE / BE</span>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">05</div>
+          <div>
+            <div class="step-title">Defaults, clearing, and checkout</div>
+            <div class="step-body">Any item left untagged defaults automatically to the initiator - nothing can reach checkout unassigned. A "clear all splits" control lets the initiator restart tagging from scratch. The order cannot be confirmed unless Pathao Pay is set as the payment method.</div>
+            <span class="step-owner">Food &middot; FE</span>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">06</div>
+          <div>
+            <div class="step-title">Order confirmed &amp; fully funded</div>
+            <div class="step-body">The full order amount is captured against the initiator's Pathao Pay balance at the moment of confirmation (Decision 1). The order is now financially complete, independent of anything that happens next.</div>
+            <span class="step-owner">Pay &middot; BE</span>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">07</div>
+          <div>
+            <div class="step-title">Payment requests fan out to friends</div>
+            <div class="step-body">Individual payment requests are dispatched to each tagged friend through Pathao Pay, in parallel with order preparation - not blocking it. Each friend can accept or reject independently.</div>
+            <span class="step-owner">Pay &middot; BE</span>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">08</div>
+          <div>
+            <div class="step-title">Rider payout - unconditional</div>
+            <div class="step-body">Because the order was already fully funded in step 6, the rider is paid instantly on delivery through the standard digital-payment path, regardless of whether every friend request has resolved. Pathao Food reconciles the underlying float with Pathao Pay separately - the rider never sees or waits on this.</div>
+            <span class="step-owner">Pay &middot; BE / Ops</span>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">09</div>
+          <div>
+            <div class="step-title">Requests resolve - split completes or cancels</div>
+            <div class="step-body">If every friend accepts, their share is transferred and reimburses the initiator's wallet. If any single friend fails to accept, the whole split is cancelled and the initiator's original charge simply stands (Decision 3) - the initiator is notified of the specific reason.</div>
+            <span class="step-owner">Pay &middot; BE</span>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">10</div>
+          <div>
+            <div class="step-title">Order history, timeline &amp; reorder</div>
+            <div class="step-body">Split orders are clearly marked in order history, showing success/failure and the full distribution to the initiator, and the cancellation reason where relevant. Tagged friends see only delivery status in their own timeline (Decision 6). Reordering carries the existing split distribution forward automatically.</div>
+            <span class="step-owner">Food &middot; FE / BE</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="phone-row reveal">
+        <div class="phone-col">
+          <div class="phone-frame">
+            <div class="phone-notch"></div>
+            <img class="phone-screen" src="https://lh3.googleusercontent.com/pw/AP1GczNYzlqe-ObOr5aZmlrKWqZ1zZ-c4_KvVhd2v-khNUUVdDboxhHWjy_POqBaeOLcJZQPPO53k0XnZ07Zi6n0KMiX0oBH_4gXr6VctUac3KMiicRmzOFgbDn68R1uPuyXb2VHT8s90a6KHahv3YMHwf6T=w270-h632-s-no-gm?authuser=0" alt="Pathao Food Split Pay item tagging screen showing cart items assigned to contacts" loading="lazy" />
+          </div>
+          <div class="phone-caption"><strong>Item tagging</strong> &middot; cart rows by quantity, tagged to self or a friend from contacts</div>
+        </div>
+        <div class="phone-col">
+          <div class="phone-frame">
+            <div class="phone-notch"></div>
+            <img class="phone-screen" src="https://lh3.googleusercontent.com/pw/AP1GczM0BEbDYNN3AGzXKAXQhlXglZGb6ruf8xKo1tW5VHyW3Tv4qIIgKPCj-gzXQ7nmdlGSVN0-tnudD8O-JD2KW-9U-F8mraZ1jAcKfXkvo28OLIZVSKY_qjZ2gd9at36uD7X-7GV0O5Ptcms-HQ0rV4Xh=w270-h713-s-no-gm?authuser=0" alt="Pathao Food Split Pay payment status screen showing per-friend payment distribution" loading="lazy" />
+          </div>
+          <div class="phone-caption"><strong>Payment status</strong> &middot; per-friend Pending / Complete / Rejected, with distribution</div>
+        </div>
+      </div>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 07 GUARDRAILS -->
+    <section class="cs-section" id="guardrails">
+      <div class="section-eyebrow">07 -- Guardrails &amp; Edge Cases</div>
+      <h2>The cases that break a naive split - specified before they became support tickets.</h2>
+      <p>A split that only handles the happy path isn't a fintech feature, it's a demo. I specified explicit behaviour for every way the underlying cart or the friend-response cycle can go sideways.</p>
+
+      <div class="source-grid reveal">
+        <div class="source-card">
+          <div class="source-icon">&#8593;</div>
+          <div class="source-title">Cart amount increases after tagging</div>
+          <div class="source-body">Any cart update - by the customer or by CX support - that raises a participant's payable amount cancels the split entirely. The initiator becomes liable for the full, updated bill, so no participant is ever billed more than what they explicitly agreed to.</div>
+          <span class="source-tag">Consent-first</span>
+        </div>
+        <div class="source-card">
+          <div class="source-icon">&#8595;</div>
+          <div class="source-title">Cart amount decreases after tagging</div>
+          <div class="source-body">If a cart update lowers a participant's amount, Pathao Food notifies Pathao Pay to release the reduced portion from escrow back to the merchant settlement and refund the difference to the customer - handled automatically, not manually reconciled after the fact.</div>
+          <span class="source-tag">Self-correcting</span>
+        </div>
+        <div class="source-card">
+          <div class="source-icon">&#9888;&#65039;</div>
+          <div class="source-title">Friend without a Pathao Pay account</div>
+          <div class="source-body">Tagging a friend who has no registered Pathao Pay account triggers an immediate, inline invalid-account alert at the moment of tagging - not a failure discovered after the order is placed and requests have already gone out.</div>
+          <span class="source-tag">Fail early</span>
+        </div>
+      </div>
+
+      <h3>Unaccepted requests and recovery</h3>
+      <p>If a friend doesn't accept their request, the split is cancelled and the initiator is notified with the specific reason - not a generic failure message. Because the initiator's payment method was already locked to Pathao Pay for the order, no separate "change payment method" step is needed to complete the order itself; that control exists for the narrower case where a customer needs to resolve a payment issue on an ongoing order outside the split flow (S-4).</p>
+
+      <div class="callout callout-amber reveal">
+        <p><strong>A gap I found and closed: request expiry.</strong> The original spec described what happens when a friend "fails to accept" a request but didn't define a timeout - in theory, a request could sit open indefinitely. I specified an explicit expiry window tied to a defined SLA before the order's preparation timeline completes, so every split resolves to a definite state (completed or cancelled) within a bounded time, rather than staying ambiguous while the food is already on its way.</p>
+      </div>
+
+      <div class="callout callout-gray reveal">
+        <p><strong>Deliberately out of scope for v1:</strong> multi-address group orders (splitting across more than one delivery drop-off), splitting across payment rails other than Pathao Pay, and re-splitting a cancelled split automatically after a cart edit. The original PRD left "Not Doing / Out of Scope" blank - these are the boundaries I set myself, to keep the settlement model to the single shape described in Decision 4.</p>
+      </div>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 08 VALIDATION PLAN -->
+    <section class="cs-section" id="validation">
+      <div class="section-eyebrow">08 -- Validation Plan</div>
+      <h2>Because the feature hasn't shipped, this is the plan I designed - not results I can report.</h2>
+      <p>Every claim in Section 09 rests on two kinds of pre-launch validation I specified: usability testing of the tagging and split-outcome flows, and exhaustive test-case coverage of the calculation engine itself. Both are scoped and ready to run against the first working build.</p>
+
+      <h3>Planned usability testing</h3>
+      <table class="data-table reveal">
+        <thead>
+          <tr><th>Scenario</th><th>Method &amp; sample</th><th>Hypothesis / success criteria</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td data-label="Scenario">First-time split, no prior exposure</td>
+            <td data-label="Method & sample">Moderated task-based test, n=8 users who've never used Split Pay</td>
+            <td data-label="Hypothesis / success criteria">&ge;6/8 complete tagging and checkout without moderator prompting</td>
+          </tr>
+          <tr>
+            <td data-label="Scenario">Tagging a friend without a Pay account</td>
+            <td data-label="Method & sample">Same moderated session, seeded scenario</td>
+            <td data-label="Hypothesis / success criteria">Alert is understood and resolved (remove or ask friend to register) within one retry</td>
+          </tr>
+          <tr>
+            <td data-label="Scenario">All-or-nothing rejection consequence</td>
+            <td data-label="Method & sample">Scenario-based interview, n=8, before confirming checkout</td>
+            <td data-label="Hypothesis / success criteria">&ge;7/8 can correctly state "I pay the full bill if any friend rejects" before submitting</td>
+          </tr>
+          <tr>
+            <td data-label="Scenario">Cart edit after tagging (cancellation)</td>
+            <td data-label="Method & sample">Moderated test with a seeded mid-flow cart change</td>
+            <td data-label="Hypothesis / success criteria">Cancellation reason is clear enough to generate &lt;1 follow-up support question per session</td>
+          </tr>
+          <tr>
+            <td data-label="Scenario">Secondary participant timeline view</td>
+            <td data-label="Method & sample">Moderated test with a second test account as the tagged friend</td>
+            <td data-label="Hypothesis / success criteria">Friend confirms they can track delivery but correctly cannot see payment distribution</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Calculation model test coverage</h3>
+      <table class="data-table reveal">
+        <thead>
+          <tr><th>Edge case</th><th>Why it matters</th><th>Expected behaviour</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td data-label="Edge case">Single participant (initiator only)</td>
+            <td data-label="Why it matters">Split Pay entered but nothing tagged to anyone else</td>
+            <td data-label="Expected behaviour">Initiator pays 100%; Split Pay behaves identically to a normal Pathao Pay order</td>
+          </tr>
+          <tr>
+            <td data-label="Edge case">Shared item split across &gt;2 people</td>
+            <td data-label="Why it matters">Fractional shares compound rounding risk</td>
+            <td data-label="Expected behaviour">Each share computed to the poisha; remainder rule (Section 05) applies once at the end</td>
+          </tr>
+          <tr>
+            <td data-label="Edge case">Discount exceeds a participant's share</td>
+            <td data-label="Why it matters">Proportional discount could theoretically push a payable amount negative</td>
+            <td data-label="Expected behaviour">Payable amount floors at zero; any residual is re-absorbed by the initiator, never a negative charge</td>
+          </tr>
+          <tr>
+            <td data-label="Edge case">Friend cancels mid-tagging (before checkout)</td>
+            <td data-label="Why it matters">Distinguish from a post-checkout rejection, which triggers the S-3 cancellation path</td>
+            <td data-label="Expected behaviour">Their items simply revert to unassigned and default to the initiator - no order-level cancellation, since no request was ever sent</td>
+          </tr>
+          <tr>
+            <td data-label="Edge case">Maximum group size</td>
+            <td data-label="Why it matters">UI and request-fan-out both need a sane upper bound</td>
+            <td data-label="Expected behaviour">Capped group size defined explicitly rather than left unbounded, to keep the all-or-nothing failure surface manageable</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 09 RESULTS / PROJECTED IMPACT -->
+    <section class="cs-section" id="results">
+      <div class="section-eyebrow">09 -- Projected Impact</div>
+      <h2>What I expect to happen once this ships - and exactly how I'll know if I'm right.</h2>
+      <p>These are pre-launch targets, not measured outcomes. Each one is tied to a specific mechanism in the design (not a hope), and each is meant to be checked against real data within the first 90 days of a phased rollout.</p>
+
+      <table class="data-table reveal">
+        <thead>
+          <tr><th>Metric</th><th>Target</th><th>Why I expect this</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td data-label="Metric">Split Pay adoption among group orders</td>
+            <td data-label="Target">18-25% within 90 days</td>
+            <td data-label="Why I expect this">Proxy: existing manual "Request Money" usage tied to food-linked transfers, plus comparable split-bill adoption in peer delivery apps</td>
+          </tr>
+          <tr>
+            <td data-label="Metric">Split completion (all-friends-accept) rate</td>
+            <td data-label="Target">&ge;70%</td>
+            <td data-label="Why I expect this">Driven by the invalid-account pre-check removing the most common late failure, plus "recently added contacts" nudging toward reliable payers</td>
+          </tr>
+          <tr>
+            <td data-label="Metric">Reduction in manual money-request flows for food orders</td>
+            <td data-label="Target">-60%</td>
+            <td data-label="Why I expect this">Native in-order requests replace the old two-app, manual-math workaround entirely for tagged users</td>
+          </tr>
+          <tr>
+            <td data-label="Metric">New Pathao Pay accounts sourced from Food's registration gate</td>
+            <td data-label="Target">10-15% of split initiators without prior Pay accounts</td>
+            <td data-label="Why I expect this">Benchmark from comparable mandatory-registration conversion funnels; Decision 4 turns a blocker into an acquisition moment</td>
+          </tr>
+          <tr>
+            <td data-label="Metric">Rider payout delay caused by split status</td>
+            <td data-label="Target">0% - by design, not by luck</td>
+            <td data-label="Why I expect this">Direct consequence of Decision 1 - payout is architecturally decoupled from split resolution, not merely "usually fast"</td>
+          </tr>
+          <tr>
+            <td data-label="Metric">CX escalation rate on split orders</td>
+            <td data-label="Target">&lt;2% of split orders</td>
+            <td data-label="Why I expect this">Explicit cancellation reasons, scoped timeline visibility, and a bounded request-expiry window remove the most common sources of "why did this happen" tickets</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="callout callout-gray reveal">
+        <p><strong>How I'd actually validate these:</strong> a phased rollout - internal dogfooding, then a capped-percentage cohort, then general availability - with each stage's real numbers checked against the targets above before proceeding to the next. Targets that miss by a wide margin (particularly split completion rate) would trigger a UX review of tagging and the invalid-account flow before scaling further, not a quiet redefinition of "success."</p>
+      </div>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 10 RISKS -->
+    <section class="cs-section" id="risks">
+      <div class="section-eyebrow">10 -- Risks</div>
+      <h2>What could go wrong - and the design constraint I specified against it.</h2>
+      <div class="risk-grid reveal">
+        <div class="risk-card">
+          <div class="risk-level r-high">High</div>
+          <div class="risk-title">One unresponsive friend cancels an otherwise-agreed split</div>
+          <div class="risk-body">The direct cost of the all-or-nothing model (Decision 3). Mitigated by: the invalid-account pre-check that filters out the most predictable failures before checkout, and a bounded request-expiry window so the outcome is never left hanging.</div>
+        </div>
+        <div class="risk-card">
+          <div class="risk-level r-high">High</div>
+          <div class="risk-title">Cross-product financial mismatch between Food's cart total and Pay's held amount</div>
+          <div class="risk-body">Any drift between what Food thinks the bill is and what Pay has captured is a reconciliation failure. Mitigated by: the cart-mutation policy (Decision 5) that cancels rather than silently re-splits, and a single system-of-record contract per field, specified in the Appendix.</div>
+        </div>
+        <div class="risk-card">
+          <div class="risk-level r-high">High</div>
+          <div class="risk-title">Initiator's short-term financial exposure at checkout</div>
+          <div class="risk-body">Decision 1 means the initiator's balance funds the whole order upfront. Mitigated by: requiring the initiator to have sufficient Pathao Pay balance before Split Pay can be selected at all, so the exposure is never a surprise discovered mid-flow.</div>
+        </div>
+        <div class="risk-card">
+          <div class="risk-level r-med">Medium</div>
+          <div class="risk-title">Rounding drift across proportional, N-way splits</div>
+          <div class="risk-body">Fractional poisha remainders after ratio division. Mitigated by: the explicit remainder-to-initiator rule specified in Section 05, so the ledger always reconciles exactly and the remainder always has a named owner.</div>
+        </div>
+        <div class="risk-card">
+          <div class="risk-level r-med">Medium</div>
+          <div class="risk-title">Secondary participants inferring financial details they shouldn't see</div>
+          <div class="risk-body">Even with a scoped timeline view, indirect signals (delivery to a specific address, order timing) could leak context. Mitigated by: keeping the tagged-friend view strictly to delivery status, with no item, price, or participant-list data included at all.</div>
+        </div>
+        <div class="risk-card">
+          <div class="risk-level r-low">Low</div>
+          <div class="risk-title">Low discoverability if Split Pay is treated as a buried checkout option</div>
+          <div class="risk-body">A feature with real financial complexity underneath is only useful if people find it. Mitigated by: a clearly visible entry point on the order confirmation screen and a mandatory-until-successful introductory walkthrough, rather than a one-time tooltip.</div>
+        </div>
+      </div>
+    </section>
+    <hr class="cs-divider" />
+
+    <!-- 11 LESSONS -->
+    <section class="cs-section" id="lessons">
+      <div class="section-eyebrow">11 -- Lessons</div>
+      <h2>What specifying a cross-product payment feature taught me before it even shipped.</h2>
+
+      <div class="lesson-list reveal">
+        <div class="lesson-item">
+          <div class="lesson-num">01</div>
+          <div>
+            <div class="lesson-title">Payment architecture decisions are UX decisions wearing a disguise</div>
+            <div class="lesson-body">Decoupling rider payout from split completion wasn't a backend implementation detail I could leave to engineering - it's the reason the all-or-nothing rejection model (Decision 3) is acceptable at all. <strong>Get the money-movement model wrong and every downstream UX choice inherits the wrongness</strong>; get it right and several "hard" UX problems become nearly free.</div>
+          </div>
+        </div>
+        <div class="lesson-item">
+          <div class="lesson-num">02</div>
+          <div>
+            <div class="lesson-title">Every proportional split needs an explicit rounding policy - you only find this by doing the arithmetic yourself</div>
+            <div class="lesson-body">The PRD's own worked example reconciled cleanly, which is exactly why the rounding gap was easy to miss on a read-through. <strong>I only found it by manually re-deriving the calculation</strong> rather than trusting that a clean example meant a general policy existed. Reading a spec and computing a spec are not the same review.</div>
+          </div>
+        </div>
+        <div class="lesson-item">
+          <div class="lesson-num">03</div>
+          <div>
+            <div class="lesson-title">Cross-product PRDs need a system-of-record for every shared field, not just a shared screen</div>
+            <div class="lesson-body">Writing acceptance criteria that a separate product's engineering team builds against forced a level of precision - "who owns this number when it changes" - that a single-team spec can get away with leaving implicit. <strong>The Appendix's per-field ownership isn't bureaucracy; it's what makes two independent backlogs converge on the same behaviour.</strong></div>
+          </div>
+        </div>
+        <div class="lesson-item">
+          <div class="lesson-num">04</div>
+          <div>
+            <div class="lesson-title">Guardrails have to be legible to a second product's support team, not just your own</div>
+            <div class="lesson-body">Pathao Pay's CX team will field disputes about a Food-initiated transaction they didn't originate. Every cancellation reason and status label had to make sense without Food-specific context loaded in the reader's head - <strong>a guardrail that only your own team understands isn't fully specified yet.</strong></div>
+          </div>
+        </div>
+        <div class="lesson-item">
+          <div class="lesson-num">05</div>
+          <div>
+            <div class="lesson-title">What I'd do differently</div>
+            <div class="lesson-body">I specified an open-ended group size for v1. In hindsight, I'd cap the earliest rollout to 2-3 participants per split, to validate the all-or-nothing accept/reject psychology and its real cancellation rate on a small blast radius before it can affect a large group order and the rider waiting on it. I'd also have written the request-expiry window into the original PRD myself, rather than discovering the gap during my own review - a scoping conversation I should have forced earlier with the Pay stakeholder, not one I should have had to fill in solo.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div><!-- /cs-body -->
+  <div class="appendix-band">
+    <div class="appendix-inner">
+
+      <div class="appendix-header">
+        <div class="appendix-eyebrow">Appendix -- The Evidence</div>
+        <h2 class="appendix-title">Functional Spec Excerpts</h2>
+        <p class="appendix-sub">User stories, acceptance criteria, and the full split-pay lifecycle as specified in the PRD (S-1 through S-8) - presented here without exposing internal implementation details.</p>
+      </div>
+
+      <!-- USER STORIES -->
+      <div class="appendix-block reveal">
+        <div class="appendix-block-label">Appendix A -- User Stories</div>
+        <table class="appendix-table">
+          <thead>
+            <tr><th>ID</th><th>As a&hellip;</th><th>I want&hellip;</th><th>So that&hellip;</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>US.1</td>
+              <td data-label="As a…">Pathao Food user placing a group order</td>
+              <td data-label="I want…">to tag each cart item to myself or a friend and see each person's fair share calculated automatically</td>
+              <td data-label="So that…">nobody has to do VAT, delivery, and discount math by hand to figure out what they owe</td>
+            </tr>
+            <tr>
+              <td>US.2</td>
+              <td data-label="As a…">User who has placed a split order</td>
+              <td data-label="I want…">payment requests sent to each tagged friend automatically through Pathao Pay after checkout</td>
+              <td data-label="So that…">I don't have to leave the app or manually message anyone to collect what I'm owed</td>
+            </tr>
+            <tr>
+              <td>US.3</td>
+              <td data-label="As a…">User whose split was cancelled because a friend didn't accept</td>
+              <td data-label="I want…">to see exactly why it was cancelled and know I'm responsible for the full bill</td>
+              <td data-label="So that…">there's no ambiguity about what happened or what I owe</td>
+            </tr>
+            <tr>
+              <td>US.4</td>
+              <td data-label="As a…">Friend tagged into someone else's split order</td>
+              <td data-label="I want…">to see the delivery status of the order in my own timeline, nothing more</td>
+              <td data-label="So that…">I can track my food without gaining access to someone else's full payment details</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- ACCEPTANCE CRITERIA -->
+      <div class="appendix-block reveal">
+        <div class="appendix-block-label">Appendix B -- Key Acceptance Criteria</div>
+        <table class="appendix-table">
+          <thead>
+            <tr><th>#</th><th>Criteria</th><th>Owner</th><th>Planned verification</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>AC.1</td>
+              <td data-label="Criteria">The order cannot be confirmed with Split Pay active unless the payment method is set to Pathao Pay; the introductory walkthrough must reappear on every attempt until one split completes successfully.</td>
+              <td data-label="Owner">Food FE</td>
+              <td data-label="Planned verification">QA: attempt checkout with a non-Pay method selected and confirm it's blocked; verify walkthrough re-triggers across sessions</td>
+            </tr>
+            <tr>
+              <td>AC.2</td>
+              <td data-label="Criteria">Tagging a friend without a registered Pathao Pay account must surface an inline invalid-account alert at the moment of tagging, not after checkout.</td>
+              <td data-label="Owner">Food FE / BE</td>
+              <td data-label="Planned verification">QA: tag a seeded test contact with no Pay account and confirm the alert fires before checkout is reachable</td>
+            </tr>
+            <tr>
+              <td>AC.3</td>
+              <td data-label="Criteria">A cart update that increases any participant's payable amount must cancel the split and revert full liability to the initiator; a decrease must trigger an automatic escrow-release notification to Pay.</td>
+              <td data-label="Owner">Food BE / Pay BE</td>
+              <td data-label="Planned verification">QA: simulate both directions of cart edit post-tagging and confirm the correct downstream Pay action fires each time</td>
+            </tr>
+            <tr>
+              <td>AC.4</td>
+              <td data-label="Criteria">The rider's payout on delivery must never be blocked, delayed, or made conditional on the status of any friend's payment request.</td>
+              <td data-label="Owner">Pay BE / Ops</td>
+              <td data-label="Planned verification">QA: force a pending/rejected friend request state and confirm rider payout still fires on delivery within standard SLA</td>
+            </tr>
+            <tr>
+              <td>AC.5</td>
+              <td data-label="Criteria">A tagged friend's own order timeline must display delivery status only - no item, pricing, or participant-distribution data.</td>
+              <td data-label="Owner">Food FE</td>
+              <td data-label="Planned verification">Design + QA review: verify the secondary-participant view against the initiator's full view side by side</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- LIFECYCLE FLOW -->
+      <div class="appendix-block reveal">
+        <div class="appendix-block-label">Appendix C -- Split Pay Lifecycle</div>
+        <p class="appendix-flow-intro">How a group order becomes a fully settled transaction across both products.</p>
+        <div class="flow-steps">
+          <div class="flow-step">
+            <div class="flow-step-num">1</div>
+            <div>
+              <div class="flow-step-title">Tag &amp; confirm</div>
+              <div class="flow-step-text">Initiator tags cart items to themselves and friends, sees each computed share, and confirms checkout with Pathao Pay as the payment method.</div>
+            </div>
+          </div>
+          <div class="flow-arrow">&#8595;</div>
+          <div class="flow-step">
+            <div class="flow-step-num">2</div>
+            <div>
+              <div class="flow-step-title">Capture &amp; fulfil</div>
+              <div class="flow-step-text">The full amount is captured from the initiator's Pathao Pay balance; the order enters preparation and delivery on the normal timeline, independent of friends' responses.</div>
+            </div>
+          </div>
+          <div class="flow-arrow">&#8595;</div>
+          <div class="flow-step">
+            <div class="flow-step-num">3</div>
+            <div>
+              <div class="flow-step-title">Requests dispatched</div>
+              <div class="flow-step-text">Payment requests fan out to each tagged friend through Pathao Pay, running in parallel with fulfilment, with a bounded expiry window.</div>
+            </div>
+          </div>
+          <div class="flow-arrow">&#8595;</div>
+          <div class="flow-step">
+            <div class="flow-step-num">4</div>
+            <div>
+              <div class="flow-step-title">Rider paid, unconditionally</div>
+              <div class="flow-step-text">The rider receives instant digital payment on delivery, funded by the initiator's original capture - never waiting on the split's outcome.</div>
+            </div>
+          </div>
+          <div class="flow-arrow">&#8595;</div>
+          <div class="flow-step">
+            <div class="flow-step-num">5</div>
+            <div>
+              <div class="flow-step-title">Split resolves</div>
+              <div class="flow-step-text">If every friend accepts, reimbursement flows to the initiator's wallet. If any friend fails to accept, the split cancels and the initiator's original charge stands.</div>
+            </div>
+          </div>
+          <div class="flow-arrow">&#8595;</div>
+          <div class="flow-step flow-step-final">
+            <div class="flow-step-num">&#10003;</div>
+            <div>
+              <div class="flow-step-title">Recorded, transparent, reusable</div>
+              <div class="flow-step-text">Order history shows the initiator the full outcome and reason if cancelled &middot; tagged friends see delivery status only &middot; a reorder carries the same distribution forward automatically.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div><!-- /appendix-band -->
+
+  <!-- FOOTER -->
+  <footer>
+    <a href="work.html">&larr; Back to all case studies</a>
+    &nbsp;&nbsp;&middot;&nbsp;&nbsp;
+    <a href="index.html">Akash Poddar</a>
+    &nbsp;&nbsp;&middot;&nbsp;&nbsp;
+    <a href="index.html#contact">Get in touch</a>
+  </footer>
+
+  <script>
+    const reveals = document.querySelectorAll('.reveal');
+    const isMobile = window.innerWidth < 768;
+    const io = new IntersectionObserver((entries) => {
+      const visible = entries.filter(e => e.isIntersecting)
+        .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+      if (!visible.length) return;
+      requestAnimationFrame(() => {
+        visible.forEach((entry, i) => {
+          entry.target.style.transitionDelay = isMobile ? '0s' : (i * 0.05) + 's';
+          entry.target.classList.add('visible');
+          io.unobserve(entry.target);
+        });
+      });
+    }, { threshold: 0.06, rootMargin: '0px 0px -40px 0px' });
+    reveals.forEach(r => io.observe(r));
+
+    const tocItems = document.querySelectorAll('.toc-item');
+    const sections = document.querySelectorAll('.cs-section[id]');
+    const tocObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          tocItems.forEach(t => t.classList.remove('active'));
+          const active = document.querySelector(`.toc-item[href="#${entry.target.id}"]`);
+          if (active) active.classList.add('active');
+        }
+      });
+    }, { threshold: 0, rootMargin: '-101px 0px -85% 0px' });
+    sections.forEach(s => tocObserver.observe(s));
+  </script>
+
+</body>
+</html>
